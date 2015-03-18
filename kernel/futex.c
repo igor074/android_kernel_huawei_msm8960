@@ -55,10 +55,18 @@
 #include <linux/pagemap.h>
 #include <linux/syscalls.h>
 #include <linux/signal.h>
+<<<<<<< HEAD
 #include <linux/module.h>
 #include <linux/magic.h>
 #include <linux/pid.h>
 #include <linux/nsproxy.h>
+=======
+#include <linux/export.h>
+#include <linux/magic.h>
+#include <linux/pid.h>
+#include <linux/nsproxy.h>
+#include <linux/ptrace.h>
+>>>>>>> cm-10.0
 
 #include <asm/futex.h>
 
@@ -314,6 +322,7 @@ again:
 #endif
 
 	lock_page(page_head);
+<<<<<<< HEAD
 	if (!page_head->mapping) {
 		unlock_page(page_head);
 		put_page(page_head);
@@ -325,6 +334,31 @@ again:
 		if ((page_head == ZERO_PAGE(address)))
 			return -EFAULT;
 		goto again;
+=======
+
+	/*
+	 * If page_head->mapping is NULL, then it cannot be a PageAnon
+	 * page; but it might be the ZERO_PAGE or in the gate area or
+	 * in a special mapping (all cases which we are happy to fail);
+	 * or it may have been a good file page when get_user_pages_fast
+	 * found it, but truncated or holepunched or subjected to
+	 * invalidate_complete_page2 before we got the page lock (also
+	 * cases which we are happy to fail).  And we hold a reference,
+	 * so refcount care in invalidate_complete_page's remove_mapping
+	 * prevents drop_caches from setting mapping to NULL beneath us.
+	 *
+	 * The case we do have to guard against is when memory pressure made
+	 * shmem_writepage move it from filecache to swapcache beneath us:
+	 * an unlikely race, but we do need to retry for page_head->mapping.
+	 */
+	if (!page_head->mapping) {
+		int shmem_swizzled = PageSwapCache(page_head);
+		unlock_page(page_head);
+		put_page(page_head);
+		if (shmem_swizzled)
+			goto again;
+		return -EFAULT;
+>>>>>>> cm-10.0
 	}
 
 	/*
@@ -854,7 +888,11 @@ static int wake_futex_pi(u32 __user *uaddr, u32 uval, struct futex_q *this)
 {
 	struct task_struct *new_owner;
 	struct futex_pi_state *pi_state = this->pi_state;
+<<<<<<< HEAD
 	u32 curval, newval;
+=======
+	u32 uninitialized_var(curval), newval;
+>>>>>>> cm-10.0
 
 	if (!pi_state)
 		return -EINVAL;
@@ -916,7 +954,11 @@ static int wake_futex_pi(u32 __user *uaddr, u32 uval, struct futex_q *this)
 
 static int unlock_futex_pi(u32 __user *uaddr, u32 uval)
 {
+<<<<<<< HEAD
 	u32 oldval;
+=======
+	u32 uninitialized_var(oldval);
+>>>>>>> cm-10.0
 
 	/*
 	 * There is no waiter, so we unlock the futex. The owner died
@@ -1576,7 +1618,11 @@ static int fixup_pi_state_owner(u32 __user *uaddr, struct futex_q *q,
 	u32 newtid = task_pid_vnr(newowner) | FUTEX_WAITERS;
 	struct futex_pi_state *pi_state = q->pi_state;
 	struct task_struct *oldowner = pi_state->owner;
+<<<<<<< HEAD
 	u32 uval, curval, newval;
+=======
+	u32 uval, uninitialized_var(curval), newval;
+>>>>>>> cm-10.0
 	int ret;
 
 	/* Owner died? */
@@ -1793,7 +1839,11 @@ static void futex_wait_queue_me(struct futex_hash_bucket *hb, struct futex_q *q,
  *
  * Returns:
  *  0 - uaddr contains val and hb has been locked
+<<<<<<< HEAD
  * <1 - -EFAULT or -EWOULDBLOCK (uaddr does not contain val) and hb is unlcoked
+=======
+ * <1 - -EFAULT or -EWOULDBLOCK (uaddr does not contain val) and hb is unlocked
+>>>>>>> cm-10.0
  */
 static int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
 			   struct futex_q *q, struct futex_hash_bucket **hb)
@@ -2431,11 +2481,16 @@ SYSCALL_DEFINE3(get_robust_list, int, pid,
 {
 	struct robust_list_head __user *head;
 	unsigned long ret;
+<<<<<<< HEAD
 	const struct cred *cred = current_cred(), *pcred;
+=======
+	struct task_struct *p;
+>>>>>>> cm-10.0
 
 	if (!futex_cmpxchg_enabled)
 		return -ENOSYS;
 
+<<<<<<< HEAD
 	if (!pid)
 		head = current->robust_list;
 	else {
@@ -2465,6 +2520,28 @@ ok:
 		rcu_read_unlock();
 	}
 
+=======
+	WARN_ONCE(1, "deprecated: get_robust_list will be deleted in 2013.\n");
+
+	rcu_read_lock();
+
+	ret = -ESRCH;
+	if (!pid)
+		p = current;
+	else {
+		p = find_task_by_vpid(pid);
+		if (!p)
+			goto err_unlock;
+	}
+
+	ret = -EPERM;
+	if (!ptrace_may_access(p, PTRACE_MODE_READ))
+		goto err_unlock;
+
+	head = p->robust_list;
+	rcu_read_unlock();
+
+>>>>>>> cm-10.0
 	if (put_user(sizeof(*head), len_ptr))
 		return -EFAULT;
 	return put_user(head, head_ptr);
@@ -2481,7 +2558,11 @@ err_unlock:
  */
 int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
 {
+<<<<<<< HEAD
 	u32 uval, nval, mval;
+=======
+	u32 uval, uninitialized_var(nval), mval;
+>>>>>>> cm-10.0
 
 retry:
 	if (get_user(uval, uaddr))
@@ -2616,7 +2697,11 @@ void exit_robust_list(struct task_struct *curr)
 long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
 		u32 __user *uaddr2, u32 val2, u32 val3)
 {
+<<<<<<< HEAD
 	int ret = -ENOSYS, cmd = op & FUTEX_CMD_MASK;
+=======
+	int cmd = op & FUTEX_CMD_MASK;
+>>>>>>> cm-10.0
 	unsigned int flags = 0;
 
 	if (!(op & FUTEX_PRIVATE_FLAG))
@@ -2629,6 +2714,7 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
 	}
 
 	switch (cmd) {
+<<<<<<< HEAD
 	case FUTEX_WAIT:
 		val3 = FUTEX_BITSET_MATCH_ANY;
 	case FUTEX_WAIT_BITSET:
@@ -2672,6 +2758,46 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
 		ret = -ENOSYS;
 	}
 	return ret;
+=======
+	case FUTEX_LOCK_PI:
+	case FUTEX_UNLOCK_PI:
+	case FUTEX_TRYLOCK_PI:
+	case FUTEX_WAIT_REQUEUE_PI:
+	case FUTEX_CMP_REQUEUE_PI:
+		if (!futex_cmpxchg_enabled)
+			return -ENOSYS;
+	}
+
+	switch (cmd) {
+	case FUTEX_WAIT:
+		val3 = FUTEX_BITSET_MATCH_ANY;
+	case FUTEX_WAIT_BITSET:
+		return futex_wait(uaddr, flags, val, timeout, val3);
+	case FUTEX_WAKE:
+		val3 = FUTEX_BITSET_MATCH_ANY;
+	case FUTEX_WAKE_BITSET:
+		return futex_wake(uaddr, flags, val, val3);
+	case FUTEX_REQUEUE:
+		return futex_requeue(uaddr, flags, uaddr2, val, val2, NULL, 0);
+	case FUTEX_CMP_REQUEUE:
+		return futex_requeue(uaddr, flags, uaddr2, val, val2, &val3, 0);
+	case FUTEX_WAKE_OP:
+		return futex_wake_op(uaddr, flags, uaddr2, val, val2, val3);
+	case FUTEX_LOCK_PI:
+		return futex_lock_pi(uaddr, flags, val, timeout, 0);
+	case FUTEX_UNLOCK_PI:
+		return futex_unlock_pi(uaddr, flags);
+	case FUTEX_TRYLOCK_PI:
+		return futex_lock_pi(uaddr, flags, 0, timeout, 1);
+	case FUTEX_WAIT_REQUEUE_PI:
+		val3 = FUTEX_BITSET_MATCH_ANY;
+		return futex_wait_requeue_pi(uaddr, flags, val, timeout, val3,
+					     uaddr2);
+	case FUTEX_CMP_REQUEUE_PI:
+		return futex_requeue(uaddr, flags, uaddr2, val, val2, &val3, 1);
+	}
+	return -ENOSYS;
+>>>>>>> cm-10.0
 }
 
 

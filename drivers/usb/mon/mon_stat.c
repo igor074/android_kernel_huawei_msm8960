@@ -9,6 +9,10 @@
 
 #include <linux/kernel.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/usb.h>
 #include <linux/fs.h>
 #include <asm/uaccess.h>

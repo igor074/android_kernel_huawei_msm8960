@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -545,4 +549,23 @@ int sps_bam_set_satellite(struct sps_bam *dev, u32 pipe_index);
 int sps_bam_pipe_timer_ctrl(struct sps_bam *dev, u32 pipe_index,
 			    struct sps_timer_ctrl *timer_ctrl,
 			    struct sps_timer_result *timer_result);
+<<<<<<< HEAD
+=======
+
+
+/**
+ * Get the number of unused descriptors in the descriptor FIFO
+ * of a pipe
+ *
+ * @dev - pointer to BAM device descriptor
+ *
+ * @pipe_index - pipe index
+ *
+ * @desc_num - number of unused descriptors
+ *
+ */
+int sps_bam_pipe_get_unused_desc_num(struct sps_bam *dev, u32 pipe_index,
+					u32 *desc_num);
+
+>>>>>>> cm-10.0
 #endif	/* _SPSBAM_H_ */

@@ -1,6 +1,10 @@
 /******************************************************************************
  *
+<<<<<<< HEAD
  * Copyright(c) 2009-2010  Realtek Corporation.
+=======
+ * Copyright(c) 2009-2012  Realtek Corporation.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
@@ -27,6 +31,10 @@
  *
  *****************************************************************************/
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include "dm_common.h"
 #include "phy_common.h"
 #include "../pci.h"
@@ -245,6 +253,7 @@ static void rtl92c_dm_false_alarm_counter_statistics(struct ieee80211_hw *hw)
 	rtl_set_bbreg(hw, RCCK0_FALSEALARMREPORT, 0x0000c000, 2);
 
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
+<<<<<<< HEAD
 		 ("cnt_parity_fail = %d, cnt_rate_illegal = %d, "
 		  "cnt_crc8_fail = %d, cnt_mcs_fail = %d\n",
 		  falsealm_cnt->cnt_parity_fail,
@@ -255,6 +264,17 @@ static void rtl92c_dm_false_alarm_counter_statistics(struct ieee80211_hw *hw)
 		 ("cnt_ofdm_fail = %x, cnt_cck_fail = %x, cnt_all = %x\n",
 		  falsealm_cnt->cnt_ofdm_fail,
 		  falsealm_cnt->cnt_cck_fail, falsealm_cnt->cnt_all));
+=======
+		 "cnt_parity_fail = %d, cnt_rate_illegal = %d, cnt_crc8_fail = %d, cnt_mcs_fail = %d\n",
+		 falsealm_cnt->cnt_parity_fail,
+		 falsealm_cnt->cnt_rate_illegal,
+		 falsealm_cnt->cnt_crc8_fail, falsealm_cnt->cnt_mcs_fail);
+
+	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
+		 "cnt_ofdm_fail = %x, cnt_cck_fail = %x, cnt_all = %x\n",
+		 falsealm_cnt->cnt_ofdm_fail,
+		 falsealm_cnt->cnt_cck_fail, falsealm_cnt->cnt_all);
+>>>>>>> cm-10.0
 }
 
 static void rtl92c_dm_ctrl_initgain_by_fa(struct ieee80211_hw *hw)
@@ -312,8 +332,13 @@ static void rtl92c_dm_ctrl_initgain_by_rssi(struct ieee80211_hw *hw)
 		    dm_digtable.backoff_val;
 
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
+<<<<<<< HEAD
 		 ("rssi_val_min = %x backoff_val %x\n",
 		  dm_digtable.rssi_val_min, dm_digtable.backoff_val));
+=======
+		 "rssi_val_min = %x backoff_val %x\n",
+		 dm_digtable.rssi_val_min, dm_digtable.backoff_val);
+>>>>>>> cm-10.0
 
 	rtl92c_dm_write_dig(hw);
 }
@@ -329,8 +354,13 @@ static void rtl92c_dm_initial_gain_multi_sta(struct ieee80211_hw *hw)
 	if (mac->opmode == NL80211_IFTYPE_ADHOC)
 		multi_sta = true;
 
+<<<<<<< HEAD
 	if ((multi_sta == false) || (dm_digtable.cursta_connectctate !=
 				     DIG_STA_DISCONNECT)) {
+=======
+	if (!multi_sta ||
+	    dm_digtable.cursta_connectctate != DIG_STA_DISCONNECT) {
+>>>>>>> cm-10.0
 		initialized = false;
 		dm_digtable.dig_ext_port_stage = DIG_EXT_PORT_STAGE_MAX;
 		return;
@@ -363,10 +393,16 @@ static void rtl92c_dm_initial_gain_multi_sta(struct ieee80211_hw *hw)
 	}
 
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
+<<<<<<< HEAD
 		 ("curmultista_connectstate = "
 		  "%x dig_ext_port_stage %x\n",
 		  dm_digtable.curmultista_connectstate,
 		  dm_digtable.dig_ext_port_stage));
+=======
+		 "curmultista_connectstate = %x dig_ext_port_stage %x\n",
+		 dm_digtable.curmultista_connectstate,
+		 dm_digtable.dig_ext_port_stage);
+>>>>>>> cm-10.0
 }
 
 static void rtl92c_dm_initial_gain_sta(struct ieee80211_hw *hw)
@@ -374,10 +410,16 @@ static void rtl92c_dm_initial_gain_sta(struct ieee80211_hw *hw)
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
+<<<<<<< HEAD
 		 ("presta_connectstate = %x,"
 		  " cursta_connectctate = %x\n",
 		  dm_digtable.presta_connectstate,
 		  dm_digtable.cursta_connectctate));
+=======
+		 "presta_connectstate = %x, cursta_connectctate = %x\n",
+		 dm_digtable.presta_connectstate,
+		 dm_digtable.cursta_connectctate);
+>>>>>>> cm-10.0
 
 	if (dm_digtable.presta_connectstate == dm_digtable.cursta_connectctate
 	    || dm_digtable.cursta_connectctate == DIG_STA_BEFORE_CONNECT
@@ -463,18 +505,30 @@ static void rtl92c_dm_cck_packet_detection_thresh(struct ieee80211_hw *hw)
 		dm_digtable.pre_cck_pd_state = dm_digtable.cur_cck_pd_state;
 	}
 
+<<<<<<< HEAD
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
 		 ("CCKPDStage=%x\n", dm_digtable.cur_cck_pd_state));
 
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE,
 		 ("is92C=%x\n", IS_92C_SERIAL(rtlhal->version)));
+=======
+	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE, "CCKPDStage=%x\n",
+		 dm_digtable.cur_cck_pd_state);
+
+	RT_TRACE(rtlpriv, COMP_DIG, DBG_TRACE, "is92C=%x\n",
+		 IS_92C_SERIAL(rtlhal->version));
+>>>>>>> cm-10.0
 }
 
 static void rtl92c_dm_ctrl_initgain_by_twoport(struct ieee80211_hw *hw)
 {
 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
 
+<<<<<<< HEAD
 	if (mac->act_scanning == true)
+=======
+	if (mac->act_scanning)
+>>>>>>> cm-10.0
 		return;
 
 	if (mac->link_state >= MAC80211_LINKED)
@@ -518,10 +572,20 @@ void rtl92c_dm_write_dig(struct ieee80211_hw *hw)
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 
 	RT_TRACE(rtlpriv, COMP_DIG, DBG_LOUD,
+<<<<<<< HEAD
 		 ("cur_igvalue = 0x%x, "
 		  "pre_igvalue = 0x%x, backoff_val = %d\n",
 		  dm_digtable.cur_igvalue, dm_digtable.pre_igvalue,
 		  dm_digtable.backoff_val));
+=======
+		 "cur_igvalue = 0x%x, pre_igvalue = 0x%x, backoff_val = %d\n",
+		 dm_digtable.cur_igvalue, dm_digtable.pre_igvalue,
+		 dm_digtable.backoff_val);
+
+	dm_digtable.cur_igvalue += 2;
+	if (dm_digtable.cur_igvalue > 0x3f)
+		dm_digtable.cur_igvalue = 0x3f;
+>>>>>>> cm-10.0
 
 	if (dm_digtable.pre_igvalue != dm_digtable.cur_igvalue) {
 		rtl_set_bbreg(hw, ROFDM0_XAAGCCORE1, 0x7f,
@@ -670,20 +734,34 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 	u8 ofdm_index[2], cck_index = 0, ofdm_index_old[2], cck_index_old = 0;
 	int i;
 	bool is2t = IS_92C_SERIAL(rtlhal->version);
+<<<<<<< HEAD
 	u8 txpwr_level[2] = {0, 0};
+=======
+	s8 txpwr_level[2] = {0, 0};
+>>>>>>> cm-10.0
 	u8 ofdm_min_index = 6, rf;
 
 	rtlpriv->dm.txpower_trackinginit = true;
 	RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 		 ("rtl92c_dm_txpower_tracking_callback_thermalmeter\n"));
+=======
+		 "rtl92c_dm_txpower_tracking_callback_thermalmeter\n");
+>>>>>>> cm-10.0
 
 	thermalvalue = (u8) rtl_get_rfreg(hw, RF90_PATH_A, RF_T_METER, 0x1f);
 
 	RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 		 ("Readback Thermal Meter = 0x%x pre thermal meter 0x%x "
 		  "eeprom_thermalmeter 0x%x\n",
 		  thermalvalue, rtlpriv->dm.thermalvalue,
 		  rtlefuse->eeprom_thermalmeter));
+=======
+		 "Readback Thermal Meter = 0x%x pre thermal meter 0x%x eeprom_thermalmeter 0x%x\n",
+		 thermalvalue, rtlpriv->dm.thermalvalue,
+		 rtlefuse->eeprom_thermalmeter);
+>>>>>>> cm-10.0
 
 	rtl92c_phy_ap_calibrate(hw, (thermalvalue -
 				     rtlefuse->eeprom_thermalmeter));
@@ -701,10 +779,16 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 				ofdm_index_old[0] = (u8) i;
 
 				RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 					("Initial pathA ele_d reg0x%x = 0x%lx, "
 					 "ofdm_index=0x%x\n",
 					 ROFDM0_XATXIQIMBALANCE,
 					 ele_d, ofdm_index_old[0]));
+=======
+					 "Initial pathA ele_d reg0x%x = 0x%lx, ofdm_index=0x%x\n",
+					 ROFDM0_XATXIQIMBALANCE,
+					 ele_d, ofdm_index_old[0]);
+>>>>>>> cm-10.0
 				break;
 			}
 		}
@@ -718,11 +802,18 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 				    MASKOFDM_D)) {
 
 					RT_TRACE(rtlpriv, COMP_POWER_TRACKING,
+<<<<<<< HEAD
 					   DBG_LOUD,
 					   ("Initial pathB ele_d reg0x%x = "
 					   "0x%lx, ofdm_index=0x%x\n",
 					   ROFDM0_XBTXIQIMBALANCE, ele_d,
 					   ofdm_index_old[1]));
+=======
+						 DBG_LOUD,
+						 "Initial pathB ele_d reg0x%x = 0x%lx, ofdm_index=0x%x\n",
+						 ROFDM0_XBTXIQIMBALANCE, ele_d,
+						 ofdm_index_old[1]);
+>>>>>>> cm-10.0
 					break;
 				}
 			}
@@ -740,11 +831,18 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 
 					RT_TRACE(rtlpriv, COMP_POWER_TRACKING,
 						 DBG_LOUD,
+<<<<<<< HEAD
 						 ("Initial reg0x%x = 0x%lx, "
 						  "cck_index=0x%x, ch 14 %d\n",
 						  RCCK0_TXFILTER2, temp_cck,
 						  cck_index_old,
 						  rtlpriv->dm.cck_inch14));
+=======
+						 "Initial reg0x%x = 0x%lx, cck_index=0x%x, ch 14 %d\n",
+						 RCCK0_TXFILTER2, temp_cck,
+						 cck_index_old,
+						 rtlpriv->dm.cck_inch14);
+>>>>>>> cm-10.0
 					break;
 				}
 			} else {
@@ -756,11 +854,18 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 
 					RT_TRACE(rtlpriv, COMP_POWER_TRACKING,
 						 DBG_LOUD,
+<<<<<<< HEAD
 						 ("Initial reg0x%x = 0x%lx, "
 						  "cck_index=0x%x, ch14 %d\n",
 						  RCCK0_TXFILTER2, temp_cck,
 						  cck_index_old,
 						  rtlpriv->dm.cck_inch14));
+=======
+						 "Initial reg0x%x = 0x%lx, cck_index=0x%x, ch14 %d\n",
+						 RCCK0_TXFILTER2, temp_cck,
+						 cck_index_old,
+						 rtlpriv->dm.cck_inch14);
+>>>>>>> cm-10.0
 					break;
 				}
 			}
@@ -789,12 +894,19 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 		    (rtlpriv->dm.thermalvalue_iqk - thermalvalue);
 
 		RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 			("Readback Thermal Meter = 0x%x pre thermal meter 0x%x "
 			 "eeprom_thermalmeter 0x%x delta 0x%x "
 			 "delta_lck 0x%x delta_iqk 0x%x\n",
 			 thermalvalue, rtlpriv->dm.thermalvalue,
 			 rtlefuse->eeprom_thermalmeter, delta, delta_lck,
 			 delta_iqk));
+=======
+			 "Readback Thermal Meter = 0x%x pre thermal meter 0x%x eeprom_thermalmeter 0x%x delta 0x%x delta_lck 0x%x delta_iqk 0x%x\n",
+			 thermalvalue, rtlpriv->dm.thermalvalue,
+			 rtlefuse->eeprom_thermalmeter, delta, delta_lck,
+			 delta_iqk);
+>>>>>>> cm-10.0
 
 		if (delta_lck > 1) {
 			rtlpriv->dm.thermalvalue_lck = thermalvalue;
@@ -814,6 +926,7 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 
 			if (is2t) {
 				RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 					 ("temp OFDM_A_index=0x%x, "
 					  "OFDM_B_index=0x%x,"
 					  "cck_index=0x%x\n",
@@ -826,6 +939,17 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 					  "cck_index=0x%x\n",
 					  rtlpriv->dm.ofdm_index[0],
 					  rtlpriv->dm.cck_index));
+=======
+					 "temp OFDM_A_index=0x%x, OFDM_B_index=0x%x, cck_index=0x%x\n",
+					 rtlpriv->dm.ofdm_index[0],
+					 rtlpriv->dm.ofdm_index[1],
+					 rtlpriv->dm.cck_index);
+			} else {
+				RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+					 "temp OFDM_A_index=0x%x, cck_index=0x%x\n",
+					 rtlpriv->dm.ofdm_index[0],
+					 rtlpriv->dm.cck_index);
+>>>>>>> cm-10.0
 			}
 
 			if (thermalvalue > rtlefuse->eeprom_thermalmeter) {
@@ -917,6 +1041,7 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 
 			if (is2t) {
 				RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 					 ("new OFDM_A_index=0x%x, "
 					  "OFDM_B_index=0x%x,"
 					  "cck_index=0x%x\n",
@@ -927,6 +1052,15 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 					 ("new OFDM_A_index=0x%x,"
 					  "cck_index=0x%x\n",
 					  ofdm_index[0], cck_index));
+=======
+					 "new OFDM_A_index=0x%x, OFDM_B_index=0x%x, cck_index=0x%x\n",
+					 ofdm_index[0], ofdm_index[1],
+					 cck_index);
+			} else {
+				RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+					 "new OFDM_A_index=0x%x, cck_index=0x%x\n",
+					 ofdm_index[0], cck_index);
+>>>>>>> cm-10.0
 			}
 		}
 
@@ -1084,7 +1218,11 @@ static void rtl92c_dm_txpower_tracking_callback_thermalmeter(struct ieee80211_hw
 			rtlpriv->dm.thermalvalue = thermalvalue;
 	}
 
+<<<<<<< HEAD
 	RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD, ("<===\n"));
+=======
+	RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD, "<===\n");
+>>>>>>> cm-10.0
 
 }
 
@@ -1097,8 +1235,13 @@ static void rtl92c_dm_initialize_txpower_tracking_thermalmeter(
 	rtlpriv->dm.txpower_trackinginit = false;
 
 	RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 		 ("pMgntInfo->txpower_tracking = %d\n",
 		  rtlpriv->dm.txpower_tracking));
+=======
+		 "pMgntInfo->txpower_tracking = %d\n",
+		 rtlpriv->dm.txpower_tracking);
+>>>>>>> cm-10.0
 }
 
 static void rtl92c_dm_initialize_txpower_tracking(struct ieee80211_hw *hw)
@@ -1124,12 +1267,20 @@ static void rtl92c_dm_check_txpower_tracking_thermal_meter(
 		rtl_set_rfreg(hw, RF90_PATH_A, RF_T_METER, RFREG_OFFSET_MASK,
 			      0x60);
 		RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 			 ("Trigger 92S Thermal Meter!!\n"));
+=======
+			 "Trigger 92S Thermal Meter!!\n");
+>>>>>>> cm-10.0
 		tm_trigger = 1;
 		return;
 	} else {
 		RT_TRACE(rtlpriv, COMP_POWER_TRACKING, DBG_LOUD,
+<<<<<<< HEAD
 			 ("Schedule TxPowerTracking direct call!!\n"));
+=======
+			 "Schedule TxPowerTracking direct call!!\n");
+>>>>>>> cm-10.0
 		rtl92c_dm_txpower_tracking_directcall(hw);
 		tm_trigger = 0;
 	}
@@ -1168,13 +1319,21 @@ static void rtl92c_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
 
 	if (is_hal_stop(rtlhal)) {
 		RT_TRACE(rtlpriv, COMP_RATE, DBG_LOUD,
+<<<<<<< HEAD
 			 ("<---- driver is going to unload\n"));
+=======
+			 "<---- driver is going to unload\n");
+>>>>>>> cm-10.0
 		return;
 	}
 
 	if (!rtlpriv->dm.useramask) {
 		RT_TRACE(rtlpriv, COMP_RATE, DBG_LOUD,
+<<<<<<< HEAD
 			("<---- driver does not control rate adaptive mask\n"));
+=======
+			 "<---- driver does not control rate adaptive mask\n");
+>>>>>>> cm-10.0
 		return;
 	}
 
@@ -1209,6 +1368,7 @@ static void rtl92c_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
 			p_ra->ratr_state = DM_RATR_STA_LOW;
 
 		if (p_ra->pre_ratr_state != p_ra->ratr_state) {
+<<<<<<< HEAD
 			RT_TRACE(rtlpriv, COMP_RATE, DBG_LOUD,
 				 ("RSSI = %ld\n",
 				  rtlpriv->dm.undecorated_smoothed_pwdb));
@@ -1220,11 +1380,32 @@ static void rtl92c_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
 
 			rcu_read_lock();
 			sta = ieee80211_find_sta(mac->vif, mac->bssid);
+=======
+			RT_TRACE(rtlpriv, COMP_RATE, DBG_LOUD, "RSSI = %ld\n",
+				 rtlpriv->dm.undecorated_smoothed_pwdb);
+			RT_TRACE(rtlpriv, COMP_RATE, DBG_LOUD,
+				 "RSSI_LEVEL = %d\n", p_ra->ratr_state);
+			RT_TRACE(rtlpriv, COMP_RATE, DBG_LOUD,
+				 "PreState = %d, CurState = %d\n",
+				 p_ra->pre_ratr_state, p_ra->ratr_state);
+
+			/* Only the PCI card uses sta in the update rate table
+			 * callback routine */
+			if (rtlhal->interface == INTF_PCI) {
+				rcu_read_lock();
+				sta = ieee80211_find_sta(mac->vif, mac->bssid);
+			}
+>>>>>>> cm-10.0
 			rtlpriv->cfg->ops->update_rate_tbl(hw, sta,
 					p_ra->ratr_state);
 
 			p_ra->pre_ratr_state = p_ra->ratr_state;
+<<<<<<< HEAD
 			rcu_read_unlock();
+=======
+			if (rtlhal->interface == INTF_PCI)
+				rcu_read_unlock();
+>>>>>>> cm-10.0
 		}
 	}
 }
@@ -1315,8 +1496,12 @@ static void rtl92c_dm_dynamic_bb_powersaving(struct ieee80211_hw *hw)
 	if (((mac->link_state == MAC80211_NOLINK)) &&
 	    (rtlpriv->dm.entry_min_undecoratedsmoothed_pwdb == 0)) {
 		dm_pstable.rssi_val_min = 0;
+<<<<<<< HEAD
 		RT_TRACE(rtlpriv, DBG_LOUD, DBG_LOUD,
 			 ("Not connected to any\n"));
+=======
+		RT_TRACE(rtlpriv, DBG_LOUD, DBG_LOUD, "Not connected to any\n");
+>>>>>>> cm-10.0
 	}
 
 	if (mac->link_state == MAC80211_LINKED) {
@@ -1324,22 +1509,37 @@ static void rtl92c_dm_dynamic_bb_powersaving(struct ieee80211_hw *hw)
 			dm_pstable.rssi_val_min =
 			    rtlpriv->dm.entry_min_undecoratedsmoothed_pwdb;
 			RT_TRACE(rtlpriv, DBG_LOUD, DBG_LOUD,
+<<<<<<< HEAD
 				 ("AP Client PWDB = 0x%lx\n",
 				  dm_pstable.rssi_val_min));
+=======
+				 "AP Client PWDB = 0x%lx\n",
+				 dm_pstable.rssi_val_min);
+>>>>>>> cm-10.0
 		} else {
 			dm_pstable.rssi_val_min =
 			    rtlpriv->dm.undecorated_smoothed_pwdb;
 			RT_TRACE(rtlpriv, DBG_LOUD, DBG_LOUD,
+<<<<<<< HEAD
 				 ("STA Default Port PWDB = 0x%lx\n",
 				  dm_pstable.rssi_val_min));
+=======
+				 "STA Default Port PWDB = 0x%lx\n",
+				 dm_pstable.rssi_val_min);
+>>>>>>> cm-10.0
 		}
 	} else {
 		dm_pstable.rssi_val_min =
 		    rtlpriv->dm.entry_min_undecoratedsmoothed_pwdb;
 
 		RT_TRACE(rtlpriv, DBG_LOUD, DBG_LOUD,
+<<<<<<< HEAD
 			 ("AP Ext Port PWDB = 0x%lx\n",
 			  dm_pstable.rssi_val_min));
+=======
+			 "AP Ext Port PWDB = 0x%lx\n",
+			 dm_pstable.rssi_val_min);
+>>>>>>> cm-10.0
 	}
 
 	if (IS_92C_SERIAL(rtlhal->version))
@@ -1380,7 +1580,11 @@ void rtl92c_dm_dynamic_txpower(struct ieee80211_hw *hw)
 	if ((mac->link_state < MAC80211_LINKED) &&
 	    (rtlpriv->dm.entry_min_undecoratedsmoothed_pwdb == 0)) {
 		RT_TRACE(rtlpriv, COMP_POWER, DBG_TRACE,
+<<<<<<< HEAD
 			 ("Not connected to any\n"));
+=======
+			 "Not connected to any\n");
+>>>>>>> cm-10.0
 
 		rtlpriv->dm.dynamic_txhighpower_lvl = TXHIGHPWRLEVEL_NORMAL;
 
@@ -1393,28 +1597,47 @@ void rtl92c_dm_dynamic_txpower(struct ieee80211_hw *hw)
 			undecorated_smoothed_pwdb =
 			    rtlpriv->dm.entry_min_undecoratedsmoothed_pwdb;
 			RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 				 ("AP Client PWDB = 0x%lx\n",
 				  undecorated_smoothed_pwdb));
+=======
+				 "AP Client PWDB = 0x%lx\n",
+				 undecorated_smoothed_pwdb);
+>>>>>>> cm-10.0
 		} else {
 			undecorated_smoothed_pwdb =
 			    rtlpriv->dm.undecorated_smoothed_pwdb;
 			RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 				 ("STA Default Port PWDB = 0x%lx\n",
 				  undecorated_smoothed_pwdb));
+=======
+				 "STA Default Port PWDB = 0x%lx\n",
+				 undecorated_smoothed_pwdb);
+>>>>>>> cm-10.0
 		}
 	} else {
 		undecorated_smoothed_pwdb =
 		    rtlpriv->dm.entry_min_undecoratedsmoothed_pwdb;
 
 		RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 			 ("AP Ext Port PWDB = 0x%lx\n",
 			  undecorated_smoothed_pwdb));
+=======
+			 "AP Ext Port PWDB = 0x%lx\n",
+			 undecorated_smoothed_pwdb);
+>>>>>>> cm-10.0
 	}
 
 	if (undecorated_smoothed_pwdb >= TX_POWER_NEAR_FIELD_THRESH_LVL2) {
 		rtlpriv->dm.dynamic_txhighpower_lvl = TXHIGHPWRLEVEL_LEVEL1;
 		RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 			 ("TXHIGHPWRLEVEL_LEVEL1 (TxPwr=0x0)\n"));
+=======
+			 "TXHIGHPWRLEVEL_LEVEL1 (TxPwr=0x0)\n");
+>>>>>>> cm-10.0
 	} else if ((undecorated_smoothed_pwdb <
 		    (TX_POWER_NEAR_FIELD_THRESH_LVL2 - 3)) &&
 		   (undecorated_smoothed_pwdb >=
@@ -1422,18 +1645,31 @@ void rtl92c_dm_dynamic_txpower(struct ieee80211_hw *hw)
 
 		rtlpriv->dm.dynamic_txhighpower_lvl = TXHIGHPWRLEVEL_LEVEL1;
 		RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 			 ("TXHIGHPWRLEVEL_LEVEL1 (TxPwr=0x10)\n"));
+=======
+			 "TXHIGHPWRLEVEL_LEVEL1 (TxPwr=0x10)\n");
+>>>>>>> cm-10.0
 	} else if (undecorated_smoothed_pwdb <
 		   (TX_POWER_NEAR_FIELD_THRESH_LVL1 - 5)) {
 		rtlpriv->dm.dynamic_txhighpower_lvl = TXHIGHPWRLEVEL_NORMAL;
 		RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 			 ("TXHIGHPWRLEVEL_NORMAL\n"));
+=======
+			 "TXHIGHPWRLEVEL_NORMAL\n");
+>>>>>>> cm-10.0
 	}
 
 	if ((rtlpriv->dm.dynamic_txhighpower_lvl != rtlpriv->dm.last_dtp_lvl)) {
 		RT_TRACE(rtlpriv, COMP_POWER, DBG_LOUD,
+<<<<<<< HEAD
 			 ("PHY_SetTxPowerLevel8192S() Channel = %d\n",
 			  rtlphy->current_channel));
+=======
+			 "PHY_SetTxPowerLevel8192S() Channel = %d\n",
+			 rtlphy->current_channel);
+>>>>>>> cm-10.0
 		rtl92c_phy_set_txpower_level(hw, rtlphy->current_channel);
 	}
 

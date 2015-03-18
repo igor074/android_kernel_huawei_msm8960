@@ -21,6 +21,10 @@
 
 #include <asm/ptrace.h>
 #include <asm/delay.h>
+<<<<<<< HEAD
+=======
+#include <asm/mce.h>
+>>>>>>> cm-10.0
 
 #include "proto.h"
 #include "pci_impl.h"

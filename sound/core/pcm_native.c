@@ -19,15 +19,26 @@
  */
 
 #include <linux/mm.h>
+<<<<<<< HEAD
 #include <linux/file.h>
 #include <linux/slab.h>
 #include <linux/time.h>
 #include <linux/pm_qos_params.h>
+=======
+#include <linux/module.h>
+#include <linux/file.h>
+#include <linux/slab.h>
+#include <linux/time.h>
+#include <linux/pm_qos.h>
+>>>>>>> cm-10.0
 #include <linux/uio.h>
 #include <linux/dma-mapping.h>
 #include <sound/core.h>
 #include <sound/control.h>
+<<<<<<< HEAD
 #include <sound/snd_compress_params.h>
+=======
+>>>>>>> cm-10.0
 #include <sound/compress_offload.h>
 #include <sound/info.h>
 #include <sound/pcm.h>
@@ -1530,7 +1541,11 @@ static int snd_compressed_ioctl(struct snd_pcm_substream *substream,
 	if (PCM_RUNTIME_CHECK(substream))
 		return -ENXIO;
 	runtime = substream->runtime;
+<<<<<<< HEAD
 	pr_err("%s called with cmd = %d\n", __func__, cmd);
+=======
+	pr_debug("%s called with cmd = %d\n", __func__, cmd);
+>>>>>>> cm-10.0
 	err = substream->ops->ioctl(substream, cmd, arg);
 	return err;
 }
@@ -1600,12 +1615,24 @@ static int snd_pcm_link(struct snd_pcm_substream *substream, int fd)
 	struct file *file;
 	struct snd_pcm_file *pcm_file;
 	struct snd_pcm_substream *substream1;
+<<<<<<< HEAD
+=======
+	struct snd_pcm_group *group;
+>>>>>>> cm-10.0
 
 	file = snd_pcm_file_fd(fd);
 	if (!file)
 		return -EBADFD;
 	pcm_file = file->private_data;
 	substream1 = pcm_file->substream;
+<<<<<<< HEAD
+=======
+	group = kmalloc(sizeof(*group), GFP_KERNEL);
+	if (!group) {
+		res = -ENOMEM;
+		goto _nolock;
+	}
+>>>>>>> cm-10.0
 	down_write(&snd_pcm_link_rwsem);
 	write_lock_irq(&snd_pcm_link_rwlock);
 	if (substream->runtime->status->state == SNDRV_PCM_STATE_OPEN ||
@@ -1618,11 +1645,15 @@ static int snd_pcm_link(struct snd_pcm_substream *substream, int fd)
 		goto _end;
 	}
 	if (!snd_pcm_stream_linked(substream)) {
+<<<<<<< HEAD
 		substream->group = kmalloc(sizeof(struct snd_pcm_group), GFP_ATOMIC);
 		if (substream->group == NULL) {
 			res = -ENOMEM;
 			goto _end;
 		}
+=======
+		substream->group = group;
+>>>>>>> cm-10.0
 		spin_lock_init(&substream->group->lock);
 		INIT_LIST_HEAD(&substream->group->substreams);
 		list_add_tail(&substream->link_list, &substream->group->substreams);
@@ -1634,7 +1665,14 @@ static int snd_pcm_link(struct snd_pcm_substream *substream, int fd)
  _end:
 	write_unlock_irq(&snd_pcm_link_rwlock);
 	up_write(&snd_pcm_link_rwsem);
+<<<<<<< HEAD
 	fput(file);
+=======
+ _nolock:
+	fput(file);
+	if (res < 0)
+		kfree(group);
+>>>>>>> cm-10.0
 	return res;
 }
 
@@ -2079,16 +2117,23 @@ EXPORT_SYMBOL(snd_pcm_open_substream);
 
 static int snd_pcm_open_file(struct file *file,
 			     struct snd_pcm *pcm,
+<<<<<<< HEAD
 			     int stream,
 			     struct snd_pcm_file **rpcm_file)
+=======
+			     int stream)
+>>>>>>> cm-10.0
 {
 	struct snd_pcm_file *pcm_file;
 	struct snd_pcm_substream *substream;
 	int err;
 
+<<<<<<< HEAD
 	if (rpcm_file)
 		*rpcm_file = NULL;
 
+=======
+>>>>>>> cm-10.0
 	err = snd_pcm_open_substream(pcm, stream, file, &substream);
 	if (err < 0)
 		return err;
@@ -2104,8 +2149,12 @@ static int snd_pcm_open_file(struct file *file,
 		substream->pcm_release = pcm_release_private;
 	}
 	file->private_data = pcm_file;
+<<<<<<< HEAD
 	if (rpcm_file)
 		*rpcm_file = pcm_file;
+=======
+
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -2134,7 +2183,10 @@ static int snd_pcm_capture_open(struct inode *inode, struct file *file)
 static int snd_pcm_open(struct file *file, struct snd_pcm *pcm, int stream)
 {
 	int err;
+<<<<<<< HEAD
 	struct snd_pcm_file *pcm_file;
+=======
+>>>>>>> cm-10.0
 	wait_queue_t wait;
 
 	if (pcm == NULL) {
@@ -2152,7 +2204,11 @@ static int snd_pcm_open(struct file *file, struct snd_pcm *pcm, int stream)
 	add_wait_queue(&pcm->open_wait, &wait);
 	mutex_lock(&pcm->open_mutex);
 	while (1) {
+<<<<<<< HEAD
 		err = snd_pcm_open_file(file, pcm, stream, &pcm_file);
+=======
+		err = snd_pcm_open_file(file, pcm, stream);
+>>>>>>> cm-10.0
 		if (err >= 0)
 			break;
 		if (err == -EAGAIN) {
@@ -2478,6 +2534,10 @@ static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
 	volatile struct snd_pcm_mmap_status *status;
 	volatile struct snd_pcm_mmap_control *control;
 	int err;
+<<<<<<< HEAD
+=======
+	snd_pcm_uframes_t hw_avail;
+>>>>>>> cm-10.0
 
 	memset(&sync_ptr, 0, sizeof(sync_ptr));
 	if (get_user(sync_ptr.flags, (unsigned __user *)&(_sync_ptr->flags)))
@@ -2500,6 +2560,19 @@ static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
 		control->avail_min = sync_ptr.c.control.avail_min;
 	else
 		sync_ptr.c.control.avail_min = control->avail_min;
+<<<<<<< HEAD
+=======
+
+	if (runtime->render_flag & SNDRV_NON_DMA_MODE) {
+		hw_avail = snd_pcm_playback_hw_avail(runtime);
+		if ((hw_avail >= runtime->start_threshold)
+			&& (runtime->render_flag &
+				SNDRV_RENDER_STOPPED)) {
+			if (substream->ops->restart)
+				substream->ops->restart(substream);
+		}
+	}
+>>>>>>> cm-10.0
 	sync_ptr.s.status.state = status->state;
 	sync_ptr.s.status.hw_ptr = status->hw_ptr;
 	sync_ptr.s.status.tstamp = status->tstamp;
@@ -2524,7 +2597,11 @@ static int snd_pcm_tstamp(struct snd_pcm_substream *substream, int __user *_arg)
 		runtime->tstamp_type = SNDRV_PCM_TSTAMP_TYPE_MONOTONIC;
 	return 0;
 }
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> cm-10.0
 static int snd_pcm_common_ioctl1(struct file *file,
 				 struct snd_pcm_substream *substream,
 				 unsigned int cmd, void __user *arg)
@@ -2593,6 +2670,10 @@ static int snd_pcm_common_ioctl1(struct file *file,
 	case SNDRV_COMPRESS_SET_PARAMS:
 	case SNDRV_COMPRESS_GET_PARAMS:
 	case SNDRV_COMPRESS_TSTAMP:
+<<<<<<< HEAD
+=======
+	case SNDRV_COMPRESS_DRAIN:
+>>>>>>> cm-10.0
 		return snd_compressed_ioctl(substream, cmd, arg);
 	}
 	snd_printd("unknown ioctl = 0x%x\n", cmd);
@@ -2780,7 +2861,11 @@ static long snd_pcm_capture_ioctl(struct file *file, unsigned int cmd,
 
 	pcm_file = file->private_data;
 
+<<<<<<< HEAD
 	if (((cmd >> 8) & 0xff) != 'A')
+=======
+	if ((((cmd >> 8) & 0xff) != 'A') && (((cmd >> 8) & 0xff) != 'C'))
+>>>>>>> cm-10.0
 		return -ENOTTY;
 
 	return snd_pcm_capture_ioctl1(file, pcm_file->substream, cmd,
@@ -3183,8 +3268,13 @@ static const struct vm_operations_struct snd_pcm_vm_ops_data_fault = {
 /*
  * mmap the DMA buffer on RAM
  */
+<<<<<<< HEAD
 static int snd_pcm_default_mmap(struct snd_pcm_substream *substream,
 				struct vm_area_struct *area)
+=======
+int snd_pcm_lib_default_mmap(struct snd_pcm_substream *substream,
+			     struct vm_area_struct *area)
+>>>>>>> cm-10.0
 {
 	area->vm_flags |= VM_RESERVED;
 #ifdef ARCH_HAS_DMA_MMAP_COHERENT
@@ -3204,6 +3294,10 @@ static int snd_pcm_default_mmap(struct snd_pcm_substream *substream,
 	area->vm_ops = &snd_pcm_vm_ops_data_fault;
 	return 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(snd_pcm_lib_default_mmap);
+>>>>>>> cm-10.0
 
 /*
  * mmap the DMA buffer on I/O memory area
@@ -3269,7 +3363,11 @@ int snd_pcm_mmap_data(struct snd_pcm_substream *substream, struct file *file,
 	if (substream->ops->mmap)
 		err = substream->ops->mmap(substream, area);
 	else
+<<<<<<< HEAD
 		err = snd_pcm_default_mmap(substream, area);
+=======
+		err = snd_pcm_lib_default_mmap(substream, area);
+>>>>>>> cm-10.0
 	if (!err)
 		atomic_inc(&substream->mmap_count);
 	return err;

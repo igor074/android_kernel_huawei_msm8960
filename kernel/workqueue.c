@@ -23,7 +23,11 @@
  * Please read Documentation/workqueue.txt for details.
  */
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/init.h>
@@ -221,7 +225,11 @@ typedef unsigned long mayday_mask_t;
  * per-CPU workqueues:
  */
 struct workqueue_struct {
+<<<<<<< HEAD
 	unsigned int		flags;		/* I: WQ_* flags */
+=======
+	unsigned int		flags;		/* W: WQ_* flags */
+>>>>>>> cm-10.0
 	union {
 		struct cpu_workqueue_struct __percpu	*pcpu;
 		struct cpu_workqueue_struct		*single;
@@ -240,11 +248,20 @@ struct workqueue_struct {
 	mayday_mask_t		mayday_mask;	/* cpus requesting rescue */
 	struct worker		*rescuer;	/* I: rescue worker */
 
+<<<<<<< HEAD
 	int			saved_max_active; /* W: saved cwq max_active */
 	const char		*name;		/* I: workqueue name */
 #ifdef CONFIG_LOCKDEP
 	struct lockdep_map	lockdep_map;
 #endif
+=======
+	int			nr_drainers;	/* W: drain in progress */
+	int			saved_max_active; /* W: saved cwq max_active */
+#ifdef CONFIG_LOCKDEP
+	struct lockdep_map	lockdep_map;
+#endif
+	char			name[];		/* I: workqueue name */
+>>>>>>> cm-10.0
 };
 
 struct workqueue_struct *system_wq __read_mostly;
@@ -252,11 +269,19 @@ struct workqueue_struct *system_long_wq __read_mostly;
 struct workqueue_struct *system_nrt_wq __read_mostly;
 struct workqueue_struct *system_unbound_wq __read_mostly;
 struct workqueue_struct *system_freezable_wq __read_mostly;
+<<<<<<< HEAD
+=======
+struct workqueue_struct *system_nrt_freezable_wq __read_mostly;
+>>>>>>> cm-10.0
 EXPORT_SYMBOL_GPL(system_wq);
 EXPORT_SYMBOL_GPL(system_long_wq);
 EXPORT_SYMBOL_GPL(system_nrt_wq);
 EXPORT_SYMBOL_GPL(system_unbound_wq);
 EXPORT_SYMBOL_GPL(system_freezable_wq);
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(system_nrt_freezable_wq);
+>>>>>>> cm-10.0
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/workqueue.h>
@@ -473,6 +498,7 @@ static struct cpu_workqueue_struct *get_cwq(unsigned int cpu,
 					    struct workqueue_struct *wq)
 {
 	if (!(wq->flags & WQ_UNBOUND)) {
+<<<<<<< HEAD
 		if (likely(cpu < nr_cpu_ids)) {
 #ifdef CONFIG_SMP
 			return per_cpu_ptr(wq->cpu_wq.pcpu, cpu);
@@ -480,6 +506,10 @@ static struct cpu_workqueue_struct *get_cwq(unsigned int cpu,
 			return wq->cpu_wq.single;
 #endif
 		}
+=======
+		if (likely(cpu < nr_cpu_ids))
+			return per_cpu_ptr(wq->cpu_wq.pcpu, cpu);
+>>>>>>> cm-10.0
 	} else if (likely(cpu == WORK_CPU_UNBOUND))
 		return wq->cpu_wq.single;
 	return NULL;
@@ -990,7 +1020,11 @@ static void __queue_work(unsigned int cpu, struct workqueue_struct *wq,
 	debug_work_activate(work);
 
 	/* if dying, only works from the same workqueue are allowed */
+<<<<<<< HEAD
 	if (unlikely(wq->flags & WQ_DYING) &&
+=======
+	if (unlikely(wq->flags & WQ_DRAINING) &&
+>>>>>>> cm-10.0
 	    WARN_ON_ONCE(!is_chained_work(wq)))
 		return;
 
@@ -2381,6 +2415,62 @@ out_unlock:
 }
 EXPORT_SYMBOL_GPL(flush_workqueue);
 
+<<<<<<< HEAD
+=======
+/**
+ * drain_workqueue - drain a workqueue
+ * @wq: workqueue to drain
+ *
+ * Wait until the workqueue becomes empty.  While draining is in progress,
+ * only chain queueing is allowed.  IOW, only currently pending or running
+ * work items on @wq can queue further work items on it.  @wq is flushed
+ * repeatedly until it becomes empty.  The number of flushing is detemined
+ * by the depth of chaining and should be relatively short.  Whine if it
+ * takes too long.
+ */
+void drain_workqueue(struct workqueue_struct *wq)
+{
+	unsigned int flush_cnt = 0;
+	unsigned int cpu;
+
+	/*
+	 * __queue_work() needs to test whether there are drainers, is much
+	 * hotter than drain_workqueue() and already looks at @wq->flags.
+	 * Use WQ_DRAINING so that queue doesn't have to check nr_drainers.
+	 */
+	spin_lock(&workqueue_lock);
+	if (!wq->nr_drainers++)
+		wq->flags |= WQ_DRAINING;
+	spin_unlock(&workqueue_lock);
+reflush:
+	flush_workqueue(wq);
+
+	for_each_cwq_cpu(cpu, wq) {
+		struct cpu_workqueue_struct *cwq = get_cwq(cpu, wq);
+		bool drained;
+
+		spin_lock_irq(&cwq->gcwq->lock);
+		drained = !cwq->nr_active && list_empty(&cwq->delayed_works);
+		spin_unlock_irq(&cwq->gcwq->lock);
+
+		if (drained)
+			continue;
+
+		if (++flush_cnt == 10 ||
+		    (flush_cnt % 100 == 0 && flush_cnt <= 1000))
+			pr_warning("workqueue %s: flush on destruction isn't complete after %u tries\n",
+				   wq->name, flush_cnt);
+		goto reflush;
+	}
+
+	spin_lock(&workqueue_lock);
+	if (!--wq->nr_drainers)
+		wq->flags &= ~WQ_DRAINING;
+	spin_unlock(&workqueue_lock);
+}
+EXPORT_SYMBOL_GPL(drain_workqueue);
+
+>>>>>>> cm-10.0
 static bool start_flush_work(struct work_struct *work, struct wq_barrier *barr,
 			     bool wait_executing)
 {
@@ -2843,6 +2933,7 @@ static int alloc_cwqs(struct workqueue_struct *wq)
 	const size_t size = sizeof(struct cpu_workqueue_struct);
 	const size_t align = max_t(size_t, 1 << WORK_STRUCT_FLAG_BITS,
 				   __alignof__(unsigned long long));
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	bool percpu = !(wq->flags & WQ_UNBOUND);
 #else
@@ -2850,6 +2941,10 @@ static int alloc_cwqs(struct workqueue_struct *wq)
 #endif
 
 	if (percpu)
+=======
+
+	if (!(wq->flags & WQ_UNBOUND))
+>>>>>>> cm-10.0
 		wq->cpu_wq.pcpu = __alloc_percpu(size, align);
 	else {
 		void *ptr;
@@ -2873,6 +2968,7 @@ static int alloc_cwqs(struct workqueue_struct *wq)
 
 static void free_cwqs(struct workqueue_struct *wq)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	bool percpu = !(wq->flags & WQ_UNBOUND);
 #else
@@ -2880,6 +2976,9 @@ static void free_cwqs(struct workqueue_struct *wq)
 #endif
 
 	if (percpu)
+=======
+	if (!(wq->flags & WQ_UNBOUND))
+>>>>>>> cm-10.0
 		free_percpu(wq->cpu_wq.pcpu);
 	else if (wq->cpu_wq.single) {
 		/* the pointer to free is stored right after the cwq */
@@ -2900,6 +2999,7 @@ static int wq_clamp_max_active(int max_active, unsigned int flags,
 	return clamp_val(max_active, 1, lim);
 }
 
+<<<<<<< HEAD
 struct workqueue_struct *__alloc_workqueue_key(const char *name,
 					       unsigned int flags,
 					       int max_active,
@@ -2908,6 +3008,31 @@ struct workqueue_struct *__alloc_workqueue_key(const char *name,
 {
 	struct workqueue_struct *wq;
 	unsigned int cpu;
+=======
+struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
+					       unsigned int flags,
+					       int max_active,
+					       struct lock_class_key *key,
+					       const char *lock_name, ...)
+{
+	va_list args, args1;
+	struct workqueue_struct *wq;
+	unsigned int cpu;
+	size_t namelen;
+
+	/* determine namelen, allocate wq and format name */
+	va_start(args, lock_name);
+	va_copy(args1, args);
+	namelen = vsnprintf(NULL, 0, fmt, args) + 1;
+
+	wq = kzalloc(sizeof(*wq) + namelen, GFP_KERNEL);
+	if (!wq)
+		goto err;
+
+	vsnprintf(wq->name, namelen, fmt, args1);
+	va_end(args);
+	va_end(args1);
+>>>>>>> cm-10.0
 
 	/*
 	 * Workqueues which may be used during memory reclaim should
@@ -2924,12 +3049,18 @@ struct workqueue_struct *__alloc_workqueue_key(const char *name,
 		flags |= WQ_HIGHPRI;
 
 	max_active = max_active ?: WQ_DFL_ACTIVE;
+<<<<<<< HEAD
 	max_active = wq_clamp_max_active(max_active, flags, name);
 
 	wq = kzalloc(sizeof(*wq), GFP_KERNEL);
 	if (!wq)
 		goto err;
 
+=======
+	max_active = wq_clamp_max_active(max_active, flags, wq->name);
+
+	/* init wq */
+>>>>>>> cm-10.0
 	wq->flags = flags;
 	wq->saved_max_active = max_active;
 	mutex_init(&wq->flush_mutex);
@@ -2937,7 +3068,10 @@ struct workqueue_struct *__alloc_workqueue_key(const char *name,
 	INIT_LIST_HEAD(&wq->flusher_queue);
 	INIT_LIST_HEAD(&wq->flusher_overflow);
 
+<<<<<<< HEAD
 	wq->name = name;
+=======
+>>>>>>> cm-10.0
 	lockdep_init_map(&wq->lockdep_map, lock_name, key, 0);
 	INIT_LIST_HEAD(&wq->list);
 
@@ -2966,7 +3100,12 @@ struct workqueue_struct *__alloc_workqueue_key(const char *name,
 		if (!rescuer)
 			goto err;
 
+<<<<<<< HEAD
 		rescuer->task = kthread_create(rescuer_thread, wq, "%s", name);
+=======
+		rescuer->task = kthread_create(rescuer_thread, wq, "%s",
+					       wq->name);
+>>>>>>> cm-10.0
 		if (IS_ERR(rescuer->task))
 			goto err;
 
@@ -3009,6 +3148,7 @@ EXPORT_SYMBOL_GPL(__alloc_workqueue_key);
  */
 void destroy_workqueue(struct workqueue_struct *wq)
 {
+<<<<<<< HEAD
 	unsigned int flush_cnt = 0;
 	unsigned int cpu;
 
@@ -3042,6 +3182,12 @@ reflush:
 			       wq->name, flush_cnt);
 		goto reflush;
 	}
+=======
+	unsigned int cpu;
+
+	/* drain it before proceeding with destruction */
+	drain_workqueue(wq);
+>>>>>>> cm-10.0
 
 	/*
 	 * wq list is used to freeze wq, remove from list after
@@ -3796,8 +3942,16 @@ static int __init init_workqueues(void)
 					    WQ_UNBOUND_MAX_ACTIVE);
 	system_freezable_wq = alloc_workqueue("events_freezable",
 					      WQ_FREEZABLE, 0);
+<<<<<<< HEAD
 	BUG_ON(!system_wq || !system_long_wq || !system_nrt_wq ||
 	       !system_unbound_wq || !system_freezable_wq);
+=======
+	system_nrt_freezable_wq = alloc_workqueue("events_nrt_freezable",
+			WQ_NON_REENTRANT | WQ_FREEZABLE, 0);
+	BUG_ON(!system_wq || !system_long_wq || !system_nrt_wq ||
+	       !system_unbound_wq || !system_freezable_wq ||
+		!system_nrt_freezable_wq);
+>>>>>>> cm-10.0
 	return 0;
 }
 early_initcall(init_workqueues);

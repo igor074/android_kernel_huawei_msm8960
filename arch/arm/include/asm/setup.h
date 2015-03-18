@@ -126,12 +126,15 @@ struct tag_cmdline {
 	char	cmdline[1];	/* this is the minimum size */
 };
 
+<<<<<<< HEAD
 /* runmode : factory / normal */
 #define ATAG_RUNMODE_FLAG  0x54410102
 
 bool is_runmode_factory(void);
 
 
+=======
+>>>>>>> cm-10.0
 /* acorn RiscPC specific information */
 #define ATAG_ACORN	0x41000101
 
@@ -193,12 +196,20 @@ struct tagtable {
 
 #define __tag __used __attribute__((__section__(".taglist.init")))
 #define __tagtable(tag, fn) \
+<<<<<<< HEAD
 static struct tagtable __tagtable_##fn __tag = { tag, fn }
+=======
+static const struct tagtable __tagtable_##fn __tag = { tag, fn }
+>>>>>>> cm-10.0
 
 /*
  * Memory map description
  */
+<<<<<<< HEAD
 #define NR_BANKS 8
+=======
+#define NR_BANKS	CONFIG_ARM_NR_BANKS
+>>>>>>> cm-10.0
 
 struct membank {
 	phys_addr_t start;

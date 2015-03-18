@@ -415,7 +415,11 @@ static void sctp_endpoint_bh_rcv(struct work_struct *work)
 	sctp_subtype_t subtype;
 	sctp_state_t state;
 	int error = 0;
+<<<<<<< HEAD
 	int first_time = 1;	/* is this the first time through the looop */
+=======
+	int first_time = 1;	/* is this the first time through the loop */
+>>>>>>> cm-10.0
 
 	if (ep->base.dead)
 		return;

@@ -29,7 +29,10 @@
 #include <linux/device.h>
 #include <linux/kthread.h>
 #include <linux/freezer.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/irq.h>
 
 #include <pcmcia/ss.h>

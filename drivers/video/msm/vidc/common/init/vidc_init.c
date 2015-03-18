@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -63,7 +67,11 @@ struct workqueue_struct *vidc_timer_wq;
 static irqreturn_t vidc_isr(int irq, void *dev);
 static spinlock_t vidc_spin_lock;
 
+<<<<<<< HEAD
 u32 vidc_msg_timing, vidc_msg_pmem;
+=======
+u32 vidc_msg_timing, vidc_msg_pmem, vidc_msg_register;
+>>>>>>> cm-10.0
 
 #ifdef VIDC_ENABLE_DBGFS
 struct dentry *vidc_debugfs_root;
@@ -311,6 +319,11 @@ static int __init vidc_init(void)
 				(u32 *) &vidc_msg_timing);
 		vidc_debugfs_file_create(root, "vidc_msg_pmem",
 				(u32 *) &vidc_msg_pmem);
+<<<<<<< HEAD
+=======
+		vidc_debugfs_file_create(root, "vidc_msg_register",
+				(u32 *) &vidc_msg_register);
+>>>>>>> cm-10.0
 	}
 #endif
 	return 0;
@@ -386,10 +399,20 @@ u32 vidc_get_fd_info(struct video_client_ctx *client_ctx,
 	else
 		buf_addr_table = client_ctx->output_buf_addr_table;
 	if (buf_addr_table[index].pmem_fd == pmem_fd) {
+<<<<<<< HEAD
 		if (buf_addr_table[index].kernel_vaddr == kvaddr)
 			rc = buf_addr_table[index].buff_ion_flag;
 			*buff_handle = buf_addr_table[index].buff_ion_handle;
 	}
+=======
+		if (buf_addr_table[index].kernel_vaddr == kvaddr) {
+			rc = buf_addr_table[index].buff_ion_flag;
+			*buff_handle = buf_addr_table[index].buff_ion_handle;
+		} else
+			*buff_handle = NULL;
+	} else
+		*buff_handle = NULL;
+>>>>>>> cm-10.0
 	return rc;
 }
 EXPORT_SYMBOL(vidc_get_fd_info);
@@ -427,7 +450,13 @@ void vidc_cleanup_addr_table(struct video_client_ctx *client_ctx,
 				ion_unmap_kernel(client_ctx->user_ion_client,
 						buf_addr_table[i].
 						buff_ion_handle);
+<<<<<<< HEAD
 				if (!res_trk_check_for_sec_session()) {
+=======
+				if (!res_trk_check_for_sec_session() &&
+				   (res_trk_get_core_type() !=
+				   (u32)VCD_CORE_720P)) {
+>>>>>>> cm-10.0
 					ion_unmap_iommu(
 						client_ctx->user_ion_client,
 						buf_addr_table[i].
@@ -451,7 +480,12 @@ void vidc_cleanup_addr_table(struct video_client_ctx *client_ctx,
 		if (!IS_ERR_OR_NULL(client_ctx->user_ion_client)) {
 			ion_unmap_kernel(client_ctx->user_ion_client,
 					client_ctx->h264_mv_ion_handle);
+<<<<<<< HEAD
 			if (!res_trk_check_for_sec_session()) {
+=======
+			if (!res_trk_check_for_sec_session() &&
+			    (res_trk_get_core_type() != (u32)VCD_CORE_720P)) {
+>>>>>>> cm-10.0
 				ion_unmap_iommu(client_ctx->user_ion_client,
 					client_ctx->h264_mv_ion_handle,
 					VIDEO_DOMAIN,
@@ -622,7 +656,11 @@ u32 vidc_insert_addr_table(struct video_client_ctx *client_ctx,
 			buf_addr_table[*num_of_buffers].dev_addr =
 				mapped_buffer->iova[0];
 		} else {
+<<<<<<< HEAD
 			buff_ion_handle = ion_import_fd(
+=======
+			buff_ion_handle = ion_import_dma_buf(
+>>>>>>> cm-10.0
 				client_ctx->user_ion_client, pmem_fd);
 			if (IS_ERR_OR_NULL(buff_ion_handle)) {
 				ERR("%s(): get_ION_handle failed\n",
@@ -641,13 +679,22 @@ u32 vidc_insert_addr_table(struct video_client_ctx *client_ctx,
 				client_ctx->user_ion_client,
 				buff_ion_handle,
 				ionflag);
+<<<<<<< HEAD
 			if (!(*kernel_vaddr)) {
+=======
+			if (IS_ERR_OR_NULL((void *)*kernel_vaddr)) {
+>>>>>>> cm-10.0
 				ERR("%s():ION virtual addr fail\n",
 				 __func__);
 				*kernel_vaddr = (unsigned long)NULL;
 				goto ion_free_error;
 			}
+<<<<<<< HEAD
 			if (res_trk_check_for_sec_session()) {
+=======
+			if (res_trk_check_for_sec_session() ||
+			   (res_trk_get_core_type() == (u32)VCD_CORE_720P)) {
+>>>>>>> cm-10.0
 				if (ion_phys(client_ctx->user_ion_client,
 					buff_ion_handle,
 					&phys_addr, &ion_len)) {
@@ -671,9 +718,16 @@ u32 vidc_insert_addr_table(struct video_client_ctx *client_ctx,
 						(unsigned long *) &buffer_size,
 						UNCACHED,
 						ION_IOMMU_UNMAP_DELAYED);
+<<<<<<< HEAD
 				if (ret) {
 					ERR("%s():ION iommu map fail\n",
 					 __func__);
+=======
+				if (ret || !iova) {
+					ERR(
+					"%s():ION iommu map fail, ret = %d, iova = 0x%lx\n",
+						__func__, ret, iova);
+>>>>>>> cm-10.0
 					goto ion_map_error;
 				}
 				phys_addr = iova;
@@ -775,7 +829,11 @@ u32 vidc_insert_addr_table_kernel(struct video_client_ctx *client_ctx,
 		*num_of_buffers = *num_of_buffers + 1;
 		DBG("%s() : client_ctx = %p, user_virt_addr = 0x%08lx, "
 			"kernel_vaddr = 0x%08lx inserted!", __func__,
+<<<<<<< HEAD
 			client_ctx, user_vaddr, *kernel_vaddr);
+=======
+			client_ctx, user_vaddr, kernel_vaddr);
+>>>>>>> cm-10.0
 	}
 	mutex_unlock(&client_ctx->enrty_queue_lock);
 	return true;
@@ -828,7 +886,12 @@ u32 vidc_delete_addr_table(struct video_client_ctx *client_ctx,
 	if (buf_addr_table[i].buff_ion_handle) {
 		ion_unmap_kernel(client_ctx->user_ion_client,
 				buf_addr_table[i].buff_ion_handle);
+<<<<<<< HEAD
 		if (!res_trk_check_for_sec_session()) {
+=======
+		if (!res_trk_check_for_sec_session() &&
+		   (res_trk_get_core_type() != (u32)VCD_CORE_720P)) {
+>>>>>>> cm-10.0
 			ion_unmap_iommu(client_ctx->user_ion_client,
 				buf_addr_table[i].buff_ion_handle,
 				VIDEO_DOMAIN,

@@ -3,7 +3,11 @@
  * Verificion code for aDSP VDEC packets from userspace.
  *
  * Copyright (C) 2008 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2008-2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2010, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -55,7 +59,11 @@ static int pmem_fixup_high_low(unsigned short *high,
 	MM_DBG("virt %x %x\n", (unsigned int)phys_addr,
 			(unsigned int)phys_size);
 	if (phys_addr) {
+<<<<<<< HEAD
 		if (adsp_pmem_fixup_kvaddr(module, &phys_addr,
+=======
+		if (adsp_ion_fixup_kvaddr(module, &phys_addr,
+>>>>>>> cm-10.0
 			 &kvaddr, phys_size, filp, offset)) {
 			MM_ERR("ah%x al%x sh%x sl%x addr %x size %x\n",
 					*high, *low, size_high,
@@ -77,6 +85,10 @@ static int pmem_fixup_high_low(unsigned short *high,
 static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 			       void *cmd_data, size_t cmd_size)
 {
+<<<<<<< HEAD
+=======
+	void *phys_addr;
+>>>>>>> cm-10.0
 	unsigned short cmd_id = ((unsigned short *)cmd_data)[0];
 	viddec_cmd_subframe_pkt *pkt;
 	unsigned long subframe_pkt_addr;
@@ -89,7 +101,10 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 	unsigned short frame_buffer_size_high, frame_buffer_size_low;
 	struct file *filp = NULL;
 	unsigned long offset = 0;
+<<<<<<< HEAD
 	struct pmem_addr pmem_addr;
+=======
+>>>>>>> cm-10.0
 	unsigned long Codec_Id = 0;
 
 	MM_DBG("cmd_size %d cmd_id %d cmd_data %x\n", cmd_size, cmd_id,
@@ -102,6 +117,11 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 		return -1;
 
 	pkt = (viddec_cmd_subframe_pkt *)cmd_data;
+<<<<<<< HEAD
+=======
+	phys_addr = high_low_short_to_ptr(pkt->subframe_packet_high,
+				pkt->subframe_packet_low);
+>>>>>>> cm-10.0
 
 	if (pmem_fixup_high_low(&(pkt->subframe_packet_high),
 				&(pkt->subframe_packet_low),
@@ -114,6 +134,7 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 		return -1;
 	Codec_Id = pkt->codec_selection_word;
 	/*Invalidate cache before accessing the cached pmem buffer*/
+<<<<<<< HEAD
 	if (filp) {
 		pmem_addr.vaddr = subframe_pkt_addr;
 		pmem_addr.length = (((subframe_pkt_size*2) + 31) & (~31)) + 32;
@@ -124,6 +145,14 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 				pkt->subframe_packet_low);
 			return -EINVAL;
 		}
+=======
+	if (adsp_ion_do_cache_op(module, phys_addr, (void *)subframe_pkt_addr,
+		subframe_pkt_size*2, offset, ION_IOC_INV_CACHES)){
+		MM_ERR("Cache operation failed for" \
+			" phys addr high %x addr low %x\n",
+			pkt->subframe_packet_high, pkt->subframe_packet_low);
+		return -EINVAL;
+>>>>>>> cm-10.0
 	}
 	/* deref those ptrs and check if they are a frame header packet */
 	frame_header_pkt = (unsigned short *)subframe_pkt_addr;
@@ -241,6 +270,7 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 			frame_buffer_low += 2;
 		}
 	}
+<<<<<<< HEAD
 	/*Flush the cached pmem subframe packet before sending to DSP*/
 	if (filp) {
 		pmem_addr.vaddr = subframe_pkt_addr;
@@ -254,6 +284,16 @@ static int verify_vdec_pkt_cmd(struct msm_adsp_module *module,
 		}
 	}
 
+=======
+	/*Flush the cached mem subframe packet before sending to DSP*/
+	if (adsp_ion_do_cache_op(module,  phys_addr, (void *)subframe_pkt_addr,
+		MAX_FLUSH_SIZE, offset, ION_IOC_CLEAN_CACHES)){
+		MM_ERR("Cache operation failed for" \
+			" phys addr high %x addr low %x\n",
+			pkt->subframe_packet_high, pkt->subframe_packet_low);
+		return -EINVAL;
+	}
+>>>>>>> cm-10.0
 	return 0;
 }
 

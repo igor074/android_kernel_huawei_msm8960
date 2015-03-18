@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2009, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -73,13 +77,33 @@ static struct msm_fb_data_type *vsync_mfd;
 static unsigned char timer_shutdown_flag;
 static uint32 vsync_cnt_cfg;
 
+<<<<<<< HEAD
+=======
+
+void vsync_clk_prepare_enable(void)
+{
+	if (mdp_vsync_clk)
+		clk_prepare_enable(mdp_vsync_clk);
+}
+
+void vsync_clk_disable_unprepare(void)
+{
+	if (mdp_vsync_clk)
+		clk_disable_unprepare(mdp_vsync_clk);
+}
+
+>>>>>>> cm-10.0
 void mdp_hw_vsync_clk_enable(struct msm_fb_data_type *mfd)
 {
 	if (vsync_clk_status == 1)
 		return;
 	mutex_lock(&vsync_clk_lock);
 	if (mfd->use_mdp_vsync) {
+<<<<<<< HEAD
 		clk_enable(mdp_vsync_clk);
+=======
+		clk_prepare_enable(mdp_vsync_clk);
+>>>>>>> cm-10.0
 		vsync_clk_status = 1;
 	}
 	mutex_unlock(&vsync_clk_lock);
@@ -91,7 +115,11 @@ void mdp_hw_vsync_clk_disable(struct msm_fb_data_type *mfd)
 		return;
 	mutex_lock(&vsync_clk_lock);
 	if (mfd->use_mdp_vsync) {
+<<<<<<< HEAD
 		clk_disable(mdp_vsync_clk);
+=======
+		clk_disable_unprepare(mdp_vsync_clk);
+>>>>>>> cm-10.0
 		vsync_clk_status = 0;
 	}
 	mutex_unlock(&vsync_clk_lock);
@@ -255,9 +283,13 @@ void mdp_vsync_cfg_regs(struct msm_fb_data_type *mfd,
 	 * load the last line + 1 to be in the
 	 * safety zone
 	 */
+<<<<<<< HEAD
 
     /*Modify the parameter according to the te position from the panel*/
 	vsync_load_cnt = mfd->panel_info.yres/2;
+=======
+	vsync_load_cnt = mfd->panel_info.yres;
+>>>>>>> cm-10.0
 
 	/* line counter init value at the next pulse */
 	MDP_OUTP(MDP_BASE + MDP_PRIM_VSYNC_INIT_VAL,
@@ -293,7 +325,12 @@ void mdp_vsync_cfg_regs(struct msm_fb_data_type *mfd,
 }
 #endif
 
+<<<<<<< HEAD
 void mdp_config_vsync(struct msm_fb_data_type *mfd)
+=======
+void mdp_config_vsync(struct platform_device *pdev,
+	struct msm_fb_data_type *mfd)
+>>>>>>> cm-10.0
 {
 	/* vsync on primary lcd only for now */
 	if ((mfd->dest != DISPLAY_LCD) || (mfd->panel_info.pdest != DISPLAY_1)
@@ -316,7 +353,11 @@ void mdp_config_vsync(struct msm_fb_data_type *mfd)
 
 #ifdef MDP_HW_VSYNC
 		if (mdp_vsync_clk == NULL)
+<<<<<<< HEAD
 			mdp_vsync_clk = clk_get(NULL, "mdp_vsync_clk");
+=======
+			mdp_vsync_clk = clk_get(&pdev->dev, "vsync_clk");
+>>>>>>> cm-10.0
 
 		if (IS_ERR(mdp_vsync_clk)) {
 			printk(KERN_ERR "error: can't get mdp_vsync_clk!\n");

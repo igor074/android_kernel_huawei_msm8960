@@ -14,6 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <asm/unaligned.h>
 
 #include "ath.h"

@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 /*
  *  linux/drivers/mmc/core/host.c
  *
@@ -18,6 +21,10 @@
 #include <linux/err.h>
 #include <linux/idr.h>
 #include <linux/pagemap.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/leds.h>
 #include <linux/slab.h>
 #include <linux/suspend.h>
@@ -27,10 +34,13 @@
 
 #include "core.h"
 #include "host.h"
+<<<<<<< HEAD
 #ifdef CONFIG_BCMDHD
 #include "mmc_wifi.h"
 static struct mmc_host *sdio_host = NULL;
 #endif
+=======
+>>>>>>> cm-10.0
 
 #define cls_dev_to_mmc_host(d)	container_of(d, struct mmc_host, class_dev)
 
@@ -63,7 +73,11 @@ static ssize_t clkgate_delay_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
 	struct mmc_host *host = cls_dev_to_mmc_host(dev);
+<<<<<<< HEAD
 	return snprintf(buf, PAGE_SIZE, "%lu millisecs\n",
+=======
+	return snprintf(buf, PAGE_SIZE, "%lu\n",
+>>>>>>> cm-10.0
 			host->clkgate_delay);
 }
 
@@ -247,10 +261,17 @@ static inline void mmc_host_clk_init(struct mmc_host *host)
 	/* Hold MCI clock for 8 cycles by default */
 	host->clk_delay = 8;
 	/*
+<<<<<<< HEAD
 	 * Default clock gating delay is value is 200ms.
 	 * This value can be tuned by writing into sysfs entry.
 	 */
 	host->clkgate_delay = 200;
+=======
+	 * Default clock gating delay is 0ms to avoid wasting power.
+	 * This value can be tuned by writing into sysfs entry.
+	 */
+	host->clkgate_delay = 0;
+>>>>>>> cm-10.0
 	host->clk_gated = false;
 	INIT_DELAYED_WORK(&host->clk_gate_work, mmc_host_clk_gate_work);
 	spin_lock_init(&host->clk_lock);
@@ -299,6 +320,10 @@ static inline void mmc_host_clk_exit(struct mmc_host *host)
 static inline void mmc_host_clk_sysfs_init(struct mmc_host *host)
 {
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 #endif
 
 /**
@@ -340,7 +365,10 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 	wake_lock_init(&host->detect_wake_lock, WAKE_LOCK_SUSPEND,
 		kasprintf(GFP_KERNEL, "%s_detect", mmc_hostname(host)));
 	INIT_DELAYED_WORK(&host->detect, mmc_rescan);
+<<<<<<< HEAD
 	INIT_DELAYED_WORK_DEFERRABLE(&host->disable, mmc_host_deeper_disable);
+=======
+>>>>>>> cm-10.0
 #ifdef CONFIG_PM
 	host->pm_notify.notifier_call = mmc_pm_notify;
 #endif
@@ -369,6 +397,7 @@ static ssize_t
 show_perf(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct mmc_host *host = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	int64_t rtime_mmcq, wtime_mmcq, rtime_drv, wtime_drv;
 	unsigned long rbytes_mmcq, wbytes_mmcq, rbytes_drv, wbytes_drv;
 
@@ -381,11 +410,22 @@ show_perf(struct device *dev, struct device_attribute *attr, char *buf)
 
 	rtime_mmcq = ktime_to_us(host->perf.rtime_mmcq);
 	wtime_mmcq = ktime_to_us(host->perf.wtime_mmcq);
+=======
+	int64_t rtime_drv, wtime_drv;
+	unsigned long rbytes_drv, wbytes_drv;
+
+	spin_lock(&host->lock);
+
+	rbytes_drv = host->perf.rbytes_drv;
+	wbytes_drv = host->perf.wbytes_drv;
+
+>>>>>>> cm-10.0
 	rtime_drv = ktime_to_us(host->perf.rtime_drv);
 	wtime_drv = ktime_to_us(host->perf.wtime_drv);
 
 	spin_unlock(&host->lock);
 
+<<<<<<< HEAD
 	return snprintf(buf, PAGE_SIZE, "Write performance at MMCQ Level:"
 					"%lu bytes in %lld microseconds\n"
 					"Read performance at MMCQ Level:"
@@ -396,6 +436,13 @@ show_perf(struct device *dev, struct device_attribute *attr, char *buf)
 					"%lu bytes in %lld microseconds\n",
 					wbytes_mmcq, wtime_mmcq, rbytes_mmcq,
 					rtime_mmcq, wbytes_drv, wtime_drv,
+=======
+	return snprintf(buf, PAGE_SIZE, "Write performance at driver Level:"
+					"%lu bytes in %lld microseconds\n"
+					"Read performance at driver Level:"
+					"%lu bytes in %lld microseconds\n",
+					wbytes_drv, wtime_drv,
+>>>>>>> cm-10.0
 					rbytes_drv, rtime_drv);
 }
 
@@ -434,6 +481,7 @@ static struct attribute_group dev_attr_grp = {
 	.attrs = dev_attrs,
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_BCMDHD
 
 /* normal flow of mmc device:
@@ -489,6 +537,8 @@ void bcm_detect_card(int n)
 EXPORT_SYMBOL(bcm_detect_card);
 #endif
 
+=======
+>>>>>>> cm-10.0
 /**
  *	mmc_add_host - initialise host hardware
  *	@host: mmc host
@@ -524,11 +574,14 @@ int mmc_add_host(struct mmc_host *host)
 	if (!(host->pm_flags & MMC_PM_IGNORE_PM_NOTIFY))
 		register_pm_notifier(&host->pm_notify);
 
+<<<<<<< HEAD
 #ifdef CONFIG_BCMDHD
 	select_sdio_host(host, 1);
 #endif
 
 //printk("shaohua add check host %p \n", host);
+=======
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -547,10 +600,13 @@ void mmc_remove_host(struct mmc_host *host)
 	if (!(host->pm_flags & MMC_PM_IGNORE_PM_NOTIFY))
 		unregister_pm_notifier(&host->pm_notify);
 
+<<<<<<< HEAD
 #ifdef CONFIG_BCMDHD
 	select_sdio_host(host, 0);
 #endif
 
+=======
+>>>>>>> cm-10.0
 	mmc_stop_host(host);
 
 #ifdef CONFIG_DEBUG_FS

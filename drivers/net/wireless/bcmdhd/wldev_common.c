@@ -1,9 +1,15 @@
 /*
  * Common function shared by Linux WEXT, cfg80211 and p2p drivers
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -24,12 +30,21 @@
  * $Id: wldev_common.c,v 1.1.4.1.2.14 2011-02-09 01:40:07 $
  */
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <osl.h>
+#include <linux/kernel.h>
+#include <linux/kthread.h>
+>>>>>>> cm-10.0
 #include <linux/netdevice.h>
 
 #include <wldev_common.h>
 #include <bcmutils.h>
+<<<<<<< HEAD
 #include <dhd_dbg.h>
+=======
+>>>>>>> cm-10.0
 
 #define htod32(i) i
 #define htod16(i) i
@@ -37,6 +52,16 @@
 #define dtoh16(i) i
 #define htodchanspec(i) i
 #define dtohchanspec(i) i
+<<<<<<< HEAD
+=======
+
+#define	WLDEV_ERROR(args)						\
+	do {										\
+		printk(KERN_ERR "WLDEV-ERROR) %s : ", __func__);	\
+		printk args;							\
+	} while (0)
+
+>>>>>>> cm-10.0
 extern int dhd_ioctl_entry_local(struct net_device *net, wl_ioctl_t *ioc, int cmd);
 
 s32 wldev_ioctl(
@@ -45,6 +70,10 @@ s32 wldev_ioctl(
 	s32 ret = 0;
 	struct wl_ioctl ioc;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 	memset(&ioc, 0, sizeof(ioc));
 	ioc.cmd = cmd;
 	ioc.buf = arg;
@@ -52,6 +81,10 @@ s32 wldev_ioctl(
 	ioc.set = set;
 
 	ret = dhd_ioctl_entry_local(dev, &ioc, cmd);
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -71,6 +104,7 @@ static s32 wldev_mkiovar(
 
 s32 wldev_iovar_getbuf(
 	struct net_device *dev, s8 *iovar_name,
+<<<<<<< HEAD
 	void *param, s32 paramlen, void *buf, s32 buflen)
 {
 	s32 ret = 0;
@@ -78,12 +112,25 @@ s32 wldev_iovar_getbuf(
 
 	iovar_len = wldev_mkiovar(iovar_name, param, paramlen, buf, buflen);
 	ret = wldev_ioctl(dev, WLC_GET_VAR, buf, buflen, FALSE);
+=======
+	void *param, s32 paramlen, void *buf, s32 buflen, struct mutex* buf_sync)
+{
+	s32 ret = 0;
+	if (buf_sync) {
+		mutex_lock(buf_sync);
+	}
+	wldev_mkiovar(iovar_name, param, paramlen, buf, buflen);
+	ret = wldev_ioctl(dev, WLC_GET_VAR, buf, buflen, FALSE);
+	if (buf_sync)
+		mutex_unlock(buf_sync);
+>>>>>>> cm-10.0
 	return ret;
 }
 
 
 s32 wldev_iovar_setbuf(
 	struct net_device *dev, s8 *iovar_name,
+<<<<<<< HEAD
 	void *param, s32 paramlen, void *buf, s32 buflen)
 {
 	s32 ret = 0;
@@ -91,6 +138,19 @@ s32 wldev_iovar_setbuf(
 
 	iovar_len = wldev_mkiovar(iovar_name, param, paramlen, buf, buflen);
 	ret = wldev_ioctl(dev, WLC_SET_VAR, buf, iovar_len, TRUE);
+=======
+	void *param, s32 paramlen, void *buf, s32 buflen, struct mutex* buf_sync)
+{
+	s32 ret = 0;
+	s32 iovar_len;
+	if (buf_sync) {
+		mutex_lock(buf_sync);
+	}
+	iovar_len = wldev_mkiovar(iovar_name, param, paramlen, buf, buflen);
+	ret = wldev_ioctl(dev, WLC_SET_VAR, buf, iovar_len, TRUE);
+	if (buf_sync)
+		mutex_unlock(buf_sync);
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -102,7 +162,11 @@ s32 wldev_iovar_setint(
 	val = htod32(val);
 	memset(iovar_buf, 0, sizeof(iovar_buf));
 	return wldev_iovar_setbuf(dev, iovar, &val, sizeof(val), iovar_buf,
+<<<<<<< HEAD
 		sizeof(iovar_buf));
+=======
+		sizeof(iovar_buf), NULL);
+>>>>>>> cm-10.0
 }
 
 
@@ -114,7 +178,11 @@ s32 wldev_iovar_getint(
 
 	memset(iovar_buf, 0, sizeof(iovar_buf));
 	err = wldev_iovar_getbuf(dev, iovar, pval, sizeof(*pval), iovar_buf,
+<<<<<<< HEAD
 		sizeof(iovar_buf));
+=======
+		sizeof(iovar_buf), NULL);
+>>>>>>> cm-10.0
 	if (err == 0)
 	{
 		memcpy(pval, iovar_buf, sizeof(*pval));
@@ -148,7 +216,11 @@ s32 wldev_mkiovar_bsscfg(
 
 	if (buflen < 0 || iolen > (u32)buflen)
 	{
+<<<<<<< HEAD
 		DHD_ERROR(("%s: buffer is too short\n", __FUNCTION__));
+=======
+		WLDEV_ERROR(("%s: buffer is too short\n", __FUNCTION__));
+>>>>>>> cm-10.0
 		return BCME_BUFTOOSHORT;
 	}
 
@@ -177,6 +249,7 @@ s32 wldev_mkiovar_bsscfg(
 
 s32 wldev_iovar_getbuf_bsscfg(
 	struct net_device *dev, s8 *iovar_name,
+<<<<<<< HEAD
 	void *param, s32 paramlen, void *buf, s32 buflen, s32 bsscfg_idx)
 {
 	s32 ret = 0;
@@ -184,12 +257,27 @@ s32 wldev_iovar_getbuf_bsscfg(
 
 	iovar_len = wldev_mkiovar_bsscfg(iovar_name, param, paramlen, buf, buflen, bsscfg_idx);
 	ret = wldev_ioctl(dev, WLC_GET_VAR, buf, buflen, FALSE);
+=======
+	void *param, s32 paramlen, void *buf, s32 buflen, s32 bsscfg_idx, struct mutex* buf_sync)
+{
+	s32 ret = 0;
+	if (buf_sync) {
+		mutex_lock(buf_sync);
+	}
+
+	wldev_mkiovar_bsscfg(iovar_name, param, paramlen, buf, buflen, bsscfg_idx);
+	ret = wldev_ioctl(dev, WLC_GET_VAR, buf, buflen, FALSE);
+	if (buf_sync) {
+		mutex_unlock(buf_sync);
+	}
+>>>>>>> cm-10.0
 	return ret;
 
 }
 
 s32 wldev_iovar_setbuf_bsscfg(
 	struct net_device *dev, s8 *iovar_name,
+<<<<<<< HEAD
 	void *param, s32 paramlen, void *buf, s32 buflen, s32 bsscfg_idx)
 {
 	s32 ret = 0;
@@ -197,6 +285,20 @@ s32 wldev_iovar_setbuf_bsscfg(
 
 	iovar_len = wldev_mkiovar_bsscfg(iovar_name, param, paramlen, buf, buflen, bsscfg_idx);
 	ret = wldev_ioctl(dev, WLC_SET_VAR, buf, iovar_len, TRUE);
+=======
+	void *param, s32 paramlen, void *buf, s32 buflen, s32 bsscfg_idx, struct mutex* buf_sync)
+{
+	s32 ret = 0;
+	s32 iovar_len;
+	if (buf_sync) {
+		mutex_lock(buf_sync);
+	}
+	iovar_len = wldev_mkiovar_bsscfg(iovar_name, param, paramlen, buf, buflen, bsscfg_idx);
+	ret = wldev_ioctl(dev, WLC_SET_VAR, buf, iovar_len, TRUE);
+	if (buf_sync) {
+		mutex_unlock(buf_sync);
+	}
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -208,7 +310,11 @@ s32 wldev_iovar_setint_bsscfg(
 	val = htod32(val);
 	memset(iovar_buf, 0, sizeof(iovar_buf));
 	return wldev_iovar_setbuf_bsscfg(dev, iovar, &val, sizeof(val), iovar_buf,
+<<<<<<< HEAD
 		sizeof(iovar_buf), bssidx);
+=======
+		sizeof(iovar_buf), bssidx, NULL);
+>>>>>>> cm-10.0
 }
 
 
@@ -220,7 +326,11 @@ s32 wldev_iovar_getint_bsscfg(
 
 	memset(iovar_buf, 0, sizeof(iovar_buf));
 	err = wldev_iovar_getbuf_bsscfg(dev, iovar, pval, sizeof(*pval), iovar_buf,
+<<<<<<< HEAD
 		sizeof(iovar_buf), bssidx);
+=======
+		sizeof(iovar_buf), bssidx, NULL);
+>>>>>>> cm-10.0
 	if (err == 0)
 	{
 		memcpy(pval, iovar_buf, sizeof(*pval));
@@ -309,16 +419,26 @@ int wldev_set_country(
 		return error;
 
 	error = wldev_iovar_getbuf(dev, "country", &cspec, sizeof(cspec),
+<<<<<<< HEAD
 		smbuf, sizeof(smbuf));
 	if (error < 0)
 		DHD_ERROR(("%s: get country failed = %d\n", __FUNCTION__, error));
+=======
+		smbuf, sizeof(smbuf), NULL);
+	if (error < 0)
+		WLDEV_ERROR(("%s: get country failed = %d\n", __FUNCTION__, error));
+>>>>>>> cm-10.0
 
 	if ((error < 0) ||
 	    (strncmp(country_code, smbuf, WLC_CNTRY_BUF_SZ) != 0)) {
 		bzero(&scbval, sizeof(scb_val_t));
 		error = wldev_ioctl(dev, WLC_DISASSOC, &scbval, sizeof(scb_val_t), 1);
 		if (error < 0) {
+<<<<<<< HEAD
 			DHD_ERROR(("%s: set country failed due to Disassoc error %d\n",
+=======
+			WLDEV_ERROR(("%s: set country failed due to Disassoc error %d\n",
+>>>>>>> cm-10.0
 				__FUNCTION__, error));
 			return error;
 		}
@@ -328,14 +448,24 @@ int wldev_set_country(
 	memcpy(cspec.ccode, country_code, WLC_CNTRY_BUF_SZ);
 	get_customized_country_code((char *)&cspec.country_abbrev, &cspec);
 	error = wldev_iovar_setbuf(dev, "country", &cspec, sizeof(cspec),
+<<<<<<< HEAD
 		smbuf, sizeof(smbuf));
 	if (error < 0) {
 		DHD_ERROR(("%s: set country for %s as %s rev %d failed\n",
+=======
+		smbuf, sizeof(smbuf), NULL);
+	if (error < 0) {
+		WLDEV_ERROR(("%s: set country for %s as %s rev %d failed\n",
+>>>>>>> cm-10.0
 			__FUNCTION__, country_code, cspec.ccode, cspec.rev));
 		return error;
 	}
 	dhd_bus_country_set(dev, &cspec);
+<<<<<<< HEAD
 	DHD_INFO(("%s: set country for %s as %s rev %d\n",
+=======
+	WLDEV_ERROR(("%s: set country for %s as %s rev %d\n",
+>>>>>>> cm-10.0
 		__FUNCTION__, country_code, cspec.ccode, cspec.rev));
 	return 0;
 }

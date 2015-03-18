@@ -6,7 +6,10 @@
  *
  * Licence: GPL
  */
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/blkdev.h>
@@ -15,7 +18,10 @@
 #include <linux/list.h>
 #include <linux/init.h>
 #include <linux/mtd/mtd.h>
+<<<<<<< HEAD
 #include <linux/buffer_head.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/mutex.h>
 #include <linux/mount.h>
 #include <linux/slab.h>
@@ -106,6 +112,7 @@ static int block2mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
 	int offset = from & (PAGE_SIZE-1);
 	int cpylen;
 
+<<<<<<< HEAD
 	if (from > mtd->size)
 		return -EINVAL;
 	if (from + len > mtd->size)
@@ -114,6 +121,8 @@ static int block2mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
 	if (retlen)
 		*retlen = 0;
 
+=======
+>>>>>>> cm-10.0
 	while (len) {
 		if ((offset + len) > PAGE_SIZE)
 			cpylen = PAGE_SIZE - offset;	// multiple pages
@@ -150,8 +159,11 @@ static int _block2mtd_write(struct block2mtd_dev *dev, const u_char *buf,
 	int offset = to & ~PAGE_MASK;	// page offset
 	int cpylen;
 
+<<<<<<< HEAD
 	if (retlen)
 		*retlen = 0;
+=======
+>>>>>>> cm-10.0
 	while (len) {
 		if ((offset+len) > PAGE_SIZE)
 			cpylen = PAGE_SIZE - offset;	// multiple pages
@@ -190,6 +202,7 @@ static int block2mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
 	struct block2mtd_dev *dev = mtd->priv;
 	int err;
 
+<<<<<<< HEAD
 	if (!len)
 		return 0;
 	if (to >= mtd->size)
@@ -197,6 +210,8 @@ static int block2mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
 	if (to + len > mtd->size)
 		len = mtd->size - to;
 
+=======
+>>>>>>> cm-10.0
 	mutex_lock(&dev->write_mutex);
 	err = _block2mtd_write(dev, buf, to, len, retlen);
 	mutex_unlock(&dev->write_mutex);
@@ -284,6 +299,7 @@ static struct block2mtd_dev *add_device(char *devname, int erase_size)
 
 	dev->mtd.size = dev->blkdev->bd_inode->i_size & PAGE_MASK;
 	dev->mtd.erasesize = erase_size;
+<<<<<<< HEAD
 	dev->mtd.writesize = 4096;
 	dev->mtd.type = MTD_RAM;
 	dev->mtd.flags = MTD_CAP_RAM;
@@ -293,6 +309,17 @@ static struct block2mtd_dev *add_device(char *devname, int erase_size)
 	dev->mtd.writev = default_mtd_writev;
 	dev->mtd.sync = block2mtd_sync;
 	dev->mtd.read = block2mtd_read;
+=======
+	dev->mtd.writesize = 1;
+	dev->mtd.writebufsize = PAGE_SIZE;
+	dev->mtd.type = MTD_RAM;
+	dev->mtd.flags = MTD_CAP_RAM;
+	dev->mtd._erase = block2mtd_erase;
+	dev->mtd._write = block2mtd_write;
+	dev->mtd._writev = mtd_writev;
+	dev->mtd._sync = block2mtd_sync;
+	dev->mtd._read = block2mtd_read;
+>>>>>>> cm-10.0
 	dev->mtd.priv = dev;
 	dev->mtd.owner = THIS_MODULE;
 
@@ -442,7 +469,11 @@ static int block2mtd_setup(const char *val, struct kernel_param *kp)
 }
 
 
+<<<<<<< HEAD
 module_param_call(block2mtd, block2mtd_setup, NULL, NULL, 0600);
+=======
+module_param_call(block2mtd, block2mtd_setup, NULL, NULL, 0200);
+>>>>>>> cm-10.0
 MODULE_PARM_DESC(block2mtd, "Device to use. \"block2mtd=<dev>[,<erasesize>]\"");
 
 static int __init block2mtd_init(void)

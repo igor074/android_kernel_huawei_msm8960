@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -90,7 +94,11 @@
 
 #define MODULE_NAME "msm_cache_erp"
 
+<<<<<<< HEAD
 #define ERP_LOG_MAGIC_ADDR	0x748
+=======
+#define ERP_LOG_MAGIC_ADDR	0x6A4
+>>>>>>> cm-10.0
 #define ERP_LOG_MAGIC		0x11C39893
 
 struct msm_l1_err_stats {
@@ -256,6 +264,11 @@ static irqreturn_t msm_l1_erp_irq(int irq, void *dev_id)
 	void *const saw_bases[] = {
 		MSM_SAW0_BASE,
 		MSM_SAW1_BASE,
+<<<<<<< HEAD
+=======
+		MSM_SAW2_BASE,
+		MSM_SAW3_BASE,
+>>>>>>> cm-10.0
 	};
 
 	if (print_regs) {

@@ -12,6 +12,10 @@
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include <asm/pgalloc.h>
 

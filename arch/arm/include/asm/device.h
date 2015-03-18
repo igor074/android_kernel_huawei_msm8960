@@ -10,9 +10,23 @@ struct dev_archdata {
 #ifdef CONFIG_DMABOUNCE
 	struct dmabounce_device_info *dmabounce;
 #endif
+<<<<<<< HEAD
 };
 
 struct pdev_archdata {
+=======
+#ifdef CONFIG_IOMMU_API
+	void *iommu; /* private IOMMU data */
+#endif
+};
+
+struct omap_device;
+
+struct pdev_archdata {
+#ifdef CONFIG_ARCH_OMAP
+	struct omap_device *od;
+#endif
+>>>>>>> cm-10.0
 };
 
 #endif

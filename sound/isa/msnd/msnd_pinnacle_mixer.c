@@ -16,6 +16,10 @@
  ***************************************************************************/
 
 #include <linux/io.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include <sound/core.h>
 #include <sound/control.h>

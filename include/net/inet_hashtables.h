@@ -33,7 +33,11 @@
 #include <net/tcp_states.h>
 #include <net/netns/hash.h>
 
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <asm/byteorder.h>
 
 /* This is for all connections with a full identity, no wildcards.

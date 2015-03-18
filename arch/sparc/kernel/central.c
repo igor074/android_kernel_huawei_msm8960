@@ -6,6 +6,10 @@
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/string.h>
 #include <linux/init.h>
 #include <linux/of_device.h>
@@ -268,4 +272,8 @@ static int __init sunfire_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 subsys_initcall(sunfire_init);
+=======
+fs_initcall(sunfire_init);
+>>>>>>> cm-10.0

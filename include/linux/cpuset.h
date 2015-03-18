@@ -22,7 +22,11 @@ extern int cpuset_init(void);
 extern void cpuset_init_smp(void);
 extern void cpuset_update_active_cpus(void);
 extern void cpuset_cpus_allowed(struct task_struct *p, struct cpumask *mask);
+<<<<<<< HEAD
 extern int cpuset_cpus_allowed_fallback(struct task_struct *p);
+=======
+extern void cpuset_cpus_allowed_fallback(struct task_struct *p);
+>>>>>>> cm-10.0
 extern nodemask_t cpuset_mems_allowed(struct task_struct *p);
 #define cpuset_current_mems_allowed (current->mems_allowed)
 void cpuset_init_current_mems_allowed(void);
@@ -89,6 +93,7 @@ extern void rebuild_sched_domains(void);
 extern void cpuset_print_task_mems_allowed(struct task_struct *p);
 
 /*
+<<<<<<< HEAD
  * reading current mems_allowed and mempolicy in the fastpath must protected
  * by get_mems_allowed()
  */
@@ -119,12 +124,39 @@ static inline void put_mems_allowed(void)
 	 */
 	smp_mb();
 	--ACCESS_ONCE(current->mems_allowed_change_disable);
+=======
+ * get_mems_allowed is required when making decisions involving mems_allowed
+ * such as during page allocation. mems_allowed can be updated in parallel
+ * and depending on the new value an operation can fail potentially causing
+ * process failure. A retry loop with get_mems_allowed and put_mems_allowed
+ * prevents these artificial failures.
+ */
+static inline unsigned int get_mems_allowed(void)
+{
+	return read_seqcount_begin(&current->mems_allowed_seq);
+}
+
+/*
+ * If this returns false, the operation that took place after get_mems_allowed
+ * may have failed. It is up to the caller to retry the operation if
+ * appropriate.
+ */
+static inline bool put_mems_allowed(unsigned int seq)
+{
+	return !read_seqcount_retry(&current->mems_allowed_seq, seq);
+>>>>>>> cm-10.0
 }
 
 static inline void set_mems_allowed(nodemask_t nodemask)
 {
 	task_lock(current);
+<<<<<<< HEAD
 	current->mems_allowed = nodemask;
+=======
+	write_seqcount_begin(&current->mems_allowed_seq);
+	current->mems_allowed = nodemask;
+	write_seqcount_end(&current->mems_allowed_seq);
+>>>>>>> cm-10.0
 	task_unlock(current);
 }
 
@@ -144,10 +176,15 @@ static inline void cpuset_cpus_allowed(struct task_struct *p,
 	cpumask_copy(mask, cpu_possible_mask);
 }
 
+<<<<<<< HEAD
 static inline int cpuset_cpus_allowed_fallback(struct task_struct *p)
 {
 	do_set_cpus_allowed(p, cpu_possible_mask);
 	return cpumask_any(cpu_active_mask);
+=======
+static inline void cpuset_cpus_allowed_fallback(struct task_struct *p)
+{
+>>>>>>> cm-10.0
 }
 
 static inline nodemask_t cpuset_mems_allowed(struct task_struct *p)
@@ -234,12 +271,23 @@ static inline void set_mems_allowed(nodemask_t nodemask)
 {
 }
 
+<<<<<<< HEAD
 static inline void get_mems_allowed(void)
 {
 }
 
 static inline void put_mems_allowed(void)
 {
+=======
+static inline unsigned int get_mems_allowed(void)
+{
+	return 0;
+}
+
+static inline bool put_mems_allowed(unsigned int seq)
+{
+	return true;
+>>>>>>> cm-10.0
 }
 
 #endif /* !CONFIG_CPUSETS */

@@ -17,6 +17,10 @@
 #include <linux/mfd/core.h>
 #include <linux/pm_runtime.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 int mfd_cell_enable(struct platform_device *pdev)
 {
@@ -122,7 +126,11 @@ static int mfd_add_device(struct device *parent, int id,
 		}
 
 		if (!cell->ignore_resource_conflicts) {
+<<<<<<< HEAD
 			ret = acpi_check_resource_conflict(res);
+=======
+			ret = acpi_check_resource_conflict(&res[r]);
+>>>>>>> cm-10.0
 			if (ret)
 				goto fail_res;
 		}
@@ -161,7 +169,11 @@ int mfd_add_devices(struct device *parent, int id,
 	atomic_t *cnts;
 
 	/* initialize reference counting for all cells */
+<<<<<<< HEAD
 	cnts = kcalloc(sizeof(*cnts), n_devs, GFP_KERNEL);
+=======
+	cnts = kcalloc(n_devs, sizeof(*cnts), GFP_KERNEL);
+>>>>>>> cm-10.0
 	if (!cnts)
 		return -ENOMEM;
 

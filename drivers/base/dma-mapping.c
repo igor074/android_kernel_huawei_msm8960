@@ -8,6 +8,10 @@
  */
 
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/gfp.h>
 
 /*

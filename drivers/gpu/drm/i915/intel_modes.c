@@ -26,7 +26,13 @@
 #include <linux/slab.h>
 #include <linux/i2c.h>
 #include <linux/fb.h>
+<<<<<<< HEAD
 #include "drmP.h"
+=======
+#include <drm/drm_edid.h>
+#include "drmP.h"
+#include "drm_edid.h"
+>>>>>>> cm-10.0
 #include "intel_drv.h"
 #include "i915_drv.h"
 
@@ -41,13 +47,21 @@ bool intel_ddc_probe(struct intel_encoder *intel_encoder, int ddc_bus)
 	u8 buf[2];
 	struct i2c_msg msgs[] = {
 		{
+<<<<<<< HEAD
 			.addr = 0x50,
+=======
+			.addr = DDC_ADDR,
+>>>>>>> cm-10.0
 			.flags = 0,
 			.len = 1,
 			.buf = out_buf,
 		},
 		{
+<<<<<<< HEAD
 			.addr = 0x50,
+=======
+			.addr = DDC_ADDR,
+>>>>>>> cm-10.0
 			.flags = I2C_M_RD,
 			.len = 1,
 			.buf = buf,
@@ -74,6 +88,10 @@ int intel_ddc_get_modes(struct drm_connector *connector,
 	if (edid) {
 		drm_mode_connector_update_edid_property(connector, edid);
 		ret = drm_add_edid_modes(connector, edid);
+<<<<<<< HEAD
+=======
+		drm_edid_to_eld(connector, edid);
+>>>>>>> cm-10.0
 		connector->display_info.raw_edid = NULL;
 		kfree(edid);
 	}
@@ -81,10 +99,18 @@ int intel_ddc_get_modes(struct drm_connector *connector,
 	return ret;
 }
 
+<<<<<<< HEAD
 static const char *force_audio_names[] = {
 	"off",
 	"auto",
 	"on",
+=======
+static const struct drm_prop_enum_list force_audio_names[] = {
+	{ HDMI_AUDIO_OFF_DVI, "force-dvi" },
+	{ HDMI_AUDIO_OFF, "off" },
+	{ HDMI_AUDIO_AUTO, "auto" },
+	{ HDMI_AUDIO_ON, "on" },
+>>>>>>> cm-10.0
 };
 
 void
@@ -93,27 +119,45 @@ intel_attach_force_audio_property(struct drm_connector *connector)
 	struct drm_device *dev = connector->dev;
 	struct drm_i915_private *dev_priv = dev->dev_private;
 	struct drm_property *prop;
+<<<<<<< HEAD
 	int i;
 
 	prop = dev_priv->force_audio_property;
 	if (prop == NULL) {
 		prop = drm_property_create(dev, DRM_MODE_PROP_ENUM,
 					   "audio",
+=======
+
+	prop = dev_priv->force_audio_property;
+	if (prop == NULL) {
+		prop = drm_property_create_enum(dev, 0,
+					   "audio",
+					   force_audio_names,
+>>>>>>> cm-10.0
 					   ARRAY_SIZE(force_audio_names));
 		if (prop == NULL)
 			return;
 
+<<<<<<< HEAD
 		for (i = 0; i < ARRAY_SIZE(force_audio_names); i++)
 			drm_property_add_enum(prop, i, i-1, force_audio_names[i]);
 
+=======
+>>>>>>> cm-10.0
 		dev_priv->force_audio_property = prop;
 	}
 	drm_connector_attach_property(connector, prop, 0);
 }
 
+<<<<<<< HEAD
 static const char *broadcast_rgb_names[] = {
 	"Full",
 	"Limited 16:235",
+=======
+static const struct drm_prop_enum_list broadcast_rgb_names[] = {
+	{ 0, "Full" },
+	{ 1, "Limited 16:235" },
+>>>>>>> cm-10.0
 };
 
 void
@@ -122,19 +166,31 @@ intel_attach_broadcast_rgb_property(struct drm_connector *connector)
 	struct drm_device *dev = connector->dev;
 	struct drm_i915_private *dev_priv = dev->dev_private;
 	struct drm_property *prop;
+<<<<<<< HEAD
 	int i;
 
 	prop = dev_priv->broadcast_rgb_property;
 	if (prop == NULL) {
 		prop = drm_property_create(dev, DRM_MODE_PROP_ENUM,
 					   "Broadcast RGB",
+=======
+
+	prop = dev_priv->broadcast_rgb_property;
+	if (prop == NULL) {
+		prop = drm_property_create_enum(dev, DRM_MODE_PROP_ENUM,
+					   "Broadcast RGB",
+					   broadcast_rgb_names,
+>>>>>>> cm-10.0
 					   ARRAY_SIZE(broadcast_rgb_names));
 		if (prop == NULL)
 			return;
 
+<<<<<<< HEAD
 		for (i = 0; i < ARRAY_SIZE(broadcast_rgb_names); i++)
 			drm_property_add_enum(prop, i, i, broadcast_rgb_names[i]);
 
+=======
+>>>>>>> cm-10.0
 		dev_priv->broadcast_rgb_property = prop;
 	}
 

@@ -1,6 +1,10 @@
 /* drivers/mtd/devices/msm_nand.h
  *
+<<<<<<< HEAD
  * Copyright (c) 2008-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Copyright (C) 2007 Google, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
@@ -187,9 +191,12 @@ extern unsigned long ebi2_register_base;
 #define EBI2_CFG_REG		       	EBI2_REG(0x0004)
 #define EBI2_NAND_ADM_MUX       	EBI2_REG(0x005C)
 
+<<<<<<< HEAD
 #define MSM_NAND_BUF_STAT_UNCRCTBL_ERR	(1 << 8)
 #define MSM_NAND_BUF_STAT_NUM_ERR_MASK	(enable_bch_ecc ? 0x1F : 0x0F)
 
+=======
+>>>>>>> cm-10.0
 extern struct flash_platform_data msm_nand_data;
 
 #endif

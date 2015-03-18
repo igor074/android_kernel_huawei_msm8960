@@ -23,6 +23,10 @@
 #include <linux/zorro.h>
 #include <linux/ide.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #include <asm/amigahw.h>
 #include <asm/amigaints.h>

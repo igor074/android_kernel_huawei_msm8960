@@ -25,6 +25,10 @@
 #include <linux/tty.h>
 #include <linux/tty_flip.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/debugfs.h>
 
 #include "u_serial.h"
@@ -595,6 +599,7 @@ recycle:
 		port->read_started--;
 	}
 
+<<<<<<< HEAD
 	/* Push from tty to ldisc; this is immediate with low_latency, and
 	 * may trigger callbacks to this driver ... so drop the spinlock.
 	 */
@@ -608,6 +613,13 @@ recycle:
 		tty = port->port_tty;
 	}
 
+=======
+	/* Push from tty to ldisc; without low_latency set this is handled by
+	 * a workqueue, so we won't get callbacks and can hold port_lock
+	 */
+	if (tty && do_push)
+		tty_flip_buffer_push(tty);
+>>>>>>> cm-10.0
 
 	/* We want our data queue to become empty ASAP, keeping data
 	 * in the tty and ldisc (not here).  If we couldn't push any
@@ -783,9 +795,12 @@ static int gs_open(struct tty_struct *tty, struct file *file)
 	struct gs_port	*port;
 	int		status;
 
+<<<<<<< HEAD
 	if (port_num < 0 || port_num >= n_ports)
 		return -ENXIO;
 
+=======
+>>>>>>> cm-10.0
 	do {
 		mutex_lock(&ports[port_num].lock);
 		port = ports[port_num].port;
@@ -859,6 +874,7 @@ static int gs_open(struct tty_struct *tty, struct file *file)
 	port->open_count = 1;
 	port->openclose = false;
 
+<<<<<<< HEAD
 	/* low_latency means ldiscs work is carried in the same context
 	 * of tty_flip_buffer_push. The same can be called from IRQ with
 	 * low_latency = 0. But better to use a dedicated worker thread
@@ -866,6 +882,8 @@ static int gs_open(struct tty_struct *tty, struct file *file)
 	 */
 	tty->low_latency = 1;
 
+=======
+>>>>>>> cm-10.0
 	/* if connected, start the I/O stream */
 	if (port->port_usb) {
 		struct gserial	*gser = port->port_usb;
@@ -1312,8 +1330,13 @@ static void usb_debugfs_init(struct gs_port *ui_dev, int port_num)
 	if (IS_ERR(dent))
 		return;
 
+<<<<<<< HEAD
 	debugfs_create_file("readstatus", S_IRUGO, dent, ui_dev, &debug_adb_ops);
 	debugfs_create_file("reset", (S_IWUSR|S_IWGRP), dent, ui_dev, &debug_rst_ops);
+=======
+	debugfs_create_file("readstatus", 0444, dent, ui_dev, &debug_adb_ops);
+	debugfs_create_file("reset", 0222, dent, ui_dev, &debug_rst_ops);
+>>>>>>> cm-10.0
 }
 #else
 static void usb_debugfs_init(struct gs_port *ui_dev) {}
@@ -1351,7 +1374,10 @@ int gserial_setup(struct usb_gadget *g, unsigned count)
 	if (!gs_tty_driver)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	gs_tty_driver->owner = THIS_MODULE;
+=======
+>>>>>>> cm-10.0
 	gs_tty_driver->driver_name = "g_serial";
 	gs_tty_driver->name = PREFIX;
 	/* uses dynamically assigned dev_t values */
@@ -1525,12 +1551,20 @@ int gserial_connect(struct gserial *gser, u8 port_num)
 	port = ports[port_num].port;
 
 	/* activate the endpoints */
+<<<<<<< HEAD
 	status = usb_ep_enable(gser->in, gser->in_desc);
+=======
+	status = usb_ep_enable(gser->in);
+>>>>>>> cm-10.0
 	if (status < 0)
 		return status;
 	gser->in->driver_data = port;
 
+<<<<<<< HEAD
 	status = usb_ep_enable(gser->out, gser->out_desc);
+=======
+	status = usb_ep_enable(gser->out);
+>>>>>>> cm-10.0
 	if (status < 0)
 		goto fail_out;
 	gser->out->driver_data = port;

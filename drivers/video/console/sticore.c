@@ -22,7 +22,13 @@
 #include <linux/font.h>
 
 #include <asm/hardware.h>
+<<<<<<< HEAD
 #include <asm/parisc-device.h>
+=======
+#include <asm/page.h>
+#include <asm/parisc-device.h>
+#include <asm/pdc.h>
+>>>>>>> cm-10.0
 #include <asm/cacheflush.h>
 #include <asm/grfioctl.h>
 

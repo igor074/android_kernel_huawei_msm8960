@@ -26,7 +26,14 @@ enum xsd_sockmsg_type
     XS_SET_PERMS,
     XS_WATCH_EVENT,
     XS_ERROR,
+<<<<<<< HEAD
     XS_IS_DOMAIN_INTRODUCED
+=======
+    XS_IS_DOMAIN_INTRODUCED,
+    XS_RESUME,
+    XS_SET_TARGET,
+    XS_RESTRICT
+>>>>>>> cm-10.0
 };
 
 #define XS_WRITE_NONE "NONE"
@@ -84,4 +91,10 @@ struct xenstore_domain_interface {
     XENSTORE_RING_IDX rsp_cons, rsp_prod;
 };
 
+<<<<<<< HEAD
+=======
+/* Violating this is very bad.  See docs/misc/xenstore.txt. */
+#define XENSTORE_PAYLOAD_MAX 4096
+
+>>>>>>> cm-10.0
 #endif /* _XS_WIRE_H */

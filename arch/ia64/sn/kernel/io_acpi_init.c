@@ -14,6 +14,10 @@
 #include "xtalk/hubdev.h"
 #include <linux/acpi.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 
 /*

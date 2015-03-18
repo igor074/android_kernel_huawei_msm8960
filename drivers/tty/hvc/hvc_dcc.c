@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -41,6 +45,10 @@ static inline char __dcc_getchar(void)
 
 	asm volatile("mrc p14, 0, %0, c0, c5, 0	@ read comms data reg"
 		: "=r" (__c));
+<<<<<<< HEAD
+=======
+	isb();
+>>>>>>> cm-10.0
 
 	return __c;
 }
@@ -50,6 +58,10 @@ static inline void __dcc_putchar(char c)
 	asm volatile("mcr p14, 0, %0, c0, c5, 0	@ write a char"
 		: /* no output register */
 		: "r" (c));
+<<<<<<< HEAD
+=======
+	isb();
+>>>>>>> cm-10.0
 }
 
 static int hvc_dcc_put_chars(uint32_t vt, const char *buf, int count)

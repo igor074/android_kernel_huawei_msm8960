@@ -41,6 +41,10 @@ extern int			datagram_recv_ctl(struct sock *sk,
 						  struct sk_buff *skb);
 
 extern int			datagram_send_ctl(struct net *net,
+<<<<<<< HEAD
+=======
+						  struct sock *sk,
+>>>>>>> cm-10.0
 						  struct msghdr *msg,
 						  struct flowi6 *fl6,
 						  struct ipv6_txoptions *opt,

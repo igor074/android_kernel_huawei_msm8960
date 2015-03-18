@@ -2,7 +2,11 @@
  *  arch/arm/include/asm/domain.h
  *
  *  Copyright (C) 1999 Russell King.
+<<<<<<< HEAD
  *  Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+ *  Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -11,6 +15,13 @@
 #ifndef __ASM_PROC_DOMAIN_H
 #define __ASM_PROC_DOMAIN_H
 
+<<<<<<< HEAD
+=======
+#ifndef __ASSEMBLY__
+#include <asm/barrier.h>
+#endif
+
+>>>>>>> cm-10.0
 /*
  * Domain numbers
  *
@@ -101,9 +112,15 @@ void emulate_domain_manager_switch_mm(
  * instructions (inline assembly)
  */
 #ifdef CONFIG_CPU_USE_DOMAINS
+<<<<<<< HEAD
 #define T(instr)	#instr "t"
 #else
 #define T(instr)	#instr
+=======
+#define TUSER(instr)	#instr "t"
+#else
+#define TUSER(instr)	#instr
+>>>>>>> cm-10.0
 #endif
 
 #else /* __ASSEMBLY__ */
@@ -113,9 +130,15 @@ void emulate_domain_manager_switch_mm(
  * instructions
  */
 #ifdef CONFIG_CPU_USE_DOMAINS
+<<<<<<< HEAD
 #define T(instr)	instr ## t
 #else
 #define T(instr)	instr
+=======
+#define TUSER(instr)	instr ## t
+#else
+#define TUSER(instr)	instr
+>>>>>>> cm-10.0
 #endif
 
 #endif /* __ASSEMBLY__ */

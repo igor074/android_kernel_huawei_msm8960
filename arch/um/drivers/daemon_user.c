@@ -17,7 +17,10 @@
 #include "net_user.h"
 #include "os.h"
 #include "um_malloc.h"
+<<<<<<< HEAD
 #include "user.h"
+=======
+>>>>>>> cm-10.0
 
 enum request_type { REQ_NEW_CONTROL };
 

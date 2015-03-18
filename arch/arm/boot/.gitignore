@@ -3,3 +3,7 @@ zImage
 xipImage
 bootpImage
 uImage
+<<<<<<< HEAD
+=======
+*.dtb
+>>>>>>> cm-10.0

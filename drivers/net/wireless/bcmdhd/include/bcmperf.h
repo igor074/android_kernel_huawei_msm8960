@@ -1,9 +1,15 @@
 /*
  * Performance counters software interface.
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -21,7 +27,11 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
+<<<<<<< HEAD
  * $Id: bcmperf.h,v 13.5 2007-09-14 22:00:59 Exp $
+=======
+ * $Id: bcmperf.h 241182 2011-02-17 21:50:03Z $
+>>>>>>> cm-10.0
  */
 /* essai */
 #ifndef _BCMPERF_H_

@@ -12,7 +12,10 @@
  *	Input handler conversion
  */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/sched.h>
@@ -33,7 +36,10 @@
 #include <linux/module.h>
 #include <linux/suspend.h>
 #include <linux/writeback.h>
+<<<<<<< HEAD
 #include <linux/buffer_head.h>		/* for fsync_bdev() */
+=======
+>>>>>>> cm-10.0
 #include <linux/swap.h>
 #include <linux/spinlock.h>
 #include <linux/vt_kern.h>
@@ -42,17 +48,25 @@
 #include <linux/oom.h>
 #include <linux/slab.h>
 #include <linux/input.h>
+<<<<<<< HEAD
+=======
+#include <linux/uaccess.h>
+>>>>>>> cm-10.0
 
 #include <asm/ptrace.h>
 #include <asm/irq_regs.h>
 
 /* Whether we react on sysrq keys or just ignore them */
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
 static int __read_mostly sysrq_enabled = SYSRQ_DEFAULT_DISABLE;
 #else
 static int __read_mostly sysrq_enabled = SYSRQ_DEFAULT_ENABLE;
 #endif
 
+=======
+static int __read_mostly sysrq_enabled = SYSRQ_DEFAULT_ENABLE;
+>>>>>>> cm-10.0
 static bool __read_mostly sysrq_always_enabled;
 
 static bool sysrq_on(void)
@@ -116,11 +130,17 @@ static struct sysrq_key_op sysrq_SAK_op = {
 #ifdef CONFIG_VT
 static void sysrq_handle_unraw(int key)
 {
+<<<<<<< HEAD
 	struct kbd_struct *kbd = &kbd_table[fg_console];
 
 	if (kbd)
 		kbd->kbdmode = default_utf8 ? VC_UNICODE : VC_XLATE;
 }
+=======
+	vt_reset_unicode(fg_console);
+}
+
+>>>>>>> cm-10.0
 static struct sysrq_key_op sysrq_unraw_op = {
 	.handler	= sysrq_handle_unraw,
 	.help_msg	= "unRaw",
@@ -273,11 +293,15 @@ static struct sysrq_key_op sysrq_showregs_op = {
 
 static void sysrq_handle_showstate(int key)
 {
+<<<<<<< HEAD
 	extern int msm_watchdog_suspend(void);
 	extern int msm_watchdog_resume(void);
 	msm_watchdog_suspend();
 	show_state();
 	msm_watchdog_resume();
+=======
+	show_state();
+>>>>>>> cm-10.0
 }
 static struct sysrq_key_op sysrq_showstate_op = {
 	.handler	= sysrq_handle_showstate,
@@ -332,11 +356,24 @@ static void send_sig_all(int sig)
 {
 	struct task_struct *p;
 
+<<<<<<< HEAD
 	for_each_process(p) {
 		if (p->mm && !is_global_init(p))
 			/* Not swapper, init nor kernel thread */
 			force_sig(sig, p);
 	}
+=======
+	read_lock(&tasklist_lock);
+	for_each_process(p) {
+		if (p->flags & PF_KTHREAD)
+			continue;
+		if (is_global_init(p))
+			continue;
+
+		do_send_sig_info(sig, SEND_SIG_FORCED, p, true);
+	}
+	read_unlock(&tasklist_lock);
+>>>>>>> cm-10.0
 }
 
 static void sysrq_handle_term(int key)
@@ -353,7 +390,11 @@ static struct sysrq_key_op sysrq_term_op = {
 
 static void moom_callback(struct work_struct *ignored)
 {
+<<<<<<< HEAD
 	out_of_memory(node_zonelist(0, GFP_KERNEL), GFP_KERNEL, 0, NULL);
+=======
+	out_of_memory(node_zonelist(0, GFP_KERNEL), GFP_KERNEL, 0, NULL, true);
+>>>>>>> cm-10.0
 }
 
 static DECLARE_WORK(moom_work, moom_callback);
@@ -610,6 +651,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
 static void trig_crash(struct work_struct *ignored)
 {    	__handle_sysrq('c', true);
@@ -617,13 +659,18 @@ static void trig_crash(struct work_struct *ignored)
 static DECLARE_WORK(crash_trigger, trig_crash);
 #endif
 
+=======
+>>>>>>> cm-10.0
 static bool sysrq_filter(struct input_handle *handle,
 			 unsigned int type, unsigned int code, int value)
 {
 	struct sysrq_state *sysrq = handle->private;
 	bool was_active = sysrq->active;
 	bool suppress;
+<<<<<<< HEAD
 	static bool sysrq_active = false;
+=======
+>>>>>>> cm-10.0
 
 	/*
 	 * Do not filter anything if we are in the process of re-injecting
@@ -640,6 +687,7 @@ static bool sysrq_filter(struct input_handle *handle,
 
 	case EV_KEY:
 		switch (code) {
+<<<<<<< HEAD
 /* use volumedown + volumeup + power for sysrq function */ 
 #ifdef CONFIG_HUAWEI_KERNEL
 	case KEY_VOLUMEDOWN:
@@ -694,6 +742,9 @@ static bool sysrq_filter(struct input_handle *handle,
 	default:
 		break;
 #else
+=======
+
+>>>>>>> cm-10.0
 		case KEY_LEFTALT:
 		case KEY_RIGHTALT:
 			if (!value) {
@@ -739,7 +790,10 @@ static bool sysrq_filter(struct input_handle *handle,
 				__handle_sysrq(sysrq_xlate[code], true);
 			}
 			break;
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> cm-10.0
 		}
 
 		suppress = sysrq->active;
@@ -832,6 +886,7 @@ static void sysrq_disconnect(struct input_handle *handle)
  * later, but we expect all such keyboards to have left alt.
  */
 static const struct input_device_id sysrq_ids[] = {
+<<<<<<< HEAD
 /* remove the keybit of KEY_LEFTALT for sysrq function */ 
 #ifdef CONFIG_HUAWEI_KERNEL
 	{
@@ -839,13 +894,18 @@ static const struct input_device_id sysrq_ids[] = {
 		.evbit = { BIT_MASK(EV_KEY) },
 	},
 #else
+=======
+>>>>>>> cm-10.0
 	{
 		.flags = INPUT_DEVICE_ID_MATCH_EVBIT |
 				INPUT_DEVICE_ID_MATCH_KEYBIT,
 		.evbit = { BIT_MASK(EV_KEY) },
 		.keybit = { BIT_MASK(KEY_LEFTALT) },
 	},
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> cm-10.0
 	{ },
 };
 

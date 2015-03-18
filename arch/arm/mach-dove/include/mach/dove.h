@@ -11,8 +11,11 @@
 #ifndef __ASM_ARCH_DOVE_H
 #define __ASM_ARCH_DOVE_H
 
+<<<<<<< HEAD
 #include <mach/vmalloc.h>
 
+=======
+>>>>>>> cm-10.0
 /*
  * Marvell Dove address maps.
  *

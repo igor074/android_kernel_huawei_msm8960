@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -23,7 +27,10 @@
 #include "linux/proc_fs.h"
 
 #include <mach/hardware.h>
+<<<<<<< HEAD
 #include <mach/msm_subsystem_map.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/io.h>
 #include <mach/board.h>
 
@@ -34,7 +41,10 @@
 #include <linux/spinlock.h>
 #include <linux/workqueue.h>
 #include <linux/hrtimer.h>
+<<<<<<< HEAD
 #include <linux/wakelock.h>
+=======
+>>>>>>> cm-10.0
 
 #include <linux/fb.h>
 #include <linux/list.h>
@@ -45,9 +55,12 @@
 #include <linux/earlysuspend.h>
 #endif
 
+<<<<<<< HEAD
 /*  Idle wakelock to prevent PC between wake up and Vsync */
 extern struct wake_lock mdp_idle_wakelock;
 
+=======
+>>>>>>> cm-10.0
 #include "msm_fb_panel.h"
 #include "mdp.h"
 
@@ -59,12 +72,20 @@ struct disp_info_type_suspend {
 	boolean op_enable;
 	boolean sw_refreshing_enable;
 	boolean panel_power_on;
+<<<<<<< HEAD
+=======
+	boolean op_suspend;
+>>>>>>> cm-10.0
 };
 
 struct msmfb_writeback_data_list {
 	struct list_head registered_entry;
 	struct list_head active_entry;
 	void *addr;
+<<<<<<< HEAD
+=======
+	struct ion_handle *ihdl;
+>>>>>>> cm-10.0
 	struct file *pmem_file;
 	struct msmfb_data buf_info;
 	struct msmfb_img img;
@@ -84,6 +105,10 @@ struct msm_fb_data_type {
 	DISP_TARGET dest;
 	struct fb_info *fbi;
 
+<<<<<<< HEAD
+=======
+	struct delayed_work backlight_worker;
+>>>>>>> cm-10.0
 	boolean op_enable;
 	uint32 fb_imgType;
 	boolean sw_currently_refreshing;
@@ -129,6 +154,10 @@ struct msm_fb_data_type {
 	__u32 channel_irq;
 
 	struct mdp_dma_data *dma;
+<<<<<<< HEAD
+=======
+	struct device_attribute dev_attr;
+>>>>>>> cm-10.0
 	void (*dma_fnc) (struct msm_fb_data_type *mfd);
 	int (*cursor_update) (struct fb_info *info,
 			      struct fb_cursor *cursor);
@@ -136,6 +165,14 @@ struct msm_fb_data_type {
 			      struct fb_cmap *cmap);
 	int (*do_histogram) (struct fb_info *info,
 			      struct mdp_histogram_data *hist);
+<<<<<<< HEAD
+=======
+	int (*start_histogram) (struct mdp_histogram_start_req *req);
+	int (*stop_histogram) (struct fb_info *info, uint32_t block);
+	void (*vsync_ctrl) (int enable);
+	void (*vsync_init) (int cndx);
+	void *vsync_show;
+>>>>>>> cm-10.0
 	void *cursor_buf;
 	void *cursor_buf_phys;
 
@@ -177,16 +214,28 @@ struct msm_fb_data_type {
 	struct list_head writeback_register_queue;
 	wait_queue_head_t wait_q;
 	struct ion_client *iclient;
+<<<<<<< HEAD
 	struct msm_mapped_buffer *map_buffer;
+=======
+	unsigned long display_iova;
+	unsigned long rotator_iova;
+>>>>>>> cm-10.0
 	struct mdp_buf_type *ov0_wb_buf;
 	struct mdp_buf_type *ov1_wb_buf;
 	u32 ov_start;
 	u32 mem_hid;
 	u32 mdp_rev;
+<<<<<<< HEAD
 	u32 use_ov0_blt, ov0_blt_state;
 	u32 use_ov1_blt, ov1_blt_state;
 	u32 writeback_state;
 	int cont_splash_done;
+=======
+	u32 writeback_state;
+	bool writeback_active_cnt;
+	int cont_splash_done;
+	int vsync_sysfs_created;
+>>>>>>> cm-10.0
 };
 
 struct dentry *msm_fb_get_debugfs_root(void);

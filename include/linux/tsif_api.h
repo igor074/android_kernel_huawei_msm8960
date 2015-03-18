@@ -3,7 +3,11 @@
  *
  * Kernel API
  *
+<<<<<<< HEAD
  * Copyright (c) 2009-2010, Code Aurora Forum. All rights
+=======
+ * Copyright (c) 2009-2010, The Linux Foundation. All rights
+>>>>>>> cm-10.0
  * reserved.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -102,7 +106,10 @@ enum tsif_state {
 	tsif_state_running  = 1,
 	tsif_state_flushing = 2,
 	tsif_state_error    = 3,
+<<<<<<< HEAD
 	tsif_state_stopping = 4,
+=======
+>>>>>>> cm-10.0
 };
 
 /**

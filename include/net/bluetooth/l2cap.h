@@ -1,6 +1,10 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
+<<<<<<< HEAD
    Copyright (c) 2000-2001, 2010-2012 Code Aurora Forum.  All rights reserved.
+=======
+   Copyright (c) 2000-2001, 2010-2012 The Linux Foundation.  All rights reserved.
+>>>>>>> cm-10.0
    Copyright (C) 2009-2010 Gustavo F. Padovan <gustavo@padovan.org>
    Copyright (C) 2010 Google Inc.
 
@@ -534,7 +538,11 @@ struct l2cap_pinfo {
 
 	__u16		tx_win;
 	__u16		tx_win_max;
+<<<<<<< HEAD
 	__u16		ack_win; /*Add a ack parameter*/
+=======
+	__u16		ack_win;
+>>>>>>> cm-10.0
 	__u8		max_tx;
 	__u8		amp_pref;
 	__u16		remote_tx_win;
@@ -654,13 +662,21 @@ struct l2cap_pinfo {
 #define L2CAP_ATT_MTU_RSP			0x03
 #define L2CAP_ATT_RESPONSE_BIT			0x01
 #define L2CAP_ATT_INDICATE			0x1D
+<<<<<<< HEAD
+=======
+#define L2CAP_ATT_CONFIRM			0x1E
+>>>>>>> cm-10.0
 #define L2CAP_ATT_NOT_SUPPORTED			0x06
 
 #define __delta_seq(x, y, pi) ((x) >= (y) ? (x) - (y) : \
 				(pi)->tx_win_max + 1 - (y) + (x))
 #define __next_seq(x, pi) ((x + 1) & ((pi)->tx_win_max))
 
+<<<<<<< HEAD
 extern int disable_ertm;
+=======
+extern bool disable_ertm;
+>>>>>>> cm-10.0
 extern const struct proto_ops l2cap_sock_ops;
 extern struct bt_sock_list l2cap_sk_list;
 

@@ -17,10 +17,15 @@
 #include <linux/kref.h>
 #include <linux/workqueue.h>
 
+<<<<<<< HEAD
 #include <asm/atomic.h>
 #include <asm/ptrace.h>
 #include <asm/system.h>
 #include <trace/events/irq.h>
+=======
+#include <linux/atomic.h>
+#include <asm/ptrace.h>
+>>>>>>> cm-10.0
 
 /*
  * These correspond to the IORESOURCE_IRQ_* defines in
@@ -59,6 +64,11 @@
  * IRQF_NO_SUSPEND - Do not disable this IRQ during suspend
  * IRQF_FORCE_RESUME - Force enable it on resume even if IRQF_NO_SUSPEND is set
  * IRQF_NO_THREAD - Interrupt cannot be threaded
+<<<<<<< HEAD
+=======
+ * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
+ *                resume time.
+>>>>>>> cm-10.0
  */
 #define IRQF_DISABLED		0x00000020
 #define IRQF_SAMPLE_RANDOM	0x00000040
@@ -72,6 +82,10 @@
 #define IRQF_NO_SUSPEND		0x00004000
 #define IRQF_FORCE_RESUME	0x00008000
 #define IRQF_NO_THREAD		0x00010000
+<<<<<<< HEAD
+=======
+#define IRQF_EARLY_RESUME	0x00020000
+>>>>>>> cm-10.0
 
 #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
 
@@ -454,11 +468,15 @@ asmlinkage void do_softirq(void);
 asmlinkage void __do_softirq(void);
 extern void open_softirq(int nr, void (*action)(struct softirq_action *));
 extern void softirq_init(void);
+<<<<<<< HEAD
 static inline void __raise_softirq_irqoff(unsigned int nr)
 {
 	trace_softirq_raise(nr);
 	or_softirq_pending(1UL << nr);
 }
+=======
+extern void __raise_softirq_irqoff(unsigned int nr);
+>>>>>>> cm-10.0
 
 extern void raise_softirq_irqoff(unsigned int nr);
 extern void raise_softirq(unsigned int nr);

@@ -21,7 +21,10 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/ksm.h>
 #include <linux/rmap.h>
 #include <linux/security.h>
@@ -668,10 +671,17 @@ int try_to_free_swap(struct page *page)
 	 * original page might be freed under memory pressure, then
 	 * later read back in from swap, now with the wrong data.
 	 *
+<<<<<<< HEAD
 	 * Hibernation clears bits from gfp_allowed_mask to prevent
 	 * memory reclaim from writing to disk, so check that here.
 	 */
 	if (!(gfp_allowed_mask & __GFP_IO))
+=======
+	 * Hibration suspends storage while it is writing the image
+	 * to disk so check that here.
+	 */
+	if (pm_suspended_storage())
+>>>>>>> cm-10.0
 		return 0;
 
 	delete_from_swap_cache(page);
@@ -848,12 +858,21 @@ unsigned int count_swap_pages(int type, int free)
 static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
 		unsigned long addr, swp_entry_t entry, struct page *page)
 {
+<<<<<<< HEAD
 	struct mem_cgroup *ptr;
+=======
+	struct mem_cgroup *memcg;
+>>>>>>> cm-10.0
 	spinlock_t *ptl;
 	pte_t *pte;
 	int ret = 1;
 
+<<<<<<< HEAD
 	if (mem_cgroup_try_charge_swapin(vma->vm_mm, page, GFP_KERNEL, &ptr)) {
+=======
+	if (mem_cgroup_try_charge_swapin(vma->vm_mm, page,
+					 GFP_KERNEL, &memcg)) {
+>>>>>>> cm-10.0
 		ret = -ENOMEM;
 		goto out_nolock;
 	}
@@ -861,7 +880,11 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
 	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
 	if (unlikely(!pte_same(*pte, swp_entry_to_pte(entry)))) {
 		if (ret > 0)
+<<<<<<< HEAD
 			mem_cgroup_cancel_charge_swapin(ptr);
+=======
+			mem_cgroup_cancel_charge_swapin(memcg);
+>>>>>>> cm-10.0
 		ret = 0;
 		goto out;
 	}
@@ -872,7 +895,11 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
 	set_pte_at(vma->vm_mm, addr, pte,
 		   pte_mkold(mk_pte(page, vma->vm_page_prot)));
 	page_add_anon_rmap(page, vma, addr);
+<<<<<<< HEAD
 	mem_cgroup_commit_charge_swapin(page, ptr);
+=======
+	mem_cgroup_commit_charge_swapin(page, memcg);
+>>>>>>> cm-10.0
 	swap_free(entry);
 	/*
 	 * Move the page to the active list so it is not
@@ -932,9 +959,13 @@ static inline int unuse_pmd_range(struct vm_area_struct *vma, pud_t *pud,
 	pmd = pmd_offset(pud, addr);
 	do {
 		next = pmd_addr_end(addr, end);
+<<<<<<< HEAD
 		if (unlikely(pmd_trans_huge(*pmd)))
 			continue;
 		if (pmd_none_or_clear_bad(pmd))
+=======
+		if (pmd_none_or_trans_huge_or_clear_bad(pmd))
+>>>>>>> cm-10.0
 			continue;
 		ret = unuse_pte_range(vma, pmd, addr, next, entry, page);
 		if (ret)
@@ -1563,6 +1594,11 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
+<<<<<<< HEAD
+=======
+	BUG_ON(!current->mm);
+
+>>>>>>> cm-10.0
 	pathname = getname(specialfile);
 	err = PTR_ERR(pathname);
 	if (IS_ERR(pathname))
@@ -1590,7 +1626,11 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
 		spin_unlock(&swap_lock);
 		goto out_dput;
 	}
+<<<<<<< HEAD
 	if (!security_vm_enough_memory(p->pages))
+=======
+	if (!security_vm_enough_memory_mm(current->mm, p->pages))
+>>>>>>> cm-10.0
 		vm_unacct_memory(p->pages);
 	else {
 		err = -ENOMEM;
@@ -1617,7 +1657,11 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
 
 	oom_score_adj = test_set_oom_score_adj(OOM_SCORE_ADJ_MAX);
 	err = try_to_unuse(type);
+<<<<<<< HEAD
 	test_set_oom_score_adj(oom_score_adj);
+=======
+	compare_swap_oom_score_adj(OOM_SCORE_ADJ_MAX, oom_score_adj);
+>>>>>>> cm-10.0
 
 	if (err) {
 		/*
@@ -1681,6 +1725,7 @@ out:
 }
 
 #ifdef CONFIG_PROC_FS
+<<<<<<< HEAD
 struct proc_swaps {
 	struct seq_file seq;
 	int event;
@@ -1694,6 +1739,16 @@ static unsigned swaps_poll(struct file *file, poll_table *wait)
 
 	if (s->event != atomic_read(&proc_poll_event)) {
 		s->event = atomic_read(&proc_poll_event);
+=======
+static unsigned swaps_poll(struct file *file, poll_table *wait)
+{
+	struct seq_file *seq = file->private_data;
+
+	poll_wait(file, &proc_poll_wait, wait);
+
+	if (seq->poll_event != atomic_read(&proc_poll_event)) {
+		seq->poll_event = atomic_read(&proc_poll_event);
+>>>>>>> cm-10.0
 		return POLLIN | POLLRDNORM | POLLERR | POLLPRI;
 	}
 
@@ -1783,6 +1838,7 @@ static const struct seq_operations swaps_op = {
 
 static int swaps_open(struct inode *inode, struct file *file)
 {
+<<<<<<< HEAD
 	struct proc_swaps *s;
 	int ret;
 
@@ -1801,6 +1857,18 @@ static int swaps_open(struct inode *inode, struct file *file)
 	s->seq.private = s;
 	s->event = atomic_read(&proc_poll_event);
 	return ret;
+=======
+	struct seq_file *seq;
+	int ret;
+
+	ret = seq_open(file, &swaps_op);
+	if (ret)
+		return ret;
+
+	seq = file->private_data;
+	seq->poll_event = atomic_read(&proc_poll_event);
+	return 0;
+>>>>>>> cm-10.0
 }
 
 static const struct file_operations proc_swaps_operations = {
@@ -1937,6 +2005,7 @@ static unsigned long read_swap_header(struct swap_info_struct *p,
 
 	/*
 	 * Find out how many pages are allowed for a single swap
+<<<<<<< HEAD
 	 * device. There are two limiting factors: 1) the number of
 	 * bits for the swap offset in the swp_entry_t type and
 	 * 2) the number of bits in the a swap pte as defined by
@@ -1951,6 +2020,26 @@ static unsigned long read_swap_header(struct swap_info_struct *p,
 	 */
 	maxpages = swp_offset(pte_to_swp_entry(
 			swp_entry_to_pte(swp_entry(0, ~0UL)))) + 1;
+=======
+	 * device. There are three limiting factors: 1) the number
+	 * of bits for the swap offset in the swp_entry_t type, and
+	 * 2) the number of bits in the swap pte as defined by the
+	 * the different architectures, and 3) the number of free bits
+	 * in an exceptional radix_tree entry. In order to find the
+	 * largest possible bit mask, a swap entry with swap type 0
+	 * and swap offset ~0UL is created, encoded to a swap pte,
+	 * decoded to a swp_entry_t again, and finally the swap
+	 * offset is extracted. This will mask all the bits from
+	 * the initial ~0UL mask that can't be encoded in either
+	 * the swp_entry_t or the architecture definition of a
+	 * swap pte.  Then the same is done for a radix_tree entry.
+	 */
+	maxpages = swp_offset(pte_to_swp_entry(
+			swp_entry_to_pte(swp_entry(0, ~0UL))));
+	maxpages = swp_offset(radix_to_swp_entry(
+			swp_to_radix_entry(swp_entry(0, maxpages)))) + 1;
+
+>>>>>>> cm-10.0
 	if (maxpages > swap_header->info.last_page) {
 		maxpages = swap_header->info.last_page + 1;
 		/* p->max is an unsigned int: don't overflow it */
@@ -2031,6 +2120,12 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 	struct page *page = NULL;
 	struct inode *inode = NULL;
 
+<<<<<<< HEAD
+=======
+	if (swap_flags & ~SWAP_FLAGS_VALID)
+		return -EINVAL;
+
+>>>>>>> cm-10.0
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
@@ -2114,7 +2209,11 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 			p->flags |= SWP_SOLIDSTATE;
 			p->cluster_next = 1 + (random32() % p->highest_bit);
 		}
+<<<<<<< HEAD
 		if (discard_swap(p) == 0 && (swap_flags & SWAP_FLAG_DISCARD))
+=======
+		if ((swap_flags & SWAP_FLAG_DISCARD) && discard_swap(p) == 0)
+>>>>>>> cm-10.0
 			p->flags |= SWP_DISCARDABLE;
 	}
 
@@ -2299,6 +2398,7 @@ int swapcache_prepare(swp_entry_t entry)
 }
 
 /*
+<<<<<<< HEAD
  * swap_lock prevents swap_map being freed. Don't grab an extra
  * reference on the swaphandle, it doesn't matter if it becomes unused.
  */
@@ -2351,6 +2451,8 @@ int valid_swaphandles(swp_entry_t entry, unsigned long *offset)
 }
 
 /*
+=======
+>>>>>>> cm-10.0
  * add_swap_count_continuation - called when a swap count is duplicated
  * beyond SWAP_MAP_MAX, it allocates a new page and links that to the entry's
  * page of the original vmalloc'ed swap_map, to hold the continuation count
@@ -2436,9 +2538,15 @@ int add_swap_count_continuation(swp_entry_t entry, gfp_t gfp_mask)
 		if (!(count & COUNT_CONTINUED))
 			goto out;
 
+<<<<<<< HEAD
 		map = kmap_atomic(list_page, KM_USER0) + offset;
 		count = *map;
 		kunmap_atomic(map, KM_USER0);
+=======
+		map = kmap_atomic(list_page) + offset;
+		count = *map;
+		kunmap_atomic(map);
+>>>>>>> cm-10.0
 
 		/*
 		 * If this continuation count now has some space in it,
@@ -2481,7 +2589,11 @@ static bool swap_count_continued(struct swap_info_struct *si,
 
 	offset &= ~PAGE_MASK;
 	page = list_entry(head->lru.next, struct page, lru);
+<<<<<<< HEAD
 	map = kmap_atomic(page, KM_USER0) + offset;
+=======
+	map = kmap_atomic(page) + offset;
+>>>>>>> cm-10.0
 
 	if (count == SWAP_MAP_MAX)	/* initial increment from swap_map */
 		goto init_map;		/* jump over SWAP_CONT_MAX checks */
@@ -2491,6 +2603,7 @@ static bool swap_count_continued(struct swap_info_struct *si,
 		 * Think of how you add 1 to 999
 		 */
 		while (*map == (SWAP_CONT_MAX | COUNT_CONTINUED)) {
+<<<<<<< HEAD
 			kunmap_atomic(map, KM_USER0);
 			page = list_entry(page->lru.next, struct page, lru);
 			BUG_ON(page == head);
@@ -2511,6 +2624,28 @@ init_map:		*map = 0;		/* we didn't zero the page */
 			map = kmap_atomic(page, KM_USER0) + offset;
 			*map = COUNT_CONTINUED;
 			kunmap_atomic(map, KM_USER0);
+=======
+			kunmap_atomic(map);
+			page = list_entry(page->lru.next, struct page, lru);
+			BUG_ON(page == head);
+			map = kmap_atomic(page) + offset;
+		}
+		if (*map == SWAP_CONT_MAX) {
+			kunmap_atomic(map);
+			page = list_entry(page->lru.next, struct page, lru);
+			if (page == head)
+				return false;	/* add count continuation */
+			map = kmap_atomic(page) + offset;
+init_map:		*map = 0;		/* we didn't zero the page */
+		}
+		*map += 1;
+		kunmap_atomic(map);
+		page = list_entry(page->lru.prev, struct page, lru);
+		while (page != head) {
+			map = kmap_atomic(page) + offset;
+			*map = COUNT_CONTINUED;
+			kunmap_atomic(map);
+>>>>>>> cm-10.0
 			page = list_entry(page->lru.prev, struct page, lru);
 		}
 		return true;			/* incremented */
@@ -2521,15 +2656,23 @@ init_map:		*map = 0;		/* we didn't zero the page */
 		 */
 		BUG_ON(count != COUNT_CONTINUED);
 		while (*map == COUNT_CONTINUED) {
+<<<<<<< HEAD
 			kunmap_atomic(map, KM_USER0);
 			page = list_entry(page->lru.next, struct page, lru);
 			BUG_ON(page == head);
 			map = kmap_atomic(page, KM_USER0) + offset;
+=======
+			kunmap_atomic(map);
+			page = list_entry(page->lru.next, struct page, lru);
+			BUG_ON(page == head);
+			map = kmap_atomic(page) + offset;
+>>>>>>> cm-10.0
 		}
 		BUG_ON(*map == 0);
 		*map -= 1;
 		if (*map == 0)
 			count = 0;
+<<<<<<< HEAD
 		kunmap_atomic(map, KM_USER0);
 		page = list_entry(page->lru.prev, struct page, lru);
 		while (page != head) {
@@ -2537,6 +2680,15 @@ init_map:		*map = 0;		/* we didn't zero the page */
 			*map = SWAP_CONT_MAX | count;
 			count = COUNT_CONTINUED;
 			kunmap_atomic(map, KM_USER0);
+=======
+		kunmap_atomic(map);
+		page = list_entry(page->lru.prev, struct page, lru);
+		while (page != head) {
+			map = kmap_atomic(page) + offset;
+			*map = SWAP_CONT_MAX | count;
+			count = COUNT_CONTINUED;
+			kunmap_atomic(map);
+>>>>>>> cm-10.0
 			page = list_entry(page->lru.prev, struct page, lru);
 		}
 		return count == COUNT_CONTINUED;

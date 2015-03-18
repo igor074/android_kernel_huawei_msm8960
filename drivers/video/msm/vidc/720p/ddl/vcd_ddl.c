@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -42,8 +46,22 @@ u32 ddl_device_init(struct ddl_init_config *ddl_init_config,
 	}
 
 	DDL_MEMSET(ddl_context, 0, sizeof(struct ddl_context));
+<<<<<<< HEAD
 
 	DDL_BUSY(ddl_context);
+=======
+	DDL_BUSY(ddl_context);
+
+	if (res_trk_get_enable_ion()) {
+		VIDC_LOGERR_STRING("ddl_dev_init: ION framework enabled");
+		ddl_context->video_ion_client  =
+			res_trk_get_ion_client();
+		if (!ddl_context->video_ion_client) {
+			VIDC_LOGERR_STRING("ION client create failed");
+			return VCD_ERR_ILLEGAL_OP;
+		}
+	}
+>>>>>>> cm-10.0
 	ddl_context->memtype = res_trk_get_mem_type();
 	if (ddl_context->memtype == -1) {
 		VIDC_LOGERR_STRING("ddl_dev_init:Invalid Memtype");
@@ -161,7 +179,11 @@ u32 ddl_device_release(void *client_data)
 
 	VIDC_LOG_STRING("FW_ENDDONE");
 	ddl_release_context_buffers(ddl_context);
+<<<<<<< HEAD
 
+=======
+	ddl_context->video_ion_client = NULL;
+>>>>>>> cm-10.0
 	DDL_IDLE(ddl_context);
 
 	return VCD_S_SUCCESS;

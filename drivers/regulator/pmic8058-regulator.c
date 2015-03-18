@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,6 +17,10 @@
 #include <linux/err.h>
 #include <linux/string.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/init.h>
 #include <linux/bitops.h>
 #include <linux/mfd/pmic8058.h>
@@ -1692,7 +1700,11 @@ static int __devinit pm8058_vreg_probe(struct platform_device *pdev)
 			      &= ~(REGULATOR_MODE_NORMAL | REGULATOR_MODE_IDLE);
 
 		vreg->rdev = regulator_register(rdesc, &pdev->dev,
+<<<<<<< HEAD
 				&vreg->pdata->init_data, vreg);
+=======
+				&vreg->pdata->init_data, vreg, NULL);
+>>>>>>> cm-10.0
 		if (IS_ERR(vreg->rdev)) {
 			rc = PTR_ERR(vreg->rdev);
 			pr_err("%s: regulator_register failed for %s, rc=%d\n",

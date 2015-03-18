@@ -241,7 +241,11 @@ static int decode_nlm4_stat(struct xdr_stream *xdr, __be32 *stat)
 	p = xdr_inline_decode(xdr, 4);
 	if (unlikely(p == NULL))
 		goto out_overflow;
+<<<<<<< HEAD
 	if (unlikely(*p > nlm4_failed))
+=======
+	if (unlikely(ntohl(*p) > ntohl(nlm4_failed)))
+>>>>>>> cm-10.0
 		goto out_bad_xdr;
 	*stat = *p;
 	return 0;
@@ -598,7 +602,11 @@ static struct rpc_procinfo	nlm4_procedures[] = {
 	PROC(GRANTED_RES,	res,		norep),
 };
 
+<<<<<<< HEAD
 struct rpc_version	nlm_version4 = {
+=======
+const struct rpc_version nlm_version4 = {
+>>>>>>> cm-10.0
 	.number		= 4,
 	.nrprocs	= ARRAY_SIZE(nlm4_procedures),
 	.procs		= nlm4_procedures,

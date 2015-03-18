@@ -48,7 +48,10 @@
 #include <linux/i2c.h>
 #include <linux/i2c-algo-bit.h>
 #include <linux/kdev_t.h>
+<<<<<<< HEAD
 #include <linux/version.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/mutex.h>
 #include <linux/crc32.h>
 #include <linux/kthread.h>
@@ -83,6 +86,11 @@
 #define SAA7164_BOARD_HAUPPAUGE_HVR2200_3	6
 #define SAA7164_BOARD_HAUPPAUGE_HVR2250_2	7
 #define SAA7164_BOARD_HAUPPAUGE_HVR2250_3	8
+<<<<<<< HEAD
+=======
+#define SAA7164_BOARD_HAUPPAUGE_HVR2200_4	9
+#define SAA7164_BOARD_HAUPPAUGE_HVR2200_5	10
+>>>>>>> cm-10.0
 
 #define SAA7164_MAX_UNITS		8
 #define SAA7164_TS_NUMBER_OF_LINES	312

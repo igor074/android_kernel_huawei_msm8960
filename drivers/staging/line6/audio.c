@@ -11,6 +11,10 @@
 
 #include <sound/core.h>
 #include <sound/initval.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "driver.h"
 #include "audio.h"

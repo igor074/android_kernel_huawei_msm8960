@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -39,10 +43,25 @@ struct snd_msm {
 	struct snd_pcm *pcm;
 };
 
+<<<<<<< HEAD
 #define PLAYBACK_NUM_PERIODS	8
 #define PLAYBACK_PERIOD_SIZE	4032
 #define CAPTURE_NUM_PERIODS	16
 #define CAPTURE_PERIOD_SIZE	320
+=======
+struct snd_msm_volume {
+	struct msm_audio *prtd;
+	unsigned volume;
+};
+static struct snd_msm_volume multi_ch_pcm_audio = {NULL, 0x2000};
+
+#define PLAYBACK_NUM_PERIODS		8
+#define PLAYBACK_MAX_PERIOD_SIZE	4032
+#define PLAYBACK_MIN_PERIOD_SIZE        256
+#define CAPTURE_NUM_PERIODS		16
+#define CAPTURE_MIN_PERIOD_SIZE		320
+#define CAPTURE_MAX_PERIOD_SIZE		5376
+>>>>>>> cm-10.0
 
 static struct snd_pcm_hardware msm_pcm_hardware_capture = {
 	.info =                 (SNDRV_PCM_INFO_MMAP |
@@ -55,10 +74,17 @@ static struct snd_pcm_hardware msm_pcm_hardware_capture = {
 	.rate_min =             8000,
 	.rate_max =             48000,
 	.channels_min =         1,
+<<<<<<< HEAD
 	.channels_max =         2,
 	.buffer_bytes_max =     CAPTURE_NUM_PERIODS * CAPTURE_PERIOD_SIZE,
 	.period_bytes_min =	CAPTURE_PERIOD_SIZE,
 	.period_bytes_max =     CAPTURE_PERIOD_SIZE,
+=======
+	.channels_max =         8,
+	.buffer_bytes_max =     CAPTURE_NUM_PERIODS * CAPTURE_MAX_PERIOD_SIZE,
+	.period_bytes_min =	CAPTURE_MIN_PERIOD_SIZE,
+	.period_bytes_max =     CAPTURE_MAX_PERIOD_SIZE,
+>>>>>>> cm-10.0
 	.periods_min =          CAPTURE_NUM_PERIODS,
 	.periods_max =          CAPTURE_NUM_PERIODS,
 	.fifo_size =            0,
@@ -76,9 +102,15 @@ static struct snd_pcm_hardware msm_pcm_hardware_playback = {
 	.rate_max =             48000,
 	.channels_min =         1,
 	.channels_max =         6,
+<<<<<<< HEAD
 	.buffer_bytes_max =     PLAYBACK_NUM_PERIODS * PLAYBACK_PERIOD_SIZE,
 	.period_bytes_min =	PLAYBACK_PERIOD_SIZE,
 	.period_bytes_max =     PLAYBACK_PERIOD_SIZE,
+=======
+	.buffer_bytes_max =     PLAYBACK_NUM_PERIODS * PLAYBACK_MAX_PERIOD_SIZE,
+	.period_bytes_min =     PLAYBACK_MIN_PERIOD_SIZE,
+	.period_bytes_max =     PLAYBACK_MAX_PERIOD_SIZE,
+>>>>>>> cm-10.0
 	.periods_min =          PLAYBACK_NUM_PERIODS,
 	.periods_max =          PLAYBACK_NUM_PERIODS,
 	.fifo_size =            0,
@@ -303,6 +335,20 @@ static int msm_pcm_open(struct snd_pcm_substream *substream)
 	struct snd_soc_pcm_runtime *soc_prtd = substream->private_data;
 	struct msm_audio *prtd;
 	int ret = 0;
+<<<<<<< HEAD
+=======
+	struct asm_softpause_params softpause = {
+		.enable = SOFT_PAUSE_ENABLE,
+		.period = SOFT_PAUSE_PERIOD,
+		.step = SOFT_PAUSE_STEP,
+		.rampingcurve = SOFT_PAUSE_CURVE_LINEAR,
+	};
+	struct asm_softvolume_params softvol = {
+		.period = SOFT_VOLUME_PERIOD,
+		.step = SOFT_VOLUME_STEP,
+		.rampingcurve = SOFT_VOLUME_CURVE_LINEAR,
+	};
+>>>>>>> cm-10.0
 
 	pr_debug("%s\n", __func__);
 	prtd = kzalloc(sizeof(struct msm_audio), GFP_KERNEL);
@@ -318,6 +364,10 @@ static int msm_pcm_open(struct snd_pcm_substream *substream)
 		kfree(prtd);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
+=======
+	prtd->audio_client->perf_mode = false;
+>>>>>>> cm-10.0
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		runtime->hw = msm_pcm_hardware_playback;
 		ret = q6asm_open_write(prtd->audio_client,
@@ -345,8 +395,13 @@ static int msm_pcm_open(struct snd_pcm_substream *substream)
 
 	prtd->session_id = prtd->audio_client->session;
 	msm_pcm_routing_reg_phy_stream(soc_prtd->dai_link->be_id,
+<<<<<<< HEAD
 			prtd->session_id, substream->stream);
 
+=======
+			prtd->audio_client->perf_mode,
+			prtd->session_id, substream->stream);
+>>>>>>> cm-10.0
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
 		prtd->cmd_ack = 1;
 
@@ -361,12 +416,78 @@ static int msm_pcm_open(struct snd_pcm_substream *substream)
 	if (ret < 0)
 		pr_err("snd_pcm_hw_constraint_integer failed\n");
 
+<<<<<<< HEAD
 	prtd->dsp_cnt = 0;
 	runtime->private_data = prtd;
+=======
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+		ret = snd_pcm_hw_constraint_minmax(runtime,
+			SNDRV_PCM_HW_PARAM_BUFFER_BYTES,
+			PLAYBACK_NUM_PERIODS * PLAYBACK_MIN_PERIOD_SIZE,
+			PLAYBACK_NUM_PERIODS * PLAYBACK_MAX_PERIOD_SIZE);
+		if (ret < 0) {
+			pr_err("constraint for buffer bytes min max ret = %d\n",
+									ret);
+		}
+	}
+
+	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
+		ret = snd_pcm_hw_constraint_minmax(runtime,
+			SNDRV_PCM_HW_PARAM_BUFFER_BYTES,
+			CAPTURE_NUM_PERIODS * CAPTURE_MIN_PERIOD_SIZE,
+			CAPTURE_NUM_PERIODS * CAPTURE_MAX_PERIOD_SIZE);
+		if (ret < 0) {
+			pr_err("constraint for buffer bytes min max ret = %d\n",
+									ret);
+		}
+	}
+
+	prtd->dsp_cnt = 0;
+	runtime->private_data = prtd;
+	pr_debug("substream->pcm->device = %d\n", substream->pcm->device);
+	pr_debug("soc_prtd->dai_link->be_id = %d\n", soc_prtd->dai_link->be_id);
+	multi_ch_pcm_audio.prtd = prtd;
+	ret = multi_ch_pcm_set_volume(multi_ch_pcm_audio.volume);
+	if (ret < 0)
+		pr_err("%s : Set Volume failed : %d", __func__, ret);
+
+	ret = q6asm_set_softpause(multi_ch_pcm_audio.prtd->audio_client,
+								 &softpause);
+	if (ret < 0)
+		pr_err("%s: Send SoftPause Param failed ret=%d\n",
+			__func__, ret);
+	ret = q6asm_set_softvolume(multi_ch_pcm_audio.prtd->audio_client,
+								 &softvol);
+	if (ret < 0)
+		pr_err("%s: Send SoftVolume Param failed ret=%d\n",
+			__func__, ret);
+>>>>>>> cm-10.0
 
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+int multi_ch_pcm_set_volume(unsigned volume)
+{
+	int rc = 0;
+	pr_err("multi_ch_pcm_set_volume\n");
+
+	if (multi_ch_pcm_audio.prtd && multi_ch_pcm_audio.prtd->audio_client) {
+		pr_err("%s q6asm_set_volume\n", __func__);
+		rc = q6asm_set_volume(multi_ch_pcm_audio.prtd->audio_client,
+								volume);
+		if (rc < 0) {
+			pr_err("%s: Send Volume command failed"
+				" rc=%d\n", __func__, rc);
+		}
+	}
+	multi_ch_pcm_audio.volume = volume;
+	return rc;
+}
+
+
+>>>>>>> cm-10.0
 static int msm_pcm_playback_copy(struct snd_pcm_substream *substream, int a,
 	snd_pcm_uframes_t hwoff, void __user *buf, snd_pcm_uframes_t frames)
 {
@@ -447,6 +568,10 @@ static int msm_pcm_playback_close(struct snd_pcm_substream *substream)
 
 	msm_pcm_routing_dereg_phy_stream(soc_prtd->dai_link->be_id,
 	SNDRV_PCM_STREAM_PLAYBACK);
+<<<<<<< HEAD
+=======
+	multi_ch_pcm_audio.prtd = NULL;
+>>>>>>> cm-10.0
 	q6asm_audio_client_free(prtd->audio_client);
 	kfree(prtd);
 	return 0;
@@ -629,10 +754,22 @@ static int msm_pcm_hw_params(struct snd_pcm_substream *substream,
 	else
 		dir = OUT;
 
+<<<<<<< HEAD
 	ret = q6asm_audio_client_buf_alloc_contiguous(dir,
 			prtd->audio_client,
 			runtime->hw.period_bytes_min,
 			runtime->hw.periods_max);
+=======
+	/*
+	 *TODO : Need to Add Async IO changes. All period
+	 * size might not be supported.
+	 */
+	ret = q6asm_audio_client_buf_alloc_contiguous(dir,
+		prtd->audio_client,
+		(params_buffer_bytes(params) / params_periods(params)),
+		params_periods(params));
+
+>>>>>>> cm-10.0
 	if (ret < 0) {
 		pr_err("Audio Start: Buffer Allocation failed rc = %d\n", ret);
 		return -ENOMEM;
@@ -645,7 +782,11 @@ static int msm_pcm_hw_params(struct snd_pcm_substream *substream,
 	dma_buf->private_data = NULL;
 	dma_buf->area = buf[0].data;
 	dma_buf->addr =  buf[0].phys;
+<<<<<<< HEAD
 	dma_buf->bytes = runtime->hw.buffer_bytes_max;
+=======
+	dma_buf->bytes = params_buffer_bytes(params);
+>>>>>>> cm-10.0
 	if (!dma_buf->area)
 		return -ENOMEM;
 

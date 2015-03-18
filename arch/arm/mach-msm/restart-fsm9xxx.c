@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -18,11 +22,19 @@
 #include <linux/reboot.h>
 #include <linux/io.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <mach/gpio.h>
 
 #define FEMTO_GPIO_PS_HOLD 161
 
 void arch_reset(char mode, const char *cmd)
+=======
+#include <linux/gpio.h>
+
+#define FEMTO_GPIO_PS_HOLD 161
+
+void fsm_restart(char mode, const char *cmd)
+>>>>>>> cm-10.0
 {
 	pr_notice("Going down for restart now\n");
 	msleep(3000);

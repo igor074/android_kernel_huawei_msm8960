@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * All source code in this file is licensed under the following license except
  * where indicated.

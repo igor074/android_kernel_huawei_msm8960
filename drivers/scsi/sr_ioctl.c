@@ -4,6 +4,10 @@
 #include <linux/errno.h>
 #include <linux/string.h>
 #include <linux/blkdev.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/blkpg.h>
 #include <linux/cdrom.h>
 #include <linux/delay.h>

@@ -18,9 +18,20 @@ static int hpfs_file_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 int hpfs_file_fsync(struct file *file, int datasync)
 {
 	struct inode *inode = file->f_mapping->host;
+=======
+int hpfs_file_fsync(struct file *file, loff_t start, loff_t end, int datasync)
+{
+	struct inode *inode = file->f_mapping->host;
+	int ret;
+
+	ret = filemap_write_and_wait_range(file->f_mapping, start, end);
+	if (ret)
+		return ret;
+>>>>>>> cm-10.0
 	return sync_blockdev(inode->i_sb->s_bdev);
 }
 

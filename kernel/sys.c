@@ -4,15 +4,26 @@
  *  Copyright (C) 1991, 1992  Linus Torvalds
  */
 
+<<<<<<< HEAD
 #include <linux/module.h>
 #include <linux/mm.h>
 #include <linux/utsname.h>
 #include <linux/mman.h>
 #include <linux/notifier.h>
+=======
+#include <linux/export.h>
+#include <linux/mm.h>
+#include <linux/utsname.h>
+#include <linux/mman.h>
+>>>>>>> cm-10.0
 #include <linux/reboot.h>
 #include <linux/prctl.h>
 #include <linux/highuid.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
+=======
+#include <linux/kmod.h>
+>>>>>>> cm-10.0
 #include <linux/perf_event.h>
 #include <linux/resource.h>
 #include <linux/kernel.h>
@@ -54,6 +65,7 @@
 #include <asm/io.h>
 #include <asm/unistd.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL_DEBUG
 #define DBG(format, arg...) do { \
     printk(KERN_DEBUG "%s: " format "\n" , __func__ , ## arg); \
@@ -62,6 +74,8 @@
 #define DBG(format, arg...) do { } while (0)
 #endif
 
+=======
+>>>>>>> cm-10.0
 #ifndef SET_UNALIGN_CTL
 # define SET_UNALIGN_CTL(a,b)	(-EINVAL)
 #endif
@@ -188,10 +202,13 @@ SYSCALL_DEFINE3(setpriority, int, which, int, who, int, niceval)
 
 	if (which > PRIO_USER || which < PRIO_PROCESS)
 		goto out;
+<<<<<<< HEAD
 	if (!ccs_capable(CCS_SYS_NICE)) {
 		error = -EPERM;
 		goto out;
 	}
+=======
+>>>>>>> cm-10.0
 
 	/* normalize: avoid signed division (rounding problems) */
 	error = -ESRCH;
@@ -336,6 +353,40 @@ void kernel_restart_prepare(char *cmd)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ *	register_reboot_notifier - Register function to be called at reboot time
+ *	@nb: Info about notifier function to be called
+ *
+ *	Registers a function with the list of functions
+ *	to be called at reboot time.
+ *
+ *	Currently always returns zero, as blocking_notifier_chain_register()
+ *	always returns zero.
+ */
+int register_reboot_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_register(&reboot_notifier_list, nb);
+}
+EXPORT_SYMBOL(register_reboot_notifier);
+
+/**
+ *	unregister_reboot_notifier - Unregister previously registered reboot notifier
+ *	@nb: Hook to be unregistered
+ *
+ *	Unregisters a previously registered reboot
+ *	notifier function.
+ *
+ *	Returns zero on success, or %-ENOENT on failure.
+ */
+int unregister_reboot_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_unregister(&reboot_notifier_list, nb);
+}
+EXPORT_SYMBOL(unregister_reboot_notifier);
+
+/**
+>>>>>>> cm-10.0
  *	kernel_restart - reboot the system
  *	@cmd: pointer to buffer containing command to execute for restart
  *		or %NULL
@@ -386,6 +437,7 @@ EXPORT_SYMBOL_GPL(kernel_halt);
  */
 void kernel_power_off(void)
 {
+<<<<<<< HEAD
     DBG("begin");
     
 	kernel_shutdown_prepare(SYSTEM_POWER_OFF);
@@ -401,12 +453,21 @@ void kernel_power_off(void)
 
     DBG("disable_nonboot_cpus complete");
     
+=======
+	kernel_shutdown_prepare(SYSTEM_POWER_OFF);
+	if (pm_power_off_prepare)
+		pm_power_off_prepare();
+	disable_nonboot_cpus();
+>>>>>>> cm-10.0
 	syscore_shutdown();
 	printk(KERN_EMERG "Power down.\n");
 	kmsg_dump(KMSG_DUMP_POWEROFF);
 	machine_power_off();
+<<<<<<< HEAD
 
     DBG("end");
+=======
+>>>>>>> cm-10.0
 }
 EXPORT_SYMBOL_GPL(kernel_power_off);
 
@@ -426,8 +487,11 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
 	char buffer[256];
 	int ret = 0;
 
+<<<<<<< HEAD
     DBG("SYSCALL_DEFINE4  power off debug begin");
 
+=======
+>>>>>>> cm-10.0
 	/* We only trust the superuser with rebooting the system. */
 	if (!capable(CAP_SYS_BOOT))
 		return -EPERM;
@@ -439,8 +503,20 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
 			magic2 != LINUX_REBOOT_MAGIC2B &&
 	                magic2 != LINUX_REBOOT_MAGIC2C))
 		return -EINVAL;
+<<<<<<< HEAD
 	if (!ccs_capable(CCS_SYS_REBOOT))
 		return -EPERM;
+=======
+
+	/*
+	 * If pid namespaces are enabled and the current task is in a child
+	 * pid_namespace, the command is handled by reboot_pid_ns() which will
+	 * call do_exit().
+	 */
+	ret = reboot_pid_ns(task_active_pid_ns(current), cmd);
+	if (ret)
+		return ret;
+>>>>>>> cm-10.0
 
 	/* Instead of trying to make the power_off code look like
 	 * halt when pm_power_off is not set do it the easy way.
@@ -451,7 +527,10 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
 	mutex_lock(&reboot_mutex);
 	switch (cmd) {
 	case LINUX_REBOOT_CMD_RESTART:
+<<<<<<< HEAD
         DBG("case LINUX_REBOOT_CMD_RESTART");
+=======
+>>>>>>> cm-10.0
 		kernel_restart(NULL);
 		break;
 
@@ -469,7 +548,10 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
 		panic("cannot halt");
 
 	case LINUX_REBOOT_CMD_POWER_OFF:
+<<<<<<< HEAD
         DBG("case LINUX_REBOOT_CMD_POWER_OFF");
+=======
+>>>>>>> cm-10.0
 		kernel_power_off();
 		do_exit(0);
 		break;
@@ -501,9 +583,12 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
 		break;
 	}
 	mutex_unlock(&reboot_mutex);
+<<<<<<< HEAD
 
     DBG("end");
     
+=======
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -629,11 +714,26 @@ static int set_user(struct cred *new)
 	if (!new_user)
 		return -EAGAIN;
 
+<<<<<<< HEAD
 	if (atomic_read(&new_user->processes) >= rlimit(RLIMIT_NPROC) &&
 			new_user != INIT_USER) {
 		free_uid(new_user);
 		return -EAGAIN;
 	}
+=======
+	/*
+	 * We don't fail in case of NPROC limit excess here because too many
+	 * poorly written programs don't check set*uid() return code, assuming
+	 * it never fails if called by root.  We may still enforce NPROC limit
+	 * for programs doing set*uid()+execve() by harmlessly deferring the
+	 * failure to the execve() stage.
+	 */
+	if (atomic_read(&new_user->processes) >= rlimit(RLIMIT_NPROC) &&
+			new_user != INIT_USER)
+		current->flags |= PF_NPROC_EXCEEDED;
+	else
+		current->flags &= ~PF_NPROC_EXCEEDED;
+>>>>>>> cm-10.0
 
 	free_uid(new->user);
 	new->user = new_user;
@@ -1166,6 +1266,7 @@ DECLARE_RWSEM(uts_sem);
  * Work around broken programs that cannot handle "Linux 3.0".
  * Instead we map 3.x to 2.6.40+x, so e.g. 3.0 would be 2.6.40
  */
+<<<<<<< HEAD
 static int override_release(char __user *release, int len)
 {
 	int ret = 0;
@@ -1175,6 +1276,18 @@ static int override_release(char __user *release, int len)
 		char *rest = UTS_RELEASE;
 		int ndots = 0;
 		unsigned v;
+=======
+static int override_release(char __user *release, size_t len)
+{
+	int ret = 0;
+
+	if (current->personality & UNAME26) {
+		const char *rest = UTS_RELEASE;
+		char buf[65] = { 0 };
+		int ndots = 0;
+		unsigned v;
+		size_t copy;
+>>>>>>> cm-10.0
 
 		while (*rest) {
 			if (*rest == '.' && ++ndots >= 3)
@@ -1184,8 +1297,14 @@ static int override_release(char __user *release, int len)
 			rest++;
 		}
 		v = ((LINUX_VERSION_CODE >> 8) & 0xff) + 40;
+<<<<<<< HEAD
 		snprintf(buf, len, "2.6.%u%s", v, rest);
 		ret = copy_to_user(release, buf, len);
+=======
+		copy = clamp_t(size_t, len, 1, sizeof(buf));
+		copy = scnprintf(buf, copy, "2.6.%u%s", v, rest);
+		ret = copy_to_user(release, buf, copy + 1);
+>>>>>>> cm-10.0
 	}
 	return ret;
 }
@@ -1274,8 +1393,11 @@ SYSCALL_DEFINE2(sethostname, char __user *, name, int, len)
 
 	if (len < 0 || len > __NEW_UTS_LEN)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (!ccs_capable(CCS_SYS_SETHOSTNAME))
 		return -EPERM;
+=======
+>>>>>>> cm-10.0
 	down_write(&uts_sem);
 	errno = -EFAULT;
 	if (!copy_from_user(tmp, name, len)) {
@@ -1285,6 +1407,10 @@ SYSCALL_DEFINE2(sethostname, char __user *, name, int, len)
 		memset(u->nodename + len, 0, sizeof(u->nodename) - len);
 		errno = 0;
 	}
+<<<<<<< HEAD
+=======
+	uts_proc_notify(UTS_PROC_HOSTNAME);
+>>>>>>> cm-10.0
 	up_write(&uts_sem);
 	return errno;
 }
@@ -1325,8 +1451,11 @@ SYSCALL_DEFINE2(setdomainname, char __user *, name, int, len)
 		return -EPERM;
 	if (len < 0 || len > __NEW_UTS_LEN)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (!ccs_capable(CCS_SYS_SETHOSTNAME))
 		return -EPERM;
+=======
+>>>>>>> cm-10.0
 
 	down_write(&uts_sem);
 	errno = -EFAULT;
@@ -1337,6 +1466,10 @@ SYSCALL_DEFINE2(setdomainname, char __user *, name, int, len)
 		memset(u->domainname + len, 0, sizeof(u->domainname) - len);
 		errno = 0;
 	}
+<<<<<<< HEAD
+=======
+	uts_proc_notify(UTS_PROC_DOMAINNAME);
+>>>>>>> cm-10.0
 	up_write(&uts_sem);
 	return errno;
 }
@@ -1603,7 +1736,11 @@ static void k_getrusage(struct task_struct *p, int who, struct rusage *r)
 	unsigned long maxrss = 0;
 
 	memset((char *) r, 0, sizeof *r);
+<<<<<<< HEAD
 	utime = stime = cputime_zero;
+=======
+	utime = stime = 0;
+>>>>>>> cm-10.0
 
 	if (who == RUSAGE_THREAD) {
 		task_times(current, &utime, &stime);
@@ -1633,8 +1770,13 @@ static void k_getrusage(struct task_struct *p, int who, struct rusage *r)
 
 		case RUSAGE_SELF:
 			thread_group_times(p, &tgutime, &tgstime);
+<<<<<<< HEAD
 			utime = cputime_add(utime, tgutime);
 			stime = cputime_add(stime, tgstime);
+=======
+			utime += tgutime;
+			stime += tgstime;
+>>>>>>> cm-10.0
 			r->ru_nvcsw += p->signal->nvcsw;
 			r->ru_nivcsw += p->signal->nivcsw;
 			r->ru_minflt += p->signal->min_flt;
@@ -1690,6 +1832,127 @@ SYSCALL_DEFINE1(umask, int, mask)
 	return mask;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_CHECKPOINT_RESTORE
+static int prctl_set_mm(int opt, unsigned long addr,
+			unsigned long arg4, unsigned long arg5)
+{
+	unsigned long rlim = rlimit(RLIMIT_DATA);
+	unsigned long vm_req_flags;
+	unsigned long vm_bad_flags;
+	struct vm_area_struct *vma;
+	int error = 0;
+	struct mm_struct *mm = current->mm;
+
+	if (arg4 | arg5)
+		return -EINVAL;
+
+	if (!capable(CAP_SYS_RESOURCE))
+		return -EPERM;
+
+	if (addr >= TASK_SIZE)
+		return -EINVAL;
+
+	down_read(&mm->mmap_sem);
+	vma = find_vma(mm, addr);
+
+	if (opt != PR_SET_MM_START_BRK && opt != PR_SET_MM_BRK) {
+		/* It must be existing VMA */
+		if (!vma || vma->vm_start > addr)
+			goto out;
+	}
+
+	error = -EINVAL;
+	switch (opt) {
+	case PR_SET_MM_START_CODE:
+	case PR_SET_MM_END_CODE:
+		vm_req_flags = VM_READ | VM_EXEC;
+		vm_bad_flags = VM_WRITE | VM_MAYSHARE;
+
+		if ((vma->vm_flags & vm_req_flags) != vm_req_flags ||
+		    (vma->vm_flags & vm_bad_flags))
+			goto out;
+
+		if (opt == PR_SET_MM_START_CODE)
+			mm->start_code = addr;
+		else
+			mm->end_code = addr;
+		break;
+
+	case PR_SET_MM_START_DATA:
+	case PR_SET_MM_END_DATA:
+		vm_req_flags = VM_READ | VM_WRITE;
+		vm_bad_flags = VM_EXEC | VM_MAYSHARE;
+
+		if ((vma->vm_flags & vm_req_flags) != vm_req_flags ||
+		    (vma->vm_flags & vm_bad_flags))
+			goto out;
+
+		if (opt == PR_SET_MM_START_DATA)
+			mm->start_data = addr;
+		else
+			mm->end_data = addr;
+		break;
+
+	case PR_SET_MM_START_STACK:
+
+#ifdef CONFIG_STACK_GROWSUP
+		vm_req_flags = VM_READ | VM_WRITE | VM_GROWSUP;
+#else
+		vm_req_flags = VM_READ | VM_WRITE | VM_GROWSDOWN;
+#endif
+		if ((vma->vm_flags & vm_req_flags) != vm_req_flags)
+			goto out;
+
+		mm->start_stack = addr;
+		break;
+
+	case PR_SET_MM_START_BRK:
+		if (addr <= mm->end_data)
+			goto out;
+
+		if (rlim < RLIM_INFINITY &&
+		    (mm->brk - addr) +
+		    (mm->end_data - mm->start_data) > rlim)
+			goto out;
+
+		mm->start_brk = addr;
+		break;
+
+	case PR_SET_MM_BRK:
+		if (addr <= mm->end_data)
+			goto out;
+
+		if (rlim < RLIM_INFINITY &&
+		    (addr - mm->start_brk) +
+		    (mm->end_data - mm->start_data) > rlim)
+			goto out;
+
+		mm->brk = addr;
+		break;
+
+	default:
+		error = -EINVAL;
+		goto out;
+	}
+
+	error = 0;
+
+out:
+	up_read(&mm->mmap_sem);
+
+	return error;
+}
+#else /* CONFIG_CHECKPOINT_RESTORE */
+static int prctl_set_mm(int opt, unsigned long addr,
+			unsigned long arg4, unsigned long arg5)
+{
+	return -EINVAL;
+}
+#endif
+
+>>>>>>> cm-10.0
 SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		unsigned long, arg4, unsigned long, arg5)
 {
@@ -1760,6 +2023,10 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 					      sizeof(me->comm) - 1) < 0)
 				return -EFAULT;
 			set_task_comm(me, comm);
+<<<<<<< HEAD
+=======
+			proc_comm_connector(me);
+>>>>>>> cm-10.0
 			return 0;
 		case PR_GET_NAME:
 			get_task_comm(comm, me);
@@ -1838,6 +2105,20 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 			else
 				error = PR_MCE_KILL_DEFAULT;
 			break;
+<<<<<<< HEAD
+=======
+		case PR_SET_MM:
+			error = prctl_set_mm(arg2, arg3, arg4, arg5);
+			break;
+		case PR_SET_CHILD_SUBREAPER:
+			me->signal->is_child_subreaper = !!arg2;
+			error = 0;
+			break;
+		case PR_GET_CHILD_SUBREAPER:
+			error = put_user(me->signal->is_child_subreaper,
+					 (int __user *) arg2);
+			break;
+>>>>>>> cm-10.0
 		default:
 			error = -EINVAL;
 			break;

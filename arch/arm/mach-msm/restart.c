@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,8 +15,11 @@
  *
  */
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/kernel.h>
@@ -52,6 +59,7 @@
 static int restart_mode;
 void *restart_reason;
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
 #define RESTART_FLAG_ADDR  0x800
 #define RESTART_FLAG_MAGIC_NUM  0x25866220
@@ -59,6 +67,8 @@ void *restart_reason;
 void *restart_flag_addr;
 #endif
 
+=======
+>>>>>>> cm-10.0
 int pmic_reset_irq;
 static void __iomem *msm_tmr0_base;
 
@@ -186,7 +196,11 @@ static irqreturn_t resout_irq_handler(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 void arch_reset(char mode, const char *cmd)
+=======
+void msm_restart(char mode, const char *cmd)
+>>>>>>> cm-10.0
 {
 
 #ifdef CONFIG_MSM_DLOAD_MODE
@@ -208,11 +222,14 @@ void arch_reset(char mode, const char *cmd)
 
 	printk(KERN_NOTICE "Going down for restart now\n");
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
        //write the flag for reboot action
        __raw_writel(RESTART_FLAG_MAGIC_NUM,  restart_flag_addr);
 #endif
 
+=======
+>>>>>>> cm-10.0
 	pm8xxx_reset_pwr_off(1);
 
 	if (cmd != NULL) {
@@ -220,6 +237,7 @@ void arch_reset(char mode, const char *cmd)
 			__raw_writel(0x77665500, restart_reason);
 		} else if (!strncmp(cmd, "recovery", 8)) {
 			__raw_writel(0x77665502, restart_reason);
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
 		} else if(!strncmp(cmd, "resetfactory", 12)){
 			__raw_writel(0x77665520, restart_reason);
@@ -239,6 +257,8 @@ void arch_reset(char mode, const char *cmd)
 		       __raw_writel(0xF4C3D2C1, dload_mode_addr);
 		       mb();
 #endif
+=======
+>>>>>>> cm-10.0
 		} else if (!strncmp(cmd, "oem-", 4)) {
 			unsigned long code;
 			code = simple_strtoul(cmd + 4, NULL, 16) & 0xff;
@@ -265,6 +285,7 @@ void arch_reset(char mode, const char *cmd)
 	printk(KERN_ERR "Restarting has failed\n");
 }
 
+<<<<<<< HEAD
 static int __init msm_restart_init(void)
 {
 	int rc;
@@ -284,6 +305,12 @@ static int __init msm_restart_init(void)
 	restart_flag_addr = MSM_IMEM_BASE  + RESTART_FLAG_ADDR;
 #endif
 
+=======
+static int __init msm_pmic_restart_init(void)
+{
+	int rc;
+
+>>>>>>> cm-10.0
 	if (pmic_reset_irq != 0) {
 		rc = request_any_context_irq(pmic_reset_irq,
 					resout_irq_handler, IRQF_TRIGGER_HIGH,
@@ -297,4 +324,23 @@ static int __init msm_restart_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 late_initcall(msm_restart_init);
+=======
+late_initcall(msm_pmic_restart_init);
+
+static int __init msm_restart_init(void)
+{
+#ifdef CONFIG_MSM_DLOAD_MODE
+	atomic_notifier_chain_register(&panic_notifier_list, &panic_blk);
+	dload_mode_addr = MSM_IMEM_BASE + DLOAD_MODE_ADDR;
+	set_dload_mode(download_mode);
+#endif
+	msm_tmr0_base = msm_timer_get_timer0_base();
+	restart_reason = MSM_IMEM_BASE + RESTART_REASON_ADDR;
+	pm_power_off = msm_power_off;
+
+	return 0;
+}
+early_initcall(msm_restart_init);
+>>>>>>> cm-10.0

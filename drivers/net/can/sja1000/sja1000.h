@@ -40,13 +40,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  *
+<<<<<<< HEAD
  * Send feedback to <socketcan-users@lists.berlios.de>
  *
+=======
+>>>>>>> cm-10.0
  */
 
 #ifndef SJA1000_DEV_H
 #define SJA1000_DEV_H
 
+<<<<<<< HEAD
+=======
+#include <linux/irqreturn.h>
+>>>>>>> cm-10.0
 #include <linux/can/dev.h>
 #include <linux/can/platform/sja1000.h>
 

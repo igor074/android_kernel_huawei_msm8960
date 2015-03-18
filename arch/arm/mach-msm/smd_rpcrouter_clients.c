@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,10 +19,18 @@
  * SMD RPCROUTER CLIENTS module.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/slab.h>
 #include <linux/kernel.h>
 #include <linux/kthread.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #include <mach/msm_rpcrouter.h>
 #include "smd_rpcrouter.h"

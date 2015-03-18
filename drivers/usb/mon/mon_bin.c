@@ -11,6 +11,10 @@
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/cdev.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/usb.h>
 #include <linux/poll.h>
 #include <linux/compat.h>
@@ -1101,7 +1105,11 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
 		nevents = mon_bin_queued(rp);
 
 		sp = (struct mon_bin_stats __user *)arg;
+<<<<<<< HEAD
 		if (put_user(rp->cnt_lost, &sp->dropped))
+=======
+		if (put_user(ndropped, &sp->dropped))
+>>>>>>> cm-10.0
 			return -EFAULT;
 		if (put_user(nevents, &sp->queued))
 			return -EFAULT;

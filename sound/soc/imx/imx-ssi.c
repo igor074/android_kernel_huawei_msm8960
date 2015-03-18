@@ -112,7 +112,11 @@ static int imx_ssi_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 		break;
 	case SND_SOC_DAIFMT_DSP_A:
 		/* data on rising edge of bclk, frame high 1clk before data */
+<<<<<<< HEAD
 		strcr |= SSI_STCR_TFSL | SSI_STCR_TEFS;
+=======
+		strcr |= SSI_STCR_TFSL | SSI_STCR_TXBIT0 | SSI_STCR_TEFS;
+>>>>>>> cm-10.0
 		break;
 	}
 
@@ -233,6 +237,26 @@ static int imx_ssi_set_dai_clkdiv(struct snd_soc_dai *cpu_dai,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int imx_ssi_startup(struct snd_pcm_substream *substream,
+			   struct snd_soc_dai *cpu_dai)
+{
+	struct imx_ssi *ssi = snd_soc_dai_get_drvdata(cpu_dai);
+	struct imx_pcm_dma_params *dma_data;
+
+	/* Tx/Rx config */
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+		dma_data = &ssi->dma_params_tx;
+	else
+		dma_data = &ssi->dma_params_rx;
+
+	snd_soc_dai_set_dma_data(cpu_dai, substream, dma_data);
+
+	return 0;
+}
+
+>>>>>>> cm-10.0
 /*
  * Should only be called when port is inactive (i.e. SSIEN = 0),
  * although can be called multiple times by upper layers.
@@ -242,6 +266,7 @@ static int imx_ssi_hw_params(struct snd_pcm_substream *substream,
 			     struct snd_soc_dai *cpu_dai)
 {
 	struct imx_ssi *ssi = snd_soc_dai_get_drvdata(cpu_dai);
+<<<<<<< HEAD
 	struct imx_pcm_dma_params *dma_data;
 	u32 reg, sccr;
 
@@ -253,12 +278,24 @@ static int imx_ssi_hw_params(struct snd_pcm_substream *substream,
 		reg = SSI_SRCCR;
 		dma_data = &ssi->dma_params_rx;
 	}
+=======
+	u32 reg, sccr;
+
+	/* Tx/Rx config */
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+		reg = SSI_STCCR;
+	else
+		reg = SSI_SRCCR;
+>>>>>>> cm-10.0
 
 	if (ssi->flags & IMX_SSI_SYN)
 		reg = SSI_STCCR;
 
+<<<<<<< HEAD
 	snd_soc_dai_set_dma_data(cpu_dai, substream, dma_data);
 
+=======
+>>>>>>> cm-10.0
 	sccr = readl(ssi->base + reg) & ~SSI_STCCR_WL_MASK;
 
 	/* DAI data (word) size */
@@ -342,7 +379,12 @@ static int imx_ssi_trigger(struct snd_pcm_substream *substream, int cmd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct snd_soc_dai_ops imx_ssi_pcm_dai_ops = {
+=======
+static const struct snd_soc_dai_ops imx_ssi_pcm_dai_ops = {
+	.startup	= imx_ssi_startup,
+>>>>>>> cm-10.0
 	.hw_params	= imx_ssi_hw_params,
 	.set_fmt	= imx_ssi_set_dai_fmt,
 	.set_clkdiv	= imx_ssi_set_dai_clkdiv,
@@ -351,6 +393,7 @@ static struct snd_soc_dai_ops imx_ssi_pcm_dai_ops = {
 	.trigger	= imx_ssi_trigger,
 };
 
+<<<<<<< HEAD
 int snd_imx_pcm_mmap(struct snd_pcm_substream *substream,
 		struct vm_area_struct *vma)
 {
@@ -440,6 +483,8 @@ void imx_pcm_free(struct snd_pcm *pcm)
 }
 EXPORT_SYMBOL_GPL(imx_pcm_free);
 
+=======
+>>>>>>> cm-10.0
 static int imx_ssi_dai_probe(struct snd_soc_dai *dai)
 {
 	struct imx_ssi *ssi = dev_get_drvdata(dai->dev);
@@ -657,7 +702,11 @@ static int imx_ssi_probe(struct platform_device *pdev)
 	ssi->dma_params_rx.dma_addr = res->start + SSI_SRX0;
 	ssi->dma_params_tx.dma_addr = res->start + SSI_STX0;
 
+<<<<<<< HEAD
 	ssi->dma_params_tx.burstsize = 4;
+=======
+	ssi->dma_params_tx.burstsize = 6;
+>>>>>>> cm-10.0
 	ssi->dma_params_rx.burstsize = 4;
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "tx0");
@@ -758,6 +807,7 @@ static struct platform_driver imx_ssi_driver = {
 	},
 };
 
+<<<<<<< HEAD
 static int __init imx_ssi_init(void)
 {
 	return platform_driver_register(&imx_ssi_driver);
@@ -770,6 +820,9 @@ static void __exit imx_ssi_exit(void)
 
 module_init(imx_ssi_init);
 module_exit(imx_ssi_exit);
+=======
+module_platform_driver(imx_ssi_driver);
+>>>>>>> cm-10.0
 
 /* Module information */
 MODULE_AUTHOR("Sascha Hauer, <s.hauer@pengutronix.de>");

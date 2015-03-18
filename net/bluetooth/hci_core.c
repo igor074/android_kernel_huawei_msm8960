@@ -1,6 +1,10 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
+<<<<<<< HEAD
    Copyright (c) 2000-2001, 2010-2012 Code Aurora Forum.  All rights reserved.
+=======
+   Copyright (c) 2000-2001, 2010-2012 The Linux Foundation.  All rights reserved.
+>>>>>>> cm-10.0
 
    Written 2000,2001 by Maxim Krasnyansky <maxk@qualcomm.com>
 
@@ -60,7 +64,11 @@ static void hci_tx_task(unsigned long arg);
 
 static DEFINE_RWLOCK(hci_task_lock);
 
+<<<<<<< HEAD
 static int enable_smp = 1;
+=======
+static bool enable_smp = 1;
+>>>>>>> cm-10.0
 
 /* HCI device list */
 LIST_HEAD(hci_dev_list);
@@ -305,6 +313,15 @@ static void hci_le_init_req(struct hci_dev *hdev, unsigned long opt)
 
 	/* Read LE buffer size */
 	hci_send_cmd(hdev, HCI_OP_LE_READ_BUFFER_SIZE, 0, NULL);
+<<<<<<< HEAD
+=======
+
+	/* Read LE clear white list */
+	hci_send_cmd(hdev, HCI_OP_LE_CLEAR_WHITE_LIST, 0, NULL);
+
+	/* Read LE white list size */
+	hci_send_cmd(hdev, HCI_OP_LE_READ_WHITE_LIST_SIZE, 0, NULL);
+>>>>>>> cm-10.0
 }
 
 static void hci_scan_req(struct hci_dev *hdev, unsigned long opt)
@@ -1563,7 +1580,11 @@ int hci_unregister_dev(struct hci_dev *hdev)
 	list_del(&hdev->list);
 	write_unlock_bh(&hci_dev_list_lock);
 
+<<<<<<< HEAD
 	hci_dev_do_close(hdev, 0);
+=======
+	hci_dev_do_close(hdev, hdev->bus == HCI_SMD);
+>>>>>>> cm-10.0
 
 	for (i = 0; i < NUM_REASSEMBLY; i++)
 		kfree_skb(hdev->reassembly[i]);
@@ -2234,6 +2255,10 @@ static inline void hci_sched_acl(struct hci_dev *hdev)
 			if (count > hdev->acl_cnt)
 				return;
 
+<<<<<<< HEAD
+=======
+			hci_dev_lock(hdev);
+>>>>>>> cm-10.0
 			hci_conn_enter_active_mode(conn, bt_cb(skb)->force_active);
 
 			hci_send_frame(skb);
@@ -2243,6 +2268,10 @@ static inline void hci_sched_acl(struct hci_dev *hdev)
 			quote -= count;
 
 			conn->sent += count;
+<<<<<<< HEAD
+=======
+			hci_dev_unlock(hdev);
+>>>>>>> cm-10.0
 		}
 	}
 }

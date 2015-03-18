@@ -6,7 +6,10 @@
 #include <linux/kernel.h>
 #include <linux/preempt.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/page.h>
 #include <asm/tlbflush.h>
 #include <asm/tlb.h>
@@ -236,6 +239,11 @@ static void setup_tsb_params(struct mm_struct *mm, unsigned long tsb_idx, unsign
 	}
 }
 
+<<<<<<< HEAD
+=======
+struct kmem_cache *pgtable_cache __read_mostly;
+
+>>>>>>> cm-10.0
 static struct kmem_cache *tsb_caches[8] __read_mostly;
 
 static const char *tsb_cache_names[8] = {
@@ -253,6 +261,18 @@ void __init pgtable_cache_init(void)
 {
 	unsigned long i;
 
+<<<<<<< HEAD
+=======
+	pgtable_cache = kmem_cache_create("pgtable_cache",
+					  PAGE_SIZE, PAGE_SIZE,
+					  0,
+					  _clear_page);
+	if (!pgtable_cache) {
+		prom_printf("pgtable_cache_init(): Could not create!\n");
+		prom_halt();
+	}
+
+>>>>>>> cm-10.0
 	for (i = 0; i < 8; i++) {
 		unsigned long size = 8192 << i;
 		const char *name = tsb_cache_names[i];

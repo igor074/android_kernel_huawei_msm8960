@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,9 +21,14 @@
 
 #define PM8XXX_PWM_DEV_NAME	"pm8xxx-pwm"
 
+<<<<<<< HEAD
 #define PM8XXX_PWM_PERIOD_MAX		(327 * USEC_PER_SEC)
 #define PM8XXX_PWM_PERIOD_MIN		7 /* micro seconds */
 
+=======
+#define PM8XXX_PWM_PERIOD_MIN	7 /* usec: 19.2M, n=6, m=0, pre=2 */
+#define PM8XXX_PWM_PERIOD_MAX	(384 * USEC_PER_SEC) /* 1K, n=9, m=7, pre=6 */
+>>>>>>> cm-10.0
 #define PM_PWM_LUT_SIZE			64
 #define PM_PWM_LUT_DUTY_TIME_MAX	512	/* ms */
 #define PM_PWM_LUT_PAUSE_MAX		(7000 * PM_PWM_LUT_DUTY_TIME_MAX)

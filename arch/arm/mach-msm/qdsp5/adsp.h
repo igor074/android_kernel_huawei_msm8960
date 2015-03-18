@@ -1,7 +1,11 @@
 /* arch/arm/mach-msm/qdsp5/adsp.h
  *
  * Copyright (C) 2008 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2008-2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2010, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Author: Iliyan Malchev <ibm@android.com>
  *
  * This software is licensed under the terms of the GNU General Public
@@ -20,12 +24,23 @@
 
 #include <linux/types.h>
 #include <linux/msm_adsp.h>
+<<<<<<< HEAD
+=======
+#include <linux/ion.h>
+>>>>>>> cm-10.0
 #include <mach/msm_rpcrouter.h>
 #include <mach/msm_adsp.h>
 
 int adsp_pmem_fixup(struct msm_adsp_module *module, void **addr,
 		    unsigned long len);
+<<<<<<< HEAD
 int adsp_pmem_fixup_kvaddr(struct msm_adsp_module *module, void **addr,
+=======
+int adsp_ion_do_cache_op(struct msm_adsp_module *module, void *addr,
+			void *paddr, unsigned long len,
+			unsigned long offset, int cmd);
+int adsp_ion_fixup_kvaddr(struct msm_adsp_module *module, void **addr,
+>>>>>>> cm-10.0
 			   unsigned long *kvaddr, unsigned long len,
 			   struct file **filp, unsigned long *offset);
 int adsp_pmem_paddr_fixup(struct msm_adsp_module *module, void **addr);
@@ -117,6 +132,13 @@ struct adsp_info {
 	struct adsp_rtos_mp_mtoa_init_info_type	*init_info_ptr;
 	wait_queue_head_t	init_info_wait;
 	unsigned 		init_info_state;
+<<<<<<< HEAD
+=======
+	struct mutex lock;
+
+	/* Interrupt value */
+	int int_adsp;
+>>>>>>> cm-10.0
 };
 
 #define RPC_ADSP_RTOS_ATOM_NULL_PROC 0
@@ -272,8 +294,13 @@ struct msm_adsp_module {
 	struct clk *clk;
 	int open_count;
 
+<<<<<<< HEAD
 	struct mutex pmem_regions_lock;
 	struct hlist_head pmem_regions;
+=======
+	struct mutex ion_regions_lock;
+	struct hlist_head ion_regions;
+>>>>>>> cm-10.0
 	int (*verify_cmd) (struct msm_adsp_module*, unsigned int, void *,
 			   size_t);
 	int (*patch_event) (struct msm_adsp_module*, struct adsp_event *);

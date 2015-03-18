@@ -16,6 +16,10 @@
 #include <linux/regulator/driver.h>
 #include <linux/regulator/machine.h>
 #include <linux/mfd/88pm860x.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 struct pm8607_regulator_info {
 	struct regulator_desc	desc;
@@ -195,7 +199,11 @@ static const unsigned int LDO12_suspend_table[] = {
 };
 
 static const unsigned int LDO13_table[] = {
+<<<<<<< HEAD
 	1300000, 1800000, 2000000, 2500000, 2800000, 3000000, 0, 0,
+=======
+	1200000, 1300000, 1800000, 2000000, 2500000, 2800000, 3000000, 0,
+>>>>>>> cm-10.0
 };
 
 static const unsigned int LDO13_suspend_table[] = {
@@ -388,10 +396,17 @@ static struct pm8607_regulator_info pm8607_regulator_info[] = {
 	PM8607_LDO( 7,         LDO7, 0, 3, SUPPLIES_EN12, 1),
 	PM8607_LDO( 8,         LDO8, 0, 3, SUPPLIES_EN12, 2),
 	PM8607_LDO( 9,         LDO9, 0, 3, SUPPLIES_EN12, 3),
+<<<<<<< HEAD
 	PM8607_LDO(10,        LDO10, 0, 3, SUPPLIES_EN12, 4),
 	PM8607_LDO(12,        LDO12, 0, 4, SUPPLIES_EN12, 5),
 	PM8607_LDO(13, VIBRATOR_SET, 1, 3,  VIBRATOR_SET, 0),
 	PM8607_LDO(14,        LDO14, 0, 4, SUPPLIES_EN12, 6),
+=======
+	PM8607_LDO(10,        LDO10, 0, 4, SUPPLIES_EN12, 4),
+	PM8607_LDO(12,        LDO12, 0, 4, SUPPLIES_EN12, 5),
+	PM8607_LDO(13, VIBRATOR_SET, 1, 3,  VIBRATOR_SET, 0),
+	PM8607_LDO(14,        LDO14, 0, 3, SUPPLIES_EN12, 6),
+>>>>>>> cm-10.0
 };
 
 static int __devinit pm8607_regulator_probe(struct platform_device *pdev)
@@ -412,7 +427,11 @@ static int __devinit pm8607_regulator_probe(struct platform_device *pdev)
 		if (info->desc.id == res->start)
 			break;
 	}
+<<<<<<< HEAD
 	if ((i < 0) || (i > PM8607_ID_RG_MAX)) {
+=======
+	if (i == ARRAY_SIZE(pm8607_regulator_info)) {
+>>>>>>> cm-10.0
 		dev_err(&pdev->dev, "Failed to find regulator %llu\n",
 			(unsigned long long)res->start);
 		return -EINVAL;
@@ -426,7 +445,11 @@ static int __devinit pm8607_regulator_probe(struct platform_device *pdev)
 
 	/* replace driver_data with info */
 	info->regulator = regulator_register(&info->desc, &pdev->dev,
+<<<<<<< HEAD
 					     pdata, info);
+=======
+					     pdata, info, NULL);
+>>>>>>> cm-10.0
 	if (IS_ERR(info->regulator)) {
 		dev_err(&pdev->dev, "failed to register regulator %s\n",
 			info->desc.name);

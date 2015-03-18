@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -53,6 +57,15 @@ enum vcd_power_state {
 	VCD_PWR_STATE_SLEEP,
 };
 
+<<<<<<< HEAD
+=======
+struct vcd_aspect_ratio {
+	u32 aspect_ratio;
+	u32 extended_par_width;
+	u32 extended_par_height;
+};
+
+>>>>>>> cm-10.0
 struct vcd_frame_data {
 	u8 *virtual;
 	u8 *physical;
@@ -71,6 +84,10 @@ struct vcd_frame_data {
 	u8 *desc_buf;
 	u32 desc_size;
 	struct ion_handle *buff_ion_handle;
+<<<<<<< HEAD
+=======
+	struct vcd_aspect_ratio aspect_ratio_info;
+>>>>>>> cm-10.0
 };
 
 struct vcd_sequence_hdr {

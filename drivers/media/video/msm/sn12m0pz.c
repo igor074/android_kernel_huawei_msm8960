@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/delay.h>
 #include <linux/types.h>
 #include <linux/i2c.h>
@@ -1579,7 +1587,11 @@ init_done:
 	CDBG("init_done");
 	return rc;
 }
+<<<<<<< HEAD
 static int __init sn12m0pz_init_client(struct i2c_client *client)
+=======
+static int __devinit sn12m0pz_init_client(struct i2c_client *client)
+>>>>>>> cm-10.0
 {
 	/* Initialize the MSM_CAMI2C Chip */
 	init_waitqueue_head(&sn12m0pz_wait_queue);
@@ -1591,7 +1603,11 @@ static const struct i2c_device_id sn12m0pz_i2c_id[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static int sn12m0pz_i2c_probe(struct i2c_client *client,
+=======
+static int __devinit sn12m0pz_i2c_probe(struct i2c_client *client,
+>>>>>>> cm-10.0
 	const struct i2c_device_id *id)
 {
 	int rc = 0;

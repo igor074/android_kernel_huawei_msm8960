@@ -33,6 +33,10 @@
 
 #include <linux/errno.h>
 #include <linux/string.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/if_ether.h>
 
 #include <rdma/ib_pack.h>

@@ -207,6 +207,12 @@ struct vdec_ioctl_msg {
 #define VDEC_IOCTL_GET_DISABLE_DMX_SUPPORT \
 	_IOR(VDEC_IOCTL_MAGIC, 37, struct vdec_ioctl_msg)
 
+<<<<<<< HEAD
+=======
+#define VDEC_IOCTL_SET_PERF_CLK \
+	_IOR(VDEC_IOCTL_MAGIC, 38, struct vdec_ioctl_msg)
+
+>>>>>>> cm-10.0
 enum vdec_picture {
 	PICTURE_TYPE_I,
 	PICTURE_TYPE_P,
@@ -514,6 +520,15 @@ struct vdec_framesize {
 	uint32_t   bottom;
 };
 
+<<<<<<< HEAD
+=======
+struct vdec_aspectratioinfo {
+	uint32_t aspect_ratio;
+	uint32_t par_width;
+	uint32_t par_height;
+};
+
+>>>>>>> cm-10.0
 struct vdec_output_frameinfo {
 	void __user *bufferaddr;
 	size_t offset;
@@ -525,6 +540,10 @@ struct vdec_output_frameinfo {
 	void *input_frame_clientdata;
 	struct vdec_framesize framesize;
 	enum vdec_interlaced_format interlaced_format;
+<<<<<<< HEAD
+=======
+	struct vdec_aspectratioinfo aspect_ratio_info;
+>>>>>>> cm-10.0
 };
 
 union vdec_msgdata {

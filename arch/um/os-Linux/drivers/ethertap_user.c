@@ -13,11 +13,17 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include "etap.h"
+<<<<<<< HEAD
 #include "kern_constants.h"
 #include "os.h"
 #include "net_user.h"
 #include "um_malloc.h"
 #include "user.h"
+=======
+#include "os.h"
+#include "net_user.h"
+#include "um_malloc.h"
+>>>>>>> cm-10.0
 
 #define MAX_PACKET ETH_MAX_PACKET
 

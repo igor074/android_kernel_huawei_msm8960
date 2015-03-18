@@ -20,6 +20,10 @@
 #include <linux/kernel.h>
 #include <linux/init.h>
 
+<<<<<<< HEAD
+=======
+#include <asm/system_info.h>
+>>>>>>> cm-10.0
 #include <asm/thread_notify.h>
 
 /*

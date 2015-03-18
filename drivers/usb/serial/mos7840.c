@@ -174,6 +174,10 @@
 
 #define CLK_MULTI_REGISTER         ((__u16)(0x02))
 #define CLK_START_VALUE_REGISTER   ((__u16)(0x03))
+<<<<<<< HEAD
+=======
+#define GPIO_REGISTER              ((__u16)(0x07))
+>>>>>>> cm-10.0
 
 #define SERIAL_LCR_DLAB            ((__u16)(0x0080))
 
@@ -263,7 +267,11 @@ struct moschip_port {
 };
 
 
+<<<<<<< HEAD
 static int debug;
+=======
+static bool debug;
+>>>>>>> cm-10.0
 
 /*
  * mos7840_set_reg_sync
@@ -792,8 +800,11 @@ static void mos7840_bulk_in_callback(struct urb *urb)
 	}
 
 
+<<<<<<< HEAD
 	mos7840_port->read_urb->dev = serial->dev;
 
+=======
+>>>>>>> cm-10.0
 	mos7840_port->read_urb_busy = true;
 	retval = usb_submit_urb(mos7840_port->read_urb, GFP_ATOMIC);
 
@@ -1103,6 +1114,7 @@ static int mos7840_open(struct tty_struct *tty, struct usb_serial_port *port)
 	mos7840_port->read_urb = port->read_urb;
 
 	/* set up our bulk in urb */
+<<<<<<< HEAD
 
 	usb_fill_bulk_urb(mos7840_port->read_urb,
 			  serial->dev,
@@ -1111,6 +1123,27 @@ static int mos7840_open(struct tty_struct *tty, struct usb_serial_port *port)
 			  port->bulk_in_buffer,
 			  mos7840_port->read_urb->transfer_buffer_length,
 			  mos7840_bulk_in_callback, mos7840_port);
+=======
+	if ((serial->num_ports == 2)
+		&& ((((__u16)port->number -
+			(__u16)(port->serial->minor)) % 2) != 0)) {
+		usb_fill_bulk_urb(mos7840_port->read_urb,
+			serial->dev,
+			usb_rcvbulkpipe(serial->dev,
+				(port->bulk_in_endpointAddress) + 2),
+			port->bulk_in_buffer,
+			mos7840_port->read_urb->transfer_buffer_length,
+			mos7840_bulk_in_callback, mos7840_port);
+	} else {
+		usb_fill_bulk_urb(mos7840_port->read_urb,
+			serial->dev,
+			usb_rcvbulkpipe(serial->dev,
+				port->bulk_in_endpointAddress),
+			port->bulk_in_buffer,
+			mos7840_port->read_urb->transfer_buffer_length,
+			mos7840_bulk_in_callback, mos7840_port);
+	}
+>>>>>>> cm-10.0
 
 	dbg("mos7840_open: bulkin endpoint is %d",
 	    port->bulk_in_endpointAddress);
@@ -1511,7 +1544,11 @@ static int mos7840_write(struct tty_struct *tty, struct usb_serial_port *port,
 		    kmalloc(URB_TRANSFER_BUFFER_SIZE, GFP_KERNEL);
 
 		if (urb->transfer_buffer == NULL) {
+<<<<<<< HEAD
 			dev_err(&port->dev, "%s no more kernel memory...\n",
+=======
+			dev_err_console(port, "%s no more kernel memory...\n",
+>>>>>>> cm-10.0
 				__func__);
 			goto exit;
 		}
@@ -1521,6 +1558,7 @@ static int mos7840_write(struct tty_struct *tty, struct usb_serial_port *port,
 	memcpy(urb->transfer_buffer, current_position, transfer_size);
 
 	/* fill urb with data and submit  */
+<<<<<<< HEAD
 	usb_fill_bulk_urb(urb,
 			  serial->dev,
 			  usb_sndbulkpipe(serial->dev,
@@ -1528,6 +1566,27 @@ static int mos7840_write(struct tty_struct *tty, struct usb_serial_port *port,
 			  urb->transfer_buffer,
 			  transfer_size,
 			  mos7840_bulk_out_data_callback, mos7840_port);
+=======
+	if ((serial->num_ports == 2)
+		&& ((((__u16)port->number -
+			(__u16)(port->serial->minor)) % 2) != 0)) {
+		usb_fill_bulk_urb(urb,
+			serial->dev,
+			usb_sndbulkpipe(serial->dev,
+				(port->bulk_out_endpointAddress) + 2),
+			urb->transfer_buffer,
+			transfer_size,
+			mos7840_bulk_out_data_callback, mos7840_port);
+	} else {
+		usb_fill_bulk_urb(urb,
+			serial->dev,
+			usb_sndbulkpipe(serial->dev,
+				port->bulk_out_endpointAddress),
+			urb->transfer_buffer,
+			transfer_size,
+			mos7840_bulk_out_data_callback, mos7840_port);
+	}
+>>>>>>> cm-10.0
 
 	data1 = urb->transfer_buffer;
 	dbg("bulkout endpoint is %d", port->bulk_out_endpointAddress);
@@ -1537,7 +1596,11 @@ static int mos7840_write(struct tty_struct *tty, struct usb_serial_port *port,
 
 	if (status) {
 		mos7840_port->busy[i] = 0;
+<<<<<<< HEAD
 		dev_err(&port->dev, "%s - usb_submit_urb(write bulk) failed "
+=======
+		dev_err_console(port, "%s - usb_submit_urb(write bulk) failed "
+>>>>>>> cm-10.0
 			"with status = %d\n", __func__, status);
 		bytes_sent = status;
 		goto exit;
@@ -1840,7 +1903,11 @@ static int mos7840_send_cmd_write_baud_rate(struct moschip_port *mos7840_port,
 
 	} else {
 #ifdef HW_flow_control
+<<<<<<< HEAD
 		/ *setting h/w flow control bit to 0 */
+=======
+		/* setting h/w flow control bit to 0 */
+>>>>>>> cm-10.0
 		Data = 0xb;
 		mos7840_port->shadowMCR = Data;
 		status = mos7840_set_uart_reg(port, MODEM_CONTROL_REGISTER,
@@ -2058,7 +2125,10 @@ static void mos7840_change_port_settings(struct tty_struct *tty,
 	mos7840_set_uart_reg(port, INTERRUPT_ENABLE_REGISTER, Data);
 
 	if (mos7840_port->read_urb_busy == false) {
+<<<<<<< HEAD
 		mos7840_port->read_urb->dev = serial->dev;
+=======
+>>>>>>> cm-10.0
 		mos7840_port->read_urb_busy = true;
 		status = usb_submit_urb(mos7840_port->read_urb, GFP_ATOMIC);
 		if (status) {
@@ -2130,7 +2200,10 @@ static void mos7840_set_termios(struct tty_struct *tty,
 	}
 
 	if (mos7840_port->read_urb_busy == false) {
+<<<<<<< HEAD
 		mos7840_port->read_urb->dev = serial->dev;
+=======
+>>>>>>> cm-10.0
 		mos7840_port->read_urb_busy = true;
 		status = usb_submit_urb(mos7840_port->read_urb, GFP_ATOMIC);
 		if (status) {
@@ -2263,7 +2336,10 @@ static int mos7840_ioctl(struct tty_struct *tty,
 	case TIOCSERGETLSR:
 		dbg("%s (%d) TIOCSERGETLSR", __func__, port->number);
 		return mos7840_get_lsr_info(tty, argp);
+<<<<<<< HEAD
 		return 0;
+=======
+>>>>>>> cm-10.0
 
 	case TIOCGSERIAL:
 		dbg("%s (%d) TIOCGSERIAL", __func__, port->number);
@@ -2310,6 +2386,7 @@ static int mos7840_ioctl(struct tty_struct *tty,
 
 static int mos7840_calc_num_ports(struct usb_serial *serial)
 {
+<<<<<<< HEAD
 	int mos7840_num_ports = 0;
 
 	dbg("numberofendpoints: cur %d, alt %d",
@@ -2323,6 +2400,28 @@ static int mos7840_calc_num_ports(struct usb_serial *serial)
 		mos7840_num_ports = serial->num_ports = 4;
 	}
 	dbg ("mos7840_num_ports = %d", mos7840_num_ports);
+=======
+	__u16 Data = 0x00;
+	int ret = 0;
+	int mos7840_num_ports;
+
+	ret = usb_control_msg(serial->dev, usb_rcvctrlpipe(serial->dev, 0),
+		MCS_RDREQ, MCS_RD_RTYPE, 0, GPIO_REGISTER, &Data,
+		VENDOR_READ_LENGTH, MOS_WDR_TIMEOUT);
+
+	if ((Data & 0x01) == 0) {
+		mos7840_num_ports = 2;
+		serial->num_bulk_in = 2;
+		serial->num_bulk_out = 2;
+		serial->num_ports = 2;
+	} else {
+		mos7840_num_ports = 4;
+		serial->num_bulk_in = 4;
+		serial->num_bulk_out = 4;
+		serial->num_ports = 4;
+	}
+
+>>>>>>> cm-10.0
 	return mos7840_num_ports;
 }
 
@@ -2643,7 +2742,10 @@ static struct usb_driver io_driver = {
 	.probe = usb_serial_probe,
 	.disconnect = usb_serial_disconnect,
 	.id_table = moschip_id_table_combined,
+<<<<<<< HEAD
 	.no_dynamic_id = 1,
+=======
+>>>>>>> cm-10.0
 };
 
 static struct usb_serial_driver moschip7840_4port_device = {
@@ -2652,7 +2754,10 @@ static struct usb_serial_driver moschip7840_4port_device = {
 		   .name = "mos7840",
 		   },
 	.description = DRIVER_DESC,
+<<<<<<< HEAD
 	.usb_driver = &io_driver,
+=======
+>>>>>>> cm-10.0
 	.id_table = moschip_port_id_table,
 	.num_ports = 4,
 	.open = mos7840_open,
@@ -2679,6 +2784,7 @@ static struct usb_serial_driver moschip7840_4port_device = {
 	.read_int_callback = mos7840_interrupt_callback,
 };
 
+<<<<<<< HEAD
 /****************************************************************************
  * moschip7840_init
  *	This is called by the module subsystem, or on startup to initialize us
@@ -2730,6 +2836,14 @@ module_init(moschip7840_init);
 module_exit(moschip7840_exit);
 
 /* Module information */
+=======
+static struct usb_serial_driver * const serial_drivers[] = {
+	&moschip7840_4port_device, NULL
+};
+
+module_usb_serial_driver(io_driver, serial_drivers);
+
+>>>>>>> cm-10.0
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_LICENSE("GPL");
 

@@ -3,7 +3,11 @@
  *
  * Copyright (C) 2010 Samsung Electronics Co.Ltd
  * Author: Joonyoung Shim <jy0922.shim@samsung.com>
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -29,6 +33,15 @@
 /* MXT_TOUCH_KEYARRAY_T15 */
 #define MXT_KEYARRAY_MAX_KEYS	32
 
+<<<<<<< HEAD
+=======
+/* Bootoader IDs */
+#define MXT_BOOTLOADER_ID_224		0x0A
+#define MXT_BOOTLOADER_ID_224E		0x06
+#define MXT_BOOTLOADER_ID_1386		0x01
+#define MXT_BOOTLOADER_ID_1386E		0x10
+
+>>>>>>> cm-10.0
 /* Config data for a given maXTouch controller with a specific firmware */
 struct mxt_config_info {
 	const u8 *config;
@@ -37,6 +50,12 @@ struct mxt_config_info {
 	u8 variant_id;
 	u8 version;
 	u8 build;
+<<<<<<< HEAD
+=======
+	u8 bootldr_id;
+	/* Points to the firmware name to be upgraded to */
+	const char *fw_name;
+>>>>>>> cm-10.0
 };
 
 /* The platform data for the Atmel maXTouch touchscreen driver */
@@ -44,8 +63,23 @@ struct mxt_platform_data {
 	const struct mxt_config_info *config_array;
 	size_t config_array_size;
 
+<<<<<<< HEAD
 	unsigned int x_size;
 	unsigned int y_size;
+=======
+	/* touch panel's minimum and maximum coordinates */
+	u32 panel_minx;
+	u32 panel_maxx;
+	u32 panel_miny;
+	u32 panel_maxy;
+
+	/* display's minimum and maximum coordinates */
+	u32 disp_minx;
+	u32 disp_maxx;
+	u32 disp_miny;
+	u32 disp_maxy;
+
+>>>>>>> cm-10.0
 	unsigned long irqflags;
 	bool	i2c_pull_up;
 	bool	digital_pwr_regulator;

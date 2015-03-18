@@ -1,7 +1,11 @@
 /* arch/arm/mach-msm/qdsp6/audiov2/routing.c
  *
  * Copyright (C) 2009 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * Author: Brian Swetland <swetland@google.com>
  *

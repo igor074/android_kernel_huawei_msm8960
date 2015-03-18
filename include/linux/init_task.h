@@ -23,11 +23,25 @@ extern struct files_struct init_files;
 extern struct fs_struct init_fs;
 
 #ifdef CONFIG_CGROUPS
+<<<<<<< HEAD
 #define INIT_THREADGROUP_FORK_LOCK(sig)					\
 	.threadgroup_fork_lock =					\
 		__RWSEM_INITIALIZER(sig.threadgroup_fork_lock),
 #else
 #define INIT_THREADGROUP_FORK_LOCK(sig)
+=======
+#define INIT_GROUP_RWSEM(sig)						\
+	.group_rwsem = __RWSEM_INITIALIZER(sig.group_rwsem),
+#else
+#define INIT_GROUP_RWSEM(sig)
+#endif
+
+#ifdef CONFIG_CPUSETS
+#define INIT_CPUSET_SEQ							\
+	.mems_allowed_seq = SEQCNT_ZERO,
+#else
+#define INIT_CPUSET_SEQ
+>>>>>>> cm-10.0
 #endif
 
 #define INIT_SIGNALS(sig) {						\
@@ -42,11 +56,19 @@ extern struct fs_struct init_fs;
 	.cputimer	= { 						\
 		.cputime = INIT_CPUTIME,				\
 		.running = 0,						\
+<<<<<<< HEAD
 		.lock = __SPIN_LOCK_UNLOCKED(sig.cputimer.lock),	\
 	},								\
 	.cred_guard_mutex =						\
 		 __MUTEX_INITIALIZER(sig.cred_guard_mutex),		\
 	INIT_THREADGROUP_FORK_LOCK(sig)					\
+=======
+		.lock = __RAW_SPIN_LOCK_UNLOCKED(sig.cputimer.lock),	\
+	},								\
+	.cred_guard_mutex =						\
+		 __MUTEX_INITIALIZER(sig.cred_guard_mutex),		\
+	INIT_GROUP_RWSEM(sig)						\
+>>>>>>> cm-10.0
 }
 
 extern struct nsproxy init_nsproxy;
@@ -126,6 +148,7 @@ extern struct cred init_cred;
 # define INIT_PERF_EVENTS(tsk)
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_CCSECURITY) && !defined(CONFIG_CCSECURITY_USE_EXTERNAL_TASK_SECURITY)
 #define INIT_CCSECURITY          \
 	.ccs_domain_info = NULL, \
@@ -133,6 +156,9 @@ extern struct cred init_cred;
 #else
 #define INIT_CCSECURITY
 #endif
+=======
+#define INIT_TASK_COMM "swapper"
+>>>>>>> cm-10.0
 
 /*
  *  INIT_TASK is used to set up the first task table, touch at
@@ -156,7 +182,11 @@ extern struct cred init_cred;
 	},								\
 	.rt		= {						\
 		.run_list	= LIST_HEAD_INIT(tsk.rt.run_list),	\
+<<<<<<< HEAD
 		.time_slice	= HZ, 					\
+=======
+		.time_slice	= RR_TIMESLICE,				\
+>>>>>>> cm-10.0
 		.nr_cpus_allowed = NR_CPUS,				\
 	},								\
 	.tasks		= LIST_HEAD_INIT(tsk.tasks),			\
@@ -170,7 +200,11 @@ extern struct cred init_cred;
 	.group_leader	= &tsk,						\
 	RCU_INIT_POINTER(.real_cred, &init_cred),			\
 	RCU_INIT_POINTER(.cred, &init_cred),				\
+<<<<<<< HEAD
 	.comm		= "swapper",					\
+=======
+	.comm		= INIT_TASK_COMM,				\
+>>>>>>> cm-10.0
 	.thread		= INIT_THREAD,					\
 	.fs		= &init_fs,					\
 	.files		= &init_files,					\
@@ -184,7 +218,10 @@ extern struct cred init_cred;
 	.alloc_lock	= __SPIN_LOCK_UNLOCKED(tsk.alloc_lock),		\
 	.journal_info	= NULL,						\
 	.cpu_timers	= INIT_CPU_TIMERS(tsk.cpu_timers),		\
+<<<<<<< HEAD
 	.fs_excl	= ATOMIC_INIT(0),				\
+=======
+>>>>>>> cm-10.0
 	.pi_lock	= __RAW_SPIN_LOCK_UNLOCKED(tsk.pi_lock),	\
 	.timer_slack_ns = 50000, /* 50 usec default slack */		\
 	.pids = {							\
@@ -193,7 +230,10 @@ extern struct cred init_cred;
 		[PIDTYPE_SID]  = INIT_PID_LINK(PIDTYPE_SID),		\
 	},								\
 	.thread_group	= LIST_HEAD_INIT(tsk.thread_group),		\
+<<<<<<< HEAD
 	.dirties = INIT_PROP_LOCAL_SINGLE(dirties),			\
+=======
+>>>>>>> cm-10.0
 	INIT_IDS							\
 	INIT_PERF_EVENTS(tsk)						\
 	INIT_TRACE_IRQFLAGS						\
@@ -201,7 +241,11 @@ extern struct cred init_cred;
 	INIT_FTRACE_GRAPH						\
 	INIT_TRACE_RECURSION						\
 	INIT_TASK_RCU_PREEMPT(tsk)					\
+<<<<<<< HEAD
 	INIT_CCSECURITY                                                 \
+=======
+	INIT_CPUSET_SEQ							\
+>>>>>>> cm-10.0
 }
 
 

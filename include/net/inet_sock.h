@@ -31,6 +31,10 @@
 /** struct ip_options - IP Options
  *
  * @faddr - Saved first hop address
+<<<<<<< HEAD
+=======
+ * @nexthop - Saved nexthop address in LSRR and SSRR
+>>>>>>> cm-10.0
  * @is_data - Options in __data, rather than skb
  * @is_strictroute - Strict source route
  * @srr_is_hit - Packet destination addr was our one
@@ -41,6 +45,10 @@
  */
 struct ip_options {
 	__be32		faddr;
+<<<<<<< HEAD
+=======
+	__be32		nexthop;
+>>>>>>> cm-10.0
 	unsigned char	optlen;
 	unsigned char	srr;
 	unsigned char	rr;
@@ -69,7 +77,11 @@ struct ip_options_data {
 
 struct inet_request_sock {
 	struct request_sock	req;
+<<<<<<< HEAD
 #if defined(CONFIG_IPV6) || defined(CONFIG_IPV6_MODULE)
+=======
+#if IS_ENABLED(CONFIG_IPV6)
+>>>>>>> cm-10.0
 	u16			inet6_rsk_offset;
 #endif
 	__be16			loc_port;
@@ -130,6 +142,10 @@ struct rtable;
  * @tos - TOS
  * @mc_ttl - Multicasting TTL
  * @is_icsk - is this an inet_connection_sock?
+<<<<<<< HEAD
+=======
+ * @uc_index - Unicast outgoing device index
+>>>>>>> cm-10.0
  * @mc_index - Multicast device index
  * @mc_list - Group array
  * @cork - info to build ip hdr on each ip frag while socket is corked
@@ -137,7 +153,11 @@ struct rtable;
 struct inet_sock {
 	/* sk and pinet6 has to be the first two members of inet_sock */
 	struct sock		sk;
+<<<<<<< HEAD
 #if defined(CONFIG_IPV6) || defined(CONFIG_IPV6_MODULE)
+=======
+#if IS_ENABLED(CONFIG_IPV6)
+>>>>>>> cm-10.0
 	struct ipv6_pinfo	*pinet6;
 #endif
 	/* Socket demultiplex comparisons on incoming packets. */
@@ -165,6 +185,11 @@ struct inet_sock {
 				transparent:1,
 				mc_all:1,
 				nodefrag:1;
+<<<<<<< HEAD
+=======
+	__u8			rcv_tos;
+	int			uc_index;
+>>>>>>> cm-10.0
 	int			mc_index;
 	__be32			mc_addr;
 	struct ip_mc_socklist __rcu	*mc_list;
@@ -186,7 +211,11 @@ static inline void __inet_sk_copy_descendant(struct sock *sk_to,
 	memcpy(inet_sk(sk_to) + 1, inet_sk(sk_from) + 1,
 	       sk_from->sk_prot->obj_size - ancestor_size);
 }
+<<<<<<< HEAD
 #if !(defined(CONFIG_IPV6) || defined(CONFIG_IPV6_MODULE))
+=======
+#if !(IS_ENABLED(CONFIG_IPV6))
+>>>>>>> cm-10.0
 static inline void inet_sk_copy_descendant(struct sock *sk_to,
 					   const struct sock *sk_from)
 {
@@ -238,7 +267,11 @@ static inline __u8 inet_sk_flowi_flags(const struct sock *sk)
 {
 	__u8 flags = 0;
 
+<<<<<<< HEAD
 	if (inet_sk(sk)->transparent)
+=======
+	if (inet_sk(sk)->transparent || inet_sk(sk)->hdrincl)
+>>>>>>> cm-10.0
 		flags |= FLOWI_FLAG_ANYSRC;
 	if (sk->sk_protocol == IPPROTO_TCP)
 		flags |= FLOWI_FLAG_PRECOW_METRICS;

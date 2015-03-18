@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/init.h>
 #include <linux/io.h>
 #include <linux/delay.h>
@@ -20,6 +28,10 @@
 #include <linux/cpufreq.h>
 #include <linux/cpu.h>
 #include <linux/regulator/consumer.h>
+<<<<<<< HEAD
+=======
+#include <linux/platform_device.h>
+>>>>>>> cm-10.0
 
 #include <asm/cpu.h>
 
@@ -710,10 +722,15 @@ static int acpuclk_8x60_set_rate(int cpu, unsigned long rate,
 	unsigned long flags;
 	int rc = 0;
 
+<<<<<<< HEAD
 	if (cpu > num_possible_cpus()) {
 		rc = -EINVAL;
 		goto out;
 	}
+=======
+	if (cpu > num_possible_cpus())
+		return -EINVAL;
+>>>>>>> cm-10.0
 
 	if (reason == SETRATE_CPUFREQ || reason == SETRATE_HOTPLUG)
 		mutex_lock(&drv_state.lock);
@@ -734,7 +751,11 @@ static int acpuclk_8x60_set_rate(int cpu, unsigned long rate,
 	}
 
 	/* AVS needs SAW_VCTL to be intitialized correctly, before enable,
+<<<<<<< HEAD
 	 * and is not initialized at acpuclk_init().
+=======
+	 * and is not initialized during probe.
+>>>>>>> cm-10.0
 	 */
 	if (reason == SETRATE_CPUFREQ)
 		AVS_DISABLE(cpu);
@@ -1062,7 +1083,11 @@ static struct acpuclk_data acpuclk_8x60_data = {
 	.wait_for_irq_khz = MAX_AXI,
 };
 
+<<<<<<< HEAD
 static int __init acpuclk_8x60_init(struct acpuclk_soc_data *soc_data)
+=======
+static int __init acpuclk_8x60_probe(struct platform_device *pdev)
+>>>>>>> cm-10.0
 {
 	struct clkctl_acpu_speed *max_freq;
 	int cpu;
@@ -1091,6 +1116,21 @@ static int __init acpuclk_8x60_init(struct acpuclk_soc_data *soc_data)
 	return 0;
 }
 
+<<<<<<< HEAD
 struct acpuclk_soc_data acpuclk_8x60_soc_data __initdata = {
 	.init = acpuclk_8x60_init,
 };
+=======
+static struct platform_driver acpuclk_8x60_driver = {
+	.driver = {
+		.name = "acpuclk-8x60",
+		.owner = THIS_MODULE,
+	},
+};
+
+static int __init acpuclk_8x60_init(void)
+{
+	return platform_driver_probe(&acpuclk_8x60_driver, acpuclk_8x60_probe);
+}
+device_initcall(acpuclk_8x60_init);
+>>>>>>> cm-10.0

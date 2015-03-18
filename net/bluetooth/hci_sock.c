@@ -1,6 +1,10 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
+<<<<<<< HEAD
    Copyright (c) 2000-2001, 2011, Code Aurora Forum. All rights reserved.
+=======
+   Copyright (c) 2000-2001, 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
 
    Written 2000,2001 by Maxim Krasnyansky <maxk@qualcomm.com>
 
@@ -49,7 +53,11 @@
 #include <net/bluetooth/bluetooth.h>
 #include <net/bluetooth/hci_core.h>
 
+<<<<<<< HEAD
 static int enable_mgmt = 1;
+=======
+static bool enable_mgmt = 1;
+>>>>>>> cm-10.0
 
 /* ----- HCI socket interface ----- */
 
@@ -590,11 +598,16 @@ static int hci_sock_sendmsg(struct kiocb *iocb, struct socket *sock,
 		if (((ogf > HCI_SFLT_MAX_OGF) ||
 				!hci_test_bit(ocf & HCI_FLT_OCF_BITS, &hci_sec_filter.ocf_mask[ogf])) &&
 					!capable(CAP_NET_RAW)) {
+<<<<<<< HEAD
 
 		#ifdef CONFIG_WCN_BT
             err = -EPERM;
             goto drop;
 		#endif /* CONFIG_BCM_BT */
+=======
+			err = -EPERM;
+			goto drop;
+>>>>>>> cm-10.0
 		}
 
 		if (test_bit(HCI_RAW, &hdev->flags) || (ogf == 0x3f)) {

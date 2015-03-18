@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,10 +19,16 @@
 #include <linux/ioport.h>
 #include <linux/platform_device.h>
 #include <linux/bootmem.h>
+<<<<<<< HEAD
+=======
+#include <linux/ion.h>
+#include <linux/gpio.h>
+>>>>>>> cm-10.0
 #include <asm/mach-types.h>
 #include <mach/msm_bus_board.h>
 #include <mach/msm_memtypes.h>
 #include <mach/board.h>
+<<<<<<< HEAD
 #include <mach/gpio.h>
 #include <mach/gpiomux.h>
 #include <linux/ion.h>
@@ -54,12 +64,42 @@
 
 #ifdef CONFIG_FB_MSM_OVERLAY0_WRITEBACK
 #define MSM_FB_OVERLAY0_WRITEBACK_SIZE roundup((1920 * 1200 * 3 * 2), 4096)
+=======
+#include <mach/gpiomux.h>
+#include <mach/ion.h>
+#include <mach/socinfo.h>
+
+#include "devices.h"
+#include "board-8960.h"
+
+#ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
+#define MSM_FB_PRIM_BUF_SIZE \
+		(roundup((roundup(1920, 32) * roundup(1200, 32) * 4), 4096) * 3)
+			/* 4 bpp x 3 pages */
+#else
+#define MSM_FB_PRIM_BUF_SIZE \
+		(roundup((roundup(1920, 32) * roundup(1200, 32) * 4), 4096) * 2)
+			/* 4 bpp x 2 pages */
+#endif
+
+/* Note: must be multiple of 4096 */
+#define MSM_FB_SIZE roundup(MSM_FB_PRIM_BUF_SIZE, 4096)
+
+#ifdef CONFIG_FB_MSM_OVERLAY0_WRITEBACK
+#define MSM_FB_OVERLAY0_WRITEBACK_SIZE \
+		roundup((roundup(1920, 32) * roundup(1200, 32) * 3 * 2), 4096)
+>>>>>>> cm-10.0
 #else
 #define MSM_FB_OVERLAY0_WRITEBACK_SIZE (0)
 #endif  /* CONFIG_FB_MSM_OVERLAY0_WRITEBACK */
 
 #ifdef CONFIG_FB_MSM_OVERLAY1_WRITEBACK
+<<<<<<< HEAD
 #define MSM_FB_OVERLAY1_WRITEBACK_SIZE roundup((1920 * 1088 * 3 * 2), 4096)
+=======
+#define MSM_FB_OVERLAY1_WRITEBACK_SIZE \
+		roundup((roundup(1920, 32) * roundup(1080, 32) * 3 * 2), 4096)
+>>>>>>> cm-10.0
 #else
 #define MSM_FB_OVERLAY1_WRITEBACK_SIZE (0)
 #endif  /* CONFIG_FB_MSM_OVERLAY1_WRITEBACK */
@@ -71,41 +111,88 @@
 #define MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME	"mipi_video_toshiba_wsvga"
 #define MIPI_VIDEO_TOSHIBA_WUXGA_PANEL_NAME	"mipi_video_toshiba_wuxga"
 #define MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME	"mipi_video_chimei_wxga"
+<<<<<<< HEAD
 #define MIPI_VIDEO_SIMULATOR_VGA_PANEL_NAME	"mipi_video_simulator_vga"
 #define MIPI_CMD_RENESAS_FWVGA_PANEL_NAME	"mipi_cmd_renesas_fwvga"
+=======
+#define MIPI_VIDEO_CHIMEI_WUXGA_PANEL_NAME	"mipi_video_chimei_wuxga"
+#define MIPI_VIDEO_SIMULATOR_VGA_PANEL_NAME	"mipi_video_simulator_vga"
+#define MIPI_CMD_RENESAS_FWVGA_PANEL_NAME	"mipi_cmd_renesas_fwvga"
+#define MIPI_VIDEO_ORISE_720P_PANEL_NAME	"mipi_video_orise_720p"
+#define MIPI_CMD_ORISE_720P_PANEL_NAME		"mipi_cmd_orise_720p"
+>>>>>>> cm-10.0
 #define HDMI_PANEL_NAME	"hdmi_msm"
 #define TVOUT_PANEL_NAME	"tvout_msm"
 
 #ifdef CONFIG_FB_MSM_HDMI_AS_PRIMARY
+<<<<<<< HEAD
 unsigned char hdmi_is_primary = 1;
 #else
 unsigned char hdmi_is_primary;
 #endif
 
+=======
+static unsigned char hdmi_is_primary = 1;
+#else
+static unsigned char hdmi_is_primary;
+#endif
+
+unsigned char msm8960_hdmi_as_primary_selected(void)
+{
+	return hdmi_is_primary;
+}
+
+>>>>>>> cm-10.0
 static struct resource msm_fb_resources[] = {
 	{
 		.flags = IORESOURCE_DMA,
 	}
 };
 
+<<<<<<< HEAD
 #ifndef CONFIG_FB_MSM_MIPI_PANEL_DETECT
 static void set_mdp_clocks_for_wuxga(void);
 #endif
+=======
+static void set_mdp_clocks_for_wuxga(void);
+>>>>>>> cm-10.0
 
 static int msm_fb_detect_panel(const char *name)
 {
 	if (machine_is_msm8960_liquid()) {
+<<<<<<< HEAD
 		if (!strncmp(name, MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME,
 				strnlen(MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME,
 					PANEL_NAME_MAX_LEN)))
 			return 0;
+=======
+		u32 ver = socinfo_get_platform_version();
+		if (SOCINFO_VERSION_MAJOR(ver) == 3) {
+			if (!strncmp(name, MIPI_VIDEO_CHIMEI_WUXGA_PANEL_NAME,
+				     strnlen(MIPI_VIDEO_CHIMEI_WUXGA_PANEL_NAME,
+						PANEL_NAME_MAX_LEN))) {
+				set_mdp_clocks_for_wuxga();
+				return 0;
+			}
+		} else {
+			if (!strncmp(name, MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME,
+				     strnlen(MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME,
+						PANEL_NAME_MAX_LEN)))
+				return 0;
+		}
+>>>>>>> cm-10.0
 	} else {
 		if (!strncmp(name, MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME,
 				strnlen(MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME,
 					PANEL_NAME_MAX_LEN)))
 			return 0;
 
+<<<<<<< HEAD
 #ifndef CONFIG_FB_MSM_MIPI_PANEL_DETECT
+=======
+#if !defined(CONFIG_FB_MSM_LVDS_MIPI_PANEL_DETECT) && \
+	!defined(CONFIG_FB_MSM_MIPI_PANEL_DETECT)
+>>>>>>> cm-10.0
 		if (!strncmp(name, MIPI_VIDEO_NOVATEK_QHD_PANEL_NAME,
 				strnlen(MIPI_VIDEO_NOVATEK_QHD_PANEL_NAME,
 					PANEL_NAME_MAX_LEN)))
@@ -132,13 +219,34 @@ static int msm_fb_detect_panel(const char *name)
 			set_mdp_clocks_for_wuxga();
 			return 0;
 		}
+<<<<<<< HEAD
+=======
+
+		if (!strncmp(name, MIPI_VIDEO_ORISE_720P_PANEL_NAME,
+				strnlen(MIPI_VIDEO_ORISE_720P_PANEL_NAME,
+					PANEL_NAME_MAX_LEN)))
+			return 0;
+
+		if (!strncmp(name, MIPI_CMD_ORISE_720P_PANEL_NAME,
+				strnlen(MIPI_CMD_ORISE_720P_PANEL_NAME,
+					PANEL_NAME_MAX_LEN)))
+			return 0;
+>>>>>>> cm-10.0
 #endif
 	}
 
 	if (!strncmp(name, HDMI_PANEL_NAME,
 			strnlen(HDMI_PANEL_NAME,
+<<<<<<< HEAD
 				PANEL_NAME_MAX_LEN)))
 		return 0;
+=======
+				PANEL_NAME_MAX_LEN))) {
+		if (hdmi_is_primary)
+			set_mdp_clocks_for_wuxga();
+		return 0;
+	}
+>>>>>>> cm-10.0
 
 	if (!strncmp(name, TVOUT_PANEL_NAME,
 			strnlen(TVOUT_PANEL_NAME,
@@ -325,8 +433,11 @@ static int mipi_dsi_liquid_panel_power(int on)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*use huawei power function*/
 #if 0
+=======
+>>>>>>> cm-10.0
 static int mipi_dsi_cdp_panel_power(int on)
 {
 	static struct regulator *reg_l8, *reg_l23, *reg_l2;
@@ -412,7 +523,10 @@ static int mipi_dsi_cdp_panel_power(int on)
 			pr_err("enable l2 failed, rc=%d\n", rc);
 			return -ENODEV;
 		}
+<<<<<<< HEAD
 		msleep(30);
+=======
+>>>>>>> cm-10.0
 		gpio_set_value_cansleep(gpio43, 1);
 	} else {
 		rc = regulator_disable(reg_l2);
@@ -449,6 +563,7 @@ static int mipi_dsi_cdp_panel_power(int on)
 	}
 	return 0;
 }
+<<<<<<< HEAD
 #endif
 
 /*use huawei power function*/
@@ -503,6 +618,10 @@ static int mipi_dsi_huawei_panel_power(int on)
 
 
 /*use huawei power function*/
+=======
+
+static char mipi_dsi_splash_is_enabled(void);
+>>>>>>> cm-10.0
 static int mipi_dsi_panel_power(int on)
 {
 	int ret;
@@ -512,8 +631,12 @@ static int mipi_dsi_panel_power(int on)
 	if (machine_is_msm8960_liquid())
 		ret = mipi_dsi_liquid_panel_power(on);
 	else
+<<<<<<< HEAD
 		//ret = mipi_dsi_cdp_panel_power(on);
         ret = mipi_dsi_huawei_panel_power(on);
+=======
+		ret = mipi_dsi_cdp_panel_power(on);
+>>>>>>> cm-10.0
 
 	return ret;
 }
@@ -521,6 +644,7 @@ static int mipi_dsi_panel_power(int on)
 static struct mipi_dsi_platform_data mipi_dsi_pdata = {
 	.vsync_gpio = MDP_VSYNC_GPIO,
 	.dsi_power_save = mipi_dsi_panel_power,
+<<<<<<< HEAD
 };
 
 #ifdef CONFIG_MSM_BUS_SCALING
@@ -598,6 +722,12 @@ struct msm_bus_scale_pdata rotator_bus_scale_pdata = {
 	.name = "rotator",
 };
 
+=======
+	.splash_is_enabled = mipi_dsi_splash_is_enabled,
+};
+
+#ifdef CONFIG_MSM_BUS_SCALING
+>>>>>>> cm-10.0
 static struct msm_bus_vectors mdp_init_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
@@ -607,6 +737,7 @@ static struct msm_bus_vectors mdp_init_vectors[] = {
 	},
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_FB_MSM_HDMI_AS_PRIMARY
 static struct msm_bus_vectors hdmi_as_primary_vectors[] = {
 	/* If HDMI is used as primary */
@@ -644,6 +775,8 @@ static struct msm_bus_paths mdp_bus_scale_usecases[] = {
 	},
 };
 #else
+=======
+>>>>>>> cm-10.0
 static struct msm_bus_vectors mdp_ui_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
@@ -709,7 +842,10 @@ static struct msm_bus_paths mdp_bus_scale_usecases[] = {
 		mdp_1080p_vectors,
 	},
 };
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> cm-10.0
 
 static struct msm_bus_scale_pdata mdp_bus_scale_pdata = {
 	mdp_bus_scale_usecases,
@@ -719,6 +855,7 @@ static struct msm_bus_scale_pdata mdp_bus_scale_pdata = {
 
 #endif
 
+<<<<<<< HEAD
 static int mdp_core_clk_rate_table[] = {
 	85330000,
 	128000000,
@@ -731,6 +868,11 @@ static struct msm_panel_common_pdata mdp_pdata = {
 	.mdp_core_clk_rate = 85330000,
 	.mdp_core_clk_table = mdp_core_clk_rate_table,
 	.num_mdp_clk = ARRAY_SIZE(mdp_core_clk_rate_table),
+=======
+static struct msm_panel_common_pdata mdp_pdata = {
+	.gpio = MDP_VSYNC_GPIO,
+	.mdp_max_clk = 200000000,
+>>>>>>> cm-10.0
 #ifdef CONFIG_MSM_BUS_SCALING
 	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
 #endif
@@ -741,6 +883,7 @@ static struct msm_panel_common_pdata mdp_pdata = {
 	.mem_hid = MEMTYPE_EBI1,
 #endif
 	.cont_splash_enabled = 0x01,
+<<<<<<< HEAD
 };
 
 #ifndef CONFIG_FB_MSM_MIPI_PANEL_DETECT
@@ -769,6 +912,11 @@ static void set_mdp_clocks_for_wuxga(void)
 }
 #endif
 
+=======
+	.mdp_iommu_split_domain = 0,
+};
+
+>>>>>>> cm-10.0
 void __init msm8960_mdp_writeback(struct memtype_reserve* reserve_table)
 {
 	mdp_pdata.ov0_wb_size = MSM_FB_OVERLAY0_WRITEBACK_SIZE;
@@ -781,6 +929,14 @@ void __init msm8960_mdp_writeback(struct memtype_reserve* reserve_table)
 #endif
 }
 
+<<<<<<< HEAD
+=======
+static char mipi_dsi_splash_is_enabled(void)
+{
+	return mdp_pdata.cont_splash_enabled;
+}
+
+>>>>>>> cm-10.0
 static struct platform_device mipi_dsi_renesas_panel_device = {
 	.name = "mipi_renesas",
 	.id = 0,
@@ -808,9 +964,17 @@ static struct platform_device mipi_dsi_toshiba_panel_device = {
 };
 
 #define FPGA_3D_GPIO_CONFIG_ADDR	0xB5
+<<<<<<< HEAD
 static int dsi2lvds_gpio[2] = {
 	0,/* Backlight PWM-ID=0 for PMIC-GPIO#24 */
 	0x1F08 /* DSI2LVDS Bridge GPIO Output, mask=0x1f, out=0x08 */
+=======
+static int dsi2lvds_gpio[4] = {
+	0,/* Backlight PWM-ID=0 for PMIC-GPIO#24 */
+	0x1F08, /* DSI2LVDS Bridge GPIO Output, mask=0x1f, out=0x08 */
+	GPIO_LIQUID_EXPANDER_BASE+6,	/* TN Enable */
+	GPIO_LIQUID_EXPANDER_BASE+7,	/* TN Mode */
+>>>>>>> cm-10.0
 	};
 
 static struct msm_panel_common_pdata mipi_dsi2lvds_pdata = {
@@ -852,6 +1016,7 @@ static struct platform_device mipi_dsi2lvds_bridge_device = {
 	.dev.platform_data = &mipi_dsi2lvds_pdata,
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_FB_MSM_MIPI_R63306_TOSHIBA_720P_VIDEO_PT
 static struct platform_device mipi_dsi_toshiba_720p_panel_device = {
         .name = "mipi_toshiba_720p",
@@ -879,6 +1044,13 @@ static struct platform_device mipi_dsi_tianma_hx8369_wvga_panel_device = {
 	.id = 0,
 };
 #endif
+=======
+static struct platform_device mipi_dsi_orise_panel_device = {
+	.name = "mipi_orise",
+	.id = 0,
+};
+
+>>>>>>> cm-10.0
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 static struct resource hdmi_msm_resources[] = {
 	{
@@ -904,12 +1076,22 @@ static struct resource hdmi_msm_resources[] = {
 static int hdmi_enable_5v(int on);
 static int hdmi_core_power(int on, int show);
 static int hdmi_cec_power(int on);
+<<<<<<< HEAD
+=======
+static int hdmi_gpio_config(int on);
+static int hdmi_panel_power(int on);
+>>>>>>> cm-10.0
 
 static struct msm_hdmi_platform_data hdmi_msm_data = {
 	.irq = HDMI_IRQ,
 	.enable_5v = hdmi_enable_5v,
 	.core_power = hdmi_core_power,
 	.cec_power = hdmi_cec_power,
+<<<<<<< HEAD
+=======
+	.panel_power = hdmi_panel_power,
+	.gpio_config = hdmi_gpio_config,
+>>>>>>> cm-10.0
 };
 
 static struct platform_device hdmi_msm_device = {
@@ -971,7 +1153,25 @@ static struct msm_bus_scale_pdata dtv_bus_scale_pdata = {
 
 static struct lcdc_platform_data dtv_pdata = {
 	.bus_scale_table = &dtv_bus_scale_pdata,
+<<<<<<< HEAD
 };
+=======
+	.lcdc_power_save = hdmi_panel_power,
+};
+
+static int hdmi_panel_power(int on)
+{
+	int rc;
+
+	pr_debug("%s: HDMI Core: %s\n", __func__, (on ? "ON" : "OFF"));
+	rc = hdmi_core_power(on, 1);
+	if (rc)
+		rc = hdmi_cec_power(on);
+
+	pr_debug("%s: HDMI Core: %s Success\n", __func__, (on ? "ON" : "OFF"));
+	return rc;
+}
+>>>>>>> cm-10.0
 #endif
 
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
@@ -985,9 +1185,22 @@ static int hdmi_enable_5v(int on)
 	if (on == prev_on)
 		return 0;
 
+<<<<<<< HEAD
 	if (!reg_8921_hdmi_mvs)
 		reg_8921_hdmi_mvs = regulator_get(&hdmi_msm_device.dev,
 			"hdmi_mvs");
+=======
+	if (!reg_8921_hdmi_mvs) {
+		reg_8921_hdmi_mvs = regulator_get(&hdmi_msm_device.dev,
+					"hdmi_mvs");
+		if (IS_ERR(reg_8921_hdmi_mvs)) {
+			pr_err("'%s' regulator not found, rc=%ld\n",
+				"hdmi_mvs", IS_ERR(reg_8921_hdmi_mvs));
+			reg_8921_hdmi_mvs = NULL;
+			return -ENODEV;
+		}
+	}
+>>>>>>> cm-10.0
 
 	if (on) {
 		rc = regulator_enable(reg_8921_hdmi_mvs);
@@ -1065,30 +1278,10 @@ static int hdmi_core_power(int on, int show)
 				"hdmi_vcc", rc);
 			return rc;
 		}
-		rc = gpio_request(100, "HDMI_DDC_CLK");
-		if (rc) {
-			pr_err("'%s'(%d) gpio_request failed, rc=%d\n",
-				"HDMI_DDC_CLK", 100, rc);
-			goto error1;
-		}
-		rc = gpio_request(101, "HDMI_DDC_DATA");
-		if (rc) {
-			pr_err("'%s'(%d) gpio_request failed, rc=%d\n",
-				"HDMI_DDC_DATA", 101, rc);
-			goto error2;
-		}
-		rc = gpio_request(102, "HDMI_HPD");
-		if (rc) {
-			pr_err("'%s'(%d) gpio_request failed, rc=%d\n",
-				"HDMI_HPD", 102, rc);
-			goto error3;
-		}
+<<<<<<< HEAD
+=======
 		pr_debug("%s(on): success\n", __func__);
 	} else {
-		gpio_free(100);
-		gpio_free(101);
-		gpio_free(102);
-
 		rc = regulator_disable(reg_8921_l23);
 		if (rc) {
 			pr_err("disable reg_8921_l23 failed, rc=%d\n", rc);
@@ -1110,6 +1303,79 @@ static int hdmi_core_power(int on, int show)
 	prev_on = on;
 
 	return 0;
+}
+
+static int hdmi_gpio_config(int on)
+{
+	int rc = 0;
+	static int prev_on;
+
+	if (on == prev_on)
+		return 0;
+
+	if (on) {
+>>>>>>> cm-10.0
+		rc = gpio_request(100, "HDMI_DDC_CLK");
+		if (rc) {
+			pr_err("'%s'(%d) gpio_request failed, rc=%d\n",
+				"HDMI_DDC_CLK", 100, rc);
+<<<<<<< HEAD
+			goto error1;
+=======
+			return rc;
+>>>>>>> cm-10.0
+		}
+		rc = gpio_request(101, "HDMI_DDC_DATA");
+		if (rc) {
+			pr_err("'%s'(%d) gpio_request failed, rc=%d\n",
+				"HDMI_DDC_DATA", 101, rc);
+<<<<<<< HEAD
+			goto error2;
+=======
+			goto error1;
+>>>>>>> cm-10.0
+		}
+		rc = gpio_request(102, "HDMI_HPD");
+		if (rc) {
+			pr_err("'%s'(%d) gpio_request failed, rc=%d\n",
+				"HDMI_HPD", 102, rc);
+<<<<<<< HEAD
+			goto error3;
+=======
+			goto error2;
+>>>>>>> cm-10.0
+		}
+		pr_debug("%s(on): success\n", __func__);
+	} else {
+		gpio_free(100);
+		gpio_free(101);
+		gpio_free(102);
+<<<<<<< HEAD
+
+		rc = regulator_disable(reg_8921_l23);
+		if (rc) {
+			pr_err("disable reg_8921_l23 failed, rc=%d\n", rc);
+			return -ENODEV;
+		}
+		rc = regulator_disable(reg_8921_s4);
+		if (rc) {
+			pr_err("disable reg_8921_s4 failed, rc=%d\n", rc);
+			return -ENODEV;
+		}
+		rc = regulator_set_optimum_mode(reg_8921_l23, 100);
+		if (rc < 0) {
+			pr_err("set_optimum_mode l23 failed, rc=%d\n", rc);
+			return -EINVAL;
+		}
+=======
+>>>>>>> cm-10.0
+		pr_debug("%s(off): success\n", __func__);
+	}
+
+	prev_on = on;
+<<<<<<< HEAD
+
+	return 0;
 
 error3:
 	gpio_free(101);
@@ -1118,6 +1384,14 @@ error2:
 error1:
 	regulator_disable(reg_8921_l23);
 	regulator_disable(reg_8921_s4);
+=======
+	return 0;
+
+error2:
+	gpio_free(101);
+error1:
+	gpio_free(100);
+>>>>>>> cm-10.0
 	return rc;
 }
 
@@ -1167,6 +1441,10 @@ void __init msm8960_init_fb(void)
 
 	if (!machine_is_msm8960_sim() && !machine_is_msm8960_rumi3()) {
 		platform_device_register(&mipi_dsi_novatek_panel_device);
+<<<<<<< HEAD
+=======
+		platform_device_register(&mipi_dsi_orise_panel_device);
+>>>>>>> cm-10.0
 
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 		platform_device_register(&hdmi_msm_device);
@@ -1187,6 +1465,7 @@ void __init msm8960_init_fb(void)
 #ifdef CONFIG_MSM_BUS_SCALING
 	msm_fb_register_device("dtv", &dtv_pdata);
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_FB_MSM_MIPI_R63306_TOSHIBA_720P_VIDEO_PT
 	platform_device_register(&mipi_dsi_toshiba_720p_panel_device);
 #endif
@@ -1200,6 +1479,10 @@ void __init msm8960_init_fb(void)
     platform_device_register(&mipi_dsi_tianma_hx8369_wvga_panel_device);
 #endif
 }
+=======
+}
+
+>>>>>>> cm-10.0
 void __init msm8960_allocate_fb_region(void)
 {
 	void *addr;
@@ -1213,20 +1496,68 @@ void __init msm8960_allocate_fb_region(void)
 			size, addr, __pa(addr));
 }
 
+<<<<<<< HEAD
 void __init msm8960_set_display_params(char *prim_panel, char *ext_panel)
 {
+=======
+/**
+ * Set MDP clocks to high frequency to avoid DSI underflow
+ * when using high resolution 1200x1920 WUXGA panels
+ */
+static void set_mdp_clocks_for_wuxga(void)
+{
+	mdp_ui_vectors[0].ab = 2000000000;
+	mdp_ui_vectors[0].ib = 2000000000;
+	mdp_vga_vectors[0].ab = 2000000000;
+	mdp_vga_vectors[0].ib = 2000000000;
+	mdp_720p_vectors[0].ab = 2000000000;
+	mdp_720p_vectors[0].ib = 2000000000;
+	mdp_1080p_vectors[0].ab = 2000000000;
+	mdp_1080p_vectors[0].ib = 2000000000;
+
+	if (hdmi_is_primary) {
+		dtv_bus_def_vectors[0].ab = 2000000000;
+		dtv_bus_def_vectors[0].ib = 2000000000;
+	}
+}
+
+void __init msm8960_set_display_params(char *prim_panel, char *ext_panel)
+{
+	int disable_splash = 0;
+>>>>>>> cm-10.0
 	if (strnlen(prim_panel, PANEL_NAME_MAX_LEN)) {
 		strlcpy(msm_fb_pdata.prim_panel_name, prim_panel,
 			PANEL_NAME_MAX_LEN);
 		pr_debug("msm_fb_pdata.prim_panel_name %s\n",
 			msm_fb_pdata.prim_panel_name);
 
+<<<<<<< HEAD
+=======
+		if (strncmp((char *)msm_fb_pdata.prim_panel_name,
+			MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME,
+			strnlen(MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME,
+				PANEL_NAME_MAX_LEN))) {
+			/* Disable splash for panels other than Toshiba WSVGA */
+			disable_splash = 1;
+		}
+
+>>>>>>> cm-10.0
 		if (!strncmp((char *)msm_fb_pdata.prim_panel_name,
 			HDMI_PANEL_NAME, strnlen(HDMI_PANEL_NAME,
 				PANEL_NAME_MAX_LEN))) {
 			pr_debug("HDMI is the primary display by"
 				" boot parameter\n");
 			hdmi_is_primary = 1;
+<<<<<<< HEAD
+=======
+			set_mdp_clocks_for_wuxga();
+		}
+		if (!strncmp((char *)msm_fb_pdata.prim_panel_name,
+				MIPI_VIDEO_TOSHIBA_WUXGA_PANEL_NAME,
+				strnlen(MIPI_VIDEO_TOSHIBA_WUXGA_PANEL_NAME,
+					PANEL_NAME_MAX_LEN))) {
+			set_mdp_clocks_for_wuxga();
+>>>>>>> cm-10.0
 		}
 	}
 	if (strnlen(ext_panel, PANEL_NAME_MAX_LEN)) {
@@ -1235,4 +1566,10 @@ void __init msm8960_set_display_params(char *prim_panel, char *ext_panel)
 		pr_debug("msm_fb_pdata.ext_panel_name %s\n",
 			msm_fb_pdata.ext_panel_name);
 	}
+<<<<<<< HEAD
+=======
+
+	if (disable_splash)
+		mdp_pdata.cont_splash_enabled = 0;
+>>>>>>> cm-10.0
 }

@@ -1,6 +1,10 @@
 /* drivers/video/msm/mdp_ppp31.c
  *
+<<<<<<< HEAD
  * Copyright (C) 2009 Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (C) 2009 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Copyright (C) 2009 Google Incorporated
  *
  * This software is licensed under the terms of the GNU General Public

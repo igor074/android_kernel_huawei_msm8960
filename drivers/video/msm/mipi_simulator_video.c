@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,14 +14,20 @@
  * GNU General Public License for more details.
  */
 
+<<<<<<< HEAD
 /* use simulator panel driver,when no panel connected */
 #include <hsad/config_interface.h>
+=======
+>>>>>>> cm-10.0
 #include "msm_fb.h"
 #include "mipi_dsi.h"
 #include "mipi_simulator.h"
 
+<<<<<<< HEAD
 /* optmize lcd self adapt function,delete 3 lines */
 
+=======
+>>>>>>> cm-10.0
 static struct msm_panel_info pinfo;
 
 static struct mipi_dsi_phy_ctrl dsi_video_mode_phy_db = {
@@ -34,6 +44,7 @@ static struct mipi_dsi_phy_ctrl dsi_video_mode_phy_db = {
 static int __init mipi_video_simulator_init(void)
 {
 	int ret;
+<<<<<<< HEAD
 /* use simulator panel driver if no mipi panel connected,use lcd id self adapt method */
 /* if there is to panel detected simlator panel shou be adapt */
     if(-EBUSY == lcd_detect_panel("simulator_mipi_video_vga"))
@@ -44,6 +55,13 @@ static int __init mipi_video_simulator_init(void)
 
 	pinfo.xres = 480;
 	pinfo.yres = 640;
+=======
+
+	if (msm_fb_detect_client("mipi_video_simulator_vga"))
+		return 0;
+	pinfo.xres = 640;
+	pinfo.yres = 480;
+>>>>>>> cm-10.0
 	pinfo.type = MIPI_VIDEO_PANEL;
 	pinfo.pdest = DISPLAY_1;
 	pinfo.wait_cycle = 0;
@@ -92,4 +110,8 @@ static int __init mipi_video_simulator_init(void)
 		return ret;
 }
 
+<<<<<<< HEAD
 device_initcall_sync(mipi_video_simulator_init);
+=======
+module_init(mipi_video_simulator_init);
+>>>>>>> cm-10.0

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,6 +19,10 @@
 #include <linux/err.h>
 #include <linux/string.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/init.h>
 #include <linux/bitops.h>
 #include <linux/mfd/pmic8058.h>
@@ -162,7 +170,11 @@ static int __devinit pm8058_xo_buffer_probe(struct platform_device *pdev)
 			goto bail;
 
 		xo->rdev = regulator_register(rdesc, &pdev->dev,
+<<<<<<< HEAD
 					&xo->pdata->init_data, xo);
+=======
+					&xo->pdata->init_data, xo, NULL);
+>>>>>>> cm-10.0
 		if (IS_ERR(xo->rdev)) {
 			rc = PTR_ERR(xo->rdev);
 			pr_err("FAIL: regulator_register(%s): rc=%d\n",

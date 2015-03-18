@@ -128,6 +128,10 @@ struct hd_struct {
 #define GENHD_FL_EXT_DEVT			64 /* allow extended devt */
 #define GENHD_FL_NATIVE_CAPACITY		128
 #define GENHD_FL_BLOCK_EVENTS_ON_EXCL_WRITE	256
+<<<<<<< HEAD
+=======
+#define GENHD_FL_NO_PART_SCAN			512
+>>>>>>> cm-10.0
 
 enum {
 	DISK_EVENT_MEDIA_CHANGE			= 1 << 0, /* media changed */
@@ -162,7 +166,11 @@ struct gendisk {
                                          * disks that can't be partitioned. */
 
 	char disk_name[DISK_NAME_LEN];	/* name of major driver */
+<<<<<<< HEAD
 	char *(*devnode)(struct gendisk *gd, mode_t *mode);
+=======
+	char *(*devnode)(struct gendisk *gd, umode_t *mode);
+>>>>>>> cm-10.0
 
 	unsigned int events;		/* supported events */
 	unsigned int async_events;	/* async events, subset of all */
@@ -221,12 +229,15 @@ static inline void part_pack_uuid(const u8 *uuid_str, u8 *to)
 	}
 }
 
+<<<<<<< HEAD
 static inline char *part_unpack_uuid(const u8 *uuid, char *out)
 {
 	sprintf(out, "%pU", uuid);
 	return out;
 }
 
+=======
+>>>>>>> cm-10.0
 static inline int disk_max_parts(struct gendisk *disk)
 {
 	if (disk->flags & GENHD_FL_EXT_DEVT)
@@ -234,9 +245,16 @@ static inline int disk_max_parts(struct gendisk *disk)
 	return disk->minors;
 }
 
+<<<<<<< HEAD
 static inline bool disk_partitionable(struct gendisk *disk)
 {
 	return disk_max_parts(disk) > 1;
+=======
+static inline bool disk_part_scan_enabled(struct gendisk *disk)
+{
+	return disk_max_parts(disk) > 1 &&
+		!(disk->flags & GENHD_FL_NO_PART_SCAN);
+>>>>>>> cm-10.0
 }
 
 static inline dev_t disk_devt(struct gendisk *disk)
@@ -420,7 +438,11 @@ static inline int get_disk_ro(struct gendisk *disk)
 
 extern void disk_block_events(struct gendisk *disk);
 extern void disk_unblock_events(struct gendisk *disk);
+<<<<<<< HEAD
 extern void disk_check_events(struct gendisk *disk);
+=======
+extern void disk_flush_events(struct gendisk *disk, unsigned int mask);
+>>>>>>> cm-10.0
 extern unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask);
 
 /* drivers/char/random.c */
@@ -594,6 +616,10 @@ extern char *disk_name (struct gendisk *hd, int partno, char *buf);
 
 extern int disk_expand_part_tbl(struct gendisk *disk, int target);
 extern int rescan_partitions(struct gendisk *disk, struct block_device *bdev);
+<<<<<<< HEAD
+=======
+extern int invalidate_partitions(struct gendisk *disk, struct block_device *bdev);
+>>>>>>> cm-10.0
 extern struct hd_struct * __must_check add_partition(struct gendisk *disk,
 						     int partno, sector_t start,
 						     sector_t len, int flags,

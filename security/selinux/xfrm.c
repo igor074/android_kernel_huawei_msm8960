@@ -46,7 +46,11 @@
 #include <net/xfrm.h>
 #include <net/checksum.h>
 #include <net/udp.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 
 #include "avc.h"
 #include "objsec.h"

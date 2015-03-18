@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 /* Copyright (c) 2010, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,6 +19,10 @@
 #define SN12M0PZ_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
+=======
+#include <mach/board.h>
+>>>>>>> cm-10.0
 extern struct sn12m0pz_reg sn12m0pz_regs; /* from mt9t013_reg.c */
 struct reg_struct{
 	uint8_t pll_multiplier_lsb;            /* 0x0307*/

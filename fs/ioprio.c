@@ -21,6 +21,10 @@
  */
 #include <linux/gfp.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/ioprio.h>
 #include <linux/blkdev.h>
 #include <linux/capability.h>
@@ -47,6 +51,7 @@ int set_task_ioprio(struct task_struct *task, int ioprio)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	task_lock(task);
 	do {
 		ioc = task->io_context;
@@ -69,6 +74,14 @@ int set_task_ioprio(struct task_struct *task, int ioprio)
 	}
 
 	task_unlock(task);
+=======
+	ioc = get_task_io_context(task, GFP_ATOMIC, NUMA_NO_NODE);
+	if (ioc) {
+		ioc_ioprio_changed(ioc, ioprio);
+		put_io_context(ioc);
+	}
+
+>>>>>>> cm-10.0
 	return err;
 }
 EXPORT_SYMBOL_GPL(set_task_ioprio);

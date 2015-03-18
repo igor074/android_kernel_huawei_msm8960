@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -67,20 +71,37 @@ int msm_bam_dmux_ul_power_unvote(void);
 int msm_bam_dmux_is_ch_full(uint32_t id);
 
 int msm_bam_dmux_is_ch_low(uint32_t id);
+<<<<<<< HEAD
 #else
 int msm_bam_dmux_open(uint32_t id, void *priv,
+=======
+
+int msm_bam_dmux_reg_notify(void *priv,
+		       void (*notify)(void *priv, int event_type,
+						unsigned long data));
+#else
+static inline int msm_bam_dmux_open(uint32_t id, void *priv,
+>>>>>>> cm-10.0
 		       void (*notify)(void *priv, int event_type,
 						unsigned long data))
 {
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 int msm_bam_dmux_close(uint32_t id)
+=======
+static inline int msm_bam_dmux_close(uint32_t id)
+>>>>>>> cm-10.0
 {
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 int msm_bam_dmux_write(uint32_t id, struct sk_buff *skb)
+=======
+static inline int msm_bam_dmux_write(uint32_t id, struct sk_buff *skb)
+>>>>>>> cm-10.0
 {
 	return -ENODEV;
 }
@@ -100,12 +121,27 @@ static inline int msm_bam_dmux_ul_power_unvote(void)
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 int msm_bam_dmux_is_ch_full(uint32_t id)
+=======
+static inline int msm_bam_dmux_is_ch_full(uint32_t id)
 {
 	return -ENODEV;
 }
 
+static inline int msm_bam_dmux_is_ch_low(uint32_t id)
+>>>>>>> cm-10.0
+{
+	return -ENODEV;
+}
+
+<<<<<<< HEAD
 int msm_bam_dmux_is_ch_low(uint32_t id)
+=======
+static inline int msm_bam_dmux_reg_notify(void *priv,
+		       void (*notify)(void *priv, int event_type,
+						unsigned long data))
+>>>>>>> cm-10.0
 {
 	return -ENODEV;
 }

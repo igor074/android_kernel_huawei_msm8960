@@ -30,6 +30,7 @@
  *		<jkenisto@us.ibm.com> and Prasanna S Panchamukhi
  *		<prasanna@in.ibm.com> added function-return probes.
  * 2005-May	Rusty Lynch <rusty.lynch@intel.com>
+<<<<<<< HEAD
  * 		Added function return probes functionality
  * 2006-Feb	Masami Hiramatsu <hiramatu@sdl.hitachi.co.jp> added
  * 		kprobe-booster and kretprobe-booster for i386.
@@ -40,6 +41,17 @@
  * 		unified x86 kprobes code.
  */
 
+=======
+ *		Added function return probes functionality
+ * 2006-Feb	Masami Hiramatsu <hiramatu@sdl.hitachi.co.jp> added
+ *		kprobe-booster and kretprobe-booster for i386.
+ * 2007-Dec	Masami Hiramatsu <mhiramat@redhat.com> added kprobe-booster
+ *		and kretprobe-booster for x86-64
+ * 2007-Dec	Masami Hiramatsu <mhiramat@redhat.com>, Arjan van de Ven
+ *		<arjan@infradead.org> and Jim Keniston <jkenisto@us.ibm.com>
+ *		unified x86 kprobes code.
+ */
+>>>>>>> cm-10.0
 #include <linux/kprobes.h>
 #include <linux/ptrace.h>
 #include <linux/string.h>
@@ -59,6 +71,11 @@
 #include <asm/insn.h>
 #include <asm/debugreg.h>
 
+<<<<<<< HEAD
+=======
+#include "kprobes-common.h"
+
+>>>>>>> cm-10.0
 void jprobe_return_end(void);
 
 DEFINE_PER_CPU(struct kprobe *, current_kprobe) = NULL;
@@ -75,8 +92,16 @@ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
 	/*
 	 * Undefined/reserved opcodes, conditional jump, Opcode Extension
 	 * Groups, and some special opcodes can not boost.
+<<<<<<< HEAD
 	 */
 static const u32 twobyte_is_boostable[256 / 32] = {
+=======
+	 * This is non-const and volatile to keep gcc from statically
+	 * optimizing it out, as variable_test_bit makes gcc think only
+	 * *(unsigned long*) is used. 
+	 */
+static volatile u32 twobyte_is_boostable[256 / 32] = {
+>>>>>>> cm-10.0
 	/*      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f          */
 	/*      ----------------------------------------------          */
 	W(0x00, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0) | /* 00 */
@@ -105,6 +130,10 @@ struct kretprobe_blackpoint kretprobe_blacklist[] = {
 			      doesn't switch kernel stack.*/
 	{NULL, NULL}	/* Terminator */
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 const int kretprobe_blacklist_size = ARRAY_SIZE(kretprobe_blacklist);
 
 static void __kprobes __synthesize_relative_insn(void *from, void *to, u8 op)
@@ -120,11 +149,24 @@ static void __kprobes __synthesize_relative_insn(void *from, void *to, u8 op)
 }
 
 /* Insert a jump instruction at address 'from', which jumps to address 'to'.*/
+<<<<<<< HEAD
 static void __kprobes synthesize_reljump(void *from, void *to)
+=======
+void __kprobes synthesize_reljump(void *from, void *to)
+>>>>>>> cm-10.0
 {
 	__synthesize_relative_insn(from, to, RELATIVEJUMP_OPCODE);
 }
 
+<<<<<<< HEAD
+=======
+/* Insert a call instruction at address 'from', which calls address 'to'.*/
+void __kprobes synthesize_relcall(void *from, void *to)
+{
+	__synthesize_relative_insn(from, to, RELATIVECALL_OPCODE);
+}
+
+>>>>>>> cm-10.0
 /*
  * Skip the prefixes of the instruction.
  */
@@ -148,7 +190,11 @@ static kprobe_opcode_t *__kprobes skip_prefixes(kprobe_opcode_t *insn)
  * Returns non-zero if opcode is boostable.
  * RIP relative instructions are adjusted at copying time in 64 bits mode
  */
+<<<<<<< HEAD
 static int __kprobes can_boost(kprobe_opcode_t *opcodes)
+=======
+int __kprobes can_boost(kprobe_opcode_t *opcodes)
+>>>>>>> cm-10.0
 {
 	kprobe_opcode_t opcode;
 	kprobe_opcode_t *orig_opcodes = opcodes;
@@ -204,6 +250,7 @@ retry:
 	}
 }
 
+<<<<<<< HEAD
 /* Recover the probed instruction at addr for further analysis. */
 static int recover_probed_instruction(kprobe_opcode_t *buf, unsigned long addr)
 {
@@ -211,6 +258,17 @@ static int recover_probed_instruction(kprobe_opcode_t *buf, unsigned long addr)
 	kp = get_kprobe((void *)addr);
 	if (!kp)
 		return -EINVAL;
+=======
+static unsigned long
+__recover_probed_insn(kprobe_opcode_t *buf, unsigned long addr)
+{
+	struct kprobe *kp;
+
+	kp = get_kprobe((void *)addr);
+	/* There is no probe, return original address */
+	if (!kp)
+		return addr;
+>>>>>>> cm-10.0
 
 	/*
 	 *  Basically, kp->ainsn.insn has an original instruction.
@@ -227,14 +285,38 @@ static int recover_probed_instruction(kprobe_opcode_t *buf, unsigned long addr)
 	 */
 	memcpy(buf, kp->addr, MAX_INSN_SIZE * sizeof(kprobe_opcode_t));
 	buf[0] = kp->opcode;
+<<<<<<< HEAD
 	return 0;
+=======
+	return (unsigned long)buf;
+}
+
+/*
+ * Recover the probed instruction at addr for further analysis.
+ * Caller must lock kprobes by kprobe_mutex, or disable preemption
+ * for preventing to release referencing kprobes.
+ */
+unsigned long recover_probed_instruction(kprobe_opcode_t *buf, unsigned long addr)
+{
+	unsigned long __addr;
+
+	__addr = __recover_optprobed_insn(buf, addr);
+	if (__addr != addr)
+		return __addr;
+
+	return __recover_probed_insn(buf, addr);
+>>>>>>> cm-10.0
 }
 
 /* Check if paddr is at an instruction boundary */
 static int __kprobes can_probe(unsigned long paddr)
 {
+<<<<<<< HEAD
 	int ret;
 	unsigned long addr, offset = 0;
+=======
+	unsigned long addr, __addr, offset = 0;
+>>>>>>> cm-10.0
 	struct insn insn;
 	kprobe_opcode_t buf[MAX_INSN_SIZE];
 
@@ -244,13 +326,17 @@ static int __kprobes can_probe(unsigned long paddr)
 	/* Decode instructions */
 	addr = paddr - offset;
 	while (addr < paddr) {
+<<<<<<< HEAD
 		kernel_insn_init(&insn, (void *)addr);
 		insn_get_opcode(&insn);
 
+=======
+>>>>>>> cm-10.0
 		/*
 		 * Check if the instruction has been modified by another
 		 * kprobe, in which case we replace the breakpoint by the
 		 * original instruction in our buffer.
+<<<<<<< HEAD
 		 */
 		if (insn.opcode.bytes[0] == BREAKPOINT_INSTRUCTION) {
 			ret = recover_probed_instruction(buf, addr);
@@ -264,6 +350,22 @@ static int __kprobes can_probe(unsigned long paddr)
 			kernel_insn_init(&insn, buf);
 		}
 		insn_get_length(&insn);
+=======
+		 * Also, jump optimization will change the breakpoint to
+		 * relative-jump. Since the relative-jump itself is
+		 * normally used, we just go through if there is no kprobe.
+		 */
+		__addr = recover_probed_instruction(buf, addr);
+		kernel_insn_init(&insn, (void *)__addr);
+		insn_get_length(&insn);
+
+		/*
+		 * Another debugging subsystem might insert this breakpoint.
+		 * In that case, we can't recover it.
+		 */
+		if (insn.opcode.bytes[0] == BREAKPOINT_INSTRUCTION)
+			return 0;
+>>>>>>> cm-10.0
 		addr += insn.length;
 	}
 
@@ -296,6 +398,7 @@ static int __kprobes is_IF_modifier(kprobe_opcode_t *insn)
  * If not, return null.
  * Only applicable to 64-bit x86.
  */
+<<<<<<< HEAD
 static int __kprobes __copy_instruction(u8 *dest, u8 *src, int recover)
 {
 	struct insn insn;
@@ -314,6 +417,18 @@ static int __kprobes __copy_instruction(u8 *dest, u8 *src, int recover)
 		}
 	}
 	insn_get_length(&insn);
+=======
+int __kprobes __copy_instruction(u8 *dest, u8 *src)
+{
+	struct insn insn;
+	kprobe_opcode_t buf[MAX_INSN_SIZE];
+
+	kernel_insn_init(&insn, (void *)recover_probed_instruction(buf, (unsigned long)src));
+	insn_get_length(&insn);
+	/* Another subsystem puts a breakpoint, failed to recover */
+	if (insn.opcode.bytes[0] == BREAKPOINT_INSTRUCTION)
+		return 0;
+>>>>>>> cm-10.0
 	memcpy(dest, insn.kaddr, insn.length);
 
 #ifdef CONFIG_X86_64
@@ -334,8 +449,12 @@ static int __kprobes __copy_instruction(u8 *dest, u8 *src, int recover)
 		 * extension of the original signed 32-bit displacement would
 		 * have given.
 		 */
+<<<<<<< HEAD
 		newdisp = (u8 *) src + (s64) insn.displacement.value -
 			  (u8 *) dest;
+=======
+		newdisp = (u8 *) src + (s64) insn.displacement.value - (u8 *) dest;
+>>>>>>> cm-10.0
 		BUG_ON((s64) (s32) newdisp != newdisp); /* Sanity check.  */
 		disp = (u8 *) dest + insn_offset_displacement(&insn);
 		*(s32 *) disp = (s32) newdisp;
@@ -346,6 +465,7 @@ static int __kprobes __copy_instruction(u8 *dest, u8 *src, int recover)
 
 static void __kprobes arch_copy_kprobe(struct kprobe *p)
 {
+<<<<<<< HEAD
 	/*
 	 * Copy an instruction without recovering int3, because it will be
 	 * put by another subsystem.
@@ -353,11 +473,26 @@ static void __kprobes arch_copy_kprobe(struct kprobe *p)
 	__copy_instruction(p->ainsn.insn, p->addr, 0);
 
 	if (can_boost(p->addr))
+=======
+	/* Copy an instruction with recovering if other optprobe modifies it.*/
+	__copy_instruction(p->ainsn.insn, p->addr);
+
+	/*
+	 * __copy_instruction can modify the displacement of the instruction,
+	 * but it doesn't affect boostable check.
+	 */
+	if (can_boost(p->ainsn.insn))
+>>>>>>> cm-10.0
 		p->ainsn.boostable = 0;
 	else
 		p->ainsn.boostable = -1;
 
+<<<<<<< HEAD
 	p->opcode = *p->addr;
+=======
+	/* Also, displacement change doesn't affect the first byte */
+	p->opcode = p->ainsn.insn[0];
+>>>>>>> cm-10.0
 }
 
 int __kprobes arch_prepare_kprobe(struct kprobe *p)
@@ -439,8 +574,13 @@ static void __kprobes restore_btf(void)
 	}
 }
 
+<<<<<<< HEAD
 void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
 				      struct pt_regs *regs)
+=======
+void __kprobes
+arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
+>>>>>>> cm-10.0
 {
 	unsigned long *sara = stack_addr(regs);
 
@@ -450,6 +590,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
 	*sara = (unsigned long) &kretprobe_trampoline;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_OPTPROBES
 static int  __kprobes setup_detour_execution(struct kprobe *p,
 					     struct pt_regs *regs,
@@ -460,6 +601,10 @@ static int  __kprobes setup_detour_execution(struct kprobe *p,
 
 static void __kprobes setup_singlestep(struct kprobe *p, struct pt_regs *regs,
 				       struct kprobe_ctlblk *kcb, int reenter)
+=======
+static void __kprobes
+setup_singlestep(struct kprobe *p, struct pt_regs *regs, struct kprobe_ctlblk *kcb, int reenter)
+>>>>>>> cm-10.0
 {
 	if (setup_detour_execution(p, regs, reenter))
 		return;
@@ -501,8 +646,13 @@ static void __kprobes setup_singlestep(struct kprobe *p, struct pt_regs *regs,
  * within the handler. We save the original kprobes variables and just single
  * step on the instruction of the new probe without calling any user handlers.
  */
+<<<<<<< HEAD
 static int __kprobes reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
 				    struct kprobe_ctlblk *kcb)
+=======
+static int __kprobes
+reenter_kprobe(struct kprobe *p, struct pt_regs *regs, struct kprobe_ctlblk *kcb)
+>>>>>>> cm-10.0
 {
 	switch (kcb->kprobe_status) {
 	case KPROBE_HIT_SSDONE:
@@ -597,6 +747,7 @@ static int __kprobes kprobe_handler(struct pt_regs *regs)
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_X86_64
 #define SAVE_REGS_STRING		\
 	/* Skip cs, ip, orig_ax. */	\
@@ -660,6 +811,8 @@ static int __kprobes kprobe_handler(struct pt_regs *regs)
 	"	addl $24, %esp\n"
 #endif
 
+=======
+>>>>>>> cm-10.0
 /*
  * When a retprobed function returns, this code saves registers and
  * calls trampoline_handler() runs, which calls the kretprobe's handler.
@@ -813,8 +966,13 @@ static __used __kprobes void *trampoline_handler(struct pt_regs *regs)
  * jump instruction after the copied instruction, that jumps to the next
  * instruction after the probepoint.
  */
+<<<<<<< HEAD
 static void __kprobes resume_execution(struct kprobe *p,
 		struct pt_regs *regs, struct kprobe_ctlblk *kcb)
+=======
+static void __kprobes
+resume_execution(struct kprobe *p, struct pt_regs *regs, struct kprobe_ctlblk *kcb)
+>>>>>>> cm-10.0
 {
 	unsigned long *tos = stack_addr(regs);
 	unsigned long copy_ip = (unsigned long)p->ainsn.insn;
@@ -993,8 +1151,13 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, int trapnr)
 /*
  * Wrapper routine for handling exceptions.
  */
+<<<<<<< HEAD
 int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
 				       unsigned long val, void *data)
+=======
+int __kprobes
+kprobe_exceptions_notify(struct notifier_block *self, unsigned long val, void *data)
+>>>>>>> cm-10.0
 {
 	struct die_args *args = data;
 	int ret = NOTIFY_DONE;
@@ -1104,6 +1267,7 @@ int __kprobes longjmp_break_handler(struct kprobe *p, struct pt_regs *regs)
 	return 0;
 }
 
+<<<<<<< HEAD
 
 #ifdef CONFIG_OPTPROBES
 
@@ -1564,6 +1728,11 @@ static int __kprobes init_poke_params(void)
 int __init arch_init_kprobes(void)
 {
 	return init_poke_params();
+=======
+int __init arch_init_kprobes(void)
+{
+	return arch_init_optprobes();
+>>>>>>> cm-10.0
 }
 
 int __kprobes arch_trampoline_kprobe(struct kprobe *p)

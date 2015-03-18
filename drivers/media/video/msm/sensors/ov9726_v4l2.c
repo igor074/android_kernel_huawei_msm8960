@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -236,6 +240,10 @@ static struct msm_sensor_fn_t ov9726_func_tbl = {
 	.sensor_config = msm_sensor_config,
 	.sensor_power_up = msm_sensor_power_up,
 	.sensor_power_down = msm_sensor_power_down,
+<<<<<<< HEAD
+=======
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
+>>>>>>> cm-10.0
 };
 
 static struct msm_sensor_reg_t ov9726_regs = {
@@ -271,6 +279,10 @@ static struct msm_sensor_ctrl_t ov9726_s_ctrl = {
 	.sensor_v4l2_subdev_info_size = ARRAY_SIZE(ov9726_subdev_info),
 	.sensor_v4l2_subdev_ops = &ov9726_subdev_ops,
 	.func_tbl = &ov9726_func_tbl,
+<<<<<<< HEAD
+=======
+	.clk_rate = MSM_SENSOR_MCLK_24HZ,
+>>>>>>> cm-10.0
 };
 
 module_init(msm_sensor_init_module);

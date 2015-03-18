@@ -665,6 +665,11 @@ static void atom_op_delay(atom_exec_context *ctx, int *ptr, int arg)
 	SDEBUG("   count: %d\n", count);
 	if (arg == ATOM_UNIT_MICROSEC)
 		udelay(count);
+<<<<<<< HEAD
+=======
+	else if (!drm_can_sleep())
+		mdelay(count);
+>>>>>>> cm-10.0
 	else
 		msleep(count);
 }
@@ -1254,6 +1259,12 @@ struct atom_context *atom_parse(struct card_info *card, void *bios)
 	char name[512];
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (!ctx)
+		return NULL;
+
+>>>>>>> cm-10.0
 	ctx->card = card;
 	ctx->bios = bios;
 
@@ -1301,8 +1312,16 @@ struct atom_context *atom_parse(struct card_info *card, void *bios)
 
 int atom_asic_init(struct atom_context *ctx)
 {
+<<<<<<< HEAD
 	int hwi = CU16(ctx->data_table + ATOM_DATA_FWI_PTR);
 	uint32_t ps[16];
+=======
+	struct radeon_device *rdev = ctx->card->dev->dev_private;
+	int hwi = CU16(ctx->data_table + ATOM_DATA_FWI_PTR);
+	uint32_t ps[16];
+	int ret;
+
+>>>>>>> cm-10.0
 	memset(ps, 0, 64);
 
 	ps[0] = cpu_to_le32(CU32(hwi + ATOM_FWI_DEFSCLK_PTR));
@@ -1312,7 +1331,21 @@ int atom_asic_init(struct atom_context *ctx)
 
 	if (!CU16(ctx->cmd_table + 4 + 2 * ATOM_CMD_INIT))
 		return 1;
+<<<<<<< HEAD
 	return atom_execute_table(ctx, ATOM_CMD_INIT, ps);
+=======
+	ret = atom_execute_table(ctx, ATOM_CMD_INIT, ps);
+	if (ret)
+		return ret;
+
+	memset(ps, 0, 64);
+
+	if (rdev->family < CHIP_R600) {
+		if (CU16(ctx->cmd_table + 4 + 2 * ATOM_CMD_SPDFANCNTL))
+			atom_execute_table(ctx, ATOM_CMD_SPDFANCNTL, ps);
+	}
+	return ret;
+>>>>>>> cm-10.0
 }
 
 void atom_destroy(struct atom_context *ctx)

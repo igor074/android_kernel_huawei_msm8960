@@ -21,16 +21,24 @@
 #include "rtc-core.h"
 
 
+<<<<<<< HEAD
 static DEFINE_IDR(rtc_idr);
 static DEFINE_MUTEX(idr_lock);
+=======
+static DEFINE_IDA(rtc_ida);
+>>>>>>> cm-10.0
 struct class *rtc_class;
 
 static void rtc_device_release(struct device *dev)
 {
 	struct rtc_device *rtc = to_rtc_device(dev);
+<<<<<<< HEAD
 	mutex_lock(&idr_lock);
 	idr_remove(&rtc_idr, rtc->id);
 	mutex_unlock(&idr_lock);
+=======
+	ida_simple_remove(&rtc_ida, rtc->id);
+>>>>>>> cm-10.0
 	kfree(rtc);
 }
 
@@ -146,6 +154,7 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
 	struct rtc_wkalrm alrm;
 	int id, err;
 
+<<<<<<< HEAD
 	if (idr_pre_get(&rtc_idr, GFP_KERNEL) == 0) {
 		err = -ENOMEM;
 		goto exit;
@@ -165,6 +174,18 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
 	if (rtc == NULL) {
 		err = -ENOMEM;
 		goto exit_idr;
+=======
+	id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
+	if (id < 0) {
+		err = id;
+		goto exit;
+	}
+
+	rtc = kzalloc(sizeof(struct rtc_device), GFP_KERNEL);
+	if (rtc == NULL) {
+		err = -ENOMEM;
+		goto exit_ida;
+>>>>>>> cm-10.0
 	}
 
 	rtc->id = id;
@@ -222,10 +243,15 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
 exit_kfree:
 	kfree(rtc);
 
+<<<<<<< HEAD
 exit_idr:
 	mutex_lock(&idr_lock);
 	idr_remove(&rtc_idr, id);
 	mutex_unlock(&idr_lock);
+=======
+exit_ida:
+	ida_simple_remove(&rtc_ida, id);
+>>>>>>> cm-10.0
 
 exit:
 	dev_err(dev, "rtc core: unable to register %s, err = %d\n",
@@ -276,7 +302,11 @@ static void __exit rtc_exit(void)
 {
 	rtc_dev_exit();
 	class_destroy(rtc_class);
+<<<<<<< HEAD
 	idr_destroy(&rtc_idr);
+=======
+	ida_destroy(&rtc_ida);
+>>>>>>> cm-10.0
 }
 
 subsys_initcall(rtc_init);

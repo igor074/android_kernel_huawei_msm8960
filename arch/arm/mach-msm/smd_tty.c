@@ -1,7 +1,11 @@
 /* arch/arm/mach-msm/smd_tty.c
  *
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Author: Brian Swetland <swetland@google.com>
  *
  * This software is licensed under the terms of the GNU General Public
@@ -144,6 +148,7 @@ static void smd_tty_read(unsigned long param)
 
 		avail = tty_prepare_flip_string(tty, &ptr, avail);
 		if (avail <= 0) {
+<<<<<<< HEAD
 			if (!timer_pending(&info->buf_req_timer)) {
 				init_timer(&info->buf_req_timer);
 				info->buf_req_timer.expires = jiffies +
@@ -152,6 +157,10 @@ static void smd_tty_read(unsigned long param)
 				info->buf_req_timer.data = param;
 				add_timer(&info->buf_req_timer);
 			}
+=======
+			mod_timer(&info->buf_req_timer,
+					jiffies + msecs_to_jiffies(30));
+>>>>>>> cm-10.0
 			return;
 		}
 
@@ -237,7 +246,11 @@ static int smd_tty_open(struct tty_struct *tty, struct file *f)
 	int res = 0;
 	unsigned int n = tty->index;
 	struct smd_tty_info *info;
+<<<<<<< HEAD
 	char *peripheral = NULL;
+=======
+	const char *peripheral = NULL;
+>>>>>>> cm-10.0
 
 
 	if (n >= MAX_SMD_TTYS || !smd_tty[n].smd)
@@ -249,9 +262,13 @@ static int smd_tty_open(struct tty_struct *tty, struct file *f)
 	tty->driver_data = info;
 
 	if (info->open_count++ == 0) {
+<<<<<<< HEAD
 		if (smd_tty[n].smd->edge == SMD_APPS_MODEM)
 			peripheral = "modem";
 
+=======
+		peripheral = smd_edge_to_subsystem(smd_tty[n].smd->edge);
+>>>>>>> cm-10.0
 		if (peripheral) {
 			info->pil = pil_get(peripheral);
 			if (IS_ERR(info->pil)) {
@@ -491,7 +508,12 @@ static int smd_tty_dummy_probe(struct platform_device *pdev)
 		if (!smd_configs[n].dev_name)
 			continue;
 
+<<<<<<< HEAD
 		if (!strncmp(pdev->name, smd_configs[n].dev_name,
+=======
+		if (pdev->id == smd_configs[n].edge &&
+			!strncmp(pdev->name, smd_configs[n].dev_name,
+>>>>>>> cm-10.0
 					SMD_MAX_CH_NAME_LEN)) {
 			complete_all(&smd_tty[idx].ch_allocated);
 			return 0;
@@ -573,6 +595,11 @@ static int __init smd_tty_init(void)
 		smd_tty[idx].driver.driver.owner = THIS_MODULE;
 		spin_lock_init(&smd_tty[idx].reset_lock);
 		smd_tty[idx].is_open = 0;
+<<<<<<< HEAD
+=======
+		setup_timer(&smd_tty[idx].buf_req_timer, buf_req_retry,
+				(unsigned long)&smd_tty[idx]);
+>>>>>>> cm-10.0
 		init_waitqueue_head(&smd_tty[idx].ch_opened_wait_queue);
 		ret = platform_driver_register(&smd_tty[idx].driver);
 

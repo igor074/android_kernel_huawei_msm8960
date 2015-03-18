@@ -24,7 +24,11 @@
  *
  *
  ***********************************************************************/
+<<<<<<< HEAD
 #include <linux/moduleparam.h>
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/pci.h>
 #include <linux/slab.h>
 
@@ -160,6 +164,7 @@ static int __devinit jsm_probe_one(struct pci_dev *pdev, const struct pci_device
 	dev_info(&pdev->dev, "board %d: Digi Neo (rev %d), irq %d\n",
 			adapter_count, brd->rev, brd->irq);
 
+<<<<<<< HEAD
 	/*
 	 * allocate flip buffer for board.
 	 *
@@ -175,12 +180,17 @@ static int __devinit jsm_probe_one(struct pci_dev *pdev, const struct pci_device
 		goto out_free_uart;
 	}
 
+=======
+>>>>>>> cm-10.0
 	pci_set_drvdata(pdev, brd);
 	pci_save_state(pdev);
 
 	return 0;
+<<<<<<< HEAD
  out_free_uart:
 	jsm_remove_uart_port(brd);
+=======
+>>>>>>> cm-10.0
  out_free_irq:
 	jsm_remove_uart_port(brd);
 	free_irq(brd->irq, brd);
@@ -211,14 +221,20 @@ static void __devexit jsm_remove_one(struct pci_dev *pdev)
 		if (brd->channels[i]) {
 			kfree(brd->channels[i]->ch_rqueue);
 			kfree(brd->channels[i]->ch_equeue);
+<<<<<<< HEAD
 			kfree(brd->channels[i]->ch_wqueue);
+=======
+>>>>>>> cm-10.0
 			kfree(brd->channels[i]);
 		}
 	}
 
 	pci_release_regions(pdev);
 	pci_disable_device(pdev);
+<<<<<<< HEAD
 	kfree(brd->flipbuf);
+=======
+>>>>>>> cm-10.0
 	kfree(brd);
 }
 
@@ -270,6 +286,10 @@ static void jsm_io_resume(struct pci_dev *pdev)
 	struct jsm_board *brd = pci_get_drvdata(pdev);
 
 	pci_restore_state(pdev);
+<<<<<<< HEAD
+=======
+	pci_save_state(pdev);
+>>>>>>> cm-10.0
 
 	jsm_uart_port_init(brd);
 }

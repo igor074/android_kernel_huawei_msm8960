@@ -26,6 +26,10 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/interrupt.h>
+>>>>>>> cm-10.0
 
 #include <linux/tty.h>
 #include <linux/tty_driver.h>

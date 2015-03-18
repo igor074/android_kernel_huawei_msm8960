@@ -18,14 +18,25 @@
 
 #include <linux/delay.h>
 #include <linux/suspend.h>
+<<<<<<< HEAD
+=======
+#include <linux/stat.h>
+>>>>>>> cm-10.0
 #include <asm/firmware.h>
 #include <asm/hvcall.h>
 #include <asm/machdep.h>
 #include <asm/mmu.h>
 #include <asm/rtas.h>
+<<<<<<< HEAD
 
 static u64 stream_id;
 static struct sys_device suspend_sysdev;
+=======
+#include <asm/topology.h>
+
+static u64 stream_id;
+static struct device suspend_dev;
+>>>>>>> cm-10.0
 static DECLARE_COMPLETION(suspend_work);
 static struct rtas_suspend_me_data suspend_data;
 static atomic_t suspending;
@@ -109,8 +120,13 @@ static int pseries_prepare_late(void)
 
 /**
  * store_hibernate - Initiate partition hibernation
+<<<<<<< HEAD
  * @classdev:	sysdev class struct
  * @attr:		class device attribute struct
+=======
+ * @dev:		subsys root device
+ * @attr:		device attribute struct
+>>>>>>> cm-10.0
  * @buf:		buffer
  * @count:		buffer size
  *
@@ -120,8 +136,13 @@ static int pseries_prepare_late(void)
  * Return value:
  * 	number of bytes printed to buffer / other on failure
  **/
+<<<<<<< HEAD
 static ssize_t store_hibernate(struct sysdev_class *classdev,
 			       struct sysdev_class_attribute *attr,
+=======
+static ssize_t store_hibernate(struct device *dev,
+			       struct device_attribute *attr,
+>>>>>>> cm-10.0
 			       const char *buf, size_t count)
 {
 	int rc;
@@ -137,8 +158,16 @@ static ssize_t store_hibernate(struct sysdev_class *classdev,
 			ssleep(1);
 	} while (rc == -EAGAIN);
 
+<<<<<<< HEAD
 	if (!rc)
 		rc = pm_suspend(PM_SUSPEND_MEM);
+=======
+	if (!rc) {
+		stop_topology_update();
+		rc = pm_suspend(PM_SUSPEND_MEM);
+		start_topology_update();
+	}
+>>>>>>> cm-10.0
 
 	stream_id = 0;
 
@@ -147,10 +176,18 @@ static ssize_t store_hibernate(struct sysdev_class *classdev,
 	return rc;
 }
 
+<<<<<<< HEAD
 static SYSDEV_CLASS_ATTR(hibernate, S_IWUSR, NULL, store_hibernate);
 
 static struct sysdev_class suspend_sysdev_class = {
 	.name = "power",
+=======
+static DEVICE_ATTR(hibernate, S_IWUSR, NULL, store_hibernate);
+
+static struct bus_type suspend_subsys = {
+	.name = "power",
+	.dev_name = "power",
+>>>>>>> cm-10.0
 };
 
 static const struct platform_suspend_ops pseries_suspend_ops = {
@@ -166,6 +203,7 @@ static const struct platform_suspend_ops pseries_suspend_ops = {
  * Return value:
  * 	0 on success / other on failure
  **/
+<<<<<<< HEAD
 static int pseries_suspend_sysfs_register(struct sys_device *sysdev)
 {
 	int rc;
@@ -183,6 +221,25 @@ static int pseries_suspend_sysfs_register(struct sys_device *sysdev)
 
 class_unregister:
 	sysdev_class_unregister(&suspend_sysdev_class);
+=======
+static int pseries_suspend_sysfs_register(struct device *dev)
+{
+	int rc;
+
+	if ((rc = subsys_system_register(&suspend_subsys, NULL)))
+		return rc;
+
+	dev->id = 0;
+	dev->bus = &suspend_subsys;
+
+	if ((rc = device_create_file(suspend_subsys.dev_root, &dev_attr_hibernate)))
+		goto subsys_unregister;
+
+	return 0;
+
+subsys_unregister:
+	bus_unregister(&suspend_subsys);
+>>>>>>> cm-10.0
 	return rc;
 }
 
@@ -203,7 +260,11 @@ static int __init pseries_suspend_init(void)
 	if (suspend_data.token == RTAS_UNKNOWN_SERVICE)
 		return 0;
 
+<<<<<<< HEAD
 	if ((rc = pseries_suspend_sysfs_register(&suspend_sysdev)))
+=======
+	if ((rc = pseries_suspend_sysfs_register(&suspend_dev)))
+>>>>>>> cm-10.0
 		return rc;
 
 	ppc_md.suspend_disable_cpu = pseries_suspend_cpu;

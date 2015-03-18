@@ -395,7 +395,11 @@ static int compare_lebs(struct ubi_device *ubi, const struct ubi_scan_leb *seb,
 	}
 
 	err = ubi_io_read_data(ubi, buf, pnum, 0, len);
+<<<<<<< HEAD
 	if (err && err != UBI_IO_BITFLIPS && err != -EBADMSG)
+=======
+	if (err && err != UBI_IO_BITFLIPS && !mtd_is_eccerr(err))
+>>>>>>> cm-10.0
 		goto out_free_buf;
 
 	data_crc = be32_to_cpu(vid_hdr->data_crc);
@@ -789,11 +793,19 @@ static int check_corruption(struct ubi_device *ubi, struct ubi_vid_hdr *vid_hdr,
 	int err;
 
 	mutex_lock(&ubi->buf_mutex);
+<<<<<<< HEAD
 	memset(ubi->peb_buf1, 0x00, ubi->leb_size);
 
 	err = ubi_io_read(ubi, ubi->peb_buf1, pnum, ubi->leb_start,
 			  ubi->leb_size);
 	if (err == UBI_IO_BITFLIPS || err == -EBADMSG) {
+=======
+	memset(ubi->peb_buf, 0x00, ubi->leb_size);
+
+	err = ubi_io_read(ubi, ubi->peb_buf, pnum, ubi->leb_start,
+			  ubi->leb_size);
+	if (err == UBI_IO_BITFLIPS || mtd_is_eccerr(err)) {
+>>>>>>> cm-10.0
 		/*
 		 * Bit-flips or integrity errors while reading the data area.
 		 * It is difficult to say for sure what type of corruption is
@@ -808,7 +820,11 @@ static int check_corruption(struct ubi_device *ubi, struct ubi_vid_hdr *vid_hdr,
 	if (err)
 		goto out_unlock;
 
+<<<<<<< HEAD
 	if (ubi_check_pattern(ubi->peb_buf1, 0xFF, ubi->leb_size))
+=======
+	if (ubi_check_pattern(ubi->peb_buf, 0xFF, ubi->leb_size))
+>>>>>>> cm-10.0
 		goto out_unlock;
 
 	ubi_err("PEB %d contains corrupted VID header, and the data does not "
@@ -818,7 +834,11 @@ static int check_corruption(struct ubi_device *ubi, struct ubi_vid_hdr *vid_hdr,
 	dbg_msg("hexdump of PEB %d offset %d, length %d",
 		pnum, ubi->leb_start, ubi->leb_size);
 	ubi_dbg_print_hex_dump(KERN_DEBUG, "", DUMP_PREFIX_OFFSET, 32, 1,
+<<<<<<< HEAD
 			       ubi->peb_buf1, ubi->leb_size, 1);
+=======
+			       ubi->peb_buf, ubi->leb_size, 1);
+>>>>>>> cm-10.0
 	err = 1;
 
 out_unlock:
@@ -1174,7 +1194,11 @@ struct ubi_scan_info *ubi_scan(struct ubi_device *ubi)
 
 	ech = kzalloc(ubi->ec_hdr_alsize, GFP_KERNEL);
 	if (!ech)
+<<<<<<< HEAD
 		goto out_slab;
+=======
+		goto out_si;
+>>>>>>> cm-10.0
 
 	vidh = ubi_zalloc_vid_hdr(ubi, GFP_KERNEL);
 	if (!vidh)
@@ -1235,8 +1259,11 @@ out_vidh:
 	ubi_free_vid_hdr(ubi, vidh);
 out_ech:
 	kfree(ech);
+<<<<<<< HEAD
 out_slab:
 	kmem_cache_destroy(si->scan_leb_slab);
+=======
+>>>>>>> cm-10.0
 out_si:
 	ubi_scan_destroy_si(si);
 	return ERR_PTR(err);
@@ -1325,7 +1352,13 @@ void ubi_scan_destroy_si(struct ubi_scan_info *si)
 		}
 	}
 
+<<<<<<< HEAD
 	kmem_cache_destroy(si->scan_leb_slab);
+=======
+	if (si->scan_leb_slab)
+		kmem_cache_destroy(si->scan_leb_slab);
+
+>>>>>>> cm-10.0
 	kfree(si);
 }
 
@@ -1347,7 +1380,11 @@ static int paranoid_check_si(struct ubi_device *ubi, struct ubi_scan_info *si)
 	struct ubi_scan_leb *seb, *last_seb;
 	uint8_t *buf;
 
+<<<<<<< HEAD
 	if (!(ubi_chk_flags & UBI_CHK_GEN))
+=======
+	if (!ubi->dbg->chk_gen)
+>>>>>>> cm-10.0
 		return 0;
 
 	/*

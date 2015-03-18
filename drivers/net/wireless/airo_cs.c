@@ -37,7 +37,10 @@
 #include <pcmcia/ds.h>
 
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 
 #include "airo.h"
 

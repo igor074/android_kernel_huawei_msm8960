@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -290,8 +294,11 @@ static u32 ddl_header_done_callback(struct ddl_context *ddl_context)
 			decoder->client_output_buf_req.actual_count
 			&& decoder->progressive_only)
 			need_reconfig = false;
+<<<<<<< HEAD
 		if (input_vcd_frm->flags & VCD_FRAME_FLAG_EOS)
 			need_reconfig = false;
+=======
+>>>>>>> cm-10.0
 		if ((input_vcd_frm->data_len <= seq_hdr_info.dec_frm_size ||
 			 (input_vcd_frm->flags & VCD_FRAME_FLAG_CODECCONFIG)) &&
 			(!need_reconfig ||

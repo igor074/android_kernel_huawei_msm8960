@@ -188,7 +188,10 @@ static int print_unex = 1;
 #include <linux/init.h>
 #include <linux/platform_device.h>
 #include <linux/mod_devicetable.h>
+<<<<<<< HEAD
 #include <linux/buffer_head.h>	/* for invalidate_buffers() */
+=======
+>>>>>>> cm-10.0
 #include <linux/mutex.h>
 #include <linux/io.h>
 #include <linux/uaccess.h>
@@ -203,7 +206,10 @@ static int slow_floppy;
 
 #include <asm/dma.h>
 #include <asm/irq.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 
 static int FLOPPY_IRQ = 6;
 static int FLOPPY_DMA = 2;
@@ -1032,6 +1038,7 @@ static int fd_wait_for_completion(unsigned long delay, timeout_fn function)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SPINLOCK(floppy_hlt_lock);
 static int hlt_disabled;
 static void floppy_disable_hlt(void)
@@ -1063,6 +1070,8 @@ static void floppy_enable_hlt(void)
 	spin_unlock_irqrestore(&floppy_hlt_lock, flags);
 }
 
+=======
+>>>>>>> cm-10.0
 static void setup_DMA(void)
 {
 	unsigned long f;
@@ -1107,7 +1116,10 @@ static void setup_DMA(void)
 	fd_enable_dma();
 	release_dma_lock(f);
 #endif
+<<<<<<< HEAD
 	floppy_disable_hlt();
+=======
+>>>>>>> cm-10.0
 }
 
 static void show_floppy(void);
@@ -1709,7 +1721,10 @@ irqreturn_t floppy_interrupt(int irq, void *dev_id)
 	fd_disable_dma();
 	release_dma_lock(f);
 
+<<<<<<< HEAD
 	floppy_enable_hlt();
+=======
+>>>>>>> cm-10.0
 	do_floppy = NULL;
 	if (fdc >= N_FDC || FDCS->address == -1) {
 		/* we don't even know which FDC is the culprit */
@@ -1858,8 +1873,11 @@ static void floppy_shutdown(unsigned long data)
 		show_floppy();
 	cancel_activity();
 
+<<<<<<< HEAD
 	floppy_enable_hlt();
 
+=======
+>>>>>>> cm-10.0
 	flags = claim_dma_lock();
 	fd_disable_dma();
 	release_dma_lock(flags);
@@ -3833,7 +3851,11 @@ static int __floppy_read_block_0(struct block_device *bdev)
 	bio.bi_size = size;
 	bio.bi_bdev = bdev;
 	bio.bi_sector = 0;
+<<<<<<< HEAD
 	bio.bi_flags = BIO_QUIET;
+=======
+	bio.bi_flags = (1 << BIO_QUIET);
+>>>>>>> cm-10.0
 	init_completion(&complete);
 	bio.bi_private = &complete;
 	bio.bi_end_io = floppy_rb0_complete;
@@ -4369,8 +4391,19 @@ out_unreg_blkdev:
 out_put_disk:
 	while (dr--) {
 		del_timer_sync(&motor_off_timer[dr]);
+<<<<<<< HEAD
 		if (disks[dr]->queue)
 			blk_cleanup_queue(disks[dr]->queue);
+=======
+		if (disks[dr]->queue) {
+			blk_cleanup_queue(disks[dr]->queue);
+			/*
+			 * put_disk() is not paired with add_disk() and
+			 * will put queue reference one extra time. fix it.
+			 */
+			disks[dr]->queue = NULL;
+		}
+>>>>>>> cm-10.0
 		put_disk(disks[dr]);
 	}
 	return err;
@@ -4504,7 +4537,10 @@ static void floppy_release_irq_and_dma(void)
 #if N_FDC > 1
 	set_dor(1, ~8, 0);
 #endif
+<<<<<<< HEAD
 	floppy_enable_hlt();
+=======
+>>>>>>> cm-10.0
 
 	if (floppy_track_buffer && max_buffer_sectors) {
 		tmpsize = max_buffer_sectors * 1024;
@@ -4580,6 +4616,18 @@ static void __exit floppy_module_exit(void)
 			platform_device_unregister(&floppy_device[drive]);
 		}
 		blk_cleanup_queue(disks[drive]->queue);
+<<<<<<< HEAD
+=======
+
+		/*
+		 * These disks have not called add_disk().  Don't put down
+		 * queue reference in put_disk().
+		 */
+		if (!(allowed_drive_mask & (1 << drive)) ||
+		    fdc_state[FDC(drive)].version == FDC_NONE)
+			disks[drive]->queue = NULL;
+
+>>>>>>> cm-10.0
 		put_disk(disks[drive]);
 	}
 

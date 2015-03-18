@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,6 +17,10 @@
 
 #include <linux/i2c.h>
 #include <linux/mfd/tps65023.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 /* TPS65023_registers */
 #define TPS65023_VERSION	0

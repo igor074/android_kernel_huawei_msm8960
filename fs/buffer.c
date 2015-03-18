@@ -29,7 +29,11 @@
 #include <linux/file.h>
 #include <linux/quotaops.h>
 #include <linux/highmem.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/writeback.h>
 #include <linux/hash.h>
 #include <linux/suspend.h>
@@ -41,7 +45,10 @@
 #include <linux/bitops.h>
 #include <linux/mpage.h>
 #include <linux/bit_spinlock.h>
+<<<<<<< HEAD
 #include <linux/cleancache.h>
+=======
+>>>>>>> cm-10.0
 
 static int fsync_buffers_list(spinlock_t *lock, struct list_head *list);
 
@@ -213,13 +220,23 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
 	 * elsewhere, don't buffer_error if we had some unmapped buffers
 	 */
 	if (all_mapped) {
+<<<<<<< HEAD
+=======
+		char b[BDEVNAME_SIZE];
+
+>>>>>>> cm-10.0
 		printk("__find_get_block_slow() failed. "
 			"block=%llu, b_blocknr=%llu\n",
 			(unsigned long long)block,
 			(unsigned long long)bh->b_blocknr);
 		printk("b_state=0x%08lx, b_size=%zu\n",
 			bh->b_state, bh->b_size);
+<<<<<<< HEAD
 		printk("device blocksize: %d\n", 1 << bd_inode->i_blkbits);
+=======
+		printk("device %s blocksize: %d\n", bdevname(bdev, b),
+			1 << bd_inode->i_blkbits);
+>>>>>>> cm-10.0
 	}
 out_unlock:
 	spin_unlock(&bd_mapping->private_lock);
@@ -228,6 +245,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 /* If invalidate_buffers() will trash dirty buffers, it means some kind
    of fs corruption is going on. Trashing dirty data always imply losing
    information that was supposed to be just stored on the physical layer
@@ -277,6 +295,8 @@ void invalidate_bdev(struct block_device *bdev)
 }
 EXPORT_SYMBOL(invalidate_bdev);
 
+=======
+>>>>>>> cm-10.0
 /*
  * Kick the writeback threads then try to free up some ZONE_NORMAL memory.
  */
@@ -285,7 +305,11 @@ static void free_more_memory(void)
 	struct zone *zone;
 	int nid;
 
+<<<<<<< HEAD
 	wakeup_flusher_threads(1024);
+=======
+	wakeup_flusher_threads(1024, WB_REASON_FREE_MORE_MEM);
+>>>>>>> cm-10.0
 	yield();
 
 	for_each_online_node(nid) {
@@ -968,6 +992,10 @@ init_page_buffers(struct page *page, struct block_device *bdev,
 	struct buffer_head *head = page_buffers(page);
 	struct buffer_head *bh = head;
 	int uptodate = PageUptodate(page);
+<<<<<<< HEAD
+=======
+	sector_t end_block = blkdev_max_block(I_BDEV(bdev->bd_inode));
+>>>>>>> cm-10.0
 
 	do {
 		if (!buffer_mapped(bh)) {
@@ -976,7 +1004,12 @@ init_page_buffers(struct page *page, struct block_device *bdev,
 			bh->b_blocknr = block;
 			if (uptodate)
 				set_buffer_uptodate(bh);
+<<<<<<< HEAD
 			set_buffer_mapped(bh);
+=======
+			if (block < end_block)
+				set_buffer_mapped(bh);
+>>>>>>> cm-10.0
 		}
 		block++;
 		bh = bh->b_this_page;
@@ -1032,7 +1065,10 @@ grow_dev_page(struct block_device *bdev, sector_t block,
 	return page;
 
 failed:
+<<<<<<< HEAD
 	BUG();
+=======
+>>>>>>> cm-10.0
 	unlock_page(page);
 	page_cache_release(page);
 	return NULL;
@@ -1431,10 +1467,30 @@ static void invalidate_bh_lru(void *arg)
 	}
 	put_cpu_var(bh_lrus);
 }
+<<<<<<< HEAD
 	
 void invalidate_bh_lrus(void)
 {
 	on_each_cpu(invalidate_bh_lru, NULL, 1);
+=======
+
+static bool has_bh_in_lru(int cpu, void *dummy)
+{
+	struct bh_lru *b = per_cpu_ptr(&bh_lrus, cpu);
+	int i;
+	
+	for (i = 0; i < BH_LRU_SIZE; i++) {
+		if (b->bhs[i])
+			return 1;
+	}
+
+	return 0;
+}
+
+void invalidate_bh_lrus(void)
+{
+	on_each_cpu_cond(has_bh_in_lru, invalidate_bh_lru, NULL, 1, GFP_KERNEL);
+>>>>>>> cm-10.0
 }
 EXPORT_SYMBOL_GPL(invalidate_bh_lrus);
 
@@ -1470,13 +1526,21 @@ static void discard_buffer(struct buffer_head * bh)
 }
 
 /**
+<<<<<<< HEAD
  * block_invalidatepage - invalidate part of all of a buffer-backed page
+=======
+ * block_invalidatepage - invalidate part or all of a buffer-backed page
+>>>>>>> cm-10.0
  *
  * @page: the page which is affected
  * @offset: the index of the truncation point
  *
  * block_invalidatepage() is called when all or part of the page has become
+<<<<<<< HEAD
  * invalidatedby a truncate operation.
+=======
+ * invalidated by a truncate operation.
+>>>>>>> cm-10.0
  *
  * block_invalidatepage() does not have to release all buffers, but it must
  * ensure that no dirty buffer is left outside @offset and that no I/O

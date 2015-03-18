@@ -713,6 +713,10 @@ static int llc_ui_recvmsg(struct kiocb *iocb, struct socket *sock,
 	struct sk_buff *skb = NULL;
 	struct sock *sk = sock->sk;
 	struct llc_sock *llc = llc_sk(sk);
+<<<<<<< HEAD
+=======
+	unsigned long cpu_flags;
+>>>>>>> cm-10.0
 	size_t copied = 0;
 	u32 peek_seq = 0;
 	u32 *seq;
@@ -833,6 +837,7 @@ static int llc_ui_recvmsg(struct kiocb *iocb, struct socket *sock,
 		copied += used;
 		len -= used;
 
+<<<<<<< HEAD
 		if (!(flags & MSG_PEEK)) {
 			sk_eat_skb(sk, skb, 0);
 			*seq = 0;
@@ -842,6 +847,19 @@ static int llc_ui_recvmsg(struct kiocb *iocb, struct socket *sock,
 		if (sk->sk_type != SOCK_STREAM)
 			goto copy_uaddr;
 
+=======
+		/* For non stream protcols we get one packet per recvmsg call */
+		if (sk->sk_type != SOCK_STREAM)
+			goto copy_uaddr;
+
+		if (!(flags & MSG_PEEK)) {
+			spin_lock_irqsave(&sk->sk_receive_queue.lock, cpu_flags);
+			sk_eat_skb(sk, skb, 0);
+			spin_unlock_irqrestore(&sk->sk_receive_queue.lock, cpu_flags);
+			*seq = 0;
+		}
+
+>>>>>>> cm-10.0
 		/* Partial read */
 		if (used + offset < skb->len)
 			continue;
@@ -857,6 +875,17 @@ copy_uaddr:
 	}
 	if (llc_sk(sk)->cmsg_flags)
 		llc_cmsg_rcv(msg, skb);
+<<<<<<< HEAD
+=======
+
+	if (!(flags & MSG_PEEK)) {
+			spin_lock_irqsave(&sk->sk_receive_queue.lock, cpu_flags);
+			sk_eat_skb(sk, skb, 0);
+			spin_unlock_irqrestore(&sk->sk_receive_queue.lock, cpu_flags);
+			*seq = 0;
+	}
+
+>>>>>>> cm-10.0
 	goto out;
 }
 

@@ -1,7 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
 # Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+# Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -10,7 +14,11 @@
 #     * Redistributions in binary form must reproduce the above copyright
 #       notice, this list of conditions and the following disclaimer in the
 #       documentation and/or other materials provided with the distribution.
+<<<<<<< HEAD
 #     * Neither the name of Code Aurora nor
+=======
+#     * Neither the name of The Linux Foundation nor
+>>>>>>> cm-10.0
 #       the names of its contributors may be used to endorse or promote
 #       products derived from this software without specific prior written
 #       permission.
@@ -40,6 +48,7 @@ import subprocess
 # force LANG to be set to en_US.UTF-8 to get consistent warnings.
 
 allowed_warnings = set([
+<<<<<<< HEAD
     "alignment.c:720",
     "async.c:122",
     "async.c:270",
@@ -62,6 +71,11 @@ allowed_warnings = set([
     "soc-core.c:1719",
     "xt_log.h:50",
     "vx6953.c:3124",
+=======
+    "alignment.c:327",
+    "mmu.c:602",
+    "return_address.c:62",
+>>>>>>> cm-10.0
  ])
 
 # Capture the name of the object file, can find it.

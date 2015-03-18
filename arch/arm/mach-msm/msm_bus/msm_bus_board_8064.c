@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -360,6 +364,11 @@ static struct msm_bus_node_info system_fabric_info[]  = {
 		.tier = tier2,
 		.num_tiers = ARRAY_SIZE(tier2),
 		.buswidth = 8,
+<<<<<<< HEAD
+=======
+		.slaveclk[DUAL_CTX] = "dfab_clk",
+		.slaveclk[ACTIVE_CTX] = "dfab_a_clk",
+>>>>>>> cm-10.0
 	},
 	{
 		.id = MSM_BUS_SLAVE_SYSTEM_IMEM,

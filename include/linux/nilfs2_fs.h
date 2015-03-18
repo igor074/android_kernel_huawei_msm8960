@@ -41,6 +41,10 @@
 #include <linux/types.h>
 #include <linux/ioctl.h>
 #include <linux/magic.h>
+<<<<<<< HEAD
+=======
+#include <linux/bug.h>
+>>>>>>> cm-10.0
 
 
 #define NILFS_INODE_BMAP_SIZE	7

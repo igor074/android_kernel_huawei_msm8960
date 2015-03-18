@@ -30,7 +30,11 @@
 
 #define PRINT_PREF KERN_INFO "mtd_stresstest: "
 
+<<<<<<< HEAD
 static int dev;
+=======
+static int dev = -EINVAL;
+>>>>>>> cm-10.0
 module_param(dev, int, S_IRUGO);
 MODULE_PARM_DESC(dev, "MTD device number to use");
 
@@ -112,7 +116,11 @@ static int erase_eraseblock(int ebnum)
 	ei.addr = addr;
 	ei.len  = mtd->erasesize;
 
+<<<<<<< HEAD
 	err = mtd->erase(mtd, &ei);
+=======
+	err = mtd_erase(mtd, &ei);
+>>>>>>> cm-10.0
 	if (unlikely(err)) {
 		printk(PRINT_PREF "error %d while erasing EB %d\n", err, ebnum);
 		return err;
@@ -132,7 +140,11 @@ static int is_block_bad(int ebnum)
 	loff_t addr = ebnum * mtd->erasesize;
 	int ret;
 
+<<<<<<< HEAD
 	ret = mtd->block_isbad(mtd, addr);
+=======
+	ret = mtd_block_isbad(mtd, addr);
+>>>>>>> cm-10.0
 	if (ret)
 		printk(PRINT_PREF "block %d is bad\n", ebnum);
 	return ret;
@@ -140,7 +152,11 @@ static int is_block_bad(int ebnum)
 
 static int do_read(void)
 {
+<<<<<<< HEAD
 	size_t read = 0;
+=======
+	size_t read;
+>>>>>>> cm-10.0
 	int eb = rand_eb();
 	int offs = rand_offs();
 	int len = rand_len(offs), err;
@@ -153,8 +169,13 @@ static int do_read(void)
 			len = mtd->erasesize - offs;
 	}
 	addr = eb * mtd->erasesize + offs;
+<<<<<<< HEAD
 	err = mtd->read(mtd, addr, len, &read, readbuf);
 	if (err == -EUCLEAN)
+=======
+	err = mtd_read(mtd, addr, len, &read, readbuf);
+	if (mtd_is_bitflip(err))
+>>>>>>> cm-10.0
 		err = 0;
 	if (unlikely(err || read != len)) {
 		printk(PRINT_PREF "error: read failed at 0x%llx\n",
@@ -169,7 +190,11 @@ static int do_read(void)
 static int do_write(void)
 {
 	int eb = rand_eb(), offs, err, len;
+<<<<<<< HEAD
 	size_t written = 0;
+=======
+	size_t written;
+>>>>>>> cm-10.0
 	loff_t addr;
 
 	offs = offsets[eb];
@@ -192,7 +217,11 @@ static int do_write(void)
 		}
 	}
 	addr = eb * mtd->erasesize + offs;
+<<<<<<< HEAD
 	err = mtd->write(mtd, addr, len, &written, writebuf);
+=======
+	err = mtd_write(mtd, addr, len, &written, writebuf);
+>>>>>>> cm-10.0
 	if (unlikely(err || written != len)) {
 		printk(PRINT_PREF "error: write failed at 0x%llx\n",
 		       (long long)addr);
@@ -227,8 +256,12 @@ static int scan_for_bad_eraseblocks(void)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	/* NOR flash does not implement block_isbad */
 	if (mtd->block_isbad == NULL)
+=======
+	if (!mtd_can_have_bb(mtd))
+>>>>>>> cm-10.0
 		return 0;
 
 	printk(PRINT_PREF "scanning for bad eraseblocks\n");
@@ -250,6 +283,16 @@ static int __init mtd_stresstest_init(void)
 
 	printk(KERN_INFO "\n");
 	printk(KERN_INFO "=================================================\n");
+<<<<<<< HEAD
+=======
+
+	if (dev < 0) {
+		printk(PRINT_PREF "Please specify a valid mtd-device via module paramter\n");
+		printk(KERN_CRIT "CAREFUL: This test wipes all data on the specified MTD device!\n");
+		return -EINVAL;
+	}
+
+>>>>>>> cm-10.0
 	printk(PRINT_PREF "MTD device: %d\n", dev);
 
 	mtd = get_mtd_device(NULL, dev);
@@ -277,6 +320,15 @@ static int __init mtd_stresstest_init(void)
 	       (unsigned long long)mtd->size, mtd->erasesize,
 	       pgsize, ebcnt, pgcnt, mtd->oobsize);
 
+<<<<<<< HEAD
+=======
+	if (ebcnt < 2) {
+		printk(PRINT_PREF "error: need at least 2 eraseblocks\n");
+		err = -ENOSPC;
+		goto out_put_mtd;
+	}
+
+>>>>>>> cm-10.0
 	/* Read or write up 2 eraseblocks at a time */
 	bufsize = mtd->erasesize * 2;
 
@@ -315,6 +367,10 @@ out:
 	kfree(bbt);
 	vfree(writebuf);
 	vfree(readbuf);
+<<<<<<< HEAD
+=======
+out_put_mtd:
+>>>>>>> cm-10.0
 	put_mtd_device(mtd);
 	if (err)
 		printk(PRINT_PREF "error %d occurred\n", err);

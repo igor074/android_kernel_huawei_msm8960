@@ -9,6 +9,10 @@
  */
 
 #include <media/rc-map.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 /*
  * Avermedia M733A with IR model RM-K6

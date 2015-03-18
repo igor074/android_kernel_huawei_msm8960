@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,4 +25,8 @@ struct msm_spi_platform_data {
 	int (*dma_config)(void);
 	const char *rsl_id;
 	uint32_t pm_lat;
+<<<<<<< HEAD
+=======
+	uint32_t infinite_mode;
+>>>>>>> cm-10.0
 };

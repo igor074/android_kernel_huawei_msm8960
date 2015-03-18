@@ -20,9 +20,12 @@
 /*  ----------------------------------- DSP/BIOS Bridge */
 #include <dspbridge/dbdefs.h>
 
+<<<<<<< HEAD
 /*  ----------------------------------- Trace & Debug */
 #include <dspbridge/dbc.h>
 
+=======
+>>>>>>> cm-10.0
 /*  ----------------------------------- OS Adaptation Layer */
 #include <dspbridge/sync.h>
 

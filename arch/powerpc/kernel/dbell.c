@@ -37,6 +37,11 @@ void doorbell_exception(struct pt_regs *regs)
 
 	irq_enter();
 
+<<<<<<< HEAD
+=======
+	may_hard_irq_enable();
+
+>>>>>>> cm-10.0
 	smp_ipi_demux();
 
 	irq_exit();

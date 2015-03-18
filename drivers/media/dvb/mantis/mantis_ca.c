@@ -22,6 +22,10 @@
 #include <linux/slab.h>
 #include <linux/sched.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <asm/io.h>
+>>>>>>> cm-10.0
 
 #include "dmxdev.h"
 #include "dvbdev.h"

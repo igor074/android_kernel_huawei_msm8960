@@ -11,7 +11,11 @@
 #include <linux/interrupt.h>
 #include <linux/debug_locks.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
 			  struct lock_class_key *key)
@@ -49,6 +53,7 @@ void __rwlock_init(rwlock_t *lock, const char *name,
 
 EXPORT_SYMBOL(__rwlock_init);
 
+<<<<<<< HEAD
 static void spin_bug(raw_spinlock_t *lock, const char *msg)
 {
 	struct task_struct *owner = NULL;
@@ -56,12 +61,22 @@ static void spin_bug(raw_spinlock_t *lock, const char *msg)
 	if (!debug_locks_off())
 		return;
 
+=======
+static void spin_dump(raw_spinlock_t *lock, const char *msg)
+{
+	struct task_struct *owner = NULL;
+
+>>>>>>> cm-10.0
 	if (lock->owner && lock->owner != SPINLOCK_OWNER_INIT)
 		owner = lock->owner;
 	printk(KERN_EMERG "BUG: spinlock %s on CPU#%d, %s/%d\n",
 		msg, raw_smp_processor_id(),
 		current->comm, task_pid_nr(current));
+<<<<<<< HEAD
 	printk(KERN_EMERG " lock: %p, .magic: %08x, .owner: %s/%d, "
+=======
+	printk(KERN_EMERG " lock: %ps, .magic: %08x, .owner: %s/%d, "
+>>>>>>> cm-10.0
 			".owner_cpu: %d\n",
 		lock, lock->magic,
 		owner ? owner->comm : "<none>",
@@ -70,6 +85,17 @@ static void spin_bug(raw_spinlock_t *lock, const char *msg)
 	dump_stack();
 }
 
+<<<<<<< HEAD
+=======
+static void spin_bug(raw_spinlock_t *lock, const char *msg)
+{
+	if (!debug_locks_off())
+		return;
+
+	spin_dump(lock, msg);
+}
+
+>>>>>>> cm-10.0
 #define SPIN_BUG_ON(cond, lock, msg) if (unlikely(cond)) spin_bug(lock, msg)
 
 static inline void
@@ -114,10 +140,17 @@ static void __spin_lock_debug(raw_spinlock_t *lock)
 		if (print_once) {
 			print_once = 0;
 			printk(KERN_EMERG "BUG: spinlock lockup on CPU#%d, "
+<<<<<<< HEAD
 					"%s/%d, %p\n",
 				raw_smp_processor_id(), current->comm,
 				task_pid_nr(current), lock);
 			dump_stack();
+=======
+					"%s/%d, %ps\n",
+				raw_smp_processor_id(), current->comm,
+				task_pid_nr(current), lock);
+			spin_dump(lock, "lockup");
+>>>>>>> cm-10.0
 #ifdef CONFIG_SMP
 			trigger_all_cpu_backtrace();
 #endif

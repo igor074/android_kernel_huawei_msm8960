@@ -10,7 +10,11 @@
 #include <linux/seq_file.h>
 #include <linux/swap.h>
 #include <linux/vmstat.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <asm/page.h>
 #include <asm/pgtable.h>
 #include "internal.h"
@@ -131,12 +135,22 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 		K(i.freeswap),
 		K(global_page_state(NR_FILE_DIRTY)),
 		K(global_page_state(NR_WRITEBACK)),
+<<<<<<< HEAD
 		K(global_page_state(NR_ANON_PAGES)
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 		  + global_page_state(NR_ANON_TRANSPARENT_HUGEPAGES) *
 		  HPAGE_PMD_NR
 #endif
 		  ),
+=======
+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+		K(global_page_state(NR_ANON_PAGES)
+		  + global_page_state(NR_ANON_TRANSPARENT_HUGEPAGES) *
+		  HPAGE_PMD_NR),
+#else
+		K(global_page_state(NR_ANON_PAGES)),
+#endif
+>>>>>>> cm-10.0
 		K(global_page_state(NR_FILE_MAPPED)),
 		K(global_page_state(NR_SHMEM)),
 		K(global_page_state(NR_SLAB_RECLAIMABLE) +

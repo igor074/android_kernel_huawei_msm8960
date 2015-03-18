@@ -17,7 +17,10 @@
 #include <linux/notifier.h>
 #include <linux/kobject.h>
 #include <linux/percpu.h>
+<<<<<<< HEAD
 #include <linux/sysdev.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/errno.h>
 #include <linux/sched.h>
 #include <linux/sysfs.h>
@@ -64,11 +67,17 @@ struct threshold_bank {
 };
 static DEFINE_PER_CPU(struct threshold_bank * [NR_BANKS], threshold_banks);
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static unsigned char shared_bank[NR_BANKS] = {
 	0, 0, 0, 0, 1
 };
 #endif
+=======
+static unsigned char shared_bank[NR_BANKS] = {
+	0, 0, 0, 0, 1
+};
+>>>>>>> cm-10.0
 
 static DEFINE_PER_CPU(unsigned char, bank_map);	/* see which banks are on */
 
@@ -202,10 +211,16 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
 
 			if (!block)
 				per_cpu(bank_map, cpu) |= (1 << bank);
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 			if (shared_bank[bank] && c->cpu_core_id)
 				break;
 #endif
+=======
+			if (shared_bank[bank] && c->cpu_core_id)
+				break;
+
+>>>>>>> cm-10.0
 			offset = setup_APIC_mce(offset,
 						(high & MASK_LVTOFF_HI) >> 20);
 
@@ -527,6 +542,10 @@ static __cpuinit int threshold_create_bank(unsigned int cpu, unsigned int bank)
 {
 	int i, err = 0;
 	struct threshold_bank *b = NULL;
+<<<<<<< HEAD
+=======
+	struct device *dev = per_cpu(mce_device, cpu);
+>>>>>>> cm-10.0
 	char name[32];
 
 	sprintf(name, "threshold_bank%i", bank);
@@ -548,8 +567,12 @@ static __cpuinit int threshold_create_bank(unsigned int cpu, unsigned int bank)
 		if (!b)
 			goto out;
 
+<<<<<<< HEAD
 		err = sysfs_create_link(&per_cpu(mce_dev, cpu).kobj,
 					b->kobj, name);
+=======
+		err = sysfs_create_link(&dev->kobj, b->kobj, name);
+>>>>>>> cm-10.0
 		if (err)
 			goto out;
 
@@ -571,7 +594,11 @@ static __cpuinit int threshold_create_bank(unsigned int cpu, unsigned int bank)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	b->kobj = kobject_create_and_add(name, &per_cpu(mce_dev, cpu).kobj);
+=======
+	b->kobj = kobject_create_and_add(name, &dev->kobj);
+>>>>>>> cm-10.0
 	if (!b->kobj)
 		goto out_free;
 
@@ -591,8 +618,14 @@ static __cpuinit int threshold_create_bank(unsigned int cpu, unsigned int bank)
 		if (i == cpu)
 			continue;
 
+<<<<<<< HEAD
 		err = sysfs_create_link(&per_cpu(mce_dev, i).kobj,
 					b->kobj, name);
+=======
+		dev = per_cpu(mce_device, i);
+		if (dev)
+			err = sysfs_create_link(&dev->kobj,b->kobj, name);
+>>>>>>> cm-10.0
 		if (err)
 			goto out;
 
@@ -655,6 +688,10 @@ static void deallocate_threshold_block(unsigned int cpu,
 static void threshold_remove_bank(unsigned int cpu, int bank)
 {
 	struct threshold_bank *b;
+<<<<<<< HEAD
+=======
+	struct device *dev;
+>>>>>>> cm-10.0
 	char name[32];
 	int i = 0;
 
@@ -669,7 +706,12 @@ static void threshold_remove_bank(unsigned int cpu, int bank)
 #ifdef CONFIG_SMP
 	/* sibling symlink */
 	if (shared_bank[bank] && b->blocks->cpu != cpu) {
+<<<<<<< HEAD
 		sysfs_remove_link(&per_cpu(mce_dev, cpu).kobj, name);
+=======
+		dev = per_cpu(mce_device, cpu);
+		sysfs_remove_link(&dev->kobj, name);
+>>>>>>> cm-10.0
 		per_cpu(threshold_banks, cpu)[bank] = NULL;
 
 		return;
@@ -681,7 +723,13 @@ static void threshold_remove_bank(unsigned int cpu, int bank)
 		if (i == cpu)
 			continue;
 
+<<<<<<< HEAD
 		sysfs_remove_link(&per_cpu(mce_dev, i).kobj, name);
+=======
+		dev = per_cpu(mce_device, i);
+		if (dev)
+			sysfs_remove_link(&dev->kobj, name);
+>>>>>>> cm-10.0
 		per_cpu(threshold_banks, i)[bank] = NULL;
 	}
 

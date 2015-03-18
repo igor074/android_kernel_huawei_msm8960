@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -42,11 +46,14 @@ static long dummy_clk_round_rate(struct clk *clk, unsigned long rate)
 	return rate;
 }
 
+<<<<<<< HEAD
 static bool dummy_clk_is_local(struct clk *clk)
 {
 	return true;
 }
 
+=======
+>>>>>>> cm-10.0
 static struct clk_ops clk_ops_dummy = {
 	.reset = dummy_clk_reset,
 	.set_rate = dummy_clk_set_rate,
@@ -54,7 +61,10 @@ static struct clk_ops clk_ops_dummy = {
 	.set_flags = dummy_clk_set_flags,
 	.get_rate = dummy_clk_get_rate,
 	.round_rate = dummy_clk_round_rate,
+<<<<<<< HEAD
 	.is_local = dummy_clk_is_local,
+=======
+>>>>>>> cm-10.0
 };
 
 struct clk dummy_clk = {

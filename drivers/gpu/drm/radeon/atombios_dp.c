@@ -63,12 +63,21 @@ static int radeon_process_aux_ch(struct radeon_i2c_chan *chan,
 
 	memset(&args, 0, sizeof(args));
 
+<<<<<<< HEAD
 	base = (unsigned char *)rdev->mode_info.atom_context->scratch;
 
 	memcpy(base, send, send_bytes);
 
 	args.v1.lpAuxRequest = 0;
 	args.v1.lpDataOut = 16;
+=======
+	base = (unsigned char *)(rdev->mode_info.atom_context->scratch + 1);
+
+	memcpy(base, send, send_bytes);
+
+	args.v1.lpAuxRequest = 0 + 4;
+	args.v1.lpDataOut = 16 + 4;
+>>>>>>> cm-10.0
 	args.v1.ucDataOutLen = 0;
 	args.v1.ucChannelID = chan->rec.i2c_id;
 	args.v1.ucDelay = delay / 10;
@@ -283,7 +292,11 @@ int radeon_dp_i2c_aux_ch(struct i2c_adapter *adapter, int mode,
 		}
 	}
 
+<<<<<<< HEAD
 	DRM_ERROR("aux i2c too many retries, giving up\n");
+=======
+	DRM_DEBUG_KMS("aux i2c too many retries, giving up\n");
+>>>>>>> cm-10.0
 	return -EREMOTEIO;
 }
 
@@ -405,10 +418,19 @@ static void dp_get_adjust_train(u8 link_status[DP_LINK_STATUS_SIZE],
 /* get bpc from the EDID */
 static int convert_bpc_to_bpp(int bpc)
 {
+<<<<<<< HEAD
+=======
+#if 0
+>>>>>>> cm-10.0
 	if (bpc == 0)
 		return 24;
 	else
 		return bpc * 3;
+<<<<<<< HEAD
+=======
+#endif
+	return 24;
+>>>>>>> cm-10.0
 }
 
 /* get the max pix clock supported by the link rate and lane num */
@@ -482,7 +504,12 @@ static int radeon_dp_get_dp_link_clock(struct drm_connector *connector,
 	int bpp = convert_bpc_to_bpp(connector->display_info.bpc);
 	int lane_num, max_pix_clock;
 
+<<<<<<< HEAD
 	if (radeon_connector_encoder_is_dp_bridge(connector))
+=======
+	if (radeon_connector_encoder_get_dp_bridge_encoder_id(connector) ==
+	    ENCODER_OBJECT_ID_NUTMEG)
+>>>>>>> cm-10.0
 		return 270000;
 
 	lane_num = radeon_dp_get_dp_lane_number(connector, dpcd, pix_clock);
@@ -548,6 +575,7 @@ bool radeon_dp_getdpcd(struct radeon_connector *radeon_connector)
 	return false;
 }
 
+<<<<<<< HEAD
 static void radeon_dp_set_panel_mode(struct drm_encoder *encoder,
 				     struct drm_connector *connector)
 {
@@ -564,6 +592,44 @@ static void radeon_dp_set_panel_mode(struct drm_encoder *encoder,
 	atombios_dig_encoder_setup(encoder,
 				   ATOM_ENCODER_CMD_SETUP_PANEL_MODE,
 				   panel_mode);
+=======
+int radeon_dp_get_panel_mode(struct drm_encoder *encoder,
+			     struct drm_connector *connector)
+{
+	struct drm_device *dev = encoder->dev;
+	struct radeon_device *rdev = dev->dev_private;
+	struct radeon_connector *radeon_connector = to_radeon_connector(connector);
+	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
+
+	if (!ASIC_IS_DCE4(rdev))
+		return panel_mode;
+
+	if (radeon_connector_encoder_get_dp_bridge_encoder_id(connector) ==
+	    ENCODER_OBJECT_ID_NUTMEG)
+		panel_mode = DP_PANEL_MODE_INTERNAL_DP1_MODE;
+	else if (radeon_connector_encoder_get_dp_bridge_encoder_id(connector) ==
+		 ENCODER_OBJECT_ID_TRAVIS) {
+		u8 id[6];
+		int i;
+		for (i = 0; i < 6; i++)
+			id[i] = radeon_read_dpcd_reg(radeon_connector, 0x503 + i);
+		if (id[0] == 0x73 &&
+		    id[1] == 0x69 &&
+		    id[2] == 0x76 &&
+		    id[3] == 0x61 &&
+		    id[4] == 0x72 &&
+		    id[5] == 0x54)
+			panel_mode = DP_PANEL_MODE_INTERNAL_DP1_MODE;
+		else
+			panel_mode = DP_PANEL_MODE_INTERNAL_DP2_MODE;
+	} else if (connector->connector_type == DRM_MODE_CONNECTOR_eDP) {
+		u8 tmp = radeon_read_dpcd_reg(radeon_connector, DP_EDP_CONFIGURATION_CAP);
+		if (tmp & 1)
+			panel_mode = DP_PANEL_MODE_INTERNAL_DP2_MODE;
+	}
+
+	return panel_mode;
+>>>>>>> cm-10.0
 }
 
 void radeon_dp_set_link_config(struct drm_connector *connector,
@@ -701,6 +767,11 @@ static void radeon_dp_set_tp(struct radeon_dp_link_train_info *dp_info, int tp)
 
 static int radeon_dp_link_train_init(struct radeon_dp_link_train_info *dp_info)
 {
+<<<<<<< HEAD
+=======
+	struct radeon_encoder *radeon_encoder = to_radeon_encoder(dp_info->encoder);
+	struct radeon_encoder_atom_dig *dig = radeon_encoder->enc_priv;
+>>>>>>> cm-10.0
 	u8 tmp;
 
 	/* power up the sink */
@@ -716,11 +787,23 @@ static int radeon_dp_link_train_init(struct radeon_dp_link_train_info *dp_info)
 		radeon_write_dpcd_reg(dp_info->radeon_connector,
 				      DP_DOWNSPREAD_CTRL, 0);
 
+<<<<<<< HEAD
 	radeon_dp_set_panel_mode(dp_info->encoder, dp_info->connector);
 
 	/* set the lane count on the sink */
 	tmp = dp_info->dp_lane_count;
 	if (dp_info->dpcd[0] >= 0x11)
+=======
+	if ((dp_info->connector->connector_type == DRM_MODE_CONNECTOR_eDP) &&
+	    (dig->panel_mode == DP_PANEL_MODE_INTERNAL_DP2_MODE)) {
+		radeon_write_dpcd_reg(dp_info->radeon_connector, DP_EDP_CONFIGURATION_SET, 1);
+	}
+
+	/* set the lane count on the sink */
+	tmp = dp_info->dp_lane_count;
+	if (dp_info->dpcd[DP_DPCD_REV] >= 0x11 &&
+	    dp_info->dpcd[DP_MAX_LANE_COUNT] & DP_ENHANCED_FRAME_CAP)
+>>>>>>> cm-10.0
 		tmp |= DP_LANE_COUNT_ENHANCED_FRAME_EN;
 	radeon_write_dpcd_reg(dp_info->radeon_connector, DP_LANE_COUNT_SET, tmp);
 

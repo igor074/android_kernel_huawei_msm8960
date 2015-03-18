@@ -23,6 +23,10 @@
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/timer.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/of_platform.h>
 
 #include <asm/processor.h>

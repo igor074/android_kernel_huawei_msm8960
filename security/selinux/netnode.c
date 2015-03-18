@@ -6,7 +6,11 @@
  * needed to reduce the lookup overhead since most of these queries happen on
  * a per-packet basis.
  *
+<<<<<<< HEAD
  * Author: Paul Moore <paul.moore@hp.com>
+=======
+ * Author: Paul Moore <paul@paul-moore.com>
+>>>>>>> cm-10.0
  *
  * This code is heavily based on the "netif" concept originally developed by
  * James Morris <jmorris@redhat.com>
@@ -69,6 +73,7 @@ static DEFINE_SPINLOCK(sel_netnode_lock);
 static struct sel_netnode_bkt sel_netnode_hash[SEL_NETNODE_HASH_SIZE];
 
 /**
+<<<<<<< HEAD
  * sel_netnode_free - Frees a node entry
  * @p: the entry's RCU field
  *
@@ -85,6 +90,8 @@ static void sel_netnode_free(struct rcu_head *p)
 }
 
 /**
+=======
+>>>>>>> cm-10.0
  * sel_netnode_hashfn_ipv4 - IPv4 hashing function for the node table
  * @addr: IPv4 address
  *
@@ -193,7 +200,11 @@ static void sel_netnode_insert(struct sel_netnode *node)
 			rcu_dereference(sel_netnode_hash[idx].list.prev),
 			struct sel_netnode, list);
 		list_del_rcu(&tail->list);
+<<<<<<< HEAD
 		call_rcu(&tail->rcu, sel_netnode_free);
+=======
+		kfree_rcu(tail, rcu);
+>>>>>>> cm-10.0
 	} else
 		sel_netnode_hash[idx].size++;
 }
@@ -236,7 +247,11 @@ static int sel_netnode_sid_slow(void *addr, u16 family, u32 *sid)
 	case PF_INET6:
 		ret = security_node_sid(PF_INET6,
 					addr, sizeof(struct in6_addr), sid);
+<<<<<<< HEAD
 		ipv6_addr_copy(&new->nsec.addr.ipv6, addr);
+=======
+		new->nsec.addr.ipv6 = *(struct in6_addr *)addr;
+>>>>>>> cm-10.0
 		break;
 	default:
 		BUG();
@@ -306,7 +321,11 @@ static void sel_netnode_flush(void)
 		list_for_each_entry_safe(node, node_tmp,
 					 &sel_netnode_hash[idx].list, list) {
 				list_del_rcu(&node->list);
+<<<<<<< HEAD
 				call_rcu(&node->rcu, sel_netnode_free);
+=======
+				kfree_rcu(node, rcu);
+>>>>>>> cm-10.0
 		}
 		sel_netnode_hash[idx].size = 0;
 	}

@@ -23,6 +23,10 @@
 #include <crypto/internal/hash.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/string.h>
 #include <linux/types.h>
 #include <asm/byteorder.h>

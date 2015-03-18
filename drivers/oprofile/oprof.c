@@ -239,26 +239,57 @@ int oprofile_set_ulong(unsigned long *addr, unsigned long val)
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int timer_mode;
+
+>>>>>>> cm-10.0
 static int __init oprofile_init(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	err = oprofile_arch_init(&oprofile_ops);
 	if (err < 0 || timer) {
 		printk(KERN_INFO "oprofile: using timer interrupt.\n");
+=======
+	/* always init architecture to setup backtrace support */
+	timer_mode = 0;
+	err = oprofile_arch_init(&oprofile_ops);
+	if (!err) {
+		if (!timer && !oprofilefs_register())
+			return 0;
+		oprofile_arch_exit();
+	}
+
+	/* setup timer mode: */
+	timer_mode = 1;
+	/* no nmi timer mode if oprofile.timer is set */
+	if (timer || op_nmi_timer_init(&oprofile_ops)) {
+>>>>>>> cm-10.0
 		err = oprofile_timer_init(&oprofile_ops);
 		if (err)
 			return err;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 	return oprofilefs_register();
 }
 
 
 static void __exit oprofile_exit(void)
 {
+<<<<<<< HEAD
 	oprofile_timer_exit();
 	oprofilefs_unregister();
 	oprofile_arch_exit();
+=======
+	oprofilefs_unregister();
+	if (!timer_mode)
+		oprofile_arch_exit();
+>>>>>>> cm-10.0
 }
 
 

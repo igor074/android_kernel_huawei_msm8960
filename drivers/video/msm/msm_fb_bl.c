@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -34,7 +38,13 @@ static int msm_fb_bl_update_status(struct backlight_device *pbd)
 
 	bl_lvl = pbd->props.brightness;
 	bl_lvl = mfd->fbi->bl_curve[bl_lvl];
+<<<<<<< HEAD
 	msm_fb_set_backlight(mfd, bl_lvl);
+=======
+	down(&mfd->sem);
+	msm_fb_set_backlight(mfd, bl_lvl);
+	up(&mfd->sem);
+>>>>>>> cm-10.0
 	return 0;
 }
 

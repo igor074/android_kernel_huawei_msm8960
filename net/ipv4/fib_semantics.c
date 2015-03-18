@@ -14,7 +14,10 @@
  */
 
 #include <asm/uaccess.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/bitops.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
@@ -142,11 +145,26 @@ const struct fib_prop fib_props[RTN_MAX + 1] = {
 };
 
 /* Release a nexthop info record */
+<<<<<<< HEAD
+=======
+static void free_fib_info_rcu(struct rcu_head *head)
+{
+	struct fib_info *fi = container_of(head, struct fib_info, rcu);
+
+	if (fi->fib_metrics != (u32 *) dst_default_metrics)
+		kfree(fi->fib_metrics);
+	kfree(fi);
+}
+>>>>>>> cm-10.0
 
 void free_fib_info(struct fib_info *fi)
 {
 	if (fi->fib_dead == 0) {
+<<<<<<< HEAD
 		pr_warning("Freeing alive fib_info %p\n", fi);
+=======
+		pr_warn("Freeing alive fib_info %p\n", fi);
+>>>>>>> cm-10.0
 		return;
 	}
 	change_nexthops(fi) {
@@ -156,7 +174,11 @@ void free_fib_info(struct fib_info *fi)
 	} endfor_nexthops(fi);
 	fib_info_cnt--;
 	release_net(fi->fib_net);
+<<<<<<< HEAD
 	kfree_rcu(fi, rcu);
+=======
+	call_rcu(&fi->rcu, free_fib_info_rcu);
+>>>>>>> cm-10.0
 }
 
 void fib_release_info(struct fib_info *fi)

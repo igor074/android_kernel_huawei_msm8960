@@ -53,9 +53,13 @@ void __noreturn cpu_idle(void)
 		while (!need_resched())
 			barrier();
 
+<<<<<<< HEAD
 		preempt_enable_no_resched();
 		schedule();
 		preempt_disable();
+=======
+		schedule_preempt_disabled();
+>>>>>>> cm-10.0
 	}
 }
 

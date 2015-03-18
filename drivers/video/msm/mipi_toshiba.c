@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -193,12 +197,20 @@ static int mipi_toshiba_lcd_on(struct platform_device *pdev)
 		return -EINVAL;
 
 	if (TM_GET_PID(mfd->panel.id) == MIPI_DSI_PANEL_WVGA_PT)
+<<<<<<< HEAD
 		mipi_dsi_cmds_tx(mfd, &toshiba_tx_buf,
+=======
+		mipi_dsi_cmds_tx(&toshiba_tx_buf,
+>>>>>>> cm-10.0
 			toshiba_wvga_display_on_cmds,
 			ARRAY_SIZE(toshiba_wvga_display_on_cmds));
 	else if (TM_GET_PID(mfd->panel.id) == MIPI_DSI_PANEL_WSVGA_PT ||
 		TM_GET_PID(mfd->panel.id) == MIPI_DSI_PANEL_WUXGA)
+<<<<<<< HEAD
 		mipi_dsi_cmds_tx(mfd, &toshiba_tx_buf,
+=======
+		mipi_dsi_cmds_tx(&toshiba_tx_buf,
+>>>>>>> cm-10.0
 			toshiba_wsvga_display_on_cmds,
 			ARRAY_SIZE(toshiba_wsvga_display_on_cmds));
 	else
@@ -218,7 +230,11 @@ static int mipi_toshiba_lcd_off(struct platform_device *pdev)
 	if (mfd->key != MFD_KEY)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mipi_dsi_cmds_tx(mfd, &toshiba_tx_buf, toshiba_display_off_cmds,
+=======
+	mipi_dsi_cmds_tx(&toshiba_tx_buf, toshiba_display_off_cmds,
+>>>>>>> cm-10.0
 			ARRAY_SIZE(toshiba_display_off_cmds));
 
 	return 0;

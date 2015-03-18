@@ -16,6 +16,10 @@
  */
 #include <linux/bootmem.h>
 #include <linux/efi.h>
+<<<<<<< HEAD
+=======
+#include <linux/memblock.h>
+>>>>>>> cm-10.0
 #include <linux/mm.h>
 #include <linux/nmi.h>
 #include <linux/swap.h>
@@ -348,7 +352,11 @@ paging_init (void)
 		printk("Virtual mem_map starts at 0x%p\n", mem_map);
 	}
 #else /* !CONFIG_VIRTUAL_MEM_MAP */
+<<<<<<< HEAD
 	add_active_range(0, 0, max_low_pfn);
+=======
+	memblock_add_node(0, PFN_PHYS(max_low_pfn), 0);
+>>>>>>> cm-10.0
 	free_area_init_nodes(max_zone_pfns);
 #endif /* !CONFIG_VIRTUAL_MEM_MAP */
 	zero_page_memmap_ptr = virt_to_page(ia64_imva(empty_zero_page));

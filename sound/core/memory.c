@@ -20,6 +20,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/uaccess.h>
 #include <sound/core.h>

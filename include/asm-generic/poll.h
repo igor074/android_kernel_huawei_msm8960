@@ -28,6 +28,11 @@
 #define POLLRDHUP       0x2000
 #endif
 
+<<<<<<< HEAD
+=======
+#define POLLFREE	0x4000	/* currently only for epoll */
+
+>>>>>>> cm-10.0
 struct pollfd {
 	int fd;
 	short events;

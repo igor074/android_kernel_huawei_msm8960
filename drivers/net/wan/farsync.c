@@ -25,6 +25,10 @@
 #include <linux/slab.h>
 #include <linux/ioport.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/interrupt.h>
+>>>>>>> cm-10.0
 #include <linux/if.h>
 #include <linux/hdlc.h>
 #include <asm/io.h>
@@ -1664,10 +1668,16 @@ check_started_ok(struct fst_card_info *card)
 	 * existing firmware etc so we just report it for the moment.
 	 */
 	if (FST_RDL(card, numberOfPorts) != card->nports) {
+<<<<<<< HEAD
 		pr_warning("Port count mismatch on card %d. "
 			   "Firmware thinks %d we say %d\n",
 			   card->card_no,
 			   FST_RDL(card, numberOfPorts), card->nports);
+=======
+		pr_warn("Port count mismatch on card %d.  Firmware thinks %d we say %d\n",
+			card->card_no,
+			FST_RDL(card, numberOfPorts), card->nports);
+>>>>>>> cm-10.0
 	}
 }
 
@@ -2483,6 +2493,10 @@ fst_add_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 		pr_err("Control memory remap failed\n");
 		pci_release_regions(pdev);
 		pci_disable_device(pdev);
+<<<<<<< HEAD
+=======
+		iounmap(card->mem);
+>>>>>>> cm-10.0
 		kfree(card);
 		return -ENODEV;
 	}

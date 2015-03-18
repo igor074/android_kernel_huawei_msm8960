@@ -13,6 +13,11 @@
 enum dma_attr {
 	DMA_ATTR_WRITE_BARRIER,
 	DMA_ATTR_WEAK_ORDERING,
+<<<<<<< HEAD
+=======
+	DMA_ATTR_WRITE_COMBINE,
+	DMA_ATTR_NON_CONSISTENT,
+>>>>>>> cm-10.0
 	DMA_ATTR_MAX,
 };
 

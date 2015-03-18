@@ -2,7 +2,11 @@
  * include/linux/ion.h
  *
  * Copyright (C) 2011 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -21,7 +25,10 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 struct ion_handle;
 /**
  * enum ion_heap_types - list of all possible types of heaps
@@ -86,6 +93,17 @@ enum ion_fixed_position {
 	FIXED_HIGH,
 };
 
+<<<<<<< HEAD
+=======
+enum cp_mem_usage {
+	VIDEO_BITSTREAM = 0x1,
+	VIDEO_PIXEL = 0x2,
+	VIDEO_NONPIXEL = 0x3,
+	MAX_USAGE = 0x4,
+	UNKNOWN = 0x7FFFFFFF,
+};
+
+>>>>>>> cm-10.0
 /**
  * Flag to use when allocating to indicate that a heap is secure.
  */
@@ -148,6 +166,10 @@ struct ion_buffer;
  * @base:	base address of heap in physical memory if applicable
  * @size:	size of the heap in bytes if applicable
  * @memory_type:Memory type used for the heap
+<<<<<<< HEAD
+=======
+ * @has_outer_cache:    set to 1 if outer cache is used, 0 otherwise.
+>>>>>>> cm-10.0
  * @extra_data:	Extra data specific to each heap type
  */
 struct ion_platform_heap {
@@ -157,6 +179,10 @@ struct ion_platform_heap {
 	ion_phys_addr_t base;
 	size_t size;
 	enum ion_memory_types memory_type;
+<<<<<<< HEAD
+=======
+	unsigned int has_outer_cache;
+>>>>>>> cm-10.0
 	void *extra_data;
 };
 
@@ -228,6 +254,10 @@ struct ion_co_heap_pdata {
 
 /**
  * struct ion_platform_data - array of platform heaps passed from board file
+<<<<<<< HEAD
+=======
+ * @has_outer_cache:    set to 1 if outer cache is used, 0 otherwise.
+>>>>>>> cm-10.0
  * @nr:    number of structures in the array
  * @request_region: function to be called when the number of allocations goes
  *						from 0 -> 1
@@ -239,6 +269,10 @@ struct ion_co_heap_pdata {
  * Provided by the board file in the form of platform data to a platform device.
  */
 struct ion_platform_data {
+<<<<<<< HEAD
+=======
+	unsigned int has_outer_cache;
+>>>>>>> cm-10.0
 	int nr;
 	int (*request_region)(void *);
 	int (*release_region)(void *);
@@ -249,6 +283,20 @@ struct ion_platform_data {
 #ifdef CONFIG_ION
 
 /**
+<<<<<<< HEAD
+=======
+ * ion_reserve() - reserve memory for ion heaps if applicable
+ * @data:	platform data specifying starting physical address and
+ *		size
+ *
+ * Calls memblock reserve to set aside memory for heaps that are
+ * located at specific memory addresses or of specfic sizes not
+ * managed by the kernel
+ */
+void ion_reserve(struct ion_platform_data *data);
+
+/**
+>>>>>>> cm-10.0
  * ion_client_create() -  allocate a client and returns it
  * @dev:	the global ion device
  * @heap_mask:	mask of heaps this client can allocate from
@@ -311,7 +359,11 @@ void ion_free(struct ion_client *client, struct ion_handle *handle);
  * This function queries the heap for a particular handle to get the
  * handle's physical address.  It't output is only correct if
  * a heap returns physically contiguous memory -- in other cases
+<<<<<<< HEAD
  * this api should not be implemented -- ion_map_dma should be used
+=======
+ * this api should not be implemented -- ion_sg_table should be used
+>>>>>>> cm-10.0
  * instead.  Returns -EINVAL if the handle is invalid.  This has
  * no implications on the reference counting of the handle --
  * the returned value may not be valid if the caller is not
@@ -321,6 +373,20 @@ int ion_phys(struct ion_client *client, struct ion_handle *handle,
 	     ion_phys_addr_t *addr, size_t *len);
 
 /**
+<<<<<<< HEAD
+=======
+ * ion_map_dma - return an sg_table describing a handle
+ * @client:	the client
+ * @handle:	the handle
+ *
+ * This function returns the sg_table describing
+ * a particular ion handle.
+ */
+struct sg_table *ion_sg_table(struct ion_client *client,
+			      struct ion_handle *handle);
+
+/**
+>>>>>>> cm-10.0
  * ion_map_kernel - create mapping for the given handle
  * @client:	the client
  * @handle:	handle to map
@@ -341,6 +407,7 @@ void *ion_map_kernel(struct ion_client *client, struct ion_handle *handle,
 void ion_unmap_kernel(struct ion_client *client, struct ion_handle *handle);
 
 /**
+<<<<<<< HEAD
  * ion_map_dma - create a dma mapping for a given handle
  * @client:	the client
  * @handle:	handle to map
@@ -399,6 +466,24 @@ struct ion_handle *ion_import(struct ion_client *client,
  * the handle to use to refer to it further.
  */
 struct ion_handle *ion_import_fd(struct ion_client *client, int fd);
+=======
+ * ion_share_dma_buf() - given an ion client, create a dma-buf fd
+ * @client:	the client
+ * @handle:	the handle
+ */
+int ion_share_dma_buf(struct ion_client *client, struct ion_handle *handle);
+
+/**
+ * ion_import_dma_buf() - given an dma-buf fd from the ion exporter get handle
+ * @client:	the client
+ * @fd:		the dma-buf fd
+ *
+ * Given an dma-buf fd that was allocated through ion via ion_share_dma_buf,
+ * import that fd and return a handle representing it.  If a dma-buf from
+ * another exporter is passed in this function will return ERR_PTR(-EINVAL)
+ */
+struct ion_handle *ion_import_dma_buf(struct ion_client *client, int fd);
+>>>>>>> cm-10.0
 
 /**
  * ion_handle_get_flags - get the flags for a given handle
@@ -478,22 +563,42 @@ void ion_unmap_iommu(struct ion_client *client, struct ion_handle *handle,
  *
  * @client - a client that has allocated from the heap heap_id
  * @heap_id - heap id to secure.
+<<<<<<< HEAD
+=======
+ * @version - version of content protection
+ * @data - extra data needed for protection
+>>>>>>> cm-10.0
  *
  * Secure a heap
  * Returns 0 on success
  */
+<<<<<<< HEAD
 int ion_secure_heap(struct ion_device *dev, int heap_id);
+=======
+int ion_secure_heap(struct ion_device *dev, int heap_id, int version,
+			void *data);
+>>>>>>> cm-10.0
 
 /**
  * ion_unsecure_heap - un-secure a heap
  *
  * @client - a client that has allocated from the heap heap_id
  * @heap_id - heap id to un-secure.
+<<<<<<< HEAD
+=======
+ * @version - version of content protection
+ * @data - extra data needed for protection
+>>>>>>> cm-10.0
  *
  * Un-secure a heap
  * Returns 0 on success
  */
+<<<<<<< HEAD
 int ion_unsecure_heap(struct ion_device *dev, int heap_id);
+=======
+int ion_unsecure_heap(struct ion_device *dev, int heap_id, int version,
+			void *data);
+>>>>>>> cm-10.0
 
 /**
  * msm_ion_secure_heap - secure a heap. Wrapper around ion_secure_heap.
@@ -516,6 +621,33 @@ int msm_ion_secure_heap(int heap_id);
 int msm_ion_unsecure_heap(int heap_id);
 
 /**
+<<<<<<< HEAD
+=======
+ * msm_ion_secure_heap_2_0 - secure a heap using 2.0 APIs
+ *  Wrapper around ion_secure_heap.
+ *
+ * @heap_id - heap id to secure.
+ * @usage - usage hint to TZ
+ *
+ * Secure a heap
+ * Returns 0 on success
+ */
+int msm_ion_secure_heap_2_0(int heap_id, enum cp_mem_usage usage);
+
+/**
+ * msm_ion_unsecure_heap - unsecure a heap secured with 3.0 APIs.
+ * Wrapper around ion_unsecure_heap.
+ *
+ * @heap_id - heap id to secure.
+ * @usage - usage hint to TZ
+ *
+ * Un-secure a heap
+ * Returns 0 on success
+ */
+int msm_ion_unsecure_heap_2_0(int heap_id, enum cp_mem_usage usage);
+
+/**
+>>>>>>> cm-10.0
  * msm_ion_do_cache_op - do cache operations.
  *
  * @client - pointer to ION client.
@@ -533,6 +665,14 @@ int msm_ion_do_cache_op(struct ion_client *client, struct ion_handle *handle,
 			void *vaddr, unsigned long len, unsigned int cmd);
 
 #else
+<<<<<<< HEAD
+=======
+static inline void ion_reserve(struct ion_platform_data *data)
+{
+
+}
+
+>>>>>>> cm-10.0
 static inline struct ion_client *ion_client_create(struct ion_device *dev,
 				     unsigned int heap_mask, const char *name)
 {
@@ -563,21 +703,31 @@ static inline int ion_phys(struct ion_client *client,
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
 static inline void *ion_map_kernel(struct ion_client *client,
 	struct ion_handle *handle, unsigned long flags)
+=======
+static inline struct sg_table *ion_sg_table(struct ion_client *client,
+			      struct ion_handle *handle)
+>>>>>>> cm-10.0
 {
 	return ERR_PTR(-ENODEV);
 }
 
+<<<<<<< HEAD
 static inline void ion_unmap_kernel(struct ion_client *client,
 	struct ion_handle *handle) { }
 
 static inline struct scatterlist *ion_map_dma(struct ion_client *client,
+=======
+static inline void *ion_map_kernel(struct ion_client *client,
+>>>>>>> cm-10.0
 	struct ion_handle *handle, unsigned long flags)
 {
 	return ERR_PTR(-ENODEV);
 }
 
+<<<<<<< HEAD
 static inline void ion_unmap_dma(struct ion_client *client,
 	struct ion_handle *handle) { }
 
@@ -595,6 +745,17 @@ static inline struct ion_handle *ion_import(struct ion_client *client,
 
 static inline struct ion_handle *ion_import_fd(struct ion_client *client,
 	int fd)
+=======
+static inline void ion_unmap_kernel(struct ion_client *client,
+	struct ion_handle *handle) { }
+
+static inline int ion_share_dma_buf(struct ion_client *client, struct ion_handle *handle)
+{
+	return -ENODEV;
+}
+
+static inline struct ion_handle *ion_import_dma_buf(struct ion_client *client, int fd)
+>>>>>>> cm-10.0
 {
 	return ERR_PTR(-ENODEV);
 }
@@ -623,13 +784,23 @@ static inline void ion_unmap_iommu(struct ion_client *client,
 	return;
 }
 
+<<<<<<< HEAD
 static inline int ion_secure_heap(struct ion_device *dev, int heap_id)
+=======
+static inline int ion_secure_heap(struct ion_device *dev, int heap_id,
+					int version, void *data)
+>>>>>>> cm-10.0
 {
 	return -ENODEV;
 
 }
 
+<<<<<<< HEAD
 static inline int ion_unsecure_heap(struct ion_device *dev, int heap_id)
+=======
+static inline int ion_unsecure_heap(struct ion_device *dev, int heap_id,
+					int version, void *data)
+>>>>>>> cm-10.0
 {
 	return -ENODEV;
 }
@@ -645,6 +816,20 @@ static inline int msm_ion_unsecure_heap(int heap_id)
 	return -ENODEV;
 }
 
+<<<<<<< HEAD
+=======
+static inline int msm_ion_secure_heap_2_0(int heap_id, enum cp_mem_usage usage)
+{
+	return -ENODEV;
+}
+
+static inline int msm_ion_unsecure_heap_2_0(int heap_id,
+					enum cp_mem_usage usage)
+{
+	return -ENODEV;
+}
+
+>>>>>>> cm-10.0
 static inline int msm_ion_do_cache_op(struct ion_client *client,
 			struct ion_handle *handle, void *vaddr,
 			unsigned long len, unsigned int cmd)

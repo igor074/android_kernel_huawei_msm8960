@@ -60,6 +60,12 @@ struct netbk_rx_meta {
 
 #define MAX_PENDING_REQS 256
 
+<<<<<<< HEAD
+=======
+/* Discriminate from any valid pending_idx value. */
+#define INVALID_PENDING_IDX 0xFFFF
+
+>>>>>>> cm-10.0
 #define MAX_BUFFER_OFFSET PAGE_SIZE
 
 /* extra field used in struct page */
@@ -155,13 +161,21 @@ static struct xen_netif_rx_response *make_rx_response(struct xenvif *vif,
 					     u16      flags);
 
 static inline unsigned long idx_to_pfn(struct xen_netbk *netbk,
+<<<<<<< HEAD
 				       unsigned int idx)
+=======
+				       u16 idx)
+>>>>>>> cm-10.0
 {
 	return page_to_pfn(netbk->mmap_pages[idx]);
 }
 
 static inline unsigned long idx_to_kaddr(struct xen_netbk *netbk,
+<<<<<<< HEAD
 					 unsigned int idx)
+=======
+					 u16 idx)
+>>>>>>> cm-10.0
 {
 	return (unsigned long)pfn_to_kaddr(idx_to_pfn(netbk, idx));
 }
@@ -215,6 +229,19 @@ static int get_page_ext(struct page *pg,
 			 sizeof(struct iphdr) + MAX_IPOPTLEN + \
 			 sizeof(struct tcphdr) + MAX_TCP_OPTION_SPACE)
 
+<<<<<<< HEAD
+=======
+static u16 frag_get_pending_idx(skb_frag_t *frag)
+{
+	return (u16)frag->page_offset;
+}
+
+static void frag_set_pending_idx(skb_frag_t *frag, u16 pending_idx)
+{
+	frag->page_offset = pending_idx;
+}
+
+>>>>>>> cm-10.0
 static inline pending_ring_idx_t pending_index(unsigned i)
 {
 	return i & (MAX_PENDING_REQS-1);
@@ -321,7 +348,11 @@ unsigned int xen_netbk_count_skb_slots(struct xenvif *vif, struct sk_buff *skb)
 		count++;
 
 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
+<<<<<<< HEAD
 		unsigned long size = skb_shinfo(skb)->frags[i].size;
+=======
+		unsigned long size = skb_frag_size(&skb_shinfo(skb)->frags[i]);
+>>>>>>> cm-10.0
 		unsigned long bytes;
 		while (size > 0) {
 			BUG_ON(copy_off > MAX_BUFFER_OFFSET);
@@ -382,7 +413,11 @@ static void netbk_gop_frag_copy(struct xenvif *vif, struct sk_buff *skb,
 	struct gnttab_copy *copy_gop;
 	struct netbk_rx_meta *meta;
 	/*
+<<<<<<< HEAD
 	 * These variables a used iff get_page_ext returns true,
+=======
+	 * These variables are used iff get_page_ext returns true,
+>>>>>>> cm-10.0
 	 * in which case they are guaranteed to be initialized.
 	 */
 	unsigned int uninitialized_var(group), uninitialized_var(idx);
@@ -512,8 +547,13 @@ static int netbk_gop_skb(struct sk_buff *skb,
 
 	for (i = 0; i < nr_frags; i++) {
 		netbk_gop_frag_copy(vif, skb, npo,
+<<<<<<< HEAD
 				    skb_shinfo(skb)->frags[i].page,
 				    skb_shinfo(skb)->frags[i].size,
+=======
+				    skb_frag_page(&skb_shinfo(skb)->frags[i]),
+				    skb_frag_size(&skb_shinfo(skb)->frags[i]),
+>>>>>>> cm-10.0
 				    skb_shinfo(skb)->frags[i].page_offset,
 				    &head);
 	}
@@ -890,7 +930,11 @@ static int netbk_count_requests(struct xenvif *vif,
 
 static struct page *xen_netbk_alloc_page(struct xen_netbk *netbk,
 					 struct sk_buff *skb,
+<<<<<<< HEAD
 					 unsigned long pending_idx)
+=======
+					 u16 pending_idx)
+>>>>>>> cm-10.0
 {
 	struct page *page;
 	page = alloc_page(GFP_KERNEL|__GFP_COLD);
@@ -909,11 +953,19 @@ static struct gnttab_copy *xen_netbk_get_requests(struct xen_netbk *netbk,
 {
 	struct skb_shared_info *shinfo = skb_shinfo(skb);
 	skb_frag_t *frags = shinfo->frags;
+<<<<<<< HEAD
 	unsigned long pending_idx = *((u16 *)skb->data);
 	int i, start;
 
 	/* Skip first skb fragment if it is on same page as header fragment. */
 	start = ((unsigned long)shinfo->frags[0].page == pending_idx);
+=======
+	u16 pending_idx = *((u16 *)skb->data);
+	int i, start;
+
+	/* Skip first skb fragment if it is on same page as header fragment. */
+	start = (frag_get_pending_idx(&shinfo->frags[0]) == pending_idx);
+>>>>>>> cm-10.0
 
 	for (i = start; i < shinfo->nr_frags; i++, txp++) {
 		struct page *page;
@@ -927,8 +979,11 @@ static struct gnttab_copy *xen_netbk_get_requests(struct xen_netbk *netbk,
 		if (!page)
 			return NULL;
 
+<<<<<<< HEAD
 		netbk->mmap_pages[pending_idx] = page;
 
+=======
+>>>>>>> cm-10.0
 		gop->source.u.ref = txp->gref;
 		gop->source.domid = vif->domid;
 		gop->source.offset = txp->offset;
@@ -945,7 +1000,11 @@ static struct gnttab_copy *xen_netbk_get_requests(struct xen_netbk *netbk,
 		memcpy(&pending_tx_info[pending_idx].req, txp, sizeof(*txp));
 		xenvif_get(vif);
 		pending_tx_info[pending_idx].vif = vif;
+<<<<<<< HEAD
 		frags[i].page = (void *)pending_idx;
+=======
+		frag_set_pending_idx(&frags[i], pending_idx);
+>>>>>>> cm-10.0
 	}
 
 	return gop;
@@ -956,7 +1015,11 @@ static int xen_netbk_tx_check_gop(struct xen_netbk *netbk,
 				  struct gnttab_copy **gopp)
 {
 	struct gnttab_copy *gop = *gopp;
+<<<<<<< HEAD
 	int pending_idx = *((u16 *)skb->data);
+=======
+	u16 pending_idx = *((u16 *)skb->data);
+>>>>>>> cm-10.0
 	struct pending_tx_info *pending_tx_info = netbk->pending_tx_info;
 	struct xenvif *vif = pending_tx_info[pending_idx].vif;
 	struct xen_netif_tx_request *txp;
@@ -976,13 +1039,21 @@ static int xen_netbk_tx_check_gop(struct xen_netbk *netbk,
 	}
 
 	/* Skip first skb fragment if it is on same page as header fragment. */
+<<<<<<< HEAD
 	start = ((unsigned long)shinfo->frags[0].page == pending_idx);
+=======
+	start = (frag_get_pending_idx(&shinfo->frags[0]) == pending_idx);
+>>>>>>> cm-10.0
 
 	for (i = start; i < nr_frags; i++) {
 		int j, newerr;
 		pending_ring_idx_t index;
 
+<<<<<<< HEAD
 		pending_idx = (unsigned long)shinfo->frags[i].page;
+=======
+		pending_idx = frag_get_pending_idx(&shinfo->frags[i]);
+>>>>>>> cm-10.0
 
 		/* Check error status: if okay then remember grant handle. */
 		newerr = (++gop)->status;
@@ -1008,7 +1079,11 @@ static int xen_netbk_tx_check_gop(struct xen_netbk *netbk,
 		pending_idx = *((u16 *)skb->data);
 		xen_netbk_idx_release(netbk, pending_idx);
 		for (j = start; j < i; j++) {
+<<<<<<< HEAD
 			pending_idx = (unsigned long)shinfo->frags[i].page;
+=======
+			pending_idx = frag_get_pending_idx(&shinfo->frags[j]);
+>>>>>>> cm-10.0
 			xen_netbk_idx_release(netbk, pending_idx);
 		}
 
@@ -1029,6 +1104,7 @@ static void xen_netbk_fill_frags(struct xen_netbk *netbk, struct sk_buff *skb)
 	for (i = 0; i < nr_frags; i++) {
 		skb_frag_t *frag = shinfo->frags + i;
 		struct xen_netif_tx_request *txp;
+<<<<<<< HEAD
 		unsigned long pending_idx;
 
 		pending_idx = (unsigned long)frag->page;
@@ -1038,6 +1114,16 @@ static void xen_netbk_fill_frags(struct xen_netbk *netbk, struct sk_buff *skb)
 		frag->size = txp->size;
 		frag->page_offset = txp->offset;
 
+=======
+		struct page *page;
+		u16 pending_idx;
+
+		pending_idx = frag_get_pending_idx(frag);
+
+		txp = &netbk->pending_tx_info[pending_idx].req;
+		page = virt_to_page(idx_to_kaddr(netbk, pending_idx));
+		__skb_fill_page_desc(skb, i, page, txp->offset, txp->size);
+>>>>>>> cm-10.0
 		skb->len += txp->size;
 		skb->data_len += txp->size;
 		skb->truesize += txp->size;
@@ -1324,8 +1410,11 @@ static unsigned xen_netbk_tx_build_gops(struct xen_netbk *netbk)
 			continue;
 		}
 
+<<<<<<< HEAD
 		netbk->mmap_pages[pending_idx] = page;
 
+=======
+>>>>>>> cm-10.0
 		gop->source.u.ref = txreq.gref;
 		gop->source.domid = vif->domid;
 		gop->source.offset = txreq.offset;
@@ -1349,11 +1438,19 @@ static unsigned xen_netbk_tx_build_gops(struct xen_netbk *netbk)
 		skb_shinfo(skb)->nr_frags = ret;
 		if (data_len < txreq.size) {
 			skb_shinfo(skb)->nr_frags++;
+<<<<<<< HEAD
 			skb_shinfo(skb)->frags[0].page =
 				(void *)(unsigned long)pending_idx;
 		} else {
 			/* Discriminate from any valid pending_idx value. */
 			skb_shinfo(skb)->frags[0].page = (void *)~0UL;
+=======
+			frag_set_pending_idx(&skb_shinfo(skb)->frags[0],
+					     pending_idx);
+		} else {
+			frag_set_pending_idx(&skb_shinfo(skb)->frags[0],
+					     INVALID_PENDING_IDX);
+>>>>>>> cm-10.0
 		}
 
 		__skb_queue_tail(&netbk->tx_queue, skb);
@@ -1577,6 +1674,7 @@ static int xen_netbk_kthread(void *data)
 
 void xen_netbk_unmap_frontend_rings(struct xenvif *vif)
 {
+<<<<<<< HEAD
 	struct gnttab_unmap_grant_ref op;
 
 	if (vif->tx.sring) {
@@ -1598,18 +1696,31 @@ void xen_netbk_unmap_frontend_rings(struct xenvif *vif)
 		free_vm_area(vif->rx_comms_area);
 	if (vif->tx_comms_area)
 		free_vm_area(vif->tx_comms_area);
+=======
+	if (vif->tx.sring)
+		xenbus_unmap_ring_vfree(xenvif_to_xenbus_device(vif),
+					vif->tx.sring);
+	if (vif->rx.sring)
+		xenbus_unmap_ring_vfree(xenvif_to_xenbus_device(vif),
+					vif->rx.sring);
+>>>>>>> cm-10.0
 }
 
 int xen_netbk_map_frontend_rings(struct xenvif *vif,
 				 grant_ref_t tx_ring_ref,
 				 grant_ref_t rx_ring_ref)
 {
+<<<<<<< HEAD
 	struct gnttab_map_grant_ref op;
+=======
+	void *addr;
+>>>>>>> cm-10.0
 	struct xen_netif_tx_sring *txs;
 	struct xen_netif_rx_sring *rxs;
 
 	int err = -ENOMEM;
 
+<<<<<<< HEAD
 	vif->tx_comms_area = alloc_vm_area(PAGE_SIZE);
 	if (vif->tx_comms_area == NULL)
 		goto err;
@@ -1659,6 +1770,26 @@ int xen_netbk_map_frontend_rings(struct xenvif *vif,
 	rxs = (struct xen_netif_rx_sring *)vif->rx_comms_area->addr;
 	BACK_RING_INIT(&vif->rx, rxs, PAGE_SIZE);
 
+=======
+	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(vif),
+				     tx_ring_ref, &addr);
+	if (err)
+		goto err;
+
+	txs = (struct xen_netif_tx_sring *)addr;
+	BACK_RING_INIT(&vif->tx, txs, PAGE_SIZE);
+
+	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(vif),
+				     rx_ring_ref, &addr);
+	if (err)
+		goto err;
+
+	rxs = (struct xen_netif_rx_sring *)addr;
+	BACK_RING_INIT(&vif->rx, rxs, PAGE_SIZE);
+
+	vif->rx_req_cons_peek = 0;
+
+>>>>>>> cm-10.0
 	return 0;
 
 err:
@@ -1672,15 +1803,24 @@ static int __init netback_init(void)
 	int rc = 0;
 	int group;
 
+<<<<<<< HEAD
 	if (!xen_pv_domain())
+=======
+	if (!xen_domain())
+>>>>>>> cm-10.0
 		return -ENODEV;
 
 	xen_netbk_group_nr = num_online_cpus();
 	xen_netbk = vzalloc(sizeof(struct xen_netbk) * xen_netbk_group_nr);
+<<<<<<< HEAD
 	if (!xen_netbk) {
 		printk(KERN_ALERT "%s: out of memory\n", __func__);
 		return -ENOMEM;
 	}
+=======
+	if (!xen_netbk)
+		return -ENOMEM;
+>>>>>>> cm-10.0
 
 	for (group = 0; group < xen_netbk_group_nr; group++) {
 		struct xen_netbk *netbk = &xen_netbk[group];
@@ -1702,7 +1842,11 @@ static int __init netback_init(void)
 					     "netback/%u", group);
 
 		if (IS_ERR(netbk->task)) {
+<<<<<<< HEAD
 			printk(KERN_ALERT "kthread_run() fails at netback\n");
+=======
+			printk(KERN_ALERT "kthread_create() fails at netback\n");
+>>>>>>> cm-10.0
 			del_timer(&netbk->net_timer);
 			rc = PTR_ERR(netbk->task);
 			goto failed_init;
@@ -1743,3 +1887,7 @@ failed_init:
 module_init(netback_init);
 
 MODULE_LICENSE("Dual BSD/GPL");
+<<<<<<< HEAD
+=======
+MODULE_ALIAS("xen-backend:vif");
+>>>>>>> cm-10.0

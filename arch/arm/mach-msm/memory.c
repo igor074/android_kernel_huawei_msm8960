@@ -1,7 +1,11 @@
 /* arch/arm/mach-msm/memory.c
  *
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -36,6 +40,13 @@
 #include <linux/android_pmem.h>
 #include <mach/msm_iomap.h>
 #include <mach/socinfo.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched.h>
+
+/* fixme */
+#include <asm/tlbflush.h>
+>>>>>>> cm-10.0
 #include <../../mm/mm.h>
 #include <linux/fmem.h>
 
@@ -83,6 +94,7 @@ void write_to_strongly_ordered_memory(void)
 }
 EXPORT_SYMBOL(write_to_strongly_ordered_memory);
 
+<<<<<<< HEAD
 void flush_axi_bus_buffer(void)
 {
 #if defined(CONFIG_ARCH_MSM7X27) && !defined(CONFIG_ARCH_MSM7X27A)
@@ -97,10 +109,16 @@ void flush_axi_bus_buffer(void)
 /* These cache related routines make the assumption that the associated
  * physical memory is contiguous. They will operate on all (L1
  * and L2 if present) caches.
+=======
+/* These cache related routines make the assumption (if outer cache is
+ * available) that the associated physical memory is contiguous.
+ * They will operate on all (L1 and L2 if present) caches.
+>>>>>>> cm-10.0
  */
 void clean_and_invalidate_caches(unsigned long vstart,
 	unsigned long length, unsigned long pstart)
 {
+<<<<<<< HEAD
 	unsigned long vaddr;
 
 	for (vaddr = vstart; vaddr < vstart + length; vaddr += CACHE_LINE_SIZE)
@@ -112,11 +130,16 @@ void clean_and_invalidate_caches(unsigned long vstart,
 	asm ("mcr p15, 0, %0, c7, c5, 0" : : "r" (0));
 
 	flush_axi_bus_buffer();
+=======
+	dmac_flush_range((void *)vstart, (void *) (vstart + length));
+	outer_flush_range(pstart, pstart + length);
+>>>>>>> cm-10.0
 }
 
 void clean_caches(unsigned long vstart,
 	unsigned long length, unsigned long pstart)
 {
+<<<<<<< HEAD
 	unsigned long vaddr;
 
 	for (vaddr = vstart; vaddr < vstart + length; vaddr += CACHE_LINE_SIZE)
@@ -128,11 +151,16 @@ void clean_caches(unsigned long vstart,
 	asm ("mcr p15, 0, %0, c7, c5, 0" : : "r" (0));
 
 	flush_axi_bus_buffer();
+=======
+	dmac_clean_range((void *)vstart, (void *) (vstart + length));
+	outer_clean_range(pstart, pstart + length);
+>>>>>>> cm-10.0
 }
 
 void invalidate_caches(unsigned long vstart,
 	unsigned long length, unsigned long pstart)
 {
+<<<<<<< HEAD
 	unsigned long vaddr;
 
 	for (vaddr = vstart; vaddr < vstart + length; vaddr += CACHE_LINE_SIZE)
@@ -147,6 +175,13 @@ void invalidate_caches(unsigned long vstart,
 }
 
 void *alloc_bootmem_aligned(unsigned long size, unsigned long alignment)
+=======
+	dmac_inv_range((void *)vstart, (void *) (vstart + length));
+	outer_inv_range(pstart, pstart + length);
+}
+
+void * __init alloc_bootmem_aligned(unsigned long size, unsigned long alignment)
+>>>>>>> cm-10.0
 {
 	void *unused_addr = NULL;
 	unsigned long addr, tmp_size, unused_size;
@@ -317,6 +352,11 @@ static void __init reserve_memory_for_mempools(void)
 			if (size >= mt->size) {
 				size = stable_size(mb,
 					reserve_info->low_unstable_address);
+<<<<<<< HEAD
+=======
+				if (!size)
+					continue;
+>>>>>>> cm-10.0
 				/* mt->size may be larger than size, all this
 				 * means is that we are carving the memory pool
 				 * out of multiple contiguous memory banks.
@@ -330,6 +370,7 @@ static void __init reserve_memory_for_mempools(void)
 	}
 }
 
+<<<<<<< HEAD
 unsigned long __init reserve_memory_for_fmem(unsigned long fmem_size, 
 						unsigned long align)
 {
@@ -351,6 +392,8 @@ unsigned long __init reserve_memory_for_fmem(unsigned long fmem_size,
 	return fmem_phys;
 }
 
+=======
+>>>>>>> cm-10.0
 static void __init initialize_mempools(void)
 {
 	struct mem_pool *mpool;
@@ -368,6 +411,11 @@ static void __init initialize_mempools(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+#define  MAX_FIXED_AREA_SIZE 0x11000000
+
+>>>>>>> cm-10.0
 void __init msm_reserve(void)
 {
 	unsigned long msm_fixed_area_size;
@@ -379,7 +427,14 @@ void __init msm_reserve(void)
 	msm_fixed_area_size = reserve_info->fixed_area_size;
 	msm_fixed_area_start = reserve_info->fixed_area_start;
 	if (msm_fixed_area_size)
+<<<<<<< HEAD
 		reserve_info->low_unstable_address = msm_fixed_area_start;
+=======
+		if (msm_fixed_area_start > reserve_info->low_unstable_address
+			- MAX_FIXED_AREA_SIZE)
+			reserve_info->low_unstable_address =
+			msm_fixed_area_start;
+>>>>>>> cm-10.0
 
 	calculate_reserve_limits();
 	adjust_reserve_sizes();
@@ -411,6 +466,7 @@ unsigned long allocate_contiguous_ebi_nomap(unsigned long size,
 }
 EXPORT_SYMBOL(allocate_contiguous_ebi_nomap);
 
+<<<<<<< HEAD
 /* emulation of the deprecated pmem_kalloc and pmem_kfree */
 int32_t pmem_kalloc(const size_t size, const uint32_t flags)
 {
@@ -469,6 +525,8 @@ int pmem_kfree(const int32_t physaddr)
 }
 EXPORT_SYMBOL(pmem_kfree);
 
+=======
+>>>>>>> cm-10.0
 unsigned int msm_ttbr0;
 
 void store_ttbr0(void)
@@ -487,3 +545,17 @@ int release_fmem_c_region(void *unused)
 {
 	return fmem_set_state(FMEM_T_STATE);
 }
+<<<<<<< HEAD
+=======
+
+unsigned long get_ddr_size(void)
+{
+	unsigned int i;
+	unsigned long ret = 0;
+
+	for (i = 0; i < meminfo.nr_banks; i++)
+		ret += meminfo.bank[i].size;
+
+	return ret;
+}
+>>>>>>> cm-10.0

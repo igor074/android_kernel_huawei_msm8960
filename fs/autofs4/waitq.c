@@ -56,26 +56,42 @@ void autofs4_catatonic_mode(struct autofs_sb_info *sbi)
 	mutex_unlock(&sbi->wq_mutex);
 }
 
+<<<<<<< HEAD
 static int autofs4_write(struct file *file, const void *addr, int bytes)
+=======
+static int autofs4_write(struct autofs_sb_info *sbi,
+			 struct file *file, const void *addr, int bytes)
+>>>>>>> cm-10.0
 {
 	unsigned long sigpipe, flags;
 	mm_segment_t fs;
 	const char *data = (const char *)addr;
 	ssize_t wr = 0;
 
+<<<<<<< HEAD
 	/** WARNING: this is not safe for writing more than PIPE_BUF bytes! **/
 
+=======
+>>>>>>> cm-10.0
 	sigpipe = sigismember(&current->pending.signal, SIGPIPE);
 
 	/* Save pointer to user space and point back to kernel space */
 	fs = get_fs();
 	set_fs(KERNEL_DS);
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&sbi->pipe_mutex);
+>>>>>>> cm-10.0
 	while (bytes &&
 	       (wr = file->f_op->write(file,data,bytes,&file->f_pos)) > 0) {
 		data += wr;
 		bytes -= wr;
 	}
+<<<<<<< HEAD
+=======
+	mutex_unlock(&sbi->pipe_mutex);
+>>>>>>> cm-10.0
 
 	set_fs(fs);
 
@@ -104,12 +120,26 @@ static void autofs4_notify_daemon(struct autofs_sb_info *sbi,
 	size_t pktsz;
 
 	DPRINTK("wait id = 0x%08lx, name = %.*s, type=%d",
+<<<<<<< HEAD
 		wq->wait_queue_token, wq->name.len, wq->name.name, type);
+=======
+		(unsigned long) wq->wait_queue_token, wq->name.len, wq->name.name, type);
+>>>>>>> cm-10.0
 
 	memset(&pkt,0,sizeof pkt); /* For security reasons */
 
 	pkt.hdr.proto_version = sbi->version;
 	pkt.hdr.type = type;
+<<<<<<< HEAD
+=======
+	mutex_lock(&sbi->wq_mutex);
+
+	/* Check if we have become catatonic */
+	if (sbi->catatonic) {
+		mutex_unlock(&sbi->wq_mutex);
+		return;
+	}
+>>>>>>> cm-10.0
 	switch (type) {
 	/* Kernel protocol v4 missing and expire packets */
 	case autofs_ptype_missing:
@@ -163,6 +193,7 @@ static void autofs4_notify_daemon(struct autofs_sb_info *sbi,
 	}
 	default:
 		printk("autofs4_notify_daemon: bad type %d!\n", type);
+<<<<<<< HEAD
 		return;
 	}
 
@@ -179,6 +210,20 @@ static void autofs4_notify_daemon(struct autofs_sb_info *sbi,
 			autofs4_catatonic_mode(sbi);
 		fput(pipe);
 	}
+=======
+		mutex_unlock(&sbi->wq_mutex);
+		return;
+	}
+
+	pipe = sbi->pipe;
+	get_file(pipe);
+
+	mutex_unlock(&sbi->wq_mutex);
+
+	if (autofs4_write(sbi, pipe, &pkt, pktsz))
+		autofs4_catatonic_mode(sbi);
+	fput(pipe);
+>>>>>>> cm-10.0
 }
 
 static int autofs4_getpath(struct autofs_sb_info *sbi,
@@ -257,6 +302,12 @@ static int validate_request(struct autofs_wait_queue **wait,
 	struct autofs_wait_queue *wq;
 	struct autofs_info *ino;
 
+<<<<<<< HEAD
+=======
+	if (sbi->catatonic)
+		return -ENOENT;
+
+>>>>>>> cm-10.0
 	/* Wait in progress, continue; */
 	wq = autofs4_find_wait(sbi, qstr);
 	if (wq) {
@@ -289,6 +340,12 @@ static int validate_request(struct autofs_wait_queue **wait,
 			if (mutex_lock_interruptible(&sbi->wq_mutex))
 				return -EINTR;
 
+<<<<<<< HEAD
+=======
+			if (sbi->catatonic)
+				return -ENOENT;
+
+>>>>>>> cm-10.0
 			wq = autofs4_find_wait(sbi, qstr);
 			if (wq) {
 				*wait = wq;
@@ -389,7 +446,11 @@ int autofs4_wait(struct autofs_sb_info *sbi, struct dentry *dentry,
 
 	ret = validate_request(&wq, sbi, &qstr, dentry, notify);
 	if (ret <= 0) {
+<<<<<<< HEAD
 		if (ret == 0)
+=======
+		if (ret != -EINTR)
+>>>>>>> cm-10.0
 			mutex_unlock(&sbi->wq_mutex);
 		kfree(qstr.name);
 		return ret;

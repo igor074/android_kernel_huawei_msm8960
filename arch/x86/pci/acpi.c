@@ -12,7 +12,11 @@ struct pci_root_info {
 	char *name;
 	unsigned int res_num;
 	struct resource *res;
+<<<<<<< HEAD
 	struct pci_bus *bus;
+=======
+	struct list_head *resources;
+>>>>>>> cm-10.0
 	int busnum;
 };
 
@@ -24,6 +28,15 @@ static int __init set_use_crs(const struct dmi_system_id *id)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int __init set_nouse_crs(const struct dmi_system_id *id)
+{
+	pci_use_crs = false;
+	return 0;
+}
+
+>>>>>>> cm-10.0
 static const struct dmi_system_id pci_use_crs_table[] __initconst = {
 	/* http://bugzilla.kernel.org/show_bug.cgi?id=14183 */
 	{
@@ -54,6 +67,42 @@ static const struct dmi_system_id pci_use_crs_table[] __initconst = {
 			DMI_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
 		},
 	},
+<<<<<<< HEAD
+=======
+	/* https://bugzilla.kernel.org/show_bug.cgi?id=42619 */
+	{
+		.callback = set_use_crs,
+		.ident = "MSI MS-7253",
+		.matches = {
+			DMI_MATCH(DMI_BOARD_VENDOR, "MICRO-STAR INTERNATIONAL CO., LTD"),
+			DMI_MATCH(DMI_BOARD_NAME, "MS-7253"),
+			DMI_MATCH(DMI_BIOS_VENDOR, "Phoenix Technologies, LTD"),
+		},
+	},
+
+	/* Now for the blacklist.. */
+
+	/* https://bugzilla.redhat.com/show_bug.cgi?id=769657 */
+	{
+		.callback = set_nouse_crs,
+		.ident = "Dell Studio 1557",
+		.matches = {
+			DMI_MATCH(DMI_BOARD_VENDOR, "Dell Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Studio 1557"),
+			DMI_MATCH(DMI_BIOS_VERSION, "A09"),
+		},
+	},
+	/* https://bugzilla.redhat.com/show_bug.cgi?id=769657 */
+	{
+		.callback = set_nouse_crs,
+		.ident = "Thinkpad SL510",
+		.matches = {
+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+			DMI_MATCH(DMI_BOARD_NAME, "2847DFG"),
+			DMI_MATCH(DMI_BIOS_VERSION, "6JET85WW (1.43 )"),
+		},
+	},
+>>>>>>> cm-10.0
 	{}
 };
 
@@ -149,7 +198,11 @@ setup_resource(struct acpi_resource *acpi_res, void *data)
 	struct acpi_resource_address64 addr;
 	acpi_status status;
 	unsigned long flags;
+<<<<<<< HEAD
 	u64 start, end;
+=======
+	u64 start, orig_end, end;
+>>>>>>> cm-10.0
 
 	status = resource_to_addr(acpi_res, &addr);
 	if (!ACPI_SUCCESS(status))
@@ -165,7 +218,25 @@ setup_resource(struct acpi_resource *acpi_res, void *data)
 		return AE_OK;
 
 	start = addr.minimum + addr.translation_offset;
+<<<<<<< HEAD
 	end = addr.maximum + addr.translation_offset;
+=======
+	orig_end = end = addr.maximum + addr.translation_offset;
+
+	/* Exclude non-addressable range or non-addressable portion of range */
+	end = min(end, (u64)iomem_resource.end);
+	if (end <= start) {
+		dev_info(&info->bridge->dev,
+			"host bridge window [%#llx-%#llx] "
+			"(ignored, not CPU addressable)\n", start, orig_end);
+		return AE_OK;
+	} else if (orig_end != end) {
+		dev_info(&info->bridge->dev,
+			"host bridge window [%#llx-%#llx] "
+			"([%#llx-%#llx] ignored, not CPU addressable)\n", 
+			start, orig_end, end + 1, orig_end);
+	}
+>>>>>>> cm-10.0
 
 	res = &info->res[info->res_num];
 	res->name = info->name;
@@ -239,9 +310,12 @@ static void add_resources(struct pci_root_info *info)
 	int i;
 	struct resource *res, *root, *conflict;
 
+<<<<<<< HEAD
 	if (!pci_use_crs)
 		return;
 
+=======
+>>>>>>> cm-10.0
 	coalesce_windows(info, IORESOURCE_MEM);
 	coalesce_windows(info, IORESOURCE_IO);
 
@@ -257,28 +331,46 @@ static void add_resources(struct pci_root_info *info)
 
 		conflict = insert_resource_conflict(root, res);
 		if (conflict)
+<<<<<<< HEAD
 			dev_err(&info->bridge->dev,
 				"address space collision: host bridge window %pR "
 				"conflicts with %s %pR\n",
 				res, conflict->name, conflict);
 		else
 			pci_bus_add_resource(info->bus, res, 0);
+=======
+			dev_info(&info->bridge->dev,
+				 "ignoring host bridge window %pR (conflicts with %s %pR)\n",
+				 res, conflict->name, conflict);
+		else
+			pci_add_resource(info->resources, res);
+>>>>>>> cm-10.0
 	}
 }
 
 static void
 get_current_resources(struct acpi_device *device, int busnum,
+<<<<<<< HEAD
 			int domain, struct pci_bus *bus)
+=======
+		      int domain, struct list_head *resources)
+>>>>>>> cm-10.0
 {
 	struct pci_root_info info;
 	size_t size;
 
+<<<<<<< HEAD
 	if (pci_use_crs)
 		pci_bus_remove_resources(bus);
 
 	info.bridge = device;
 	info.bus = bus;
 	info.res_num = 0;
+=======
+	info.bridge = device;
+	info.res_num = 0;
+	info.resources = resources;
+>>>>>>> cm-10.0
 	acpi_walk_resources(device->handle, METHOD_NAME__CRS, count_resource,
 				&info);
 	if (!info.res_num)
@@ -287,7 +379,11 @@ get_current_resources(struct acpi_device *device, int busnum,
 	size = sizeof(*info.res) * info.res_num;
 	info.res = kmalloc(size, GFP_KERNEL);
 	if (!info.res)
+<<<<<<< HEAD
 		goto res_alloc_fail;
+=======
+		return;
+>>>>>>> cm-10.0
 
 	info.name = kasprintf(GFP_KERNEL, "PCI Bus %04x:%02x", domain, busnum);
 	if (!info.name)
@@ -297,6 +393,7 @@ get_current_resources(struct acpi_device *device, int busnum,
 	acpi_walk_resources(device->handle, METHOD_NAME__CRS, setup_resource,
 				&info);
 
+<<<<<<< HEAD
 	add_resources(&info);
 	return;
 
@@ -304,6 +401,18 @@ name_alloc_fail:
 	kfree(info.res);
 res_alloc_fail:
 	return;
+=======
+	if (pci_use_crs) {
+		add_resources(&info);
+
+		return;
+	}
+
+	kfree(info.name);
+
+name_alloc_fail:
+	kfree(info.res);
+>>>>>>> cm-10.0
 }
 
 struct pci_bus * __devinit pci_acpi_scan_root(struct acpi_pci_root *root)
@@ -311,6 +420,10 @@ struct pci_bus * __devinit pci_acpi_scan_root(struct acpi_pci_root *root)
 	struct acpi_device *device = root->device;
 	int domain = root->segment;
 	int busnum = root->secondary.start;
+<<<<<<< HEAD
+=======
+	LIST_HEAD(resources);
+>>>>>>> cm-10.0
 	struct pci_bus *bus;
 	struct pci_sysdata *sd;
 	int node;
@@ -365,10 +478,40 @@ struct pci_bus * __devinit pci_acpi_scan_root(struct acpi_pci_root *root)
 		memcpy(bus->sysdata, sd, sizeof(*sd));
 		kfree(sd);
 	} else {
+<<<<<<< HEAD
 		bus = pci_create_bus(NULL, busnum, &pci_root_ops, sd);
 		if (bus) {
 			get_current_resources(device, busnum, domain, bus);
 			bus->subordinate = pci_scan_child_bus(bus);
+=======
+		get_current_resources(device, busnum, domain, &resources);
+
+		/*
+		 * _CRS with no apertures is normal, so only fall back to
+		 * defaults or native bridge info if we're ignoring _CRS.
+		 */
+		if (!pci_use_crs)
+			x86_pci_root_bus_resources(busnum, &resources);
+		bus = pci_create_root_bus(NULL, busnum, &pci_root_ops, sd,
+					  &resources);
+		if (bus)
+			bus->subordinate = pci_scan_child_bus(bus);
+		else
+			pci_free_resource_list(&resources);
+	}
+
+	/* After the PCI-E bus has been walked and all devices discovered,
+	 * configure any settings of the fabric that might be necessary.
+	 */
+	if (bus) {
+		struct pci_bus *child;
+		list_for_each_entry(child, &bus->children, node) {
+			struct pci_dev *self = child->self;
+			if (!self)
+				continue;
+
+			pcie_bus_configure_settings(child, self->pcie_mpss);
+>>>>>>> cm-10.0
 		}
 	}
 

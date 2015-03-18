@@ -1,4 +1,8 @@
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <scsi/sas.h>
 #include <scsi/libsas.h>
 

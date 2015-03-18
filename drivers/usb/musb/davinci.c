@@ -33,9 +33,12 @@
 #include <linux/platform_device.h>
 #include <linux/dma-mapping.h>
 
+<<<<<<< HEAD
 #include <mach/hardware.h>
 #include <mach/memory.h>
 #include <mach/gpio.h>
+=======
+>>>>>>> cm-10.0
 #include <mach/cputype.h>
 
 #include <asm/mach-types.h>
@@ -143,12 +146,16 @@ static void davinci_musb_disable(struct musb *musb)
 }
 
 
+<<<<<<< HEAD
 #ifdef CONFIG_USB_MUSB_HDRC_HCD
 #define	portstate(stmt)		stmt
 #else
 #define	portstate(stmt)
 #endif
 
+=======
+#define	portstate(stmt)		stmt
+>>>>>>> cm-10.0
 
 /*
  * VBUS SWITCHING IS BOARD-SPECIFIC ... at least for the DM6446 EVM,
@@ -273,6 +280,10 @@ static irqreturn_t davinci_musb_interrupt(int irq, void *__hci)
 	unsigned long	flags;
 	irqreturn_t	retval = IRQ_NONE;
 	struct musb	*musb = __hci;
+<<<<<<< HEAD
+=======
+	struct usb_otg	*otg = musb->xceiv->otg;
+>>>>>>> cm-10.0
 	void __iomem	*tibase = musb->ctrl_base;
 	struct cppi	*cppi;
 	u32		tmp;
@@ -339,14 +350,22 @@ static irqreturn_t davinci_musb_interrupt(int irq, void *__hci)
 			WARNING("VBUS error workaround (delay coming)\n");
 		} else if (is_host_enabled(musb) && drvvbus) {
 			MUSB_HST_MODE(musb);
+<<<<<<< HEAD
 			musb->xceiv->default_a = 1;
+=======
+			otg->default_a = 1;
+>>>>>>> cm-10.0
 			musb->xceiv->state = OTG_STATE_A_WAIT_VRISE;
 			portstate(musb->port1_status |= USB_PORT_STAT_POWER);
 			del_timer(&otg_workaround);
 		} else {
 			musb->is_active = 0;
 			MUSB_DEV_MODE(musb);
+<<<<<<< HEAD
 			musb->xceiv->default_a = 0;
+=======
+			otg->default_a = 0;
+>>>>>>> cm-10.0
 			musb->xceiv->state = OTG_STATE_B_IDLE;
 			portstate(musb->port1_status &= ~USB_PORT_STAT_POWER);
 		}
@@ -391,9 +410,15 @@ static int davinci_musb_init(struct musb *musb)
 	u32		revision;
 
 	usb_nop_xceiv_register();
+<<<<<<< HEAD
 	musb->xceiv = otg_get_transceiver();
 	if (!musb->xceiv)
 		return -ENODEV;
+=======
+	musb->xceiv = usb_get_transceiver();
+	if (!musb->xceiv)
+		goto unregister;
+>>>>>>> cm-10.0
 
 	musb->mregs += DAVINCI_BASE_OFFSET;
 
@@ -450,7 +475,12 @@ static int davinci_musb_init(struct musb *musb)
 	return 0;
 
 fail:
+<<<<<<< HEAD
 	otg_put_transceiver(musb->xceiv);
+=======
+	usb_put_transceiver(musb->xceiv);
+unregister:
+>>>>>>> cm-10.0
 	usb_nop_xceiv_unregister();
 	return -ENODEV;
 }
@@ -472,7 +502,11 @@ static int davinci_musb_exit(struct musb *musb)
 	davinci_musb_source_power(musb, 0 /*off*/, 1);
 
 	/* delay, to avoid problems with module reload */
+<<<<<<< HEAD
 	if (is_host_enabled(musb) && musb->xceiv->default_a) {
+=======
+	if (is_host_enabled(musb) && musb->xceiv->otg->default_a) {
+>>>>>>> cm-10.0
 		int	maxdelay = 30;
 		u8	devctl, warn = 0;
 
@@ -499,7 +533,11 @@ static int davinci_musb_exit(struct musb *musb)
 
 	phy_off();
 
+<<<<<<< HEAD
 	otg_put_transceiver(musb->xceiv);
+=======
+	usb_put_transceiver(musb->xceiv);
+>>>>>>> cm-10.0
 	usb_nop_xceiv_unregister();
 
 	return 0;
@@ -519,7 +557,11 @@ static const struct musb_platform_ops davinci_ops = {
 
 static u64 davinci_dmamask = DMA_BIT_MASK(32);
 
+<<<<<<< HEAD
 static int __init davinci_probe(struct platform_device *pdev)
+=======
+static int __devinit davinci_probe(struct platform_device *pdev)
+>>>>>>> cm-10.0
 {
 	struct musb_hdrc_platform_data	*pdata = pdev->dev.platform_data;
 	struct platform_device		*musb;
@@ -602,7 +644,11 @@ err0:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int __exit davinci_remove(struct platform_device *pdev)
+=======
+static int __devexit davinci_remove(struct platform_device *pdev)
+>>>>>>> cm-10.0
 {
 	struct davinci_glue		*glue = platform_get_drvdata(pdev);
 
@@ -616,7 +662,12 @@ static int __exit davinci_remove(struct platform_device *pdev)
 }
 
 static struct platform_driver davinci_driver = {
+<<<<<<< HEAD
 	.remove		= __exit_p(davinci_remove),
+=======
+	.probe		= davinci_probe,
+	.remove		= __devexit_p(davinci_remove),
+>>>>>>> cm-10.0
 	.driver		= {
 		.name	= "musb-davinci",
 	},
@@ -628,9 +679,15 @@ MODULE_LICENSE("GPL v2");
 
 static int __init davinci_init(void)
 {
+<<<<<<< HEAD
 	return platform_driver_probe(&davinci_driver, davinci_probe);
 }
 subsys_initcall(davinci_init);
+=======
+	return platform_driver_register(&davinci_driver);
+}
+module_init(davinci_init);
+>>>>>>> cm-10.0
 
 static void __exit davinci_exit(void)
 {

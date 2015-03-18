@@ -35,6 +35,10 @@
 #include <linux/pci.h>
 #undef PCI_DEBUG
 #include <linux/proc_fs.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include <asm/processor.h>
 #include <asm/pdc.h>

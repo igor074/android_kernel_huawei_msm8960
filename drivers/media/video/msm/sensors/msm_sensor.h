@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,10 +17,18 @@
 #ifndef MSM_SENSOR_H
 #define MSM_SENSOR_H
 
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/debugfs.h>
 #include <linux/delay.h>
 #include <linux/i2c.h>
 #include <linux/miscdevice.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/types.h>
@@ -83,6 +95,10 @@ struct msm_sensor_reg_t {
 	struct msm_camera_i2c_conf_array *init_settings;
 	uint8_t init_size;
 	struct msm_camera_i2c_conf_array *mode_settings;
+<<<<<<< HEAD
+=======
+	struct msm_camera_i2c_conf_array *no_effect_settings;
+>>>>>>> cm-10.0
 	struct msm_sensor_output_info_t *output_settings;
 	uint8_t num_conf;
 };
@@ -135,12 +151,22 @@ struct msm_sensor_fn_t {
 	int32_t (*sensor_match_id)(struct msm_sensor_ctrl_t *s_ctrl);
 	int (*sensor_adjust_frame_lines)
 		(struct msm_sensor_ctrl_t *s_ctrl, uint16_t res);
+<<<<<<< HEAD
     int (*sensor_set_effect_yuv) (struct msm_sensor_ctrl_t * s_ctrl,char effect);
     int (*sensor_set_whitebalance_yuv) (struct msm_sensor_ctrl_t *s_ctrl,char wb);
 
 	int (*sensor_otp_reading)(struct sensor_cfg_data *cfg);
 
 
+=======
+	int32_t (*sensor_get_csi_params)(struct msm_sensor_ctrl_t *,
+		struct csi_lane_params_t *);
+};
+
+struct msm_sensor_csi_info {
+	uint32_t csid_version;
+	uint8_t is_csic;
+>>>>>>> cm-10.0
 };
 
 struct msm_sensor_ctrl_t {
@@ -150,14 +176,22 @@ struct msm_sensor_ctrl_t {
 	struct msm_camera_i2c_client *sensor_i2c_client;
 	uint16_t sensor_i2c_addr;
 
+<<<<<<< HEAD
 	struct msm_camera_eeprom_client *sensor_eeprom_client;
 
+=======
+>>>>>>> cm-10.0
 	struct msm_sensor_output_reg_addr_t *sensor_output_reg_addr;
 	struct msm_sensor_id_info_t *sensor_id_info;
 	struct msm_sensor_exp_gain_info_t *sensor_exp_gain_info;
 	struct msm_sensor_reg_t *msm_sensor_reg;
 	struct msm_sensor_v4l2_ctrl_info_t *msm_sensor_v4l2_ctrl_info;
 	uint16_t num_v4l2_ctrl;
+<<<<<<< HEAD
+=======
+	uint32_t csid_version;
+	uint8_t is_csic;
+>>>>>>> cm-10.0
 
 	uint16_t curr_line_length_pclk;
 	uint16_t curr_frame_length_lines;
@@ -206,9 +240,12 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl,
 int32_t msm_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl);
 int32_t msm_sensor_power_down(struct msm_sensor_ctrl_t *s_ctrl);
 
+<<<<<<< HEAD
 int32_t msm_sensor_expand_power_up(struct msm_sensor_ctrl_t *s_ctrl);
 int32_t msm_sensor_expand_power_down(struct msm_sensor_ctrl_t *s_ctrl);
 
+=======
+>>>>>>> cm-10.0
 int32_t msm_sensor_match_id(struct msm_sensor_ctrl_t *s_ctrl);
 int msm_sensor_i2c_probe(struct i2c_client *client,
 	const struct i2c_device_id *id);
@@ -250,9 +287,16 @@ int msm_sensor_enable_debugfs(struct msm_sensor_ctrl_t *s_ctrl);
 long msm_sensor_subdev_ioctl(struct v4l2_subdev *sd,
 			unsigned int cmd, void *arg);
 
+<<<<<<< HEAD
 struct msm_sensor_ctrl_t *get_sctrl(struct v4l2_subdev *sd);
 int32_t msm_sensor_setting_delay(struct msm_sensor_ctrl_t *s_ctrl,
 int update_type, int res);
+=======
+int32_t msm_sensor_get_csi_params(struct msm_sensor_ctrl_t *s_ctrl,
+		struct csi_lane_params_t *sensor_output_info);
+
+struct msm_sensor_ctrl_t *get_sctrl(struct v4l2_subdev *sd);
+>>>>>>> cm-10.0
 
 #define VIDIOC_MSM_SENSOR_CFG \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 10, void __user *)
@@ -260,4 +304,10 @@ int update_type, int res);
 #define VIDIOC_MSM_SENSOR_RELEASE \
 	_IO('V', BASE_VIDIOC_PRIVATE + 11)
 
+<<<<<<< HEAD
+=======
+#define VIDIOC_MSM_SENSOR_CSID_INFO\
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 12, struct msm_sensor_csi_info *)
+
+>>>>>>> cm-10.0
 #endif

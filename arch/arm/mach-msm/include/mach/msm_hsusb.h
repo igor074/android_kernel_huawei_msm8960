@@ -1,7 +1,11 @@
 /* linux/include/mach/hsusb.h
  *
  * Copyright (C) 2008 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Author: Brian Swetland <swetland@google.com>
  *
  * This software is licensed under the terms of the GNU General Public
@@ -19,7 +23,13 @@
 #define __ASM_ARCH_MSM_HSUSB_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/pm_qos_params.h>
+=======
+#include <linux/pm_qos.h>
+#include <linux/usb/ch9.h>
+#include <linux/usb/gadget.h>
+>>>>>>> cm-10.0
 
 #define PHY_TYPE_MASK		0x0F
 #define PHY_TYPE_MODE		0xF0
@@ -60,6 +70,24 @@
 #define phy_id_state_c(ints)	(phy_id_state((ints)) == PHY_ID_C)
 #endif
 
+<<<<<<< HEAD
+=======
+/*
+ * The following are bit fields describing the usb_request.udc_priv word.
+ * These bit fields are set by function drivers that wish to queue
+ * usb_requests with sps/bam parameters.
+ */
+#define MSM_PIPE_ID_MASK		(0x1F)
+#define MSM_TX_PIPE_ID_OFS		(16)
+#define MSM_SPS_MODE			BIT(5)
+#define MSM_IS_FINITE_TRANSFER		BIT(6)
+#define MSM_PRODUCER			BIT(7)
+#define MSM_DISABLE_WB			BIT(8)
+#define MSM_ETD_IOC			BIT(9)
+#define MSM_INTERNAL_MEM		BIT(10)
+#define MSM_VENDOR_ID			BIT(16)
+
+>>>>>>> cm-10.0
 /* used to detect the OTG Mode */
 enum otg_mode {
 	OTG_ID = 0,   		/* ID pin detection */
@@ -173,7 +201,11 @@ struct msm_otg_platform_data {
 	int (*config_vddcx)(int high);
 	int (*init_vddcx)(int init);
 
+<<<<<<< HEAD
 	struct pm_qos_request_list pm_qos_req_dma;
+=======
+	struct pm_qos_request pm_qos_req_dma;
+>>>>>>> cm-10.0
 };
 
 struct msm_usb_host_platform_data {
@@ -185,4 +217,11 @@ struct msm_usb_host_platform_data {
 	struct clk *ebi1_clk;
 };
 
+<<<<<<< HEAD
+=======
+int msm_ep_config(struct usb_ep *ep);
+int msm_ep_unconfig(struct usb_ep *ep);
+int msm_data_fifo_config(struct usb_ep *ep, u32 addr, u32 size);
+
+>>>>>>> cm-10.0
 #endif

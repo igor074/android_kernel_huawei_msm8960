@@ -12,6 +12,10 @@
 #include "bitops.h"
                 .text
 
+<<<<<<< HEAD
 ENTRY(_test_and_set_bit)
 	testop	orreq, streq
 ENDPROC(_test_and_set_bit)
+=======
+testop	_test_and_set_bit, orreq, streq
+>>>>>>> cm-10.0

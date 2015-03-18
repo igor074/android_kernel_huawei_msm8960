@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+#include <linux/prefetch.h>
+
+>>>>>>> cm-10.0
 /**
  * iommu_fill_pdir - Insert coalesced scatter/gather chunks into the I/O Pdir.
  * @ioc: The I/O Controller.

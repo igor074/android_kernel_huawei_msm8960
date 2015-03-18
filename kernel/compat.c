@@ -21,6 +21,10 @@
 #include <linux/unistd.h>
 #include <linux/security.h>
 #include <linux/timex.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/migrate.h>
 #include <linux/posix-timers.h>
 #include <linux/times.h>
@@ -30,11 +34,18 @@
 #include <asm/uaccess.h>
 
 /*
+<<<<<<< HEAD
  * Note that the native side is already converted to a timespec, because
  * that's what we want anyway.
  */
 static int compat_get_timeval(struct timespec *o,
 		struct compat_timeval __user *i)
+=======
+ * Get/set struct timeval with struct timespec on the native side
+ */
+static int compat_get_timeval_convert(struct timespec *o,
+				      struct compat_timeval __user *i)
+>>>>>>> cm-10.0
 {
 	long usec;
 
@@ -45,8 +56,13 @@ static int compat_get_timeval(struct timespec *o,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int compat_put_timeval(struct compat_timeval __user *o,
 		struct timeval *i)
+=======
+static int compat_put_timeval_convert(struct compat_timeval __user *o,
+				      struct timeval *i)
+>>>>>>> cm-10.0
 {
 	return (put_user(i->tv_sec, &o->tv_sec) ||
 		put_user(i->tv_usec, &o->tv_usec)) ? -EFAULT : 0;
@@ -116,7 +132,11 @@ asmlinkage long compat_sys_gettimeofday(struct compat_timeval __user *tv,
 	if (tv) {
 		struct timeval ktv;
 		do_gettimeofday(&ktv);
+<<<<<<< HEAD
 		if (compat_put_timeval(tv, &ktv))
+=======
+		if (compat_put_timeval_convert(tv, &ktv))
+>>>>>>> cm-10.0
 			return -EFAULT;
 	}
 	if (tz) {
@@ -134,7 +154,11 @@ asmlinkage long compat_sys_settimeofday(struct compat_timeval __user *tv,
 	struct timezone ktz;
 
 	if (tv) {
+<<<<<<< HEAD
 		if (compat_get_timeval(&kts, tv))
+=======
+		if (compat_get_timeval_convert(&kts, tv))
+>>>>>>> cm-10.0
 			return -EFAULT;
 	}
 	if (tz) {
@@ -145,12 +169,35 @@ asmlinkage long compat_sys_settimeofday(struct compat_timeval __user *tv,
 	return do_sys_settimeofday(tv ? &kts : NULL, tz ? &ktz : NULL);
 }
 
+<<<<<<< HEAD
+=======
+int get_compat_timeval(struct timeval *tv, const struct compat_timeval __user *ctv)
+{
+	return (!access_ok(VERIFY_READ, ctv, sizeof(*ctv)) ||
+			__get_user(tv->tv_sec, &ctv->tv_sec) ||
+			__get_user(tv->tv_usec, &ctv->tv_usec)) ? -EFAULT : 0;
+}
+EXPORT_SYMBOL_GPL(get_compat_timeval);
+
+int put_compat_timeval(const struct timeval *tv, struct compat_timeval __user *ctv)
+{
+	return (!access_ok(VERIFY_WRITE, ctv, sizeof(*ctv)) ||
+			__put_user(tv->tv_sec, &ctv->tv_sec) ||
+			__put_user(tv->tv_usec, &ctv->tv_usec)) ? -EFAULT : 0;
+}
+EXPORT_SYMBOL_GPL(put_compat_timeval);
+
+>>>>>>> cm-10.0
 int get_compat_timespec(struct timespec *ts, const struct compat_timespec __user *cts)
 {
 	return (!access_ok(VERIFY_READ, cts, sizeof(*cts)) ||
 			__get_user(ts->tv_sec, &cts->tv_sec) ||
 			__get_user(ts->tv_nsec, &cts->tv_nsec)) ? -EFAULT : 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(get_compat_timespec);
+>>>>>>> cm-10.0
 
 int put_compat_timespec(const struct timespec *ts, struct compat_timespec __user *cts)
 {
@@ -158,6 +205,46 @@ int put_compat_timespec(const struct timespec *ts, struct compat_timespec __user
 			__put_user(ts->tv_sec, &cts->tv_sec) ||
 			__put_user(ts->tv_nsec, &cts->tv_nsec)) ? -EFAULT : 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(put_compat_timespec);
+
+int compat_get_timeval(struct timeval *tv, const void __user *utv)
+{
+	if (COMPAT_USE_64BIT_TIME)
+		return copy_from_user(tv, utv, sizeof *tv) ? -EFAULT : 0;
+	else
+		return get_compat_timeval(tv, utv);
+}
+EXPORT_SYMBOL_GPL(compat_get_timeval);
+
+int compat_put_timeval(const struct timeval *tv, void __user *utv)
+{
+	if (COMPAT_USE_64BIT_TIME)
+		return copy_to_user(utv, tv, sizeof *tv) ? -EFAULT : 0;
+	else
+		return put_compat_timeval(tv, utv);
+}
+EXPORT_SYMBOL_GPL(compat_put_timeval);
+
+int compat_get_timespec(struct timespec *ts, const void __user *uts)
+{
+	if (COMPAT_USE_64BIT_TIME)
+		return copy_from_user(ts, uts, sizeof *ts) ? -EFAULT : 0;
+	else
+		return get_compat_timespec(ts, uts);
+}
+EXPORT_SYMBOL_GPL(compat_get_timespec);
+
+int compat_put_timespec(const struct timespec *ts, void __user *uts)
+{
+	if (COMPAT_USE_64BIT_TIME)
+		return copy_to_user(uts, ts, sizeof *ts) ? -EFAULT : 0;
+	else
+		return put_compat_timespec(ts, uts);
+}
+EXPORT_SYMBOL_GPL(compat_put_timespec);
+>>>>>>> cm-10.0
 
 static long compat_nanosleep_restart(struct restart_block *restart)
 {
@@ -318,6 +405,7 @@ asmlinkage long compat_sys_sigpending(compat_old_sigset_t __user *set)
 
 #ifdef __ARCH_WANT_SYS_SIGPROCMASK
 
+<<<<<<< HEAD
 asmlinkage long compat_sys_sigprocmask(int how, compat_old_sigset_t __user *set,
 		compat_old_sigset_t __user *oset)
 {
@@ -337,6 +425,56 @@ asmlinkage long compat_sys_sigprocmask(int how, compat_old_sigset_t __user *set,
 		if (oset)
 			ret = put_user(s, oset);
 	return ret;
+=======
+/*
+ * sys_sigprocmask SIG_SETMASK sets the first (compat) word of the
+ * blocked set of signals to the supplied signal set
+ */
+static inline void compat_sig_setmask(sigset_t *blocked, compat_sigset_word set)
+{
+	memcpy(blocked->sig, &set, sizeof(set));
+}
+
+asmlinkage long compat_sys_sigprocmask(int how,
+				       compat_old_sigset_t __user *nset,
+				       compat_old_sigset_t __user *oset)
+{
+	old_sigset_t old_set, new_set;
+	sigset_t new_blocked;
+
+	old_set = current->blocked.sig[0];
+
+	if (nset) {
+		if (get_user(new_set, nset))
+			return -EFAULT;
+		new_set &= ~(sigmask(SIGKILL) | sigmask(SIGSTOP));
+
+		new_blocked = current->blocked;
+
+		switch (how) {
+		case SIG_BLOCK:
+			sigaddsetmask(&new_blocked, new_set);
+			break;
+		case SIG_UNBLOCK:
+			sigdelsetmask(&new_blocked, new_set);
+			break;
+		case SIG_SETMASK:
+			compat_sig_setmask(&new_blocked, new_set);
+			break;
+		default:
+			return -EINVAL;
+		}
+
+		set_current_blocked(&new_blocked);
+	}
+
+	if (oset) {
+		if (put_user(old_set, oset))
+			return -EFAULT;
+	}
+
+	return 0;
+>>>>>>> cm-10.0
 }
 
 #endif
@@ -890,6 +1028,10 @@ sigset_from_compat (sigset_t *set, compat_sigset_t *compat)
 	case 1: set->sig[0] = compat->sig[0] | (((long)compat->sig[1]) << 32 );
 	}
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(sigset_from_compat);
+>>>>>>> cm-10.0
 
 asmlinkage long
 compat_sys_rt_sigtimedwait (compat_sigset_t __user *uthese,
@@ -991,11 +1133,16 @@ asmlinkage long compat_sys_rt_sigsuspend(compat_sigset_t __user *unewset, compat
 	sigset_from_compat(&newset, &newset32);
 	sigdelsetmask(&newset, sigmask(SIGKILL)|sigmask(SIGSTOP));
 
+<<<<<<< HEAD
 	spin_lock_irq(&current->sighand->siglock);
 	current->saved_sigmask = current->blocked;
 	current->blocked = newset;
 	recalc_sigpending();
 	spin_unlock_irq(&current->sighand->siglock);
+=======
+	current->saved_sigmask = current->blocked;
+	set_current_blocked(&newset);
+>>>>>>> cm-10.0
 
 	current->state = TASK_INTERRUPTIBLE;
 	schedule();

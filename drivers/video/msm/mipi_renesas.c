@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1131,6 +1135,7 @@ static int mipi_renesas_lcd_on(struct platform_device *pdev)
 	if (mfd->key != MFD_KEY)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mipi_dsi_cmds_tx(mfd, &renesas_tx_buf, renesas_sleep_off_cmds,
 			ARRAY_SIZE(renesas_sleep_off_cmds));
 
@@ -1140,14 +1145,32 @@ static int mipi_renesas_lcd_on(struct platform_device *pdev)
 
 	if (cpu_is_msm7x25a() || cpu_is_msm7x25aa() || cpu_is_msm7x25ab()) {
 		mipi_dsi_cmds_tx(mfd, &renesas_tx_buf, renesas_hvga_on_cmds,
+=======
+	mipi_dsi_cmds_tx(&renesas_tx_buf, renesas_sleep_off_cmds,
+			ARRAY_SIZE(renesas_sleep_off_cmds));
+
+	mipi_set_tx_power_mode(1);
+	mipi_dsi_cmds_tx(&renesas_tx_buf, renesas_display_on_cmds,
+			ARRAY_SIZE(renesas_display_on_cmds));
+
+	if (cpu_is_msm7x25a() || cpu_is_msm7x25aa() || cpu_is_msm7x25ab()) {
+		mipi_dsi_cmds_tx(&renesas_tx_buf, renesas_hvga_on_cmds,
+>>>>>>> cm-10.0
 			ARRAY_SIZE(renesas_hvga_on_cmds));
 	}
 
 	if (mipi->mode == DSI_VIDEO_MODE)
+<<<<<<< HEAD
 		mipi_dsi_cmds_tx(mfd, &renesas_tx_buf, renesas_video_on_cmds,
 			ARRAY_SIZE(renesas_video_on_cmds));
 	else
 		mipi_dsi_cmds_tx(mfd, &renesas_tx_buf, renesas_cmd_on_cmds,
+=======
+		mipi_dsi_cmds_tx(&renesas_tx_buf, renesas_video_on_cmds,
+			ARRAY_SIZE(renesas_video_on_cmds));
+	else
+		mipi_dsi_cmds_tx(&renesas_tx_buf, renesas_cmd_on_cmds,
+>>>>>>> cm-10.0
 			ARRAY_SIZE(renesas_cmd_on_cmds));
 	mipi_set_tx_power_mode(0);
 
@@ -1165,7 +1188,11 @@ static int mipi_renesas_lcd_off(struct platform_device *pdev)
 	if (mfd->key != MFD_KEY)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mipi_dsi_cmds_tx(mfd, &renesas_tx_buf, renesas_display_off_cmds,
+=======
+	mipi_dsi_cmds_tx(&renesas_tx_buf, renesas_display_off_cmds,
+>>>>>>> cm-10.0
 			ARRAY_SIZE(renesas_display_off_cmds));
 
 	return 0;

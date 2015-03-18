@@ -92,6 +92,10 @@ static struct apic apic_default = {
 	.name				= "default",
 	.probe				= probe_default,
 	.acpi_madt_oem_check		= NULL,
+<<<<<<< HEAD
+=======
+	.apic_id_valid			= default_apic_id_valid,
+>>>>>>> cm-10.0
 	.apic_id_registered		= default_apic_id_registered,
 
 	.irq_delivery_mode		= dest_LowestPrio,
@@ -200,6 +204,7 @@ void __init default_setup_apic_routing(void)
 	 * - we find more than 8 CPUs in acpi LAPIC listing with xAPIC support
 	 */
 
+<<<<<<< HEAD
 	if (!cmdline_apic && apic == &apic_default) {
 		struct apic *bigsmp = generic_bigsmp_probe();
 		if (bigsmp) {
@@ -208,6 +213,10 @@ void __init default_setup_apic_routing(void)
 			       apic->name);
 		}
 	}
+=======
+	if (!cmdline_apic && apic == &apic_default)
+		generic_bigsmp_probe();
+>>>>>>> cm-10.0
 #endif
 
 	if (apic->setup_apic_routing)

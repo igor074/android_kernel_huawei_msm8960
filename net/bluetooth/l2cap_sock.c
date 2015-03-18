@@ -1,6 +1,10 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
+<<<<<<< HEAD
    Copyright (c) 2000-2001, 2011-2012 Code Aurora Forum.  All rights reserved.
+=======
+   Copyright (c) 2000-2001, 2011-2012 The Linux Foundation.  All rights reserved.
+>>>>>>> cm-10.0
    Copyright (C) 2009-2010 Gustavo F. Padovan <gustavo@padovan.org>
    Copyright (C) 2010 Google Inc.
 
@@ -26,6 +30,12 @@
 
 /* Bluetooth L2CAP sockets. */
 
+<<<<<<< HEAD
+=======
+#include <linux/interrupt.h>
+#include <linux/module.h>
+
+>>>>>>> cm-10.0
 #include <net/bluetooth/bluetooth.h>
 #include <net/bluetooth/hci_core.h>
 #include <net/bluetooth/l2cap.h>
@@ -1171,7 +1181,11 @@ static int l2cap_sock_shutdown(struct socket *sock, int how)
 static int l2cap_sock_release(struct socket *sock)
 {
 	struct sock *sk = sock->sk;
+<<<<<<< HEAD
 	struct sock *srv_sk = NULL;
+=======
+	struct sock *sk2 = NULL;
+>>>>>>> cm-10.0
 	int err;
 
 	BT_DBG("sock %p, sk %p", sock, sk);
@@ -1179,6 +1193,7 @@ static int l2cap_sock_release(struct socket *sock)
 	if (!sk)
 		return 0;
 
+<<<<<<< HEAD
 	/* If this is an ATT Client socket, find the matching Server */
 	if (l2cap_pi(sk)->scid == L2CAP_CID_LE_DATA && !l2cap_pi(sk)->incoming)
 		srv_sk = l2cap_find_sock_by_fixed_cid_and_dir(L2CAP_CID_LE_DATA,
@@ -1188,6 +1203,18 @@ static int l2cap_sock_release(struct socket *sock)
 	BT_DBG("client:%p server:%p", sk, srv_sk);
 	if (srv_sk)
 		l2cap_sock_set_timer(srv_sk, 1);
+=======
+	/* If this is an ATT socket, find it's matching server/client */
+	if (l2cap_pi(sk)->scid == L2CAP_CID_LE_DATA)
+		sk2 = l2cap_find_sock_by_fixed_cid_and_dir(L2CAP_CID_LE_DATA,
+					&bt_sk(sk)->src, &bt_sk(sk)->dst,
+					l2cap_pi(sk)->incoming ? 0 : 1);
+
+	/* If matching socket found, request tear down */
+	BT_DBG("sock:%p companion:%p", sk, sk2);
+	if (sk2)
+		l2cap_sock_set_timer(sk2, 1);
+>>>>>>> cm-10.0
 
 	err = l2cap_sock_shutdown(sock, 2);
 
@@ -1267,7 +1294,11 @@ void l2cap_sock_init(struct sock *sk, struct sock *parent)
 	pi->scid = 0;
 	pi->dcid = 0;
 	pi->tx_win_max = L2CAP_TX_WIN_MAX_ENHANCED;
+<<<<<<< HEAD
 	pi->ack_win = pi->tx_win;			/*Add for fix  wcn3660 bt speed issue*/
+=======
+	pi->ack_win = pi->tx_win;
+>>>>>>> cm-10.0
 	pi->extended_control = 0;
 
 	pi->local_conf.fcs = pi->fcs;

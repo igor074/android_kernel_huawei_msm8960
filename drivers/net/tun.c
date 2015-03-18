@@ -69,7 +69,10 @@
 #include <net/rtnetlink.h>
 #include <net/sock.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/uaccess.h>
 
 /* Uncomment to enable debugging */
@@ -123,7 +126,11 @@ struct tun_struct {
 	gid_t			group;
 
 	struct net_device	*dev;
+<<<<<<< HEAD
 	u32			set_features;
+=======
+	netdev_features_t	set_features;
+>>>>>>> cm-10.0
 #define TUN_USER_FEATURES (NETIF_F_HW_CSUM|NETIF_F_TSO_ECN|NETIF_F_TSO| \
 			  NETIF_F_TSO6|NETIF_F_UFO)
 	struct fasync_struct	*fasync;
@@ -359,7 +366,11 @@ static void tun_free_netdev(struct net_device *dev)
 {
 	struct tun_struct *tun = netdev_priv(dev);
 
+<<<<<<< HEAD
 	sock_put(tun->socket.sk);
+=======
+	sk_release_kernel(tun->socket.sk);
+>>>>>>> cm-10.0
 }
 
 /* Net device open. */
@@ -454,7 +465,12 @@ tun_net_change_mtu(struct net_device *dev, int new_mtu)
 	return 0;
 }
 
+<<<<<<< HEAD
 static u32 tun_net_fix_features(struct net_device *dev, u32 features)
+=======
+static netdev_features_t tun_net_fix_features(struct net_device *dev,
+	netdev_features_t features)
+>>>>>>> cm-10.0
 {
 	struct tun_struct *tun = netdev_priv(dev);
 
@@ -496,7 +512,11 @@ static const struct net_device_ops tap_netdev_ops = {
 	.ndo_start_xmit		= tun_net_xmit,
 	.ndo_change_mtu		= tun_net_change_mtu,
 	.ndo_fix_features	= tun_net_fix_features,
+<<<<<<< HEAD
 	.ndo_set_multicast_list	= tun_net_mclist,
+=======
+	.ndo_set_rx_mode	= tun_net_mclist,
+>>>>>>> cm-10.0
 	.ndo_set_mac_address	= eth_mac_addr,
 	.ndo_validate_addr	= eth_validate_addr,
 #ifdef CONFIG_NET_POLL_CONTROLLER
@@ -530,7 +550,11 @@ static void tun_net_init(struct net_device *dev)
 		ether_setup(dev);
 		dev->priv_flags &= ~IFF_TX_SKB_SHARING;
 
+<<<<<<< HEAD
 		random_ether_addr(dev->dev_addr);
+=======
+		eth_hw_addr_random(dev);
+>>>>>>> cm-10.0
 
 		dev->tx_queue_len = TUN_READQ_SIZE;  /* We prefer our own queue length */
 		break;
@@ -573,9 +597,15 @@ static unsigned int tun_chr_poll(struct file *file, poll_table * wait)
 
 /* prepad is the amount to reserve at front.  len is length after that.
  * linear is a hint as to how much to copy (usually headers). */
+<<<<<<< HEAD
 static inline struct sk_buff *tun_alloc_skb(struct tun_struct *tun,
 					    size_t prepad, size_t len,
 					    size_t linear, int noblock)
+=======
+static struct sk_buff *tun_alloc_skb(struct tun_struct *tun,
+				     size_t prepad, size_t len,
+				     size_t linear, int noblock)
+>>>>>>> cm-10.0
 {
 	struct sock *sk = tun->socket.sk;
 	struct sk_buff *skb;
@@ -601,6 +631,7 @@ static inline struct sk_buff *tun_alloc_skb(struct tun_struct *tun,
 }
 
 /* Get packet from user space buffer */
+<<<<<<< HEAD
 static __inline__ ssize_t tun_get_user(struct tun_struct *tun,
 				       const struct iovec *iv, size_t count,
 				       int noblock)
@@ -608,6 +639,15 @@ static __inline__ ssize_t tun_get_user(struct tun_struct *tun,
 	struct tun_pi pi = { 0, cpu_to_be16(ETH_P_IP) };
 	struct sk_buff *skb;
 	size_t len = count, align = 0;
+=======
+static ssize_t tun_get_user(struct tun_struct *tun,
+			    const struct iovec *iv, size_t count,
+			    int noblock)
+{
+	struct tun_pi pi = { 0, cpu_to_be16(ETH_P_IP) };
+	struct sk_buff *skb;
+	size_t len = count, align = NET_SKB_PAD;
+>>>>>>> cm-10.0
 	struct virtio_net_hdr gso = { 0 };
 	int offset = 0;
 
@@ -637,7 +677,11 @@ static __inline__ ssize_t tun_get_user(struct tun_struct *tun,
 	}
 
 	if ((tun->flags & TUN_TYPE_MASK) == TUN_TAP_DEV) {
+<<<<<<< HEAD
 		align = NET_IP_ALIGN;
+=======
+		align += NET_IP_ALIGN;
+>>>>>>> cm-10.0
 		if (unlikely(len < ETH_HLEN ||
 			     (gso.hdr_len && gso.hdr_len < ETH_HLEN)))
 			return -EINVAL;
@@ -689,7 +733,11 @@ static __inline__ ssize_t tun_get_user(struct tun_struct *tun,
 	case TUN_TAP_DEV:
 		skb->protocol = eth_type_trans(skb, tun->dev);
 		break;
+<<<<<<< HEAD
 	};
+=======
+	}
+>>>>>>> cm-10.0
 
 	if (gso.gso_type != VIRTIO_NET_HDR_GSO_NONE) {
 		pr_debug("GSO!\n");
@@ -752,9 +800,15 @@ static ssize_t tun_chr_aio_write(struct kiocb *iocb, const struct iovec *iv,
 }
 
 /* Put packet to the user space buffer */
+<<<<<<< HEAD
 static __inline__ ssize_t tun_put_user(struct tun_struct *tun,
 				       struct sk_buff *skb,
 				       const struct iovec *iv, int len)
+=======
+static ssize_t tun_put_user(struct tun_struct *tun,
+			    struct sk_buff *skb,
+			    const struct iovec *iv, int len)
+>>>>>>> cm-10.0
 {
 	struct tun_pi pi = { 0, skb->protocol };
 	ssize_t total = 0;
@@ -811,6 +865,11 @@ static __inline__ ssize_t tun_put_user(struct tun_struct *tun,
 			gso.flags = VIRTIO_NET_HDR_F_NEEDS_CSUM;
 			gso.csum_start = skb_checksum_start_offset(skb);
 			gso.csum_offset = skb->csum_offset;
+<<<<<<< HEAD
+=======
+		} else if (skb->ip_summed == CHECKSUM_UNNECESSARY) {
+			gso.flags = VIRTIO_NET_HDR_F_DATA_VALID;
+>>>>>>> cm-10.0
 		} /* else everything is zero */
 
 		if (unlikely(memcpy_toiovecend(iv, (void *)&gso, total,
@@ -840,7 +899,12 @@ static ssize_t tun_do_read(struct tun_struct *tun,
 
 	tun_debug(KERN_INFO, tun, "tun_chr_read\n");
 
+<<<<<<< HEAD
 	add_wait_queue(&tun->wq.wait, &wait);
+=======
+	if (unlikely(!noblock))
+		add_wait_queue(&tun->wq.wait, &wait);
+>>>>>>> cm-10.0
 	while (len) {
 		current->state = TASK_INTERRUPTIBLE;
 
@@ -871,7 +935,12 @@ static ssize_t tun_do_read(struct tun_struct *tun,
 	}
 
 	current->state = TASK_RUNNING;
+<<<<<<< HEAD
 	remove_wait_queue(&tun->wq.wait, &wait);
+=======
+	if (unlikely(!noblock))
+		remove_wait_queue(&tun->wq.wait, &wait);
+>>>>>>> cm-10.0
 
 	return ret;
 }
@@ -975,10 +1044,24 @@ static int tun_recvmsg(struct kiocb *iocb, struct socket *sock,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int tun_release(struct socket *sock)
+{
+	if (sock->sk)
+		sock_put(sock->sk);
+	return 0;
+}
+
+>>>>>>> cm-10.0
 /* Ops structure to mimic raw sockets with tun */
 static const struct proto_ops tun_socket_ops = {
 	.sendmsg = tun_sendmsg,
 	.recvmsg = tun_recvmsg,
+<<<<<<< HEAD
+=======
+	.release = tun_release,
+>>>>>>> cm-10.0
 };
 
 static struct proto tun_proto = {
@@ -1105,10 +1188,18 @@ static int tun_set_iff(struct net *net, struct file *file, struct ifreq *ifr)
 		tun->vnet_hdr_sz = sizeof(struct virtio_net_hdr);
 
 		err = -ENOMEM;
+<<<<<<< HEAD
 		sk = sk_alloc(net, AF_UNSPEC, GFP_KERNEL, &tun_proto);
 		if (!sk)
 			goto err_free_dev;
 
+=======
+		sk = sk_alloc(&init_net, AF_UNSPEC, GFP_KERNEL, &tun_proto);
+		if (!sk)
+			goto err_free_dev;
+
+		sk_change_net(sk, net);
+>>>>>>> cm-10.0
 		tun->socket.wq = &tun->wq;
 		init_waitqueue_head(&tun->wq.wait);
 		tun->socket.ops = &tun_socket_ops;
@@ -1169,7 +1260,11 @@ static int tun_set_iff(struct net *net, struct file *file, struct ifreq *ifr)
 	return 0;
 
  err_free_sk:
+<<<<<<< HEAD
 	sock_put(sk);
+=======
+	tun_free_netdev(dev);
+>>>>>>> cm-10.0
  err_free_dev:
 	free_netdev(dev);
  failed:
@@ -1192,7 +1287,11 @@ static int tun_get_iff(struct net *net, struct tun_struct *tun,
  * privs required. */
 static int set_offload(struct tun_struct *tun, unsigned long arg)
 {
+<<<<<<< HEAD
 	u32 features = 0;
+=======
+	netdev_features_t features = 0;
+>>>>>>> cm-10.0
 
 	if (arg & TUN_F_CSUM) {
 		features |= NETIF_F_HW_CSUM;
@@ -1591,6 +1690,7 @@ static void tun_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info
 {
 	struct tun_struct *tun = netdev_priv(dev);
 
+<<<<<<< HEAD
 	strcpy(info->driver, DRV_NAME);
 	strcpy(info->version, DRV_VERSION);
 	strcpy(info->fw_version, "N/A");
@@ -1601,6 +1701,17 @@ static void tun_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info
 		break;
 	case TUN_TAP_DEV:
 		strcpy(info->bus_info, "tap");
+=======
+	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
+	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
+
+	switch (tun->flags & TUN_TYPE_MASK) {
+	case TUN_TUN_DEV:
+		strlcpy(info->bus_info, "tun", sizeof(info->bus_info));
+		break;
+	case TUN_TAP_DEV:
+		strlcpy(info->bus_info, "tap", sizeof(info->bus_info));
+>>>>>>> cm-10.0
 		break;
 	}
 }

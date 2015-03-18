@@ -227,7 +227,10 @@ int tty_port_block_til_ready(struct tty_port *port,
 	int do_clocal = 0, retval;
 	unsigned long flags;
 	DEFINE_WAIT(wait);
+<<<<<<< HEAD
 	int cd;
+=======
+>>>>>>> cm-10.0
 
 	/* block if port is in the process of being closed */
 	if (tty_hung_up_p(filp) || port->flags & ASYNC_CLOSING) {
@@ -284,11 +287,22 @@ int tty_port_block_til_ready(struct tty_port *port,
 				retval = -ERESTARTSYS;
 			break;
 		}
+<<<<<<< HEAD
 		/* Probe the carrier. For devices with no carrier detect this
 		   will always return true */
 		cd = tty_port_carrier_raised(port);
 		if (!(port->flags & ASYNC_CLOSING) &&
 				(do_clocal || cd))
+=======
+		/*
+		 * Probe the carrier. For devices with no carrier detect
+		 * tty_port_carrier_raised will always return true.
+		 * Never ask drivers if CLOCAL is set, this causes troubles
+		 * on some hardware.
+		 */
+		if (!(port->flags & ASYNC_CLOSING) &&
+				(do_clocal || tty_port_carrier_raised(port)))
+>>>>>>> cm-10.0
 			break;
 		if (signal_pending(current)) {
 			retval = -ERESTARTSYS;
@@ -350,7 +364,11 @@ int tty_port_close_start(struct tty_port *port,
 		tty_driver_flush_buffer(tty);
 	if (test_bit(ASYNCB_INITIALIZED, &port->flags) &&
 			port->closing_wait != ASYNC_CLOSING_WAIT_NONE)
+<<<<<<< HEAD
 		tty_wait_until_sent(tty, port->closing_wait);
+=======
+		tty_wait_until_sent_from_close(tty, port->closing_wait);
+>>>>>>> cm-10.0
 	if (port->drain_delay) {
 		unsigned int bps = tty_get_baud_rate(tty);
 		long timeout;

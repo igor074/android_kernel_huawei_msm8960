@@ -1,6 +1,10 @@
 #ifndef _ASM_X86_AMD_NB_H
 #define _ASM_X86_AMD_NB_H
 
+<<<<<<< HEAD
+=======
+#include <linux/ioport.h>
+>>>>>>> cm-10.0
 #include <linux/pci.h>
 
 struct amd_nb_bus_dev_range {
@@ -13,15 +17,31 @@ extern const struct pci_device_id amd_nb_misc_ids[];
 extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
 
 extern bool early_is_amd_nb(u32 value);
+<<<<<<< HEAD
+=======
+extern struct resource *amd_get_mmconfig_range(struct resource *res);
+>>>>>>> cm-10.0
 extern int amd_cache_northbridges(void);
 extern void amd_flush_garts(void);
 extern int amd_numa_init(void);
 extern int amd_get_subcaches(int);
 extern int amd_set_subcaches(int, int);
 
+<<<<<<< HEAD
 struct amd_northbridge {
 	struct pci_dev *misc;
 	struct pci_dev *link;
+=======
+struct amd_l3_cache {
+	unsigned indices;
+	u8	 subcaches[4];
+};
+
+struct amd_northbridge {
+	struct pci_dev *misc;
+	struct pci_dev *link;
+	struct amd_l3_cache l3_cache;
+>>>>>>> cm-10.0
 };
 
 struct amd_northbridge_info {

@@ -14,7 +14,10 @@
  *
  */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/string.h>
@@ -107,7 +110,11 @@ static void scan_bbt(struct mtd_info *mtd, unsigned int *bbt)
 	int i;
 
 	for (i = 0; i < apanic_erase_blocks; i++) {
+<<<<<<< HEAD
 		if (mtd->block_isbad!=NULL && mtd->block_isbad(mtd, i*mtd->erasesize))
+=======
+		if (mtd->block_isbad(mtd, i*mtd->erasesize))
+>>>>>>> cm-10.0
 			set_bb(i, apanic_bbt);
 	}
 }
@@ -193,6 +200,7 @@ static int apanic_proc_read(char *buffer, char **start, off_t offset,
 		phy_offset(ctx->mtd, (page_no * ctx->mtd->writesize)),
 		ctx->mtd->writesize,
 		&len, ctx->bounce);
+<<<<<<< HEAD
     
 	//if (page_offset)//hanping
 	//	count -= page_offset;
@@ -202,6 +210,14 @@ static int apanic_proc_read(char *buffer, char **start, off_t offset,
 	memcpy(buffer, ctx->bounce + page_offset, count);
 
 	*(int *)start = count;
+=======
+
+	if (page_offset)
+		count -= page_offset;
+	memcpy(buffer, ctx->bounce + page_offset, count);
+
+	*start = count;
+>>>>>>> cm-10.0
 
 	if ((offset + count) == file_length)
 		*peof = 1;
@@ -444,7 +460,10 @@ static int apanic_writeflashpage(struct mtd_info *mtd, loff_t to,
 
 extern int log_buf_copy(char *dest, int idx, int len);
 extern void log_buf_clear(void);
+<<<<<<< HEAD
 extern int log_buf_get_len(void);
+=======
+>>>>>>> cm-10.0
 
 /*
  * Writes the contents of the console to the specified offset in flash.
@@ -457,9 +476,13 @@ static int apanic_write_console(struct mtd_info *mtd, unsigned int off)
 	int idx = 0;
 	int rc, rc2;
 	unsigned int last_chunk = 0;
+<<<<<<< HEAD
 	int max_len = 0;
 
 	max_len = log_buf_get_len();
+=======
+
+>>>>>>> cm-10.0
 	while (!last_chunk) {
 		saved_oip = oops_in_progress;
 		oops_in_progress = 1;
@@ -487,12 +510,19 @@ static int apanic_write_console(struct mtd_info *mtd, unsigned int off)
 		else
 			idx += last_chunk;
 		off += rc2;
+<<<<<<< HEAD
 		if(idx >= max_len) break;
 	}
 	return idx;
 }
 extern int msm_watchdog_suspend(void);
 extern int msm_watchdog_resume(void);
+=======
+	}
+	return idx;
+}
+
+>>>>>>> cm-10.0
 static int apanic(struct notifier_block *this, unsigned long event,
 			void *ptr)
 {
@@ -504,6 +534,7 @@ static int apanic(struct notifier_block *this, unsigned long event,
 	int threads_len = 0;
 	int rc;
 
+<<<<<<< HEAD
 	/* Unfortunately, we don't support apanic in interrupt context */
 	if(in_interrupt())
 	{
@@ -517,6 +548,11 @@ static int apanic(struct notifier_block *this, unsigned long event,
 	msm_watchdog_suspend();
 	disable_irq(USB1_HS_IRQ);
 
+=======
+	if (in_panic)
+		return NOTIFY_DONE;
+	in_panic = 1;
+>>>>>>> cm-10.0
 #ifdef CONFIG_PREEMPT
 	/* Ensure that cond_resched() won't try to preempt anybody */
 	add_preempt_count(PREEMPT_ACTIVE);
@@ -581,12 +617,16 @@ static int apanic(struct notifier_block *this, unsigned long event,
 		goto out;
 	}
 
+<<<<<<< HEAD
        ctx->mtd->sync(ctx->mtd);
 	   
 	printk(KERN_EMERG "apanic: Panic dump sucessfully written to flash\n");
 	
 	enable_irq(USB1_HS_IRQ);
 	msm_watchdog_resume();
+=======
+	printk(KERN_EMERG "apanic: Panic dump sucessfully written to flash\n");
+>>>>>>> cm-10.0
 
  out:
 #ifdef CONFIG_PREEMPT

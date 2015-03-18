@@ -1,6 +1,10 @@
 obj-$(CONFIG_ATH5K)		+= ath5k/
 obj-$(CONFIG_ATH9K_HW)		+= ath9k/
 obj-$(CONFIG_CARL9170)		+= carl9170/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_ATH6KL)		+= ath6kl/
+>>>>>>> cm-10.0
 
 obj-$(CONFIG_ATH_COMMON)	+= ath.o
 
@@ -10,3 +14,7 @@ ath-objs :=	main.o \
 		key.o
 
 ath-$(CONFIG_ATH_DEBUG) += debug.o
+<<<<<<< HEAD
+=======
+ccflags-y += -D__CHECK_ENDIAN__
+>>>>>>> cm-10.0

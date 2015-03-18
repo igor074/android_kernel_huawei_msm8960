@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -100,6 +104,10 @@ enum rpm_vreg_id_8960 {
 	RPM_VREG_ID_PM8921_L10,
 	RPM_VREG_ID_PM8921_L11,
 	RPM_VREG_ID_PM8921_L12,
+<<<<<<< HEAD
+=======
+	RPM_VREG_ID_PM8921_L13,
+>>>>>>> cm-10.0
 	RPM_VREG_ID_PM8921_L14,
 	RPM_VREG_ID_PM8921_L15,
 	RPM_VREG_ID_PM8921_L16,
@@ -176,6 +184,10 @@ enum rpm_vreg_id_8960 {
 };
 
 /* Minimum high power mode loads in uA. */
+<<<<<<< HEAD
+=======
+#define RPM_VREG_8960_LDO_5_HPM_MIN_LOAD		0
+>>>>>>> cm-10.0
 #define RPM_VREG_8960_LDO_50_HPM_MIN_LOAD		5000
 #define RPM_VREG_8960_LDO_150_HPM_MIN_LOAD		10000
 #define RPM_VREG_8960_LDO_300_HPM_MIN_LOAD		10000

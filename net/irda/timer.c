@@ -24,7 +24,10 @@
  *
  ********************************************************************/
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/delay.h>
 
 #include <net/irda/timer.h>

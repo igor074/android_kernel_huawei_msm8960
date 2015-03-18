@@ -30,7 +30,10 @@
 #include <linux/blkdev.h>
 #include <linux/dma-mapping.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 
 #include <scsi/scsi.h>
@@ -2583,7 +2586,11 @@ static int atp870u_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	 * this than via the PCI device table
 	 */
 	if (ent->device == PCI_DEVICE_ID_ARTOP_AEC7610) {
+<<<<<<< HEAD
 		error = pci_read_config_byte(pdev, PCI_CLASS_REVISION, &atpdev->chip_ver);
+=======
+		atpdev->chip_ver = pdev->revision;
+>>>>>>> cm-10.0
 		if (atpdev->chip_ver < 2)
 			goto err_eio;
 	}
@@ -2602,7 +2609,11 @@ static int atp870u_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	base_io &= 0xfffffff8;
 
 	if ((ent->device == ATP880_DEVID1)||(ent->device == ATP880_DEVID2)) {
+<<<<<<< HEAD
 		error = pci_read_config_byte(pdev, PCI_CLASS_REVISION, &atpdev->chip_ver);
+=======
+		atpdev->chip_ver = pdev->revision;
+>>>>>>> cm-10.0
 		pci_write_config_byte(pdev, PCI_LATENCY_TIMER, 0x80);//JCC082803
 
 		host_id = inb(base_io + 0x39);

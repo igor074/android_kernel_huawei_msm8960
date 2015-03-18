@@ -10,7 +10,11 @@
  */
 #include <stdarg.h>
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/sched.h>
 #include <linux/kernel.h>
 #include <linux/mm.h>
@@ -30,11 +34,18 @@
 #include <linux/uaccess.h>
 #include <linux/random.h>
 #include <linux/hw_breakpoint.h>
+<<<<<<< HEAD
+=======
+#include <linux/cpuidle.h>
+>>>>>>> cm-10.0
 #include <linux/console.h>
 
 #include <asm/cacheflush.h>
 #include <asm/processor.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/thread_notify.h>
 #include <asm/stacktrace.h>
 #include <asm/mach/time.h>
@@ -56,12 +67,19 @@ static const char *isa_modes[] = {
   "ARM" , "Thumb" , "Jazelle", "ThumbEE"
 };
 
+<<<<<<< HEAD
 extern void setup_mm_for_reboot(char mode);
 
 static volatile int hlt_counter;
 
 #include <mach/system.h>
 
+=======
+extern void setup_mm_for_reboot(void);
+
+static volatile int hlt_counter;
+
+>>>>>>> cm-10.0
 #ifdef CONFIG_SMP
 void arch_trigger_all_cpu_backtrace(void)
 {
@@ -103,6 +121,12 @@ static int __init hlt_setup(char *__unused)
 __setup("nohlt", nohlt_setup);
 __setup("hlt", hlt_setup);
 
+<<<<<<< HEAD
+=======
+extern void call_with_stack(void (*fn)(void *), void *arg, void *sp);
+typedef void (*phys_reset_t)(unsigned long);
+
+>>>>>>> cm-10.0
 #ifdef CONFIG_ARM_FLUSH_CONSOLE_ON_RESTART
 void arm_machine_flush_console(void)
 {
@@ -128,6 +152,7 @@ void arm_machine_flush_console(void)
 }
 #endif
 
+<<<<<<< HEAD
 void arm_machine_restart(char mode, const char *cmd)
 {
 	/* Flush the console to make sure all the relevant messages make it
@@ -144,6 +169,23 @@ void arm_machine_restart(char mode, const char *cmd)
 	 * soft boot works.
 	 */
 	setup_mm_for_reboot(mode);
+=======
+/*
+ * A temporary stack to use for CPU reset. This is static so that we
+ * don't clobber it with the identity mapping. When running with this
+ * stack, any references to the current task *will not work* so you
+ * should really do as little as possible before jumping to your reset
+ * code.
+ */
+static u64 soft_restart_stack[16];
+
+static void __soft_restart(void *addr)
+{
+	phys_reset_t phys_reset;
+
+	/* Take out a flat memory mapping. */
+	setup_mm_for_reboot();
+>>>>>>> cm-10.0
 
 	/* Clean and invalidate caches */
 	flush_cache_all();
@@ -154,6 +196,7 @@ void arm_machine_restart(char mode, const char *cmd)
 	/* Push out any further dirty data, and ensure cache is empty */
 	flush_cache_all();
 
+<<<<<<< HEAD
 	/*Push out the dirty data from external caches */
 	outer_disable();
 
@@ -169,6 +212,40 @@ void arm_machine_restart(char mode, const char *cmd)
 	mdelay(1000);
 	printk("Reboot failed -- System halted\n");
 	while (1);
+=======
+	/* Push out the dirty data from external caches */
+	outer_disable();
+
+	/* Switch to the identity mapping. */
+	phys_reset = (phys_reset_t)(unsigned long)virt_to_phys(cpu_reset);
+	phys_reset((unsigned long)addr);
+
+	/* Should never get here. */
+	BUG();
+}
+
+void soft_restart(unsigned long addr)
+{
+	u64 *stack = soft_restart_stack + ARRAY_SIZE(soft_restart_stack);
+
+	/* Disable interrupts first */
+	local_irq_disable();
+	local_fiq_disable();
+
+	/* Disable the L2 if we're the last man standing. */
+	if (num_online_cpus() == 1)
+		outer_disable();
+
+	/* Change to the new stack and continue with the reset. */
+	call_with_stack(__soft_restart, (void *)addr, (void *)stack);
+
+	/* Should never get here. */
+	BUG();
+}
+
+static void null_restart(char mode, const char *cmd)
+{
+>>>>>>> cm-10.0
 }
 
 /*
@@ -177,7 +254,11 @@ void arm_machine_restart(char mode, const char *cmd)
 void (*pm_power_off)(void);
 EXPORT_SYMBOL(pm_power_off);
 
+<<<<<<< HEAD
 void (*arm_pm_restart)(char str, const char *cmd) = arm_machine_restart;
+=======
+void (*arm_pm_restart)(char str, const char *cmd) = null_restart;
+>>>>>>> cm-10.0
 EXPORT_SYMBOL_GPL(arm_pm_restart);
 
 static void do_nothing(void *unused)
@@ -201,6 +282,7 @@ void cpu_idle_wait(void)
 EXPORT_SYMBOL_GPL(cpu_idle_wait);
 
 /*
+<<<<<<< HEAD
  * This is our default idle handler.  We need to disable
  * interrupts here to ensure we don't miss a wakeup call.
  */
@@ -208,6 +290,20 @@ static void default_idle(void)
 {
 	if (!need_resched())
 		arch_idle();
+=======
+ * This is our default idle handler.
+ */
+
+extern void arch_idle(void);
+void (*arm_pm_idle)(void) = arch_idle;
+
+static void default_idle(void)
+{
+	if (arm_pm_idle)
+		arm_pm_idle();
+	else
+		cpu_do_idle();
+>>>>>>> cm-10.0
 	local_irq_enable();
 }
 
@@ -226,6 +322,7 @@ void cpu_idle(void)
 
 	/* endless idle loop with no priority at all */
 	while (1) {
+<<<<<<< HEAD
 		tick_nohz_stop_sched_tick(1);
 		idle_notifier_call_chain(IDLE_START);
 		while (!need_resched()) {
@@ -256,6 +353,44 @@ void cpu_idle(void)
 		preempt_enable_no_resched();
 		schedule();
 		preempt_disable();
+=======
+		idle_notifier_call_chain(IDLE_START);
+		tick_nohz_idle_enter();
+		rcu_idle_enter();
+		while (!need_resched()) {
+			/*
+			 * We need to disable interrupts here
+			 * to ensure we don't miss a wakeup call.
+			 */
+			local_irq_disable();
+#ifdef CONFIG_PL310_ERRATA_769419
+			wmb();
+#endif
+			if (hlt_counter) {
+				local_irq_enable();
+				cpu_relax();
+			} else if (!need_resched()) {
+				stop_critical_timings();
+				if (cpuidle_idle_call())
+					pm_idle();
+				start_critical_timings();
+				/*
+				 * pm_idle functions must always
+				 * return with IRQs enabled.
+				 */
+				WARN_ON(irqs_disabled());
+			} else
+				local_irq_enable();
+		}
+		rcu_idle_exit();
+		tick_nohz_idle_exit();
+		idle_notifier_call_chain(IDLE_END);
+		schedule_preempt_disabled();
+#ifdef CONFIG_HOTPLUG_CPU
+		if (cpu_is_offline(smp_processor_id()))
+			cpu_die();
+#endif
+>>>>>>> cm-10.0
 	}
 }
 
@@ -271,6 +406,10 @@ __setup("reboot=", reboot_setup);
 
 void machine_shutdown(void)
 {
+<<<<<<< HEAD
+=======
+	preempt_disable();
+>>>>>>> cm-10.0
 #ifdef CONFIG_SMP
 	smp_send_stop();
 #endif
@@ -292,7 +431,23 @@ void machine_power_off(void)
 void machine_restart(char *cmd)
 {
 	machine_shutdown();
+<<<<<<< HEAD
 	arm_pm_restart(reboot_mode, cmd);
+=======
+
+	/* Flush the console to make sure all the relevant messages make it
+	 * out to the console drivers */
+	arm_machine_flush_console();
+
+	arm_pm_restart(reboot_mode, cmd);
+
+	/* Give a grace period for failure to restart of 1s */
+	mdelay(1000);
+
+	/* Whoops - the platform was unable to reboot. Tell the user! */
+	printk("Reboot failed -- System halted\n");
+	while (1);
+>>>>>>> cm-10.0
 }
 
 /*
@@ -434,7 +589,11 @@ void show_regs(struct pt_regs * regs)
 	printk("\n");
 	printk("Pid: %d, comm: %20s\n", task_pid_nr(current), current->comm);
 	__show_regs(regs);
+<<<<<<< HEAD
 	__backtrace();
+=======
+	dump_stack();
+>>>>>>> cm-10.0
 }
 
 ATOMIC_NOTIFIER_HEAD(thread_notify_head);
@@ -605,6 +764,7 @@ unsigned long arch_randomize_brk(struct mm_struct *mm)
 #ifdef CONFIG_MMU
 /*
  * The vectors page is always readable from user space for the
+<<<<<<< HEAD
  * atomic helpers and the signal restart code.  Let's declare a mapping
  * for it so it is visible through ptrace and /proc/<pid>/mem.
  */
@@ -617,10 +777,45 @@ int vectors_user_mapping(void)
 				       VM_MAYREAD | VM_MAYEXEC |
 				       VM_ALWAYSDUMP | VM_RESERVED,
 				       NULL);
+=======
+ * atomic helpers and the signal restart code. Insert it into the
+ * gate_vma so that it is visible through ptrace and /proc/<pid>/mem.
+ */
+static struct vm_area_struct gate_vma;
+
+static int __init gate_vma_init(void)
+{
+	gate_vma.vm_start	= 0xffff0000;
+	gate_vma.vm_end		= 0xffff0000 + PAGE_SIZE;
+	gate_vma.vm_page_prot	= PAGE_READONLY_EXEC;
+	gate_vma.vm_flags	= VM_READ | VM_EXEC |
+				  VM_MAYREAD | VM_MAYEXEC;
+	return 0;
+}
+arch_initcall(gate_vma_init);
+
+struct vm_area_struct *get_gate_vma(struct mm_struct *mm)
+{
+	return &gate_vma;
+}
+
+int in_gate_area(struct mm_struct *mm, unsigned long addr)
+{
+	return (addr >= gate_vma.vm_start) && (addr < gate_vma.vm_end);
+}
+
+int in_gate_area_no_mm(unsigned long addr)
+{
+	return in_gate_area(NULL, addr);
+>>>>>>> cm-10.0
 }
 
 const char *arch_vma_name(struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	return (vma->vm_start == 0xffff0000) ? "[vectors]" : NULL;
+=======
+	return (vma == &gate_vma) ? "[vectors]" : NULL;
+>>>>>>> cm-10.0
 }
 #endif

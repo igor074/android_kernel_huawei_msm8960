@@ -34,7 +34,10 @@
 
 #include <asm/io.h>
 #include <asm/byteorder.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/unaligned.h>
 
 
@@ -159,6 +162,7 @@ static const u32 oid_supported_list[] =
 #endif	/* RNDIS_PM */
 };
 
+<<<<<<< HEAD
 /* HACK: copied from net/core/dev.c to replace dev_get_stats since
  * dev_get_stats cannot be called from atomic context */
 static void netdev_stats_to_stats64(struct rtnl_link_stats64 *stats64,
@@ -178,6 +182,8 @@ static void netdev_stats_to_stats64(struct rtnl_link_stats64 *stats64,
 		dst[i] = src[i];
 #endif
 }
+=======
+>>>>>>> cm-10.0
 
 /* NDIS Functions */
 static int gen_ndis_query_resp(int configNr, u32 OID, u8 *buf,
@@ -190,7 +196,11 @@ static int gen_ndis_query_resp(int configNr, u32 OID, u8 *buf,
 	rndis_query_cmplt_type *resp;
 	struct net_device *net;
 	struct rtnl_link_stats64 temp;
+<<<<<<< HEAD
 	struct rtnl_link_stats64 *stats = &temp;
+=======
+	const struct rtnl_link_stats64 *stats;
+>>>>>>> cm-10.0
 
 	if (!r) return -ENOMEM;
 	resp = (rndis_query_cmplt_type *)r->buf;
@@ -213,7 +223,11 @@ static int gen_ndis_query_resp(int configNr, u32 OID, u8 *buf,
 	resp->InformationBufferOffset = cpu_to_le32(16);
 
 	net = rndis_per_dev_params[configNr].dev;
+<<<<<<< HEAD
 	netdev_stats_to_stats64(stats, &net->stats);
+=======
+	stats = dev_get_stats(net, &temp);
+>>>>>>> cm-10.0
 
 	switch (OID) {
 
@@ -1166,11 +1180,21 @@ static struct proc_dir_entry *rndis_connect_state [RNDIS_MAX_CONFIGS];
 
 #endif /* CONFIG_USB_GADGET_DEBUG_FILES */
 
+<<<<<<< HEAD
+=======
+static bool rndis_initialized;
+>>>>>>> cm-10.0
 
 int rndis_init(void)
 {
 	u8 i;
 
+<<<<<<< HEAD
+=======
+	if (rndis_initialized)
+		return 0;
+
+>>>>>>> cm-10.0
 	for (i = 0; i < RNDIS_MAX_CONFIGS; i++) {
 #ifdef	CONFIG_USB_GADGET_DEBUG_FILES
 		char name [20];
@@ -1197,6 +1221,10 @@ int rndis_init(void)
 		INIT_LIST_HEAD(&(rndis_per_dev_params[i].resp_queue));
 	}
 
+<<<<<<< HEAD
+=======
+	rndis_initialized = true;
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -1205,7 +1233,17 @@ void rndis_exit(void)
 #ifdef CONFIG_USB_GADGET_DEBUG_FILES
 	u8 i;
 	char name[20];
+<<<<<<< HEAD
 
+=======
+#endif
+
+	if (!rndis_initialized)
+		return;
+	rndis_initialized = false;
+
+#ifdef CONFIG_USB_GADGET_DEBUG_FILES
+>>>>>>> cm-10.0
 	for (i = 0; i < RNDIS_MAX_CONFIGS; i++) {
 		sprintf(name, NAME_TEMPLATE, i);
 		remove_proc_entry(name, NULL);

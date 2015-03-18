@@ -12,6 +12,10 @@
 #include <linux/notifier.h>
 #include <linux/slab.h>
 #include <linux/err.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/platform_device.h>
 #include <linux/device.h>
 #include <linux/interrupt.h>
@@ -482,12 +486,15 @@ struct ab3100_get_set_reg_priv {
 	bool mode;
 };
 
+<<<<<<< HEAD
 static int ab3100_get_set_reg_open_file(struct inode *inode, struct file *file)
 {
 	file->private_data = inode->i_private;
 	return 0;
 }
 
+=======
+>>>>>>> cm-10.0
 static ssize_t ab3100_get_set_reg(struct file *file,
 				  const char __user *user_buf,
 				  size_t count, loff_t *ppos)
@@ -582,7 +589,11 @@ static ssize_t ab3100_get_set_reg(struct file *file,
 }
 
 static const struct file_operations ab3100_get_set_reg_fops = {
+<<<<<<< HEAD
 	.open = ab3100_get_set_reg_open_file,
+=======
+	.open = simple_open,
+>>>>>>> cm-10.0
 	.write = ab3100_get_set_reg,
 	.llseek = noop_llseek,
 };
@@ -809,7 +820,11 @@ struct ab_family_id {
 	char	*name;
 };
 
+<<<<<<< HEAD
 static const struct ab_family_id ids[] __devinitdata = {
+=======
+static const struct ab_family_id ids[] __devinitconst = {
+>>>>>>> cm-10.0
 	/* AB3100 */
 	{
 		.id = 0xc0,

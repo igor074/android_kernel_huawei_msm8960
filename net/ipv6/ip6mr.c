@@ -16,7 +16,10 @@
  *
  */
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/uaccess.h>
 #include <linux/types.h>
 #include <linux/sched.h>
@@ -51,6 +54,10 @@
 #include <linux/pim.h>
 #include <net/addrconf.h>
 #include <linux/netfilter_ipv6.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <net/ip6_checksum.h>
 
 struct mr6_table {
@@ -696,8 +703,15 @@ static netdev_tx_t reg_vif_xmit(struct sk_buff *skb,
 	int err;
 
 	err = ip6mr_fib_lookup(net, &fl6, &mrt);
+<<<<<<< HEAD
 	if (err < 0)
 		return err;
+=======
+	if (err < 0) {
+		kfree_skb(skb);
+		return err;
+	}
+>>>>>>> cm-10.0
 
 	read_lock(&mrt_lock);
 	dev->stats.tx_bytes += skb->len;
@@ -1102,8 +1116,13 @@ static int ip6mr_cache_report(struct mr6_table *mrt, struct sk_buff *pkt,
 		msg->im6_msgtype = MRT6MSG_WHOLEPKT;
 		msg->im6_mif = mrt->mroute_reg_vif_num;
 		msg->im6_pad = 0;
+<<<<<<< HEAD
 		ipv6_addr_copy(&msg->im6_src, &ipv6_hdr(pkt)->saddr);
 		ipv6_addr_copy(&msg->im6_dst, &ipv6_hdr(pkt)->daddr);
+=======
+		msg->im6_src = ipv6_hdr(pkt)->saddr;
+		msg->im6_dst = ipv6_hdr(pkt)->daddr;
+>>>>>>> cm-10.0
 
 		skb->ip_summed = CHECKSUM_UNNECESSARY;
 	} else
@@ -1128,8 +1147,13 @@ static int ip6mr_cache_report(struct mr6_table *mrt, struct sk_buff *pkt,
 	msg->im6_msgtype = assert;
 	msg->im6_mif = mifi;
 	msg->im6_pad = 0;
+<<<<<<< HEAD
 	ipv6_addr_copy(&msg->im6_src, &ipv6_hdr(pkt)->saddr);
 	ipv6_addr_copy(&msg->im6_dst, &ipv6_hdr(pkt)->daddr);
+=======
+	msg->im6_src = ipv6_hdr(pkt)->saddr;
+	msg->im6_dst = ipv6_hdr(pkt)->daddr;
+>>>>>>> cm-10.0
 
 	skb_dst_set(skb, dst_clone(skb_dst(pkt)));
 	skb->ip_summed = CHECKSUM_UNNECESSARY;
@@ -1354,7 +1378,12 @@ int __init ip6_mr_init(void)
 		goto add_proto_fail;
 	}
 #endif
+<<<<<<< HEAD
 	rtnl_register(RTNL_FAMILY_IP6MR, RTM_GETROUTE, NULL, ip6mr_rtm_dumproute);
+=======
+	rtnl_register(RTNL_FAMILY_IP6MR, RTM_GETROUTE, NULL,
+		      ip6mr_rtm_dumproute, NULL);
+>>>>>>> cm-10.0
 	return 0;
 #ifdef CONFIG_IPV6_PIMSM_V2
 add_proto_fail:
@@ -1922,8 +1951,15 @@ static int ip6mr_forward2(struct net *net, struct mr6_table *mrt,
 	};
 
 	dst = ip6_route_output(net, NULL, &fl6);
+<<<<<<< HEAD
 	if (!dst)
 		goto out_free;
+=======
+	if (dst->error) {
+		dst_release(dst);
+		goto out_free;
+	}
+>>>>>>> cm-10.0
 
 	skb_dst_drop(skb);
 	skb_dst_set(skb, dst);
@@ -2051,8 +2087,15 @@ int ip6_mr_input(struct sk_buff *skb)
 	int err;
 
 	err = ip6mr_fib_lookup(net, &fl6, &mrt);
+<<<<<<< HEAD
 	if (err < 0)
 		return err;
+=======
+	if (err < 0) {
+		kfree_skb(skb);
+		return err;
+	}
+>>>>>>> cm-10.0
 
 	read_lock(&mrt_lock);
 	cache = ip6mr_cache_find(mrt,
@@ -2175,8 +2218,13 @@ int ip6mr_get_route(struct net *net,
 		iph->payload_len = 0;
 		iph->nexthdr = IPPROTO_NONE;
 		iph->hop_limit = 0;
+<<<<<<< HEAD
 		ipv6_addr_copy(&iph->saddr, &rt->rt6i_src.addr);
 		ipv6_addr_copy(&iph->daddr, &rt->rt6i_dst.addr);
+=======
+		iph->saddr = rt->rt6i_src.addr;
+		iph->daddr = rt->rt6i_dst.addr;
+>>>>>>> cm-10.0
 
 		err = ip6mr_cache_unresolved(mrt, vif, skb2);
 		read_unlock(&mrt_lock);

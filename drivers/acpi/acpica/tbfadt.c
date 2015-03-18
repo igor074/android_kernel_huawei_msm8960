@@ -5,7 +5,11 @@
  *****************************************************************************/
 
 /*
+<<<<<<< HEAD
  * Copyright (C) 2000 - 2011, Intel Corp.
+=======
+ * Copyright (C) 2000 - 2012, Intel Corp.
+>>>>>>> cm-10.0
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,14 +67,24 @@ static void acpi_tb_setup_fadt_registers(void);
 
 typedef struct acpi_fadt_info {
 	char *name;
+<<<<<<< HEAD
 	u8 address64;
 	u8 address32;
 	u8 length;
+=======
+	u16 address64;
+	u16 address32;
+	u16 length;
+>>>>>>> cm-10.0
 	u8 default_length;
 	u8 type;
 
 } acpi_fadt_info;
 
+<<<<<<< HEAD
+=======
+#define ACPI_FADT_OPTIONAL          0
+>>>>>>> cm-10.0
 #define ACPI_FADT_REQUIRED          1
 #define ACPI_FADT_SEPARATE_LENGTH   2
 
@@ -87,7 +101,11 @@ static struct acpi_fadt_info fadt_info_table[] = {
 	 ACPI_FADT_OFFSET(pm1b_event_block),
 	 ACPI_FADT_OFFSET(pm1_event_length),
 	 ACPI_PM1_REGISTER_WIDTH * 2,	/* Enable + Status register */
+<<<<<<< HEAD
 	 0},
+=======
+	 ACPI_FADT_OPTIONAL},
+>>>>>>> cm-10.0
 
 	{"Pm1aControlBlock",
 	 ACPI_FADT_OFFSET(xpm1a_control_block),
@@ -101,7 +119,11 @@ static struct acpi_fadt_info fadt_info_table[] = {
 	 ACPI_FADT_OFFSET(pm1b_control_block),
 	 ACPI_FADT_OFFSET(pm1_control_length),
 	 ACPI_PM1_REGISTER_WIDTH,
+<<<<<<< HEAD
 	 0},
+=======
+	 ACPI_FADT_OPTIONAL},
+>>>>>>> cm-10.0
 
 	{"Pm2ControlBlock",
 	 ACPI_FADT_OFFSET(xpm2_control_block),
@@ -139,7 +161,11 @@ static struct acpi_fadt_info fadt_info_table[] = {
 
 typedef struct acpi_fadt_pm_info {
 	struct acpi_generic_address *target;
+<<<<<<< HEAD
 	u8 source;
+=======
+	u16 source;
+>>>>>>> cm-10.0
 	u8 register_num;
 
 } acpi_fadt_pm_info;
@@ -253,8 +279,18 @@ void acpi_tb_parse_fadt(u32 table_index)
 	acpi_tb_install_table((acpi_physical_address) acpi_gbl_FADT.Xdsdt,
 			      ACPI_SIG_DSDT, ACPI_TABLE_INDEX_DSDT);
 
+<<<<<<< HEAD
 	acpi_tb_install_table((acpi_physical_address) acpi_gbl_FADT.Xfacs,
 			      ACPI_SIG_FACS, ACPI_TABLE_INDEX_FACS);
+=======
+	/* If Hardware Reduced flag is set, there is no FACS */
+
+	if (!acpi_gbl_reduced_hardware) {
+		acpi_tb_install_table((acpi_physical_address) acpi_gbl_FADT.
+				      Xfacs, ACPI_SIG_FACS,
+				      ACPI_TABLE_INDEX_FACS);
+	}
+>>>>>>> cm-10.0
 }
 
 /*******************************************************************************
@@ -277,12 +313,20 @@ void acpi_tb_create_local_fadt(struct acpi_table_header *table, u32 length)
 {
 	/*
 	 * Check if the FADT is larger than the largest table that we expect
+<<<<<<< HEAD
 	 * (the ACPI 2.0/3.0 version). If so, truncate the table, and issue
+=======
+	 * (the ACPI 5.0 version). If so, truncate the table, and issue
+>>>>>>> cm-10.0
 	 * a warning.
 	 */
 	if (length > sizeof(struct acpi_table_fadt)) {
 		ACPI_WARNING((AE_INFO,
+<<<<<<< HEAD
 			      "FADT (revision %u) is longer than ACPI 2.0 version, "
+=======
+			      "FADT (revision %u) is longer than ACPI 5.0 version, "
+>>>>>>> cm-10.0
 			      "truncating length %u to %u",
 			      table->revision, length,
 			      (u32)sizeof(struct acpi_table_fadt)));
@@ -297,6 +341,16 @@ void acpi_tb_create_local_fadt(struct acpi_table_header *table, u32 length)
 	ACPI_MEMCPY(&acpi_gbl_FADT, table,
 		    ACPI_MIN(length, sizeof(struct acpi_table_fadt)));
 
+<<<<<<< HEAD
+=======
+	/* Take a copy of the Hardware Reduced flag */
+
+	acpi_gbl_reduced_hardware = FALSE;
+	if (acpi_gbl_FADT.flags & ACPI_FADT_HW_REDUCED) {
+		acpi_gbl_reduced_hardware = TRUE;
+	}
+
+>>>>>>> cm-10.0
 	/* Convert the local copy of the FADT to the common internal format */
 
 	acpi_tb_convert_fadt();
@@ -350,10 +404,13 @@ static void acpi_tb_convert_fadt(void)
 	u32 address32;
 	u32 i;
 
+<<<<<<< HEAD
 	/* Update the local FADT table header length */
 
 	acpi_gbl_FADT.header.length = sizeof(struct acpi_table_fadt);
 
+=======
+>>>>>>> cm-10.0
 	/*
 	 * Expand the 32-bit FACS and DSDT addresses to 64-bit as necessary.
 	 * Later code will always use the X 64-bit field. Also, check for an
@@ -395,6 +452,13 @@ static void acpi_tb_convert_fadt(void)
 		acpi_gbl_FADT.boot_flags = 0;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Update the local FADT table header length */
+
+	acpi_gbl_FADT.header.length = sizeof(struct acpi_table_fadt);
+
+>>>>>>> cm-10.0
 	/*
 	 * Expand the ACPI 1.0 32-bit addresses to the ACPI 2.0 64-bit "X"
 	 * generic address structures as necessary. Later code will always use
@@ -502,6 +566,15 @@ static void acpi_tb_validate_fadt(void)
 		acpi_gbl_FADT.Xdsdt = (u64) acpi_gbl_FADT.dsdt;
 	}
 
+<<<<<<< HEAD
+=======
+	/* If Hardware Reduced flag is set, we are all done */
+
+	if (acpi_gbl_reduced_hardware) {
+		return;
+	}
+
+>>>>>>> cm-10.0
 	/* Examine all of the 64-bit extended address fields (X fields) */
 
 	for (i = 0; i < ACPI_FADT_INFO_ENTRIES; i++) {

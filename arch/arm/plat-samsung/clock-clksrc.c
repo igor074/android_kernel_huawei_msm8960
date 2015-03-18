@@ -16,7 +16,11 @@
 #include <linux/errno.h>
 #include <linux/err.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/sysdev.h>
+=======
+#include <linux/device.h>
+>>>>>>> cm-10.0
 #include <linux/io.h>
 
 #include <plat/clock.h>

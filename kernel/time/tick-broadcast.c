@@ -71,7 +71,11 @@ int tick_check_broadcast_device(struct clock_event_device *dev)
 	     (dev->features & CLOCK_EVT_FEAT_C3STOP))
 		return 0;
 
+<<<<<<< HEAD
 	clockevents_exchange_device(NULL, dev);
+=======
+	clockevents_exchange_device(tick_broadcast_device.evtdev, dev);
+>>>>>>> cm-10.0
 	tick_broadcast_device.evtdev = dev;
 	if (!cpumask_empty(tick_get_broadcast_mask()))
 		tick_broadcast_start_periodic(dev);
@@ -194,7 +198,11 @@ static void tick_handle_periodic_broadcast(struct clock_event_device *dev)
 	for (next = dev->next_event; ;) {
 		next = ktime_add(next, tick_period);
 
+<<<<<<< HEAD
 		if (!clockevents_program_event(dev, next, ktime_get()))
+=======
+		if (!clockevents_program_event(dev, next, false))
+>>>>>>> cm-10.0
 			return;
 		tick_do_periodic_broadcast();
 	}
@@ -346,7 +354,12 @@ int tick_resume_broadcast(void)
 						     tick_get_broadcast_mask());
 			break;
 		case TICKDEV_MODE_ONESHOT:
+<<<<<<< HEAD
 			broadcast = tick_resume_broadcast_oneshot(bc);
+=======
+			if (!cpumask_empty(tick_get_broadcast_mask()))
+				broadcast = tick_resume_broadcast_oneshot(bc);
+>>>>>>> cm-10.0
 			break;
 		}
 	}
@@ -373,7 +386,14 @@ static int tick_broadcast_set_event(ktime_t expires, int force)
 {
 	struct clock_event_device *bc = tick_broadcast_device.evtdev;
 
+<<<<<<< HEAD
 	return tick_dev_program_event(bc, expires, force);
+=======
+	if (bc->mode != CLOCK_EVT_MODE_ONESHOT)
+		clockevents_set_mode(bc, CLOCK_EVT_MODE_ONESHOT);
+
+	return clockevents_program_event(bc, expires, force);
+>>>>>>> cm-10.0
 }
 
 int tick_resume_broadcast_oneshot(struct clock_event_device *bc)
@@ -531,7 +551,10 @@ void tick_broadcast_setup_oneshot(struct clock_event_device *bc)
 		int was_periodic = bc->mode == CLOCK_EVT_MODE_PERIODIC;
 
 		bc->event_handler = tick_handle_oneshot_broadcast;
+<<<<<<< HEAD
 		clockevents_set_mode(bc, CLOCK_EVT_MODE_ONESHOT);
+=======
+>>>>>>> cm-10.0
 
 		/* Take the do_timer update */
 		tick_do_timer_cpu = cpu;
@@ -549,6 +572,10 @@ void tick_broadcast_setup_oneshot(struct clock_event_device *bc)
 			   to_cpumask(tmpmask));
 
 		if (was_periodic && !cpumask_empty(to_cpumask(tmpmask))) {
+<<<<<<< HEAD
+=======
+			clockevents_set_mode(bc, CLOCK_EVT_MODE_ONESHOT);
+>>>>>>> cm-10.0
 			tick_broadcast_init_next_event(to_cpumask(tmpmask),
 						       tick_next_period);
 			tick_broadcast_set_event(tick_next_period, 1);
@@ -580,6 +607,10 @@ void tick_broadcast_switch_to_oneshot(void)
 	bc = tick_broadcast_device.evtdev;
 	if (bc)
 		tick_broadcast_setup_oneshot(bc);
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 	raw_spin_unlock_irqrestore(&tick_broadcast_lock, flags);
 }
 

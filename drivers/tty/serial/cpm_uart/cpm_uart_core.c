@@ -31,6 +31,10 @@
 
 #include <linux/module.h>
 #include <linux/tty.h>
+<<<<<<< HEAD
+=======
+#include <linux/tty_flip.h>
+>>>>>>> cm-10.0
 #include <linux/ioport.h>
 #include <linux/init.h>
 #include <linux/serial.h>

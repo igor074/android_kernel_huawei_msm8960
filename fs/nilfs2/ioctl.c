@@ -27,7 +27,11 @@
 #include <linux/uaccess.h>	/* copy_from_user(), copy_to_user() */
 #include <linux/vmalloc.h>
 #include <linux/compat.h>	/* compat_ptr() */
+<<<<<<< HEAD
 #include <linux/mount.h>	/* mnt_want_write(), mnt_drop_write() */
+=======
+#include <linux/mount.h>	/* mnt_want_write_file(), mnt_drop_write_file() */
+>>>>>>> cm-10.0
 #include <linux/buffer_head.h>
 #include <linux/nilfs2_fs.h>
 #include "nilfs.h"
@@ -119,7 +123,11 @@ static int nilfs_ioctl_setflags(struct inode *inode, struct file *filp,
 	if (get_user(flags, (int __user *)argp))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	ret = mnt_want_write(filp->f_path.mnt);
+=======
+	ret = mnt_want_write_file(filp);
+>>>>>>> cm-10.0
 	if (ret)
 		return ret;
 
@@ -154,7 +162,11 @@ static int nilfs_ioctl_setflags(struct inode *inode, struct file *filp,
 	ret = nilfs_transaction_commit(inode->i_sb);
 out:
 	mutex_unlock(&inode->i_mutex);
+<<<<<<< HEAD
 	mnt_drop_write(filp->f_path.mnt);
+=======
+	mnt_drop_write_file(filp);
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -174,7 +186,11 @@ static int nilfs_ioctl_change_cpmode(struct inode *inode, struct file *filp,
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
+<<<<<<< HEAD
 	ret = mnt_want_write(filp->f_path.mnt);
+=======
+	ret = mnt_want_write_file(filp);
+>>>>>>> cm-10.0
 	if (ret)
 		return ret;
 
@@ -194,7 +210,11 @@ static int nilfs_ioctl_change_cpmode(struct inode *inode, struct file *filp,
 
 	up_read(&inode->i_sb->s_umount);
 out:
+<<<<<<< HEAD
 	mnt_drop_write(filp->f_path.mnt);
+=======
+	mnt_drop_write_file(filp);
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -210,7 +230,11 @@ nilfs_ioctl_delete_checkpoint(struct inode *inode, struct file *filp,
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
+<<<<<<< HEAD
 	ret = mnt_want_write(filp->f_path.mnt);
+=======
+	ret = mnt_want_write_file(filp);
+>>>>>>> cm-10.0
 	if (ret)
 		return ret;
 
@@ -225,7 +249,11 @@ nilfs_ioctl_delete_checkpoint(struct inode *inode, struct file *filp,
 	else
 		nilfs_transaction_commit(inode->i_sb); /* never fails */
 out:
+<<<<<<< HEAD
 	mnt_drop_write(filp->f_path.mnt);
+=======
+	mnt_drop_write_file(filp);
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -591,7 +619,11 @@ static int nilfs_ioctl_clean_segments(struct inode *inode, struct file *filp,
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
+<<<<<<< HEAD
 	ret = mnt_want_write(filp->f_path.mnt);
+=======
+	ret = mnt_want_write_file(filp);
+>>>>>>> cm-10.0
 	if (ret)
 		return ret;
 
@@ -603,6 +635,11 @@ static int nilfs_ioctl_clean_segments(struct inode *inode, struct file *filp,
 	nsegs = argv[4].v_nmembs;
 	if (argv[4].v_size != argsz[4])
 		goto out;
+<<<<<<< HEAD
+=======
+	if (nsegs > UINT_MAX / sizeof(__u64))
+		goto out;
+>>>>>>> cm-10.0
 
 	/*
 	 * argv[4] points to segment numbers this ioctl cleans.  We
@@ -625,6 +662,12 @@ static int nilfs_ioctl_clean_segments(struct inode *inode, struct file *filp,
 		if (argv[n].v_nmembs > nsegs * nilfs->ns_blocks_per_segment)
 			goto out_free;
 
+<<<<<<< HEAD
+=======
+		if (argv[n].v_nmembs >= UINT_MAX / argv[n].v_size)
+			goto out_free;
+
+>>>>>>> cm-10.0
 		len = argv[n].v_size * argv[n].v_nmembs;
 		base = (void __user *)(unsigned long)argv[n].v_base;
 		if (len == 0) {
@@ -672,7 +715,11 @@ out_free:
 		vfree(kbufs[n]);
 	kfree(kbufs[4]);
 out:
+<<<<<<< HEAD
 	mnt_drop_write(filp->f_path.mnt);
+=======
+	mnt_drop_write_file(filp);
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -707,7 +754,11 @@ static int nilfs_ioctl_resize(struct inode *inode, struct file *filp,
 	if (!capable(CAP_SYS_ADMIN))
 		goto out;
 
+<<<<<<< HEAD
 	ret = mnt_want_write(filp->f_path.mnt);
+=======
+	ret = mnt_want_write_file(filp);
+>>>>>>> cm-10.0
 	if (ret)
 		goto out;
 
@@ -718,7 +769,11 @@ static int nilfs_ioctl_resize(struct inode *inode, struct file *filp,
 	ret = nilfs_resize_fs(inode->i_sb, newsize);
 
 out_drop_write:
+<<<<<<< HEAD
 	mnt_drop_write(filp->f_path.mnt);
+=======
+	mnt_drop_write_file(filp);
+>>>>>>> cm-10.0
 out:
 	return ret;
 }
@@ -842,6 +897,22 @@ long nilfs_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case FS_IOC32_GETVERSION:
 		cmd = FS_IOC_GETVERSION;
 		break;
+<<<<<<< HEAD
+=======
+	case NILFS_IOCTL_CHANGE_CPMODE:
+	case NILFS_IOCTL_DELETE_CHECKPOINT:
+	case NILFS_IOCTL_GET_CPINFO:
+	case NILFS_IOCTL_GET_CPSTAT:
+	case NILFS_IOCTL_GET_SUINFO:
+	case NILFS_IOCTL_GET_SUSTAT:
+	case NILFS_IOCTL_GET_VINFO:
+	case NILFS_IOCTL_GET_BDESCS:
+	case NILFS_IOCTL_CLEAN_SEGMENTS:
+	case NILFS_IOCTL_SYNC:
+	case NILFS_IOCTL_RESIZE:
+	case NILFS_IOCTL_SET_ALLOC_RANGE:
+		break;
+>>>>>>> cm-10.0
 	default:
 		return -ENOIOCTLCMD;
 	}

@@ -1,7 +1,11 @@
 /*
  * TSIF Driver
  *
+<<<<<<< HEAD
  * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -86,7 +90,11 @@
  *
  */
 #define TSIF_PKTS_IN_CHUNK_DEFAULT  (16)  /**< packets in one DM chunk */
+<<<<<<< HEAD
 #define TSIF_CHUNKS_IN_BUF_DEFAULT   (16)
+=======
+#define TSIF_CHUNKS_IN_BUF_DEFAULT   (8)
+>>>>>>> cm-10.0
 #define TSIF_PKTS_IN_CHUNK        (tsif_device->pkts_per_chunk)
 #define TSIF_CHUNKS_IN_BUF        (tsif_device->chunks_per_buf)
 #define TSIF_PKTS_IN_BUF          (TSIF_PKTS_IN_CHUNK * TSIF_CHUNKS_IN_BUF)
@@ -266,6 +274,39 @@ static void tsif_clock(struct msm_tsif_device *tsif_device, int on)
 /* ===clocks end=== */
 /* ===gpio begin=== */
 
+<<<<<<< HEAD
+=======
+static void tsif_gpios_free(const struct msm_gpio *table, int size)
+{
+	int i;
+	const struct msm_gpio *g;
+	for (i = size-1; i >= 0; i--) {
+		g = table + i;
+		gpio_free(GPIO_PIN(g->gpio_cfg));
+	}
+}
+
+static int tsif_gpios_request(const struct msm_gpio *table, int size)
+{
+	int rc;
+	int i;
+	const struct msm_gpio *g;
+	for (i = 0; i < size; i++) {
+		g = table + i;
+		rc = gpio_request(GPIO_PIN(g->gpio_cfg), g->label);
+		if (rc) {
+			pr_err("gpio_request(%d) <%s> failed: %d\n",
+			       GPIO_PIN(g->gpio_cfg), g->label ?: "?", rc);
+			goto err;
+		}
+	}
+	return 0;
+err:
+	tsif_gpios_free(table, i);
+	return rc;
+}
+
+>>>>>>> cm-10.0
 static int tsif_gpios_disable(const struct msm_gpio *table, int size)
 {
 	int rc = 0;
@@ -274,7 +315,10 @@ static int tsif_gpios_disable(const struct msm_gpio *table, int size)
 	for (i = size-1; i >= 0; i--) {
 		int tmp;
 		g = table + i;
+<<<<<<< HEAD
 		printk("%s(%d)\n", __func__, GPIO_PIN(g->gpio_cfg));
+=======
+>>>>>>> cm-10.0
 		tmp = gpio_tlmm_config(GPIO_CFG(GPIO_PIN(g->gpio_cfg),
 			0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
 			GPIO_CFG_DISABLE);
@@ -301,7 +345,10 @@ static int tsif_gpios_enable(const struct msm_gpio *table, int size)
 	const struct msm_gpio *g;
 	for (i = 0; i < size; i++) {
 		g = table + i;
+<<<<<<< HEAD
 		printk("%s(%d)\n", __func__, GPIO_PIN(g->gpio_cfg));
+=======
+>>>>>>> cm-10.0
 		rc = gpio_tlmm_config(g->gpio_cfg, GPIO_CFG_ENABLE);
 		if (rc) {
 			pr_err("gpio_tlmm_config(0x%08x, GPIO_CFG_ENABLE)"
@@ -322,30 +369,54 @@ err:
 
 static int tsif_gpios_request_enable(const struct msm_gpio *table, int size)
 {
+<<<<<<< HEAD
 	int rc;
 		
 	rc = tsif_gpios_enable(table, size);
+=======
+	int rc = tsif_gpios_request(table, size);
+	if (rc)
+		return rc;
+	rc = tsif_gpios_enable(table, size);
+	if (rc)
+		tsif_gpios_free(table, size);
+>>>>>>> cm-10.0
 	return rc;
 }
 
 static void tsif_gpios_disable_free(const struct msm_gpio *table, int size)
 {
 	tsif_gpios_disable(table, size);
+<<<<<<< HEAD
+=======
+	tsif_gpios_free(table, size);
+>>>>>>> cm-10.0
 }
 
 static int tsif_start_gpios(struct msm_tsif_device *tsif_device)
 {
+<<<<<<< HEAD
     struct msm_tsif_platform_data *pdata =
         tsif_device->pdev->dev.platform_data;
 
     return tsif_gpios_request_enable(pdata->gpios, pdata->num_gpios);
+=======
+	struct msm_tsif_platform_data *pdata =
+		tsif_device->pdev->dev.platform_data;
+	return tsif_gpios_request_enable(pdata->gpios, pdata->num_gpios);
+>>>>>>> cm-10.0
 }
 
 static void tsif_stop_gpios(struct msm_tsif_device *tsif_device)
 {
+<<<<<<< HEAD
     struct msm_tsif_platform_data *pdata =
         tsif_device->pdev->dev.platform_data;
 
+=======
+	struct msm_tsif_platform_data *pdata =
+		tsif_device->pdev->dev.platform_data;
+>>>>>>> cm-10.0
 	tsif_gpios_disable_free(pdata->gpios, pdata->num_gpios);
 }
 
@@ -357,7 +428,10 @@ static int tsif_start_hw(struct msm_tsif_device *tsif_device)
 		  TSIF_STS_CTL_EN_TIME_LIM |
 		  TSIF_STS_CTL_EN_TCR |
 		  TSIF_STS_CTL_EN_DM;
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 	dev_info(&tsif_device->pdev->dev, "%s\n", __func__);
 	switch (tsif_device->mode) {
 	case 1: /* mode 1 */
@@ -380,16 +454,24 @@ static int tsif_start_hw(struct msm_tsif_device *tsif_device)
 		  tsif_device->base + TSIF_STS_CTL_OFF);
 	wmb();
 	ctl = ioread32(tsif_device->base + TSIF_STS_CTL_OFF);
+<<<<<<< HEAD
 	pr_err("tsif %s: end\n", __func__);
+=======
+>>>>>>> cm-10.0
 	return (ctl & TSIF_STS_CTL_START) ? 0 : -EFAULT;
 }
 
 static void tsif_stop_hw(struct msm_tsif_device *tsif_device)
 {
+<<<<<<< HEAD
 
 	iowrite32(TSIF_STS_CTL_STOP, tsif_device->base + TSIF_STS_CTL_OFF);
 	wmb();
 
+=======
+	iowrite32(TSIF_STS_CTL_STOP, tsif_device->base + TSIF_STS_CTL_OFF);
+	wmb();
+>>>>>>> cm-10.0
 }
 
 /* ===DMA begin=== */
@@ -446,8 +528,11 @@ static void tsif_stop_hw(struct msm_tsif_device *tsif_device)
 static void tsif_dma_schedule(struct msm_tsif_device *tsif_device)
 {
 	int i, dmwi0, dmwi1, found = 0;
+<<<<<<< HEAD
 
 	pr_err("tsif %s: start %d %d\n", __func__, TSIF_PKTS_IN_CHUNK, TSIF_PKTS_IN_BUF);
+=======
+>>>>>>> cm-10.0
 	/* find free entry */
 	for (i = 0; i < 2; i++) {
 		struct tsif_xfer *xfer = &tsif_device->xfer[i];
@@ -471,12 +556,17 @@ static void tsif_dma_schedule(struct msm_tsif_device *tsif_device)
 		if (dmwi1 != tsif_device->ri) {
 			tsif_device->dmwi = dmwi1;
 		} else {
+<<<<<<< HEAD
 /* FSI start */
 #ifdef CONFIG_TSIF_DEBUG
 			dev_info(&tsif_device->pdev->dev,
 				 "Overflow detected\n");
 #endif
 /* FSI end */
+=======
+			dev_info(&tsif_device->pdev->dev,
+				 "Overflow detected\n");
+>>>>>>> cm-10.0
 		}
 		xfer->wi = tsif_device->dmwi;
 #ifdef CONFIG_TSIF_DEBUG
@@ -488,6 +578,7 @@ static void tsif_dma_schedule(struct msm_tsif_device *tsif_device)
 		dma_coherent_pre_ops();
 		msm_dmov_enqueue_cmd(tsif_device->dma, &xfer->hdr);
 	}
+<<<<<<< HEAD
 /* FSI start */
 #ifdef CONFIG_TSIF_DEBUG
 	if (!found)
@@ -496,6 +587,11 @@ static void tsif_dma_schedule(struct msm_tsif_device *tsif_device)
 #endif
 /* FSI end */
 	pr_err("tsif %s: end\n", __func__);
+=======
+	if (!found)
+		dev_info(&tsif_device->pdev->dev,
+			 "All xfer entries are busy\n");
+>>>>>>> cm-10.0
 }
 
 /**
@@ -517,8 +613,11 @@ static void tsif_dmov_complete_func(struct msm_dmov_cmd *cmd,
 	struct tsif_xfer *xfer;
 	struct msm_tsif_device *tsif_device;
 	int reschedule = 0;
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 	if (!(result & DMOV_RSLT_VALID)) { /* can I trust to @cmd? */
 		pr_err("Invalid DMOV result: rc=0x%08x, cmd = %p", result, cmd);
 		return;
@@ -612,12 +711,17 @@ static void tsif_dmov_complete_func(struct msm_dmov_cmd *cmd,
 			 * @tsif_stop(), when we are waiting for outstanding
 			 * DMA commands to be flushed.
 			 */
+<<<<<<< HEAD
 /* FSI start */
 #ifdef CONFIG_TSIF_DEBUG
 			dev_info(&tsif_device->pdev->dev,
 				 "DMA channel flushed (0x%08x)\n", result);
 #endif
 /* FSI end */
+=======
+			dev_info(&tsif_device->pdev->dev,
+				 "DMA channel flushed (0x%08x)\n", result);
+>>>>>>> cm-10.0
 			if (tsif_device->state == tsif_state_flushing) {
 				if ((!tsif_device->xfer[0].busy) &&
 				    (!tsif_device->xfer[1].busy)) {
@@ -642,8 +746,11 @@ static void tsif_dmov_complete_func(struct msm_dmov_cmd *cmd,
 	 */
 	if (reschedule)
 		tasklet_schedule(&tsif_device->dma_refill);
+<<<<<<< HEAD
 
 	pr_err("tsif %s: end\n", __func__);
+=======
+>>>>>>> cm-10.0
 }
 
 /**
@@ -658,7 +765,10 @@ static void tsif_dmov_complete_func(struct msm_dmov_cmd *cmd,
 static void tsif_dma_refill(unsigned long data)
 {
 	struct msm_tsif_device *tsif_device = (struct msm_tsif_device *) data;
+<<<<<<< HEAD
 	pr_err("tsif %s\n", __func__);
+=======
+>>>>>>> cm-10.0
 	if (tsif_device->state == tsif_state_running)
 		tsif_dma_schedule(tsif_device);
 }
@@ -672,7 +782,10 @@ static void tsif_dma_refill(unsigned long data)
  */
 static void tsif_dma_flush(struct msm_tsif_device *tsif_device)
 {
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 	if (tsif_device->xfer[0].busy || tsif_device->xfer[1].busy) {
 		tsif_device->state = tsif_state_flushing;
 		while (tsif_device->xfer[0].busy ||
@@ -684,13 +797,19 @@ static void tsif_dma_flush(struct msm_tsif_device *tsif_device)
 	tsif_device->state = tsif_state_stopped;
 	if (tsif_device->client_notify)
 		tsif_device->client_notify(tsif_device->client_data);
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 }
 
 static void tsif_dma_exit(struct msm_tsif_device *tsif_device)
 {
 	int i;
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 	tsif_device->state = tsif_state_flushing;
 	tasklet_kill(&tsif_device->dma_refill);
 	tsif_dma_flush(tsif_device);
@@ -702,7 +821,10 @@ static void tsif_dma_exit(struct msm_tsif_device *tsif_device)
 			tsif_device->dmov_cmd[i] = NULL;
 		}
 	}
+<<<<<<< HEAD
 	#if 0
+=======
+>>>>>>> cm-10.0
 	if (tsif_device->data_buffer) {
 		tsif_device->blob_wrapper_databuf.data = NULL;
 		tsif_device->blob_wrapper_databuf.size = 0;
@@ -711,7 +833,10 @@ static void tsif_dma_exit(struct msm_tsif_device *tsif_device)
 				  tsif_device->data_buffer_dma);
 		tsif_device->data_buffer = NULL;
 	}
+<<<<<<< HEAD
 	#endif
+=======
+>>>>>>> cm-10.0
 }
 
 static int tsif_dma_init(struct msm_tsif_device *tsif_device)
@@ -720,17 +845,26 @@ static int tsif_dma_init(struct msm_tsif_device *tsif_device)
 	/* TODO: allocate all DMA memory in one buffer */
 	/* Note: don't pass device,
 	   it require coherent_dma_mask id device definition */
+<<<<<<< HEAD
 	 #if 0
+=======
+>>>>>>> cm-10.0
 	tsif_device->data_buffer = dma_alloc_coherent(NULL, TSIF_BUF_SIZE,
 				&tsif_device->data_buffer_dma, GFP_KERNEL);
 	if (!tsif_device->data_buffer)
 		goto err;
+<<<<<<< HEAD
 	
+=======
+>>>>>>> cm-10.0
 	dev_info(&tsif_device->pdev->dev, "data_buffer: %p phys 0x%08x\n",
 		 tsif_device->data_buffer, tsif_device->data_buffer_dma);
 	tsif_device->blob_wrapper_databuf.data = tsif_device->data_buffer;
 	tsif_device->blob_wrapper_databuf.size = TSIF_BUF_SIZE;
+<<<<<<< HEAD
 	#endif
+=======
+>>>>>>> cm-10.0
 	tsif_device->ri = 0;
 	tsif_device->wi = 0;
 	tsif_device->dmwi = 0;
@@ -784,6 +918,7 @@ static irqreturn_t tsif_irq(int irq, void *dev_id)
 			 TSIF_STS_CTL_OVERFLOW |
 			 TSIF_STS_CTL_LOST_SYNC |
 			 TSIF_STS_CTL_TIMEOUT))) {
+<<<<<<< HEAD
 /* FSI start */
 #ifdef CONFIG_TSIF_DEBUG
 		dev_warn(&tsif_device->pdev->dev, "Spurious interrupt\n");
@@ -821,6 +956,25 @@ static irqreturn_t tsif_irq(int irq, void *dev_id)
 		dev_info(&tsif_device->pdev->dev, "TSIF IRQ: TIMEOUT\n");
 #endif
 /* FSI end */
+=======
+		dev_warn(&tsif_device->pdev->dev, "Spurious interrupt\n");
+		return IRQ_NONE;
+	}
+	if (sts_ctl & TSIF_STS_CTL_PACK_AVAIL) {
+		dev_info(&tsif_device->pdev->dev, "TSIF IRQ: PACK_AVAIL\n");
+		tsif_device->stat_rx++;
+	}
+	if (sts_ctl & TSIF_STS_CTL_OVERFLOW) {
+		dev_info(&tsif_device->pdev->dev, "TSIF IRQ: OVERFLOW\n");
+		tsif_device->stat_overflow++;
+	}
+	if (sts_ctl & TSIF_STS_CTL_LOST_SYNC) {
+		dev_info(&tsif_device->pdev->dev, "TSIF IRQ: LOST SYNC\n");
+		tsif_device->stat_lost_sync++;
+	}
+	if (sts_ctl & TSIF_STS_CTL_TIMEOUT) {
+		dev_info(&tsif_device->pdev->dev, "TSIF IRQ: TIMEOUT\n");
+>>>>>>> cm-10.0
 		tsif_device->stat_timeout++;
 	}
 	iowrite32(sts_ctl, tsif_device->base + TSIF_STS_CTL_OFF);
@@ -847,9 +1001,12 @@ static ssize_t show_stats(struct device *dev, struct device_attribute *attr,
 	case tsif_state_flushing:
 		state_string = "flushing";
 		break;
+<<<<<<< HEAD
 	case tsif_state_stopping:
 		state_string = "stopping";
 		break;
+=======
+>>>>>>> cm-10.0
 	default:
 		state_string = "???";
 	}
@@ -1049,17 +1206,35 @@ static int action_open(struct msm_tsif_device *tsif_device)
 
 	struct msm_tsif_platform_data *pdata =
 		tsif_device->pdev->dev.platform_data;
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 	dev_info(&tsif_device->pdev->dev, "%s\n", __func__);
 	if (tsif_device->state != tsif_state_stopped)
 		return -EAGAIN;
 	rc = tsif_dma_init(tsif_device);
 	if (rc) {
+<<<<<<< HEAD
 		dev_err(&tsif_device->pdev->dev, "failed to init DMA\n"); 
+=======
+		dev_err(&tsif_device->pdev->dev, "failed to init DMA\n");
+>>>>>>> cm-10.0
 		return rc;
 	}
 	tsif_device->state = tsif_state_running;
 
+<<<<<<< HEAD
+=======
+	/* make sure the GPIO's are set up */
+	rc = tsif_start_gpios(tsif_device);
+	if (rc) {
+		dev_err(&tsif_device->pdev->dev, "failed to start GPIOs\n");
+		tsif_dma_exit(tsif_device);
+		return rc;
+	}
+
+>>>>>>> cm-10.0
 	/*
 	 * DMA should be scheduled prior to TSIF hardware initialization,
 	 * otherwise "bus error" will be reported by Data Mover
@@ -1074,6 +1249,7 @@ static int action_open(struct msm_tsif_device *tsif_device)
 		pdata->init(pdata);
 	rc = tsif_start_hw(tsif_device);
 	if (rc) {
+<<<<<<< HEAD
 		dev_err(&tsif_device->pdev->dev, "Unable to start HW\n"); 
 		tsif_dma_exit(tsif_device);
 		tsif_clock(tsif_device, 0);
@@ -1093,27 +1269,46 @@ static int action_open(struct msm_tsif_device *tsif_device)
 	}
 
 
+=======
+		dev_err(&tsif_device->pdev->dev, "Unable to start HW\n");
+		tsif_stop_gpios(tsif_device);
+		tsif_dma_exit(tsif_device);
+		tsif_clock(tsif_device, 0);
+		return rc;
+	}
+
+>>>>>>> cm-10.0
 	result = pm_runtime_get(&tsif_device->pdev->dev);
 	if (result < 0) {
 		dev_err(&tsif_device->pdev->dev,
 			"Runtime PM: Unable to wake up the device, rc = %d\n",
 			result);
+<<<<<<< HEAD
 		tsif_stop_gpios(tsif_device);
 		tsif_stop_hw(tsif_device);
 		tsif_dma_exit(tsif_device);
 		tsif_clock(tsif_device, 0);
 		disable_irq(tsif_device->irq);
+=======
+>>>>>>> cm-10.0
 		return result;
 	}
 
 	wake_lock(&tsif_device->wake_lock);
+<<<<<<< HEAD
 	return 0;
+=======
+	return rc;
+>>>>>>> cm-10.0
 }
 
 static int action_close(struct msm_tsif_device *tsif_device)
 {
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 	dev_info(&tsif_device->pdev->dev, "%s, state %d\n", __func__,
 		 (int)tsif_device->state);
 
@@ -1126,7 +1321,11 @@ static int action_close(struct msm_tsif_device *tsif_device)
 	 * there are any outstanding reads on the bus, and if we
 	 * stop the TSIF too quickly, it can cause a bus error.
 	 */
+<<<<<<< HEAD
 	msleep(250);
+=======
+	msleep(100);
+>>>>>>> cm-10.0
 
 	/* now we can stop the core */
 	tsif_stop_hw(tsif_device);
@@ -1136,8 +1335,11 @@ static int action_close(struct msm_tsif_device *tsif_device)
 
 	pm_runtime_put(&tsif_device->pdev->dev);
 	wake_unlock(&tsif_device->wake_lock);
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -1303,7 +1505,11 @@ static void tsif_debugfs_exit(struct msm_tsif_device *tsif_device)
 		tsif_device->debugfs_databuf = NULL;
 	}
 }
+<<<<<<< HEAD
 	/* ===debugfs end=== */
+=======
+/* ===debugfs end=== */
+>>>>>>> cm-10.0
 
 /* ===module begin=== */
 static LIST_HEAD(tsif_devices);
@@ -1399,6 +1605,7 @@ static int __devinit msm_tsif_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "failed to create dev. attrs : %d\n", rc);
 		goto err_attrs;
 	}
+<<<<<<< HEAD
 	
 	tsif_device->data_buffer = dma_alloc_coherent(NULL, TSIF_BUF_SIZE,
 				&tsif_device->data_buffer_dma, GFP_KERNEL);
@@ -1410,6 +1617,8 @@ static int __devinit msm_tsif_probe(struct platform_device *pdev)
 	tsif_device->blob_wrapper_databuf.data = tsif_device->data_buffer;
 	tsif_device->blob_wrapper_databuf.size = TSIF_BUF_SIZE;
 	
+=======
+>>>>>>> cm-10.0
 	wake_lock_init(&tsif_device->wake_lock, WAKE_LOCK_SUSPEND,
 		       dev_name(&pdev->dev));
 	dev_info(&pdev->dev, "Configured irq %d memory 0x%08x DMA %d CRCI %d\n",
@@ -1419,9 +1628,12 @@ static int __devinit msm_tsif_probe(struct platform_device *pdev)
 	return 0;
 /* error path */
 	sysfs_remove_group(&pdev->dev.kobj, &dev_attr_grp);
+<<<<<<< HEAD
 err_alloc:
 	dev_err(&tsif_device->pdev->dev, "Failed to allocate DMA tsif buffers\n");
 	sysfs_remove_group(&pdev->dev.kobj, &dev_attr_grp);
+=======
+>>>>>>> cm-10.0
 err_attrs:
 	free_irq(tsif_device->irq, tsif_device);
 err_irq:
@@ -1446,6 +1658,7 @@ static int __devexit msm_tsif_remove(struct platform_device *pdev)
 	free_irq(tsif_device->irq, tsif_device);
 	tsif_debugfs_exit(tsif_device);
 	tsif_dma_exit(tsif_device);
+<<<<<<< HEAD
 	if (tsif_device->data_buffer) {
 		tsif_device->blob_wrapper_databuf.data = NULL;
 		tsif_device->blob_wrapper_databuf.size = 0;
@@ -1454,6 +1667,8 @@ static int __devexit msm_tsif_remove(struct platform_device *pdev)
 				  tsif_device->data_buffer_dma);
 		tsif_device->data_buffer = NULL;
 	}
+=======
+>>>>>>> cm-10.0
 	tsif_stop_gpios(tsif_device);
 	iounmap(tsif_device->base);
 	tsif_put_clocks(tsif_device);

@@ -13,7 +13,10 @@
  */
 
 #include <linux/magic.h>
+<<<<<<< HEAD
 #include <linux/mnt_namespace.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/mount.h>
 #include <linux/namei.h>
 #include <linux/nsproxy.h>
@@ -57,6 +60,7 @@ static int prepend(char **buffer, int buflen, const char *str, int namelen)
 static int d_namespace_path(struct path *path, char *buf, int buflen,
 			    char **name, int flags)
 {
+<<<<<<< HEAD
 	struct path root, tmp;
 	char *res;
 	int connected, error = 0;
@@ -84,6 +88,57 @@ static int d_namespace_path(struct path *path, char *buf, int buflen,
 		*name = buf;
 		goto out;
 	}
+=======
+	char *res;
+	int error = 0;
+	int connected = 1;
+
+	if (path->mnt->mnt_flags & MNT_INTERNAL) {
+		/* it's not mounted anywhere */
+		res = dentry_path(path->dentry, buf, buflen);
+		*name = res;
+		if (IS_ERR(res)) {
+			*name = buf;
+			return PTR_ERR(res);
+		}
+		if (path->dentry->d_sb->s_magic == PROC_SUPER_MAGIC &&
+		    strncmp(*name, "/sys/", 5) == 0) {
+			/* TODO: convert over to using a per namespace
+			 * control instead of hard coded /proc
+			 */
+			return prepend(name, *name - buf, "/proc", 5);
+		}
+		return 0;
+	}
+
+	/* resolve paths relative to chroot?*/
+	if (flags & PATH_CHROOT_REL) {
+		struct path root;
+		get_fs_root(current->fs, &root);
+		res = __d_path(path, &root, buf, buflen);
+		path_put(&root);
+	} else {
+		res = d_absolute_path(path, buf, buflen);
+		if (!our_mnt(path->mnt))
+			connected = 0;
+	}
+
+	/* handle error conditions - and still allow a partial path to
+	 * be returned.
+	 */
+	if (!res || IS_ERR(res)) {
+		connected = 0;
+		res = dentry_path_raw(path->dentry, buf, buflen);
+		if (IS_ERR(res)) {
+			error = PTR_ERR(res);
+			*name = buf;
+			goto out;
+		};
+	} else if (!our_mnt(path->mnt))
+		connected = 0;
+
+	*name = res;
+>>>>>>> cm-10.0
 
 	/* Handle two cases:
 	 * 1. A deleted dentry && profile is not allowing mediation of deleted
@@ -97,10 +152,14 @@ static int d_namespace_path(struct path *path, char *buf, int buflen,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	/* Determine if the path is connected to the expected root */
 	connected = tmp.dentry == root.dentry && tmp.mnt == root.mnt;
 
 	/* If the path is not connected,
+=======
+	/* If the path is not connected to the expected root,
+>>>>>>> cm-10.0
 	 * check if it is a sysctl and handle specially else remove any
 	 * leading / that __d_path may have returned.
 	 * Unless
@@ -112,6 +171,7 @@ static int d_namespace_path(struct path *path, char *buf, int buflen,
 	 *     namespace root.
 	 */
 	if (!connected) {
+<<<<<<< HEAD
 		/* is the disconnect path a sysctl? */
 		if (tmp.dentry->d_sb->s_magic == PROC_SUPER_MAGIC &&
 		    strncmp(*name, "/sys/", 5) == 0) {
@@ -127,14 +187,26 @@ static int d_namespace_path(struct path *path, char *buf, int buflen,
 			 * with '/'
 			 */
 			error = -ESTALE;
+=======
+		if (!(flags & PATH_CONNECT_PATH) &&
+			   !(((flags & CHROOT_NSCONNECT) == CHROOT_NSCONNECT) &&
+			     our_mnt(path->mnt))) {
+			/* disconnected path, don't return pathname starting
+			 * with '/'
+			 */
+			error = -EACCES;
+>>>>>>> cm-10.0
 			if (*res == '/')
 				*name = res + 1;
 		}
 	}
 
 out:
+<<<<<<< HEAD
 	path_put(&root);
 
+=======
+>>>>>>> cm-10.0
 	return error;
 }
 
@@ -149,7 +221,11 @@ out:
  * Returns: %0 else error on failure
  */
 static int get_name_to_buffer(struct path *path, int flags, char *buffer,
+<<<<<<< HEAD
 			      int size, char **name)
+=======
+			      int size, char **name, const char **info)
+>>>>>>> cm-10.0
 {
 	int adjust = (flags & PATH_IS_DIR) ? 1 : 0;
 	int error = d_namespace_path(path, buffer, size - adjust, name, flags);
@@ -161,15 +237,37 @@ static int get_name_to_buffer(struct path *path, int flags, char *buffer,
 		 */
 		strcpy(&buffer[size - 2], "/");
 
+<<<<<<< HEAD
+=======
+	if (info && error) {
+		if (error == -ENOENT)
+			*info = "Failed name lookup - deleted entry";
+		else if (error == -ESTALE)
+			*info = "Failed name lookup - disconnected path";
+		else if (error == -ENAMETOOLONG)
+			*info = "Failed name lookup - name too long";
+		else
+			*info = "Failed name lookup";
+	}
+
+>>>>>>> cm-10.0
 	return error;
 }
 
 /**
+<<<<<<< HEAD
  * aa_get_name - compute the pathname of a file
+=======
+ * aa_path_name - compute the pathname of a file
+>>>>>>> cm-10.0
  * @path: path the file  (NOT NULL)
  * @flags: flags controlling path name generation
  * @buffer: buffer that aa_get_name() allocated  (NOT NULL)
  * @name: Returns - the generated path name if !error (NOT NULL)
+<<<<<<< HEAD
+=======
+ * @info: Returns - information on why the path lookup failed (MAYBE NULL)
+>>>>>>> cm-10.0
  *
  * @name is a pointer to the beginning of the pathname (which usually differs
  * from the beginning of the buffer), or NULL.  If there is an error @name
@@ -182,7 +280,12 @@ static int get_name_to_buffer(struct path *path, int flags, char *buffer,
  *
  * Returns: %0 else error code if could retrieve name
  */
+<<<<<<< HEAD
 int aa_get_name(struct path *path, int flags, char **buffer, const char **name)
+=======
+int aa_path_name(struct path *path, int flags, char **buffer, const char **name,
+		 const char **info)
+>>>>>>> cm-10.0
 {
 	char *buf, *str = NULL;
 	int size = 256;
@@ -196,7 +299,11 @@ int aa_get_name(struct path *path, int flags, char **buffer, const char **name)
 		if (!buf)
 			return -ENOMEM;
 
+<<<<<<< HEAD
 		error = get_name_to_buffer(path, flags, buf, size, &str);
+=======
+		error = get_name_to_buffer(path, flags, buf, size, &str, info);
+>>>>>>> cm-10.0
 		if (error != -ENAMETOOLONG)
 			break;
 
@@ -204,6 +311,10 @@ int aa_get_name(struct path *path, int flags, char **buffer, const char **name)
 		size <<= 1;
 		if (size > aa_g_path_max)
 			return -ENAMETOOLONG;
+<<<<<<< HEAD
+=======
+		*info = NULL;
+>>>>>>> cm-10.0
 	}
 	*buffer = buf;
 	*name = str;

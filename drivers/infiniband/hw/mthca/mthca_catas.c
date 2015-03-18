@@ -31,6 +31,10 @@
  */
 
 #include <linux/jiffies.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/timer.h>
 #include <linux/workqueue.h>
 

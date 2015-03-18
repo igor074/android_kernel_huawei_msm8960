@@ -3,7 +3,11 @@
  * Verificion code for aDSP VENC packets from userspace.
  *
  * Copyright (C) 2008 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2009, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -53,7 +57,11 @@ static int pmem_fixup_high_low(unsigned short *high,
 	phys_size = (unsigned long)high_low_short_to_ptr(size_high, size_low);
 	MM_DBG("virt %x %x\n", (unsigned int)phys_addr,
 			(unsigned int)phys_size);
+<<<<<<< HEAD
 	if (adsp_pmem_fixup_kvaddr(module, &phys_addr, &kvaddr, phys_size,
+=======
+	if (adsp_ion_fixup_kvaddr(module, &phys_addr, &kvaddr, phys_size,
+>>>>>>> cm-10.0
 				NULL, NULL)) {
 		MM_ERR("ah%x al%x sh%x sl%x addr %x size %x\n",
 			*high, *low, size_high,

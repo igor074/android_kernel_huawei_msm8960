@@ -1,6 +1,10 @@
 /*
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2007-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2007-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -18,8 +22,13 @@
 
 #include <mach/clk.h>
 #include <mach/socinfo.h>
+<<<<<<< HEAD
 
 #include "proc_comm.h"
+=======
+#include <mach/proc_comm.h>
+
+>>>>>>> cm-10.0
 #include "clock.h"
 #include "clock-pcom.h"
 
@@ -175,10 +184,28 @@ static bool pc_clk_is_local(struct clk *clk)
 	return false;
 }
 
+<<<<<<< HEAD
 struct clk_ops clk_ops_pcom = {
 	.enable = pc_clk_enable,
 	.disable = pc_clk_disable,
 	.auto_off = pc_clk_disable,
+=======
+static enum handoff pc_clk_handoff(struct clk *clk)
+{
+	/*
+	 * Handoff clock state only since querying and caching the rate here
+	 * would incur more overhead than it would ever save.
+	 */
+	if (pc_clk_is_enabled(clk))
+		return HANDOFF_ENABLED_CLK;
+
+	return HANDOFF_DISABLED_CLK;
+}
+
+struct clk_ops clk_ops_pcom = {
+	.enable = pc_clk_enable,
+	.disable = pc_clk_disable,
+>>>>>>> cm-10.0
 	.reset = pc_reset,
 	.set_rate = pc_clk_set_rate,
 	.set_max_rate = pc_clk_set_max_rate,
@@ -187,12 +214,19 @@ struct clk_ops clk_ops_pcom = {
 	.is_enabled = pc_clk_is_enabled,
 	.round_rate = pc_clk_round_rate,
 	.is_local = pc_clk_is_local,
+<<<<<<< HEAD
+=======
+	.handoff = pc_clk_handoff,
+>>>>>>> cm-10.0
 };
 
 struct clk_ops clk_ops_pcom_ext_config = {
 	.enable = pc_clk_enable,
 	.disable = pc_clk_disable,
+<<<<<<< HEAD
 	.auto_off = pc_clk_disable,
+=======
+>>>>>>> cm-10.0
 	.reset = pc_reset,
 	.set_rate = pc_clk_set_ext_config,
 	.set_max_rate = pc_clk_set_max_rate,
@@ -201,5 +235,9 @@ struct clk_ops clk_ops_pcom_ext_config = {
 	.is_enabled = pc_clk_is_enabled,
 	.round_rate = pc_clk_round_rate,
 	.is_local = pc_clk_is_local,
+<<<<<<< HEAD
+=======
+	.handoff = pc_clk_handoff,
+>>>>>>> cm-10.0
 };
 

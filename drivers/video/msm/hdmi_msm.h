@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,8 +21,11 @@
 #include "external_common.h"
 /* #define PORT_DEBUG */
 
+<<<<<<< HEAD
 /* #define MHL_CERTIFICATE */
 
+=======
+>>>>>>> cm-10.0
 #ifdef PORT_DEBUG
 const char *hdmi_msm_name(uint32 offset);
 void hdmi_outp(uint32 offset, uint32 value);
@@ -58,6 +65,7 @@ struct hdmi_msm_state_type {
 #ifdef CONFIG_SUSPEND
 	boolean pm_suspended;
 #endif
+<<<<<<< HEAD
 	int hpd_stable;
 	boolean hpd_prev_state;
 	boolean hpd_cable_chg_detected;
@@ -68,12 +76,23 @@ struct hdmi_msm_state_type {
 	struct completion ddc_sw_done;
 
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL_HDCP_SUPPORT
+=======
+	boolean full_auth_done;
+	boolean hpd_during_auth;
+	struct work_struct hpd_state_work;
+	struct completion ddc_sw_done;
+
+	bool hdcp_enable;
+>>>>>>> cm-10.0
 	boolean hdcp_activating;
 	boolean reauth ;
 	struct work_struct hdcp_reauth_work, hdcp_work;
 	struct completion hdcp_success_done;
 	struct timer_list hdcp_timer;
+<<<<<<< HEAD
 #endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL_HDCP_SUPPORT */
+=======
+>>>>>>> cm-10.0
 
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL_CEC_SUPPORT
 	boolean cec_enabled;
@@ -112,6 +131,11 @@ struct hdmi_msm_state_type {
 	void __iomem *hdmi_io;
 
 	struct external_common_state_type common;
+<<<<<<< HEAD
+=======
+	boolean is_mhl_enabled;
+	struct completion hpd_event_processed;
+>>>>>>> cm-10.0
 };
 
 extern struct hdmi_msm_state_type *hdmi_msm_state;
@@ -136,5 +160,9 @@ void hdmi_msm_cec_msg_recv(void);
 void hdmi_msm_cec_one_touch_play(void);
 void hdmi_msm_cec_msg_send(struct hdmi_msm_cec_msg *msg);
 #endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL_CEC_SUPPORT */
+<<<<<<< HEAD
 
+=======
+void mhl_connect_api(boolean on);
+>>>>>>> cm-10.0
 #endif /* __HDMI_MSM_H__ */

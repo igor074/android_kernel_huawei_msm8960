@@ -11,6 +11,11 @@
 #include <linux/console.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/compat.h>
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/list.h>
 #include <linux/slab.h>
 #include <linux/types.h>

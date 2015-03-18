@@ -6,7 +6,10 @@
 #include <linux/net.h>
 #include <linux/radix-tree.h>
 #include <linux/uio.h>
+<<<<<<< HEAD
 #include <linux/version.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/workqueue.h>
 
 #include "types.h"
@@ -15,8 +18,11 @@
 struct ceph_msg;
 struct ceph_connection;
 
+<<<<<<< HEAD
 extern struct workqueue_struct *ceph_msgr_wq;       /* receive work queue */
 
+=======
+>>>>>>> cm-10.0
 /*
  * Ceph defines these callbacks for handling connection events.
  */
@@ -55,7 +61,10 @@ struct ceph_connection_operations {
 struct ceph_messenger {
 	struct ceph_entity_inst inst;    /* my name+address */
 	struct ceph_entity_addr my_enc_addr;
+<<<<<<< HEAD
 	struct page *zero_page;          /* used in certain error cases */
+=======
+>>>>>>> cm-10.0
 
 	bool nocrc;
 
@@ -94,6 +103,10 @@ struct ceph_msg {
 	bool more_to_follow;
 	bool needs_out_seq;
 	int front_max;
+<<<<<<< HEAD
+=======
+	unsigned long ack_stamp;        /* tx: when we were acked */
+>>>>>>> cm-10.0
 
 	struct ceph_msgpool *pool;
 };
@@ -101,7 +114,11 @@ struct ceph_msg {
 struct ceph_msg_pos {
 	int page, page_pos;  /* which page; offset in page */
 	int data_pos;        /* offset in data payload */
+<<<<<<< HEAD
 	int did_page_crc;    /* true if we've calculated crc for current page */
+=======
+	bool did_page_crc;   /* true if we've calculated crc for current page */
+>>>>>>> cm-10.0
 };
 
 /* ceph connection fault delay defaults, for exponential backoff */
@@ -237,7 +254,12 @@ extern void ceph_con_keepalive(struct ceph_connection *con);
 extern struct ceph_connection *ceph_con_get(struct ceph_connection *con);
 extern void ceph_con_put(struct ceph_connection *con);
 
+<<<<<<< HEAD
 extern struct ceph_msg *ceph_msg_new(int type, int front_len, gfp_t flags);
+=======
+extern struct ceph_msg *ceph_msg_new(int type, int front_len, gfp_t flags,
+				     bool can_fail);
+>>>>>>> cm-10.0
 extern void ceph_msg_kfree(struct ceph_msg *m);
 
 

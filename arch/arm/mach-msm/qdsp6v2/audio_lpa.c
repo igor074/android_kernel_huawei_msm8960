@@ -2,7 +2,11 @@
  *
  * Copyright (C) 2008 Google, Inc.
  * Copyright (C) 2008 HTC Corporation
+<<<<<<< HEAD
  * Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -45,7 +49,11 @@
 #include <mach/debug_mm.h>
 #include <linux/fs.h>
 
+<<<<<<< HEAD
 #define MAX_BUF 3
+=======
+#define MAX_BUF 4
+>>>>>>> cm-10.0
 #define BUFSZ (524288)
 
 #define AUDDEC_DEC_PCM 0
@@ -91,7 +99,10 @@ struct audlpa_event {
 struct audlpa_ion_region {
 	struct list_head list;
 	struct ion_handle *handle;
+<<<<<<< HEAD
 	struct ion_client *client;
+=======
+>>>>>>> cm-10.0
 	int fd;
 	void *vaddr;
 	unsigned long paddr;
@@ -463,7 +474,10 @@ static int audlpa_ion_add(struct audio *audio,
 	struct audlpa_ion_region *region;
 	int rc = -EINVAL;
 	struct ion_handle *handle;
+<<<<<<< HEAD
 	struct ion_client *client;
+=======
+>>>>>>> cm-10.0
 	unsigned long ionflag;
 	void *temp_ptr;
 
@@ -475,6 +489,7 @@ static int audlpa_ion_add(struct audio *audio,
 		goto end;
 	}
 
+<<<<<<< HEAD
 	client = msm_ion_client_create(UINT_MAX, "Audio_LPA_Client");
 	if (IS_ERR_OR_NULL(client)) {
 		pr_err("Unable to create ION client\n");
@@ -482,25 +497,41 @@ static int audlpa_ion_add(struct audio *audio,
 	}
 
 	handle = ion_import_fd(client, info->fd);
+=======
+
+	handle = ion_import_dma_buf(audio->client, info->fd);
+>>>>>>> cm-10.0
 	if (IS_ERR_OR_NULL(handle)) {
 		pr_err("%s: could not get handle of the given fd\n", __func__);
 		goto import_error;
 	}
 
+<<<<<<< HEAD
 	rc = ion_handle_get_flags(client, handle, &ionflag);
+=======
+	rc = ion_handle_get_flags(audio->client, handle, &ionflag);
+>>>>>>> cm-10.0
 	if (rc) {
 		pr_err("%s: could not get flags for the handle\n", __func__);
 		goto flag_error;
 	}
 
+<<<<<<< HEAD
 	temp_ptr = ion_map_kernel(client, handle, ionflag);
+=======
+	temp_ptr = ion_map_kernel(audio->client, handle, ionflag);
+>>>>>>> cm-10.0
 	if (IS_ERR_OR_NULL(temp_ptr)) {
 		pr_err("%s: could not get virtual address\n", __func__);
 		goto map_error;
 	}
 	kvaddr = (unsigned long) temp_ptr;
 
+<<<<<<< HEAD
 	rc = ion_phys(client, handle, &paddr, &len);
+=======
+	rc = ion_phys(audio->client, handle, &paddr, &len);
+>>>>>>> cm-10.0
 	if (rc) {
 		pr_err("%s: could not get physical address\n", __func__);
 		goto ion_error;
@@ -512,7 +543,10 @@ static int audlpa_ion_add(struct audio *audio,
 		goto ion_error;
 	}
 
+<<<<<<< HEAD
 	region->client = client;
+=======
+>>>>>>> cm-10.0
 	region->handle = handle;
 	region->vaddr = info->vaddr;
 	region->fd = info->fd;
@@ -534,6 +568,7 @@ static int audlpa_ion_add(struct audio *audio,
 	}
 
 ion_error:
+<<<<<<< HEAD
 	ion_unmap_kernel(client, handle);
 map_error:
 	ion_free(client, handle);
@@ -541,6 +576,13 @@ flag_error:
 import_error:
 	ion_client_destroy(client);
 client_error:
+=======
+	ion_unmap_kernel(audio->client, handle);
+map_error:
+flag_error:
+	ion_free(audio->client, handle);
+import_error:
+>>>>>>> cm-10.0
 	kfree(region);
 end:
 	return rc;
@@ -571,9 +613,14 @@ static int audlpa_ion_remove(struct audio *audio,
 					__func__, audio);
 
 			list_del(&region->list);
+<<<<<<< HEAD
 			ion_unmap_kernel(region->client, region->handle);
 			ion_free(region->client, region->handle);
 			ion_client_destroy(region->client);
+=======
+			ion_unmap_kernel(audio->client, region->handle);
+			ion_free(audio->client, region->handle);
+>>>>>>> cm-10.0
 			kfree(region);
 			rc = 0;
 			break;
@@ -840,6 +887,13 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 				.step = SOFT_VOLUME_STEP,
 				.rampingcurve = SOFT_VOLUME_CURVE_LINEAR,
 			};
+<<<<<<< HEAD
+=======
+			if (softpause.rampingcurve == SOFT_PAUSE_CURVE_LINEAR)
+				softpause.step = SOFT_PAUSE_STEP_LINEAR;
+			if (softvol.rampingcurve == SOFT_VOLUME_CURVE_LINEAR)
+				softvol.step = SOFT_VOLUME_STEP_LINEAR;
+>>>>>>> cm-10.0
 			audio->out_enabled = 1;
 			audio->out_needed = 1;
 			rc = q6asm_set_volume(audio->ac, audio->volume);
@@ -1078,7 +1132,11 @@ done:
 	return rc;
 }
 
+<<<<<<< HEAD
 int audlpa_fsync(struct file *file, int datasync)
+=======
+int audlpa_fsync(struct file *file, loff_t ppos1, loff_t ppos2, int datasync)
+>>>>>>> cm-10.0
 {
 	struct audio *audio = file->private_data;
 
@@ -1093,9 +1151,14 @@ void audlpa_reset_ion_region(struct audio *audio)
 	list_for_each_safe(ptr, next, &audio->ion_region_queue) {
 		region = list_entry(ptr, struct audlpa_ion_region, list);
 		list_del(&region->list);
+<<<<<<< HEAD
 		ion_unmap_kernel(region->client, region->handle);
 		ion_free(region->client, region->handle);
 		ion_client_destroy(region->client);
+=======
+		ion_unmap_kernel(audio->client, region->handle);
+		ion_free(audio->client, region->handle);
+>>>>>>> cm-10.0
 		kfree(region);
 	}
 
@@ -1140,6 +1203,10 @@ static int audio_release(struct inode *inode, struct file *file)
 	auddev_unregister_evt_listner(AUDDEV_CLNT_DEC, audio->ac->session);
 	q6asm_audio_client_free(audio->ac);
 	audlpa_reset_ion_region(audio);
+<<<<<<< HEAD
+=======
+	ion_client_destroy(audio->client);
+>>>>>>> cm-10.0
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&audio->suspend_ctl.node);
 #endif
@@ -1387,6 +1454,15 @@ static int audio_open(struct inode *inode, struct file *file)
 	pr_info("%s: audio instance 0x%08x created session[%d]\n", __func__,
 						(int)audio,
 						audio->ac->session);
+<<<<<<< HEAD
+=======
+	audio->client = msm_ion_client_create(UINT_MAX, "Audio_LPA_Client");
+	if (IS_ERR_OR_NULL(audio->client)) {
+		pr_err("Unable to create ION client\n");
+		goto err;
+	}
+	pr_debug("Allocating ION clinet in audio_open %p", audio->client);
+>>>>>>> cm-10.0
 done:
 	return rc;
 err:

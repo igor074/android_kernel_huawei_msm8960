@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,6 +21,10 @@
 #include <linux/mmc/mmc.h>
 #include <linux/mmc/host.h>
 #include <linux/mmc/card.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 /* Libra SDIO function device */
 static struct sdio_func *libra_sdio_func;
@@ -26,6 +34,15 @@ static int libra_mmc_host_index;
 /* SDIO Card ID / Device ID */
 static unsigned short  libra_sdio_card_id;
 
+<<<<<<< HEAD
+=======
+/* completion variables */
+struct completion gCard_rem_event_var;
+EXPORT_SYMBOL(gCard_rem_event_var);
+struct completion gShutdown_event_var;
+EXPORT_SYMBOL(gShutdown_event_var);
+
+>>>>>>> cm-10.0
 static suspend_handler_t *libra_suspend_hldr;
 static resume_handler_t *libra_resume_hldr;
 static notify_card_removal_t *libra_notify_card_removal_hdlr;

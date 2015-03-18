@@ -12,7 +12,11 @@
  *  have a non-standard calling sequence on the Linux/arm
  *  platform.
  */
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/errno.h>
 #include <linux/sched.h>
 #include <linux/mm.h>
@@ -115,7 +119,11 @@ int kernel_execve(const char *filename,
 		  "Ir" (THREAD_START_SP - sizeof(regs)),
 		  "r" (&regs),
 		  "Ir" (sizeof(regs))
+<<<<<<< HEAD
 		: "r0", "r1", "r2", "r3", "ip", "lr", "memory");
+=======
+		: "r0", "r1", "r2", "r3", "r8", "r9", "ip", "lr", "memory");
+>>>>>>> cm-10.0
 
  out:
 	return ret;

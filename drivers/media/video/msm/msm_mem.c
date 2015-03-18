@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/workqueue.h>
 #include <linux/delay.h>
 #include <linux/types.h>
@@ -132,7 +140,11 @@ static int msm_pmem_table_add(struct hlist_head *ptype,
 	if (!region)
 		goto out;
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
+<<<<<<< HEAD
 	region->handle = ion_import_fd(client, info->fd);
+=======
+	region->handle = ion_import_dma_buf(client, info->fd);
+>>>>>>> cm-10.0
 	if (IS_ERR_OR_NULL(region->handle))
 		goto out1;
 	if (ion_map_iommu(client, region->handle, CAMERA_DOMAIN, GEN_POOL,
@@ -346,14 +358,23 @@ uint8_t msm_pmem_region_lookup_2(struct hlist_head *ptype,
 }
 
 unsigned long msm_pmem_stats_vtop_lookup(
+<<<<<<< HEAD
 				struct msm_sync *sync,
+=======
+				struct msm_cam_media_controller *mctl,
+>>>>>>> cm-10.0
 				unsigned long buffer,
 				int fd)
 {
 	struct msm_pmem_region *region;
 	struct hlist_node *node, *n;
 
+<<<<<<< HEAD
 	hlist_for_each_entry_safe(region, node, n, &sync->pmem_stats, list) {
+=======
+	hlist_for_each_entry_safe(region, node, n,
+	&mctl->stats_info.pmem_stats_list, list) {
+>>>>>>> cm-10.0
 		if (((unsigned long)(region->info.vaddr) == buffer) &&
 						(region->info.fd == fd) &&
 						region->info.active == 0) {
@@ -365,13 +386,24 @@ unsigned long msm_pmem_stats_vtop_lookup(
 	return 0;
 }
 
+<<<<<<< HEAD
 unsigned long msm_pmem_stats_ptov_lookup(struct msm_sync *sync,
 						unsigned long addr, int *fd)
+=======
+unsigned long msm_pmem_stats_ptov_lookup(
+		struct msm_cam_media_controller *mctl,
+		unsigned long addr, int *fd)
+>>>>>>> cm-10.0
 {
 	struct msm_pmem_region *region;
 	struct hlist_node *node, *n;
 
+<<<<<<< HEAD
 	hlist_for_each_entry_safe(region, node, n, &sync->pmem_stats, list) {
+=======
+	hlist_for_each_entry_safe(region, node, n,
+	&mctl->stats_info.pmem_stats_list, list) {
+>>>>>>> cm-10.0
 		if (addr == region->paddr && region->info.active) {
 			/* offset since we could pass vaddr inside a
 			 * registered pmem buffer */

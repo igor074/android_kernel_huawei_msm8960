@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,7 +25,11 @@
 #include <linux/delay.h>
 #include <mach/hardware.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 
+=======
+#include <mach/iommu_domains.h>
+>>>>>>> cm-10.0
 #include <asm/system.h>
 #include <asm/mach-types.h>
 #include <linux/semaphore.h>
@@ -77,7 +85,11 @@ int mdp4_overlay_writeback_on(struct platform_device *pdev)
 		fbi->var.yoffset * fbi->fix.line_length;
 
 	/* MDP cmd block enable */
+<<<<<<< HEAD
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
+=======
+	mdp_clk_ctrl(1);
+>>>>>>> cm-10.0
 
 	if (writeback_pipe == NULL) {
 		pipe = mdp4_overlay_pipe_alloc(OVERLAY_TYPE_BF, MDP4_MIXER2);
@@ -98,11 +110,22 @@ int mdp4_overlay_writeback_on(struct platform_device *pdev)
 		pipe = writeback_pipe;
 	}
 	ret = panel_next_on(pdev);
+<<<<<<< HEAD
 	/* MDP_LAYERMIXER_WB_MUX_SEL to use mixer1 axi for mixer2 writeback */
 	data = inpdw(MDP_BASE + 0x100F4);
 	data &= ~0x02; /* clear the mixer1 mux bit */
 	data |= 0x02;
 	outpdw(MDP_BASE + 0x100F4, data);
+=======
+
+	/* MDP_LAYERMIXER_WB_MUX_SEL to use mixer1 axi for mixer2 writeback */
+	if (hdmi_prim_display)
+		data = 0x01;
+	else
+		data = 0x02;
+	outpdw(MDP_BASE + 0x100F4, data);
+
+>>>>>>> cm-10.0
 	MDP_OUTP(MDP_BASE + MDP4_OVERLAYPROC1_BASE + 0x5004,
 		((0x0 & 0xFFF) << 16) | /* 12-bit B */
 			(0x0 & 0xFFF));         /* 12-bit G */
@@ -110,14 +133,21 @@ int mdp4_overlay_writeback_on(struct platform_device *pdev)
 	MDP_OUTP(MDP_BASE + MDP4_OVERLAYPROC1_BASE + 0x5008,
 		(0x0 & 0xFFF));         /* 12-bit R */
 
+<<<<<<< HEAD
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
+=======
+	mdp_clk_ctrl(0);
+>>>>>>> cm-10.0
 	return ret;
 }
 
 int mdp4_overlay_writeback_off(struct platform_device *pdev)
 {
 	int ret;
+<<<<<<< HEAD
 	uint32 data;
+=======
+>>>>>>> cm-10.0
 	struct msm_fb_data_type *mfd =
 			(struct msm_fb_data_type *)platform_get_drvdata(pdev);
 	if (mfd && writeback_pipe) {
@@ -128,6 +158,7 @@ int mdp4_overlay_writeback_off(struct platform_device *pdev)
 		writeback_pipe = NULL;
 	}
 	ret = panel_next_off(pdev);
+<<<<<<< HEAD
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
 	/* MDP_LAYERMIXER_WB_MUX_SEL to restore
 	 * mixer1 axi for mixer1 writeback */
@@ -135,6 +166,12 @@ int mdp4_overlay_writeback_off(struct platform_device *pdev)
 	data &= ~0x02; /* clear the mixer1 mux bit */
 	outpdw(MDP_BASE + 0x100F4, data);
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
+=======
+	mdp_clk_ctrl(1);
+	/* MDP_LAYERMIXER_WB_MUX_SEL to restore to default cfg*/
+	outpdw(MDP_BASE + 0x100F4, 0x0);
+	mdp_clk_ctrl(0);
+>>>>>>> cm-10.0
 	return ret;
 }
 int mdp4_overlay_writeback_update(struct msm_fb_data_type *mfd)
@@ -161,7 +198,11 @@ int mdp4_overlay_writeback_update(struct msm_fb_data_type *mfd)
 		fbi->var.yoffset * fbi->fix.line_length;
 
 	/* MDP cmd block enable */
+<<<<<<< HEAD
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
+=======
+	mdp_clk_ctrl(1);
+>>>>>>> cm-10.0
 
 	pipe->src_height = fbi->var.yres;
 	pipe->src_width = fbi->var.xres;
@@ -175,6 +216,7 @@ int mdp4_overlay_writeback_update(struct msm_fb_data_type *mfd)
 	pipe->dst_y = 0;
 	pipe->dst_x = 0;
 
+<<<<<<< HEAD
 	if (mfd->map_buffer) {
 		pipe->srcp0_addr = (unsigned int)mfd->map_buffer->iova[0] + \
 			buf_offset;
@@ -190,6 +232,21 @@ int mdp4_overlay_writeback_update(struct msm_fb_data_type *mfd)
 
 	/* MDP cmd block disable */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
+=======
+	mdp4_overlay_mdp_pipe_req(pipe, mfd);
+
+	if (mfd->display_iova)
+		pipe->srcp0_addr = mfd->display_iova + buf_offset;
+	else
+		pipe->srcp0_addr = (uint32)(buf + buf_offset);
+
+	mdp4_mixer_stage_up(pipe, 0);
+
+	mdp4_overlayproc_cfg(pipe);
+	mdp4_mixer_stage_commit(pipe->mixer_num);
+	/* MDP cmd block disable */
+	mdp_clk_ctrl(0);
+>>>>>>> cm-10.0
 
 	wmb();
 	return 0;
@@ -203,7 +260,11 @@ void mdp4_writeback_dma_busy_wait(struct msm_fb_data_type *mfd)
 	if (mfd->dma->busy == TRUE) {
 		if (busy_wait_cnt == 0)
 			INIT_COMPLETION(mfd->dma->comp);
+<<<<<<< HEAD
 		busy_wait_cnt++;
+=======
+		busy_wait_cnt = 1;
+>>>>>>> cm-10.0
 		need_wait++;
 	}
 	spin_unlock_irqrestore(&mdp_spin_lock, flag);
@@ -220,22 +281,38 @@ void mdp4_overlay1_done_writeback(struct mdp_dma_data *dma)
 {
 	spin_lock(&mdp_spin_lock);
 	dma->busy = FALSE;
+<<<<<<< HEAD
 	spin_unlock(&mdp_spin_lock);
 	complete(&dma->comp);
 	if (busy_wait_cnt)
 		busy_wait_cnt--;
 
 	mdp_disable_irq_nosync(MDP_OVERLAY2_TERM);
+=======
+	if (busy_wait_cnt)
+		busy_wait_cnt = 0;
+	mdp_disable_irq_nosync(MDP_OVERLAY2_TERM);
+	spin_unlock(&mdp_spin_lock);
+	complete_all(&dma->comp);
+>>>>>>> cm-10.0
 	pr_debug("%s ovdone interrupt\n", __func__);
 
 }
 void mdp4_writeback_overlay_kickoff(struct msm_fb_data_type *mfd,
+<<<<<<< HEAD
 		struct mdp4_overlay_pipe *pipe)
+=======
+				    struct mdp4_overlay_pipe *pipe)
+>>>>>>> cm-10.0
 {
 	unsigned long flag;
 	spin_lock_irqsave(&mdp_spin_lock, flag);
 	mdp_enable_irq(MDP_OVERLAY2_TERM);
+<<<<<<< HEAD
 	INIT_COMPLETION(writeback_pipe->comp);
+=======
+
+>>>>>>> cm-10.0
 	mfd->dma->busy = TRUE;
 	outp32(MDP_INTR_CLEAR, INTR_OVERLAY2_DONE);
 	mdp_intr_mask |= INTR_OVERLAY2_DONE;
@@ -247,7 +324,10 @@ void mdp4_writeback_overlay_kickoff(struct msm_fb_data_type *mfd,
 	mdp_pipe_kickoff(MDP_OVERLAY2_TERM, mfd);
 	wmb();
 	pr_debug("%s: before ov done interrupt\n", __func__);
+<<<<<<< HEAD
 	wait_for_completion_killable(&mfd->dma->comp);
+=======
+>>>>>>> cm-10.0
 }
 void mdp4_writeback_dma_stop(struct msm_fb_data_type *mfd)
 {
@@ -275,6 +355,7 @@ void mdp4_writeback_kickoff_video(struct msm_fb_data_type *mfd,
 	if (node) {
 		list_del(&(node->active_entry));
 		node->state = IN_BUSY_QUEUE;
+<<<<<<< HEAD
 	}
 	mutex_unlock(&mfd->writeback_mutex);
 
@@ -283,20 +364,54 @@ void mdp4_writeback_kickoff_video(struct msm_fb_data_type *mfd,
 	if (!writeback_pipe->blt_addr) {
 		pr_err("%s: no writeback buffer 0x%x, %p\n", __func__,
 				(unsigned int)writeback_pipe->blt_addr, node);
+=======
+		mfd->writeback_active_cnt++;
+	}
+	mutex_unlock(&mfd->writeback_mutex);
+
+	writeback_pipe->ov_blt_addr = (ulong) (node ? node->addr : NULL);
+
+	/* free previous iommu at freelist back to pool */
+	mdp4_overlay_iommu_unmap_freelist(writeback_pipe->mixer_num);
+
+	if (!writeback_pipe->ov_blt_addr) {
+		pr_err("%s: no writeback buffer 0x%x, %p\n", __func__,
+			(unsigned int)writeback_pipe->ov_blt_addr, node);
+>>>>>>> cm-10.0
 		mutex_unlock(&mfd->unregister_mutex);
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	mdp_clk_ctrl(1);
+
+>>>>>>> cm-10.0
 	if (writeback_pipe->blt_cnt == 0)
 		mdp4_overlay_writeback_update(mfd);
 
 	pr_debug("%s: pid=%d\n", __func__, current->pid);
 
+<<<<<<< HEAD
 	mdp4_writeback_overlay_kickoff(mfd, pipe);
+=======
+	mdp4_mixer_stage_commit(pipe->mixer_num);
+
+	mdp4_writeback_overlay_kickoff(mfd, pipe);
+	mdp4_writeback_dma_busy_wait(mfd);
+	mdp_clk_ctrl(0);
+
+	/* move current committed iommu to freelist */
+	mdp4_overlay_iommu_pipe_free(pipe->pipe_ndx, 0);
+>>>>>>> cm-10.0
 
 	mutex_lock(&mfd->writeback_mutex);
 	list_add_tail(&node->active_entry, &mfd->writeback_busy_queue);
 	mutex_unlock(&mfd->writeback_mutex);
+<<<<<<< HEAD
+=======
+	mfd->writeback_active_cnt--;
+>>>>>>> cm-10.0
 	mutex_unlock(&mfd->unregister_mutex);
 	wake_up(&mfd->wait_q);
 }
@@ -304,6 +419,10 @@ void mdp4_writeback_kickoff_video(struct msm_fb_data_type *mfd,
 void mdp4_writeback_kickoff_ui(struct msm_fb_data_type *mfd,
 		struct mdp4_overlay_pipe *pipe)
 {
+<<<<<<< HEAD
+=======
+	mdp4_mixer_stage_commit(pipe->mixer_num);
+>>>>>>> cm-10.0
 
 	pr_debug("%s: pid=%d\n", __func__, current->pid);
 	mdp4_writeback_overlay_kickoff(mfd, pipe);
@@ -325,6 +444,7 @@ void mdp4_writeback_overlay(struct msm_fb_data_type *mfd)
 	if (node) {
 		list_del(&(node->active_entry));
 		node->state = IN_BUSY_QUEUE;
+<<<<<<< HEAD
 	}
 	mutex_unlock(&mfd->writeback_mutex);
 
@@ -335,6 +455,19 @@ void mdp4_writeback_overlay(struct msm_fb_data_type *mfd)
 	if (writeback_pipe && !writeback_pipe->blt_addr) {
 		pr_err("%s: no writeback buffer 0x%x\n", __func__,
 				(unsigned int)writeback_pipe->blt_addr);
+=======
+		mfd->writeback_active_cnt++;
+	}
+	mutex_unlock(&mfd->writeback_mutex);
+
+	writeback_pipe->ov_blt_addr = (ulong) (node ? node->addr : NULL);
+
+	mutex_lock(&mfd->dma->ov_mutex);
+	pr_debug("%s in writeback\n", __func__);
+	if (writeback_pipe && !writeback_pipe->ov_blt_addr) {
+		pr_err("%s: no writeback buffer 0x%x\n", __func__,
+				(unsigned int)writeback_pipe->ov_blt_addr);
+>>>>>>> cm-10.0
 		ret = mdp4_overlay_writeback_update(mfd);
 		if (ret)
 			pr_err("%s: update failed writeback pipe NULL\n",
@@ -355,7 +488,11 @@ void mdp4_writeback_overlay(struct msm_fb_data_type *mfd)
 		}
 
 		pr_debug("%s: in writeback pan display 0x%x\n", __func__,
+<<<<<<< HEAD
 				(unsigned int)writeback_pipe->blt_addr);
+=======
+				(unsigned int)writeback_pipe->ov_blt_addr);
+>>>>>>> cm-10.0
 		mdp4_writeback_kickoff_ui(mfd, writeback_pipe);
 		mdp4_iommu_unmap(writeback_pipe);
 
@@ -369,6 +506,10 @@ void mdp4_writeback_overlay(struct msm_fb_data_type *mfd)
 
 	mutex_lock(&mfd->writeback_mutex);
 	list_add_tail(&node->active_entry, &mfd->writeback_busy_queue);
+<<<<<<< HEAD
+=======
+	mfd->writeback_active_cnt--;
+>>>>>>> cm-10.0
 	mutex_unlock(&mfd->writeback_mutex);
 	wake_up(&mfd->wait_q);
 fail_no_blt_addr:
@@ -393,6 +534,11 @@ static struct msmfb_writeback_data_list *get_if_registered(
 {
 	struct msmfb_writeback_data_list *temp;
 	bool found = false;
+<<<<<<< HEAD
+=======
+	int domain;
+
+>>>>>>> cm-10.0
 	if (!list_empty(&mfd->writeback_register_queue)) {
 		list_for_each_entry(temp,
 				&mfd->writeback_register_queue,
@@ -407,6 +553,7 @@ static struct msmfb_writeback_data_list *get_if_registered(
 		temp = kzalloc(sizeof(struct msmfb_writeback_data_list),
 				GFP_KERNEL);
 		if (temp == NULL) {
+<<<<<<< HEAD
 			pr_err("Out of memory\n");
 			goto err;
 		}
@@ -421,6 +568,63 @@ static struct msmfb_writeback_data_list *get_if_registered(
 	}
 err:
 	return temp;
+=======
+			pr_err("%s: out of memory\n", __func__);
+			goto register_alloc_fail;
+		}
+		temp->ihdl = NULL;
+		if (data->iova)
+			temp->addr = (void *)(data->iova + data->offset);
+		else if (mfd->iclient) {
+			struct ion_handle *srcp_ihdl;
+			ulong len;
+			srcp_ihdl = ion_import_dma_buf(mfd->iclient,
+						  data->memory_id);
+			if (IS_ERR_OR_NULL(srcp_ihdl)) {
+				pr_err("%s: ion import fd failed\n", __func__);
+				goto register_ion_fail;
+			}
+
+			if (mdp_iommu_split_domain)
+				domain = DISPLAY_WRITE_DOMAIN;
+			else
+				domain = DISPLAY_READ_DOMAIN;
+
+			if (ion_map_iommu(mfd->iclient,
+					  srcp_ihdl,
+					  domain,
+					  GEN_POOL,
+					  SZ_4K,
+					  0,
+					  (ulong *)&temp->addr,
+					  (ulong *)&len,
+					  0,
+					  ION_IOMMU_UNMAP_DELAYED)) {
+				ion_free(mfd->iclient, srcp_ihdl);
+				pr_err("%s: unable to get ion mapping addr\n",
+				       __func__);
+				goto register_ion_fail;
+			}
+			temp->addr += data->offset;
+			temp->ihdl = srcp_ihdl;
+		}
+		else {
+			pr_err("%s: only support ion memory\n", __func__);
+			goto register_ion_fail;
+		}
+
+		memcpy(&temp->buf_info, data, sizeof(struct msmfb_data));
+		if (mdp4_overlay_writeback_register_buffer(mfd, temp)) {
+			pr_err("%s: error registering node\n", __func__);
+			goto register_ion_fail;
+		}
+	}
+	return temp;
+ register_ion_fail:
+	kfree(temp);
+ register_alloc_fail:
+	return NULL;
+>>>>>>> cm-10.0
 }
 int mdp4_writeback_start(
 		struct fb_info *info)
@@ -468,7 +672,11 @@ int mdp4_writeback_dequeue_buffer(struct fb_info *info, struct msmfb_data *data)
 {
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
 	struct msmfb_writeback_data_list *node = NULL;
+<<<<<<< HEAD
 	int rc = 0;
+=======
+	int rc = 0, domain;
+>>>>>>> cm-10.0
 
 	rc = wait_event_interruptible(mfd->wait_q, is_buffer_ready(mfd));
 	if (rc) {
@@ -488,6 +696,23 @@ int mdp4_writeback_dequeue_buffer(struct fb_info *info, struct msmfb_data *data)
 		list_del(&node->active_entry);
 		node->state = WITH_CLIENT;
 		memcpy(data, &node->buf_info, sizeof(struct msmfb_data));
+<<<<<<< HEAD
+=======
+		if (!data->iova)
+			if (mfd->iclient && node->ihdl) {
+				if (mdp_iommu_split_domain)
+					domain = DISPLAY_WRITE_DOMAIN;
+				else
+					domain = DISPLAY_READ_DOMAIN;
+
+				ion_unmap_iommu(mfd->iclient,
+						node->ihdl,
+						domain,
+						GEN_POOL);
+				ion_free(mfd->iclient,
+					 node->ihdl);
+			}
+>>>>>>> cm-10.0
 	} else {
 		pr_err("node is NULL. Somebody else dequeued?\n");
 		rc = -ENOBUFS;
@@ -496,13 +721,33 @@ int mdp4_writeback_dequeue_buffer(struct fb_info *info, struct msmfb_data *data)
 	return rc;
 }
 
+<<<<<<< HEAD
+=======
+static bool is_writeback_inactive(struct msm_fb_data_type *mfd)
+{
+	bool active;
+	mutex_lock(&mfd->writeback_mutex);
+	active = !mfd->writeback_active_cnt;
+	mutex_unlock(&mfd->writeback_mutex);
+	return active;
+}
+>>>>>>> cm-10.0
 int mdp4_writeback_stop(struct fb_info *info)
 {
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
 	mutex_lock(&mfd->writeback_mutex);
 	mfd->writeback_state = WB_STOPING;
 	mutex_unlock(&mfd->writeback_mutex);
+<<<<<<< HEAD
 	wake_up(&mfd->wait_q);
+=======
+	/* Wait for all pending writebacks to finish */
+	wait_event_interruptible(mfd->wait_q, is_writeback_inactive(mfd));
+
+	/* Wake up dequeue thread in case of no UI update*/
+	wake_up(&mfd->wait_q);
+
+>>>>>>> cm-10.0
 	return 0;
 }
 int mdp4_writeback_init(struct fb_info *info)
@@ -522,8 +767,24 @@ int mdp4_writeback_terminate(struct fb_info *info)
 	struct list_head *ptr, *next;
 	struct msmfb_writeback_data_list *temp;
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
+<<<<<<< HEAD
 	mutex_lock(&mfd->unregister_mutex);
 	mutex_lock(&mfd->writeback_mutex);
+=======
+	int rc = 0;
+
+	mutex_lock(&mfd->unregister_mutex);
+	mutex_lock(&mfd->writeback_mutex);
+
+	if (mfd->writeback_state != WB_STOPING &&
+		mfd->writeback_state != WB_STOP) {
+		pr_err("%s called without stopping\n", __func__);
+		rc = -EPERM;
+		goto terminate_err;
+
+	}
+
+>>>>>>> cm-10.0
 	if (!list_empty(&mfd->writeback_register_queue)) {
 		list_for_each_safe(ptr, next,
 				&mfd->writeback_register_queue) {
@@ -537,7 +798,16 @@ int mdp4_writeback_terminate(struct fb_info *info)
 	INIT_LIST_HEAD(&mfd->writeback_register_queue);
 	INIT_LIST_HEAD(&mfd->writeback_busy_queue);
 	INIT_LIST_HEAD(&mfd->writeback_free_queue);
+<<<<<<< HEAD
 	mutex_unlock(&mfd->writeback_mutex);
 	mutex_unlock(&mfd->unregister_mutex);
 	return 0;
+=======
+
+
+terminate_err:
+	mutex_unlock(&mfd->writeback_mutex);
+	mutex_unlock(&mfd->unregister_mutex);
+	return rc;
+>>>>>>> cm-10.0
 }

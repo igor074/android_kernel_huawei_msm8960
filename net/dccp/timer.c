@@ -12,6 +12,10 @@
 
 #include <linux/dccp.h>
 #include <linux/skbuff.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "dccp.h"
 

@@ -1,9 +1,15 @@
 /*
  * SD-SPI Protocol Standard
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -21,9 +27,14 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
+<<<<<<< HEAD
  * $Id: sdspi.h,v 9.2.120.1 2010-11-15 17:56:25 Exp $
  */
 
+=======
+ * $Id: sdspi.h 241182 2011-02-17 21:50:03Z $
+ */
+>>>>>>> cm-10.0
 #ifndef	_SD_SPI_H
 #define	_SD_SPI_H
 

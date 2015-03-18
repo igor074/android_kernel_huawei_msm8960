@@ -27,7 +27,10 @@
 #include <linux/slab.h>
 #include <asm/uaccess.h>
 #include <asm/pgtable.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/processor.h>
 #include <asm/mmu_context.h>
@@ -123,9 +126,13 @@ void cpu_idle(void)
 			idle();
 		}
 
+<<<<<<< HEAD
 		preempt_enable_no_resched();
 		schedule();
 		preempt_disable();
+=======
+		schedule_preempt_disabled();
+>>>>>>> cm-10.0
 	}
 }
 

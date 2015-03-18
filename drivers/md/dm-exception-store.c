@@ -11,6 +11,10 @@
 #include <linux/mm.h>
 #include <linux/pagemap.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/slab.h>
 
 #define DM_MSG_PREFIX "snapshot exception stores"
@@ -282,7 +286,11 @@ int dm_exception_store_init(void)
 	return 0;
 
 persistent_fail:
+<<<<<<< HEAD
 	dm_persistent_snapshot_exit();
+=======
+	dm_transient_snapshot_exit();
+>>>>>>> cm-10.0
 transient_fail:
 	return r;
 }

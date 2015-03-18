@@ -49,12 +49,19 @@ obj-$(CONFIG_IP_NF_SECURITY) += iptable_security.o
 
 # matches
 obj-$(CONFIG_IP_NF_MATCH_AH) += ipt_ah.o
+<<<<<<< HEAD
 obj-$(CONFIG_IP_NF_MATCH_ECN) += ipt_ecn.o
+=======
+obj-$(CONFIG_IP_NF_MATCH_RPFILTER) += ipt_rpfilter.o
+>>>>>>> cm-10.0
 
 # targets
 obj-$(CONFIG_IP_NF_TARGET_CLUSTERIP) += ipt_CLUSTERIP.o
 obj-$(CONFIG_IP_NF_TARGET_ECN) += ipt_ECN.o
+<<<<<<< HEAD
 obj-$(CONFIG_IP_NF_TARGET_LOG) += ipt_LOG.o
+=======
+>>>>>>> cm-10.0
 obj-$(CONFIG_IP_NF_TARGET_MASQUERADE) += ipt_MASQUERADE.o
 obj-$(CONFIG_IP_NF_TARGET_NETMAP) += ipt_NETMAP.o
 obj-$(CONFIG_IP_NF_TARGET_REDIRECT) += ipt_REDIRECT.o

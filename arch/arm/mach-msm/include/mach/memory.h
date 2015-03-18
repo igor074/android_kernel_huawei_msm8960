@@ -1,7 +1,11 @@
 /* arch/arm/mach-msm/include/mach/memory.h
  *
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -78,6 +82,10 @@ void invalidate_caches(unsigned long, unsigned long, unsigned long);
 int platform_physical_remove_pages(u64, u64);
 int platform_physical_active_pages(u64, u64);
 int platform_physical_low_power_pages(u64, u64);
+<<<<<<< HEAD
+=======
+unsigned long get_ddr_size(void);
+>>>>>>> cm-10.0
 
 extern int (*change_memory_power)(u64, u64, int);
 

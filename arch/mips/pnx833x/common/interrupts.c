@@ -25,6 +25,10 @@
 #include <linux/interrupt.h>
 #include <asm/mipsregs.h>
 #include <asm/irq_cpu.h>
+<<<<<<< HEAD
+=======
+#include <asm/setup.h>
+>>>>>>> cm-10.0
 #include <irq.h>
 #include <irq-mapping.h>
 #include <gpio.h>

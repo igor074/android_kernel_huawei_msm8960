@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,15 +17,24 @@
 #ifndef __ARCH_ARM_MACH_MSM_BOARD_MSM8960_H
 #define __ARCH_ARM_MACH_MSM_BOARD_MSM8960_H
 
+<<<<<<< HEAD
 #include <linux/regulator/gpio-regulator.h>
+=======
+#include <linux/regulator/msm-gpio-regulator.h>
+>>>>>>> cm-10.0
 #include <linux/mfd/pm8xxx/pm8921.h>
 #include <linux/i2c.h>
 #include <linux/i2c/sx150x.h>
 #include <mach/irqs.h>
 #include <mach/rpm-regulator.h>
 #include <mach/msm_memtypes.h>
+<<<<<<< HEAD
 #include <hsad/config_general_struct.h>
 #include <hsad/config_interface.h>
+=======
+#include <mach/msm_rtb.h>
+#include <mach/msm_cache_dump.h>
+>>>>>>> cm-10.0
 
 /* Macros assume PMIC GPIOs and MPPs start at 1 */
 #define PM8921_GPIO_BASE		NR_GPIO_IRQS
@@ -73,6 +86,7 @@ enum {
 
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_GPIO_SX150X) || defined(CONFIG_GPIO_SX150X_MODULE)
 extern struct sx150x_platform_data msm8960_sx150x_data[];
 #endif
@@ -103,10 +117,22 @@ void msm8960_init_pmic(void);
 void msm8960_update_pmic(struct pm8xxx_regulator_platform_data* pData,int num);
 void msm8960_init_mmc(void);
 int msm8960_init_gpiomux(void);
+=======
+extern struct sx150x_platform_data msm8960_sx150x_data[];
+extern struct msm_camera_board_info msm8960_camera_board_info;
+
+void msm8960_init_cam(void);
+void msm8960_init_fb(void);
+void msm8960_init_pmic(void);
+void msm8960_init_mmc(void);
+int msm8960_init_gpiomux(void);
+unsigned char msm8960_hdmi_as_primary_selected(void);
+>>>>>>> cm-10.0
 void msm8960_allocate_fb_region(void);
 void msm8960_set_display_params(char *prim_panel, char *ext_panel);
 void msm8960_pm8921_gpio_mpp_init(void);
 void msm8960_mdp_writeback(struct memtype_reserve *reserve_table);
+<<<<<<< HEAD
 uint32_t msm_rpm_get_swfi_latency(void);
 
 #ifdef CONFIG_HUAWEI_GPIO_UNITE
@@ -133,3 +159,11 @@ void msm8960_init_audio(void);
 #define MSM_8960_GSBI2_QUP_I2C_BUS_ID 2
 #define MSM_8960_GSBI5_QUP_I2C_BUS_ID 5
 #endif
+=======
+#define MSM_8960_GSBI4_QUP_I2C_BUS_ID 4
+#define MSM_8960_GSBI3_QUP_I2C_BUS_ID 3
+#define MSM_8960_GSBI10_QUP_I2C_BUS_ID 10
+
+extern struct msm_rtb_platform_data msm8960_rtb_pdata;
+extern struct msm_cache_dump_platform_data msm8960_cache_dump_pdata;
+>>>>>>> cm-10.0

@@ -176,11 +176,19 @@ struct x86_emulate_ops {
 	void (*set_idt)(struct x86_emulate_ctxt *ctxt, struct desc_ptr *dt);
 	ulong (*get_cr)(struct x86_emulate_ctxt *ctxt, int cr);
 	int (*set_cr)(struct x86_emulate_ctxt *ctxt, int cr, ulong val);
+<<<<<<< HEAD
+=======
+	void (*set_rflags)(struct x86_emulate_ctxt *ctxt, ulong val);
+>>>>>>> cm-10.0
 	int (*cpl)(struct x86_emulate_ctxt *ctxt);
 	int (*get_dr)(struct x86_emulate_ctxt *ctxt, int dr, ulong *dest);
 	int (*set_dr)(struct x86_emulate_ctxt *ctxt, int dr, ulong value);
 	int (*set_msr)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 data);
 	int (*get_msr)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 *pdata);
+<<<<<<< HEAD
+=======
+	int (*read_pmc)(struct x86_emulate_ctxt *ctxt, u32 pmc, u64 *pdata);
+>>>>>>> cm-10.0
 	void (*halt)(struct x86_emulate_ctxt *ctxt);
 	void (*wbinvd)(struct x86_emulate_ctxt *ctxt);
 	int (*fix_hypercall)(struct x86_emulate_ctxt *ctxt);
@@ -189,6 +197,12 @@ struct x86_emulate_ops {
 	int (*intercept)(struct x86_emulate_ctxt *ctxt,
 			 struct x86_instruction_info *info,
 			 enum x86_intercept_stage stage);
+<<<<<<< HEAD
+=======
+
+	bool (*get_cpuid)(struct x86_emulate_ctxt *ctxt,
+			 u32 *eax, u32 *ebx, u32 *ecx, u32 *edx);
+>>>>>>> cm-10.0
 };
 
 typedef u32 __attribute__((vector_size(16))) sse128_t;
@@ -229,7 +243,30 @@ struct read_cache {
 	unsigned long end;
 };
 
+<<<<<<< HEAD
 struct decode_cache {
+=======
+struct x86_emulate_ctxt {
+	struct x86_emulate_ops *ops;
+
+	/* Register state before/after emulation. */
+	unsigned long eflags;
+	unsigned long eip; /* eip before instruction emulation */
+	/* Emulated execution mode, represented by an X86EMUL_MODE value. */
+	int mode;
+
+	/* interruptibility state, as a result of execution of STI or MOV SS */
+	int interruptibility;
+
+	bool guest_mode; /* guest running a nested guest */
+	bool perm_ok; /* do not check permissions if true */
+	bool only_vendor_specific_insn;
+
+	bool have_exception;
+	struct x86_exception exception;
+
+	/* decode cache */
+>>>>>>> cm-10.0
 	u8 twobyte;
 	u8 b;
 	u8 intercept;
@@ -243,11 +280,17 @@ struct decode_cache {
 	struct operand dst;
 	bool has_seg_override;
 	u8 seg_override;
+<<<<<<< HEAD
 	unsigned int d;
 	int (*execute)(struct x86_emulate_ctxt *ctxt);
 	int (*check_perm)(struct x86_emulate_ctxt *ctxt);
 	unsigned long regs[NR_VCPU_REGS];
 	unsigned long eip;
+=======
+	u64 d;
+	int (*execute)(struct x86_emulate_ctxt *ctxt);
+	int (*check_perm)(struct x86_emulate_ctxt *ctxt);
+>>>>>>> cm-10.0
 	/* modrm */
 	u8 modrm;
 	u8 modrm_mod;
@@ -255,11 +298,20 @@ struct decode_cache {
 	u8 modrm_rm;
 	u8 modrm_seg;
 	bool rip_relative;
+<<<<<<< HEAD
+=======
+	unsigned long _eip;
+	/* Fields above regs are cleared together. */
+	unsigned long regs[NR_VCPU_REGS];
+	struct operand memop;
+	struct operand *memopp;
+>>>>>>> cm-10.0
 	struct fetch_cache fetch;
 	struct read_cache io_read;
 	struct read_cache mem_read;
 };
 
+<<<<<<< HEAD
 struct x86_emulate_ctxt {
 	struct x86_emulate_ops *ops;
 
@@ -283,6 +335,8 @@ struct x86_emulate_ctxt {
 	struct decode_cache decode;
 };
 
+=======
+>>>>>>> cm-10.0
 /* Repeat String Operation Prefix */
 #define REPE_PREFIX	0xf3
 #define REPNE_PREFIX	0xf2
@@ -298,6 +352,22 @@ struct x86_emulate_ctxt {
 #define X86EMUL_MODE_PROT     (X86EMUL_MODE_PROT16|X86EMUL_MODE_PROT32| \
 			       X86EMUL_MODE_PROT64)
 
+<<<<<<< HEAD
+=======
+/* CPUID vendors */
+#define X86EMUL_CPUID_VENDOR_AuthenticAMD_ebx 0x68747541
+#define X86EMUL_CPUID_VENDOR_AuthenticAMD_ecx 0x444d4163
+#define X86EMUL_CPUID_VENDOR_AuthenticAMD_edx 0x69746e65
+
+#define X86EMUL_CPUID_VENDOR_AMDisbetterI_ebx 0x69444d41
+#define X86EMUL_CPUID_VENDOR_AMDisbetterI_ecx 0x21726574
+#define X86EMUL_CPUID_VENDOR_AMDisbetterI_edx 0x74656273
+
+#define X86EMUL_CPUID_VENDOR_GenuineIntel_ebx 0x756e6547
+#define X86EMUL_CPUID_VENDOR_GenuineIntel_ecx 0x6c65746e
+#define X86EMUL_CPUID_VENDOR_GenuineIntel_edx 0x49656e69
+
+>>>>>>> cm-10.0
 enum x86_intercept_stage {
 	X86_ICTP_NONE = 0,   /* Allow zero-init to not match anything */
 	X86_ICPT_PRE_EXCEPT,
@@ -365,14 +435,24 @@ enum x86_intercept {
 #endif
 
 int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len);
+<<<<<<< HEAD
+=======
+bool x86_page_table_writing_insn(struct x86_emulate_ctxt *ctxt);
+>>>>>>> cm-10.0
 #define EMULATION_FAILED -1
 #define EMULATION_OK 0
 #define EMULATION_RESTART 1
 #define EMULATION_INTERCEPTED 2
 int x86_emulate_insn(struct x86_emulate_ctxt *ctxt);
 int emulator_task_switch(struct x86_emulate_ctxt *ctxt,
+<<<<<<< HEAD
 			 u16 tss_selector, int reason,
 			 bool has_error_code, u32 error_code);
 int emulate_int_real(struct x86_emulate_ctxt *ctxt,
 		     struct x86_emulate_ops *ops, int irq);
+=======
+			 u16 tss_selector, int idt_index, int reason,
+			 bool has_error_code, u32 error_code);
+int emulate_int_real(struct x86_emulate_ctxt *ctxt, int irq);
+>>>>>>> cm-10.0
 #endif /* _ASM_X86_KVM_X86_EMULATE_H */

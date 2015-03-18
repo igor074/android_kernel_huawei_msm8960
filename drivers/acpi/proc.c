@@ -1,5 +1,9 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/suspend.h>
 #include <linux/bcd.h>
 #include <asm/uaccess.h>

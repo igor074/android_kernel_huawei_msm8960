@@ -18,6 +18,10 @@
  */
 
 #include <linux/kthread.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "usbip_common.h"
 

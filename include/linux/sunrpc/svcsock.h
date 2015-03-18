@@ -34,7 +34,11 @@ struct svc_sock {
 /*
  * Function prototypes.
  */
+<<<<<<< HEAD
 void		svc_close_all(struct list_head *);
+=======
+void		svc_close_net(struct svc_serv *, struct net *);
+>>>>>>> cm-10.0
 int		svc_recv(struct svc_rqst *, long);
 int		svc_send(struct svc_rqst *);
 void		svc_drop(struct svc_rqst *);

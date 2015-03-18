@@ -3,11 +3,19 @@
  *
  * Copyright 2007-2009	Johannes Berg <johannes@sipsolutions.net>
  */
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/bitops.h>
 #include <linux/etherdevice.h>
 #include <linux/slab.h>
 #include <net/cfg80211.h>
 #include <net/ip.h>
+<<<<<<< HEAD
+=======
+#include <net/dsfield.h>
+>>>>>>> cm-10.0
 #include "core.h"
 
 struct ieee80211_rate *
@@ -242,6 +250,7 @@ int cfg80211_validate_key_settings(struct cfg80211_registered_device *rdev,
 	return 0;
 }
 
+<<<<<<< HEAD
 /* See IEEE 802.1H for LLC/SNAP encapsulation/decapsulation */
 /* Ethernet-II snap header (RFC1042 for most EtherTypes) */
 const unsigned char rfc1042_header[] __aligned(2) =
@@ -253,6 +262,8 @@ const unsigned char bridge_tunnel_header[] __aligned(2) =
 	{ 0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8 };
 EXPORT_SYMBOL(bridge_tunnel_header);
 
+=======
+>>>>>>> cm-10.0
 unsigned int __attribute_const__ ieee80211_hdrlen(__le16 fc)
 {
 	unsigned int hdrlen = 24;
@@ -399,8 +410,14 @@ int ieee80211_data_to_8023(struct sk_buff *skb, const u8 *addr,
 		}
 		break;
 	case cpu_to_le16(0):
+<<<<<<< HEAD
 		if (iftype != NL80211_IFTYPE_ADHOC)
 			return -1;
+=======
+		if (iftype != NL80211_IFTYPE_ADHOC &&
+		    iftype != NL80211_IFTYPE_STATION)
+				return -1;
+>>>>>>> cm-10.0
 		break;
 	}
 
@@ -520,10 +537,16 @@ int ieee80211_data_from_8023(struct sk_buff *skb, const u8 *addr,
 		if (head_need)
 			skb_orphan(skb);
 
+<<<<<<< HEAD
 		if (pskb_expand_head(skb, head_need, 0, GFP_ATOMIC)) {
 			pr_err("failed to reallocate Tx buffer\n");
 			return -ENOMEM;
 		}
+=======
+		if (pskb_expand_head(skb, head_need, 0, GFP_ATOMIC))
+			return -ENOMEM;
+
+>>>>>>> cm-10.0
 		skb->truesize += head_need;
 	}
 
@@ -664,7 +687,14 @@ unsigned int cfg80211_classify8021d(struct sk_buff *skb)
 
 	switch (skb->protocol) {
 	case htons(ETH_P_IP):
+<<<<<<< HEAD
 		dscp = ip_hdr(skb)->tos & 0xfc;
+=======
+		dscp = ipv4_get_dsfield(ip_hdr(skb)) & 0xfc;
+		break;
+	case htons(ETH_P_IPV6):
+		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) & 0xfc;
+>>>>>>> cm-10.0
 		break;
 	default:
 		return 0;
@@ -754,9 +784,15 @@ static void cfg80211_process_wdev_events(struct wireless_dev *wdev)
 				NULL);
 			break;
 		case EVENT_ROAMED:
+<<<<<<< HEAD
 			__cfg80211_roamed(wdev, ev->rm.channel, ev->rm.bssid,
 					  ev->rm.req_ie, ev->rm.req_ie_len,
 					  ev->rm.resp_ie, ev->rm.resp_ie_len);
+=======
+			__cfg80211_roamed(wdev, ev->rm.bss, ev->rm.req_ie,
+					  ev->rm.req_ie_len, ev->rm.resp_ie,
+					  ev->rm.resp_ie_len);
+>>>>>>> cm-10.0
 			break;
 		case EVENT_DISCONNECTED:
 			__cfg80211_disconnected(wdev->netdev,
@@ -914,6 +950,10 @@ u16 cfg80211_calculate_bitrate(struct rate_info *rate)
 	/* do NOT round down here */
 	return (bitrate + 50000) / 100000;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(cfg80211_calculate_bitrate);
+>>>>>>> cm-10.0
 
 int cfg80211_validate_beacon_int(struct cfg80211_registered_device *rdev,
 				 u32 beacon_int)
@@ -998,7 +1038,11 @@ int cfg80211_can_change_interface(struct cfg80211_registered_device *rdev,
 			if (rdev->wiphy.software_iftypes & BIT(iftype))
 				continue;
 			for (j = 0; j < c->n_limits; j++) {
+<<<<<<< HEAD
 				if (!(limits[j].types & iftype))
+=======
+				if (!(limits[j].types & BIT(iftype)))
+>>>>>>> cm-10.0
 					continue;
 				if (limits[j].max < num[iftype])
 					goto cont;
@@ -1020,12 +1064,28 @@ int ieee80211_get_ratemask(struct ieee80211_supported_band *sband,
 			   u32 *mask)
 {
 	int i, j;
+<<<<<<< HEAD
 	if (n_rates == 0 || n_rates > NL80211_MAX_SUPP_RATES)
 		return -EINVAL;
 	*mask = 0;
 	for (i = 0; i < n_rates; i++) {
 		int rate = (rates[i] & 0x7f) * 5;
 		bool found = false;
+=======
+
+	if (!sband)
+		return -EINVAL;
+
+	if (n_rates == 0 || n_rates > NL80211_MAX_SUPP_RATES)
+		return -EINVAL;
+
+	*mask = 0;
+
+	for (i = 0; i < n_rates; i++) {
+		int rate = (rates[i] & 0x7f) * 5;
+		bool found = false;
+
+>>>>>>> cm-10.0
 		for (j = 0; j < sband->n_bitrates; j++) {
 			if (sband->bitrates[j].bitrate == rate) {
 				found = true;
@@ -1041,5 +1101,22 @@ int ieee80211_get_ratemask(struct ieee80211_supported_band *sband,
 	 * didn't accept a 0-length rates array nor allowed
 	 * entries in the array that didn't exist
 	 */
+<<<<<<< HEAD
 	return 0;
 }
+=======
+
+	return 0;
+}
+
+/* See IEEE 802.1H for LLC/SNAP encapsulation/decapsulation */
+/* Ethernet-II snap header (RFC1042 for most EtherTypes) */
+const unsigned char rfc1042_header[] __aligned(2) =
+	{ 0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00 };
+EXPORT_SYMBOL(rfc1042_header);
+
+/* Bridge-Tunnel header (for EtherTypes ETH_P_AARP and ETH_P_IPX) */
+const unsigned char bridge_tunnel_header[] __aligned(2) =
+	{ 0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8 };
+EXPORT_SYMBOL(bridge_tunnel_header);
+>>>>>>> cm-10.0

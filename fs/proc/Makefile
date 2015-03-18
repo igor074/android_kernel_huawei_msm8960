@@ -16,7 +16,10 @@ proc-y	+= devices.o
 proc-y	+= interrupts.o
 proc-y	+= loadavg.o
 proc-y	+= meminfo.o
+<<<<<<< HEAD
 proc-y    += ddrinfo.o
+=======
+>>>>>>> cm-10.0
 proc-y	+= stat.o
 proc-y	+= uptime.o
 proc-y	+= version.o
@@ -29,4 +32,7 @@ proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
 proc-$(CONFIG_PROC_DEVICETREE)	+= proc_devtree.o
 proc-$(CONFIG_PRINTK)	+= kmsg.o
 proc-$(CONFIG_PROC_PAGE_MONITOR)	+= page.o
+<<<<<<< HEAD
 proc-y += hwfuse.o
+=======
+>>>>>>> cm-10.0

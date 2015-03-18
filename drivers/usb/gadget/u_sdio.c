@@ -5,9 +5,15 @@
  * Copyright (C) 2003 Al Borchers (alborchers@steinerpoint.com)
  * Copyright (C) 2008 David Brownell
  * Copyright (C) 2008 by Nokia Corporation
+<<<<<<< HEAD
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
  *
  * This program from the Code Aurora Forum is free software; you can
+=======
+ * Copyright (c) 2011, The Linux Foundation. All rights reserved.
+ *
+ * This program from The Linux Foundation is free software; you can
+>>>>>>> cm-10.0
  * redistribute it and/or modify it under the GNU General Public License
  * version 2 and only version 2 as published by the Free Software Foundation.
  * The original work available from [kernel.org] is subject to the notice below.
@@ -931,7 +937,11 @@ int gsdio_connect(struct gserial *gser, u8 portno)
 	gser->notify_modem = gsdio_ctrl_notify_modem;
 	spin_unlock_irqrestore(&port->port_lock, flags);
 
+<<<<<<< HEAD
 	ret = usb_ep_enable(gser->in, gser->in_desc);
+=======
+	ret = usb_ep_enable(gser->in);
+>>>>>>> cm-10.0
 	if (ret) {
 		pr_err("%s: failed to enable in ep w/ err:%d\n",
 					__func__, ret);
@@ -940,7 +950,11 @@ int gsdio_connect(struct gserial *gser, u8 portno)
 	}
 	gser->in->driver_data = port;
 
+<<<<<<< HEAD
 	ret = usb_ep_enable(gser->out, gser->out_desc);
+=======
+	ret = usb_ep_enable(gser->out);
+>>>>>>> cm-10.0
 	if (ret) {
 		pr_err("%s: failed to enable in ep w/ err:%d\n",
 					__func__, ret);
@@ -1140,6 +1154,7 @@ int gsdio_setup(struct usb_gadget *g, unsigned count)
 			goto free_sdio_ports;
 		}
 
+<<<<<<< HEAD
 #ifdef DEBUG
 		/* REVISIT: create one file per port
 		 * or do not create any file
@@ -1152,6 +1167,8 @@ int gsdio_setup(struct usb_gadget *g, unsigned count)
 		}
 #endif
 
+=======
+>>>>>>> cm-10.0
 	}
 
 	gsdio_debugfs_init();

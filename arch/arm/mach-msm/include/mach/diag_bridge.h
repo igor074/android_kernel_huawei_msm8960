@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -19,6 +23,11 @@ struct diag_bridge_ops {
 			int buf_size, int actual);
 	void (*write_complete_cb)(void *ctxt, char *buf,
 			int buf_size, int actual);
+<<<<<<< HEAD
+=======
+	int (*suspend)(void *ctxt);
+	void (*resume)(void *ctxt);
+>>>>>>> cm-10.0
 };
 
 #if defined(CONFIG_USB_QCOM_DIAG_BRIDGE) \

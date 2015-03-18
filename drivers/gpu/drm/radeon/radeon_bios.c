@@ -120,7 +120,11 @@ static bool radeon_atrm_get_bios(struct radeon_device *rdev)
 		ret = radeon_atrm_get_bios_chunk(rdev->bios,
 						 (i * ATRM_BIOS_PAGE),
 						 ATRM_BIOS_PAGE);
+<<<<<<< HEAD
 		if (ret <= 0)
+=======
+		if (ret < ATRM_BIOS_PAGE)
+>>>>>>> cm-10.0
 			break;
 	}
 

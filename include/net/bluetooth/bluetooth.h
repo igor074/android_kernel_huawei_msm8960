@@ -1,6 +1,10 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
+<<<<<<< HEAD
    Copyright (c) 2000-2001, 2010-2012 Code Aurora Forum.  All rights reserved.
+=======
+   Copyright (c) 2000-2001, 2010-2012 The Linux Foundation.  All rights reserved.
+>>>>>>> cm-10.0
 
    Written 2000,2001 by Maxim Krasnyansky <maxk@qualcomm.com>
 
@@ -286,6 +290,7 @@ extern void bt_sysfs_cleanup(void);
 
 extern struct dentry *bt_debugfs;
 
+<<<<<<< HEAD
 #ifdef CONFIG_BT_L2CAP
 int l2cap_init(void);
 void l2cap_exit(void);
@@ -313,5 +318,12 @@ static inline void sco_exit(void)
 {
 }
 #endif
+=======
+int l2cap_init(void);
+void l2cap_exit(void);
+
+int sco_init(void);
+void sco_exit(void);
+>>>>>>> cm-10.0
 
 #endif /* __BLUETOOTH_H */

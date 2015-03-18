@@ -8,7 +8,10 @@
  *	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation; either version 2 of the License, or
  *	(at your option) any later version.
+<<<<<<< HEAD
  *
+=======
+>>>>>>> cm-10.0
  */
 
 #include <linux/kernel.h>
@@ -262,8 +265,15 @@ uvc_function_set_alt(struct usb_function *f, unsigned interface, unsigned alt)
 		if (uvc->state != UVC_STATE_CONNECTED)
 			return 0;
 
+<<<<<<< HEAD
 		if (uvc->video.ep)
 			usb_ep_enable(uvc->video.ep, &uvc_streaming_ep);
+=======
+		if (uvc->video.ep) {
+			uvc->video.ep->desc = &uvc_streaming_ep;
+			usb_ep_enable(uvc->video.ep);
+		}
+>>>>>>> cm-10.0
 
 		memset(&v4l2_event, 0, sizeof(v4l2_event));
 		v4l2_event.type = UVC_EVENT_STREAMON;
@@ -649,7 +659,11 @@ uvc_bind_config(struct usb_configuration *c,
 	if (ret)
 		kfree(uvc);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> cm-10.0
 
 error:
 	kfree(uvc);

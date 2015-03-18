@@ -36,6 +36,10 @@
 #include <linux/list.h>
 #include <linux/acpi.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <acpi/acpi_bus.h>
 #include <acpi/acpi_drivers.h>
 
@@ -81,12 +85,20 @@ struct wmi_block {
 #define ACPI_WMI_STRING      0x4	/* GUID takes & returns a string */
 #define ACPI_WMI_EVENT       0x8	/* GUID is an event */
 
+<<<<<<< HEAD
 static int debug_event;
+=======
+static bool debug_event;
+>>>>>>> cm-10.0
 module_param(debug_event, bool, 0444);
 MODULE_PARM_DESC(debug_event,
 		 "Log WMI Events [0/1]");
 
+<<<<<<< HEAD
 static int debug_dump_wdg;
+=======
+static bool debug_dump_wdg;
+>>>>>>> cm-10.0
 module_param(debug_dump_wdg, bool, 0444);
 MODULE_PARM_DESC(debug_dump_wdg,
 		 "Dump available WMI interfaces [0/1]");
@@ -754,9 +766,19 @@ static void wmi_free_devices(void)
 	struct wmi_block *wblock, *next;
 
 	/* Delete devices for all the GUIDs */
+<<<<<<< HEAD
 	list_for_each_entry_safe(wblock, next, &wmi_block_list, list)
 		if (wblock->dev.class)
 			device_unregister(&wblock->dev);
+=======
+	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
+		list_del(&wblock->list);
+		if (wblock->dev.class)
+			device_unregister(&wblock->dev);
+		else
+			kfree(wblock);
+	}
+>>>>>>> cm-10.0
 }
 
 static bool guid_already_parsed(const char *guid_string)

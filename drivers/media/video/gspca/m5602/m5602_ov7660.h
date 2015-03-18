@@ -86,7 +86,11 @@
 
 /* Kernel module parameters */
 extern int force_sensor;
+<<<<<<< HEAD
 extern int dump_sensor;
+=======
+extern bool dump_sensor;
+>>>>>>> cm-10.0
 
 int ov7660_probe(struct sd *sd);
 int ov7660_init(struct sd *sd);

@@ -1,6 +1,10 @@
 /* ehci-msm.c - HSUSB Host Controller Driver Implementation
  *
+<<<<<<< HEAD
  * Copyright (c) 2008-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * Partly derived from ehci-fsl.c and ehci-hcd.c
  * Copyright (c) 2000-2004 by David Brownell
@@ -52,7 +56,11 @@ struct msmusb_hcd {
 	unsigned int clk_enabled;
 	struct msm_usb_host_platform_data *pdata;
 	unsigned running;
+<<<<<<< HEAD
 	struct otg_transceiver *xceiv;
+=======
+	struct usb_phy *xceiv;
+>>>>>>> cm-10.0
 	struct work_struct otg_work;
 	unsigned flags;
 	struct msm_otg_ops otg_ops;
@@ -79,9 +87,15 @@ static void msm_xusb_pm_qos_update(struct msmusb_hcd *mhcd, int vote)
 		return;
 
 	if (vote)
+<<<<<<< HEAD
 		clk_enable(pdata->ebi1_clk);
 	else
 		clk_disable(pdata->ebi1_clk);
+=======
+		clk_prepare_enable(pdata->ebi1_clk);
+	else
+		clk_disable_unprepare(pdata->ebi1_clk);
+>>>>>>> cm-10.0
 }
 
 static void msm_xusb_enable_clks(struct msmusb_hcd *mhcd)
@@ -96,8 +110,13 @@ static void msm_xusb_enable_clks(struct msmusb_hcd *mhcd)
 		/* OTG driver takes care of clock management */
 		break;
 	case USB_PHY_SERIAL_PMIC:
+<<<<<<< HEAD
 		clk_enable(mhcd->alt_core_clk);
 		clk_enable(mhcd->iface_clk);
+=======
+		clk_prepare_enable(mhcd->alt_core_clk);
+		clk_prepare_enable(mhcd->iface_clk);
+>>>>>>> cm-10.0
 		break;
 	default:
 		pr_err("%s: undefined phy type ( %X )\n", __func__,
@@ -119,8 +138,13 @@ static void msm_xusb_disable_clks(struct msmusb_hcd *mhcd)
 		/* OTG driver takes care of clock management */
 		break;
 	case USB_PHY_SERIAL_PMIC:
+<<<<<<< HEAD
 		clk_disable(mhcd->alt_core_clk);
 		clk_disable(mhcd->iface_clk);
+=======
+		clk_disable_unprepare(mhcd->alt_core_clk);
+		clk_disable_unprepare(mhcd->iface_clk);
+>>>>>>> cm-10.0
 		break;
 	default:
 		pr_err("%s: undefined phy type ( %X )\n", __func__,
@@ -270,7 +294,11 @@ static void usb_lpm_exit(struct usb_hcd *hcd)
 static irqreturn_t ehci_msm_irq(struct usb_hcd *hcd)
 {
 	struct msmusb_hcd *mhcd = hcd_to_mhcd(hcd);
+<<<<<<< HEAD
 	struct msm_otg *otg = container_of(mhcd->xceiv, struct msm_otg, otg);
+=======
+	struct msm_otg *otg = container_of(mhcd->xceiv, struct msm_otg, phy);
+>>>>>>> cm-10.0
 
 	/*
 	 * OTG scheduled a work to get Integrated PHY out of LPM,
@@ -296,7 +324,11 @@ static int ehci_msm_bus_suspend(struct usb_hcd *hcd)
 		return ret;
 	}
 	if (PHY_TYPE(mhcd->pdata->phy_info) == USB_PHY_INTEGRATED)
+<<<<<<< HEAD
 		ret = otg_set_suspend(mhcd->xceiv, 1);
+=======
+		ret = usb_phy_set_suspend(mhcd->xceiv, 1);
+>>>>>>> cm-10.0
 	else
 		ret = usb_lpm_enter(hcd);
 
@@ -316,7 +348,11 @@ static int ehci_msm_bus_resume(struct usb_hcd *hcd)
 	pm_runtime_resume(dev);
 
 	if (PHY_TYPE(mhcd->pdata->phy_info) == USB_PHY_INTEGRATED) {
+<<<<<<< HEAD
 		otg_set_suspend(mhcd->xceiv, 0);
+=======
+		usb_phy_set_suspend(mhcd->xceiv, 0);
+>>>>>>> cm-10.0
 	} else { /* PMIC serial phy */
 		usb_lpm_exit(hcd);
 		if (cancel_work_sync(&(mhcd->lpm_exit_work)))
@@ -399,7 +435,11 @@ static int ehci_msm_run(struct usb_hcd *hcd)
 	ehci_writel(ehci, ehci->command, &ehci->regs->command);
 	ehci_readl(ehci, &ehci->regs->command); /* unblock posted writes */
 
+<<<<<<< HEAD
 	hcd->state = HC_STATE_RUNNING;
+=======
+	ehci->rh_state = EHCI_RH_RUNNING;
+>>>>>>> cm-10.0
 
 	/*Enable appropriate Interrupts*/
 	ehci_writel(ehci, INTR_MASK, &ehci->regs->intr_enable);
@@ -453,7 +493,11 @@ static void msm_hsusb_request_host(void *handle, int request)
 	struct msmusb_hcd *mhcd = handle;
 	struct usb_hcd *hcd = mhcd_to_hcd(mhcd);
 	struct msm_usb_host_platform_data *pdata = mhcd->pdata;
+<<<<<<< HEAD
 	struct msm_otg *otg = container_of(mhcd->xceiv, struct msm_otg, otg);
+=======
+	struct msm_otg *otg = container_of(mhcd->xceiv, struct msm_otg, phy);
+>>>>>>> cm-10.0
 #ifdef CONFIG_USB_OTG
 	struct usb_device *udev = hcd->self.root_hub;
 #endif
@@ -605,6 +649,7 @@ static int msm_xusb_rpc_close(struct msmusb_hcd *mhcd)
 	return retval;
 }
 
+<<<<<<< HEAD
 #ifdef	CONFIG_USB_OTG
 static void ehci_msm_start_hnp(struct ehci_hcd *ehci)
 {
@@ -618,6 +663,8 @@ static void ehci_msm_start_hnp(struct ehci_hcd *ehci)
 #define ehci_msm_start_hnp	NULL
 #endif
 
+=======
+>>>>>>> cm-10.0
 static int msm_xusb_init_host(struct platform_device *pdev,
 			      struct msmusb_hcd *mhcd)
 {
@@ -639,6 +686,7 @@ static int msm_xusb_init_host(struct platform_device *pdev,
 			pdata->vbus_power(pdata->phy_info, 0);
 
 		INIT_WORK(&mhcd->otg_work, msm_hsusb_otg_work);
+<<<<<<< HEAD
 		mhcd->xceiv = otg_get_transceiver();
 		if (!mhcd->xceiv)
 			return -ENODEV;
@@ -648,6 +696,17 @@ static int msm_xusb_init_host(struct platform_device *pdev,
 		ehci->start_hnp = ehci_msm_start_hnp;
 
 		ret = otg_set_host(mhcd->xceiv, &hcd->self);
+=======
+		mhcd->xceiv = usb_get_transceiver();
+		if (!mhcd->xceiv)
+			return -ENODEV;
+		otg = container_of(mhcd->xceiv, struct msm_otg, phy);
+		hcd->regs = otg->regs;
+		otg->start_host = msm_hsusb_start_host;
+
+		ret = otg_set_host(mhcd->xceiv->otg, &hcd->self);
+		ehci->transceiver = mhcd->xceiv;
+>>>>>>> cm-10.0
 		break;
 	case USB_PHY_SERIAL_PMIC:
 		hcd->regs = ioremap(hcd->rsrc_start, hcd->rsrc_len);
@@ -753,8 +812,14 @@ static void msm_xusb_uninit_host(struct msmusb_hcd *mhcd)
 	case USB_PHY_INTEGRATED:
 		if (pdata->vbus_init)
 			pdata->vbus_init(0);
+<<<<<<< HEAD
 		otg_set_host(mhcd->xceiv, NULL);
 		otg_put_transceiver(mhcd->xceiv);
+=======
+		hcd_to_ehci(hcd)->transceiver = NULL;
+		otg_set_host(mhcd->xceiv->otg, NULL);
+		usb_put_transceiver(mhcd->xceiv);
+>>>>>>> cm-10.0
 		cancel_work_sync(&mhcd->otg_work);
 		break;
 	case USB_PHY_SERIAL_PMIC:

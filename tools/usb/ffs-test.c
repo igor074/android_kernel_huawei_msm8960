@@ -2,7 +2,11 @@
  * ffs-test.c.c -- user mode filesystem api for usb composite function
  *
  * Copyright (C) 2010 Samsung Electronics
+<<<<<<< HEAD
  *                    Author: Michal Nazarewicz <m.nazarewicz@samsung.com>
+=======
+ *                    Author: Michal Nazarewicz <mina86@mina86.com>
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +40,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+<<<<<<< HEAD
+=======
+#include <tools/le_byteshift.h>
+>>>>>>> cm-10.0
 
 #include "../../include/linux/usb/functionfs.h"
 
@@ -47,6 +55,7 @@
 #define le32_to_cpu(x)  le32toh(x)
 #define le16_to_cpu(x)  le16toh(x)
 
+<<<<<<< HEAD
 static inline __u16 get_unaligned_le16(const void *_ptr)
 {
 	const __u8 *ptr = _ptr;
@@ -75,6 +84,8 @@ static inline void put_unaligned_le32(__u32 val, void *_ptr)
 	*ptr++ = val >> 24;
 }
 
+=======
+>>>>>>> cm-10.0
 
 /******************** Messages and Errors ***********************************/
 

@@ -1,6 +1,10 @@
 /* Copyright (C) 2008 Google, Inc.
  * Copyright (C) 2008 HTC Corporation
+<<<<<<< HEAD
  * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -23,8 +27,11 @@
 #include <linux/slab.h>
 #include <asm/atomic.h>
 #include <asm/ioctls.h>
+<<<<<<< HEAD
 #include <sound/q6asm.h>
 #include <sound/apr_audio.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/debugfs.h>
 #include "audio_utils_aio.h"
 
@@ -35,7 +42,11 @@ ssize_t audio_aio_debug_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 ssize_t audio_aio_debug_read(struct file *file, char __user * buf,
+=======
+ssize_t audio_aio_debug_read(struct file *file, char __user *buf,
+>>>>>>> cm-10.0
 				size_t count, loff_t *ppos)
 {
 	const int debug_bufmax = 4096;
@@ -69,7 +80,11 @@ ssize_t audio_aio_debug_read(struct file *file, char __user * buf,
 }
 #endif
 
+<<<<<<< HEAD
 static int insert_eos_buf(struct q6audio_aio *audio,
+=======
+int insert_eos_buf(struct q6audio_aio *audio,
+>>>>>>> cm-10.0
 		struct audio_aio_buffer_node *buf_node)
 {
 	struct dec_meta_out *eos_buf = buf_node->kvaddr;
@@ -95,7 +110,11 @@ static int insert_meta_data_flush(struct q6audio_aio *audio,
 		sizeof(meta_data->meta_out_dsp[0]);
 }
 
+<<<<<<< HEAD
 static void extract_meta_out_info(struct q6audio_aio *audio,
+=======
+void extract_meta_out_info(struct q6audio_aio *audio,
+>>>>>>> cm-10.0
 		struct audio_aio_buffer_node *buf_node, int dir)
 {
 	struct dec_meta_out *meta_data = buf_node->kvaddr;
@@ -116,8 +135,12 @@ static void extract_meta_out_info(struct q6audio_aio *audio,
 			&buf_node->meta_info.meta_out,
 			sizeof(struct dec_meta_out));
 		meta_data->meta_out_dsp[0].nflags = 0x00000000;
+<<<<<<< HEAD
 		pr_debug("%s[%p]:o/p: msw_ts 0x%8x lsw_ts 0x%8x nflags 0x%8x,"
 				"num_frames = %d\n",
+=======
+		pr_debug("%s[%p]:o/p: msw_ts 0x%8x lsw_ts 0x%8x nflags 0x%8x, num_frames = %d\n",
+>>>>>>> cm-10.0
 		__func__, audio,
 		((struct dec_meta_out *)buf_node->kvaddr)->\
 			meta_out_dsp[0].msw_ts,
@@ -201,7 +224,11 @@ static unsigned long audio_aio_ion_fixup(struct q6audio_aio *audio, void *addr,
 
 static int audio_aio_pause(struct q6audio_aio  *audio)
 {
+<<<<<<< HEAD
 	int rc = 0;
+=======
+	int rc = -EINVAL;
+>>>>>>> cm-10.0
 
 	pr_debug("%s[%p], enabled = %d\n", __func__, audio,
 			audio->enabled);
@@ -295,8 +322,13 @@ void audio_aio_async_write_ack(struct q6audio_aio *audio, uint32_t token,
 		kfree(used_buf);
 		if (list_empty(&audio->out_queue) &&
 			(audio->drv_status & ADRV_STATUS_FSYNC)) {
+<<<<<<< HEAD
 			pr_debug("%s[%p]: list is empty, reached EOS in\
 				Tunnel\n", __func__, audio);
+=======
+			pr_debug("%s[%p]: list is empty, reached EOS in Tunnel\n",
+				 __func__, audio);
+>>>>>>> cm-10.0
 			wake_up(&audio->write_wait);
 		}
 	} else {
@@ -306,6 +338,7 @@ void audio_aio_async_write_ack(struct q6audio_aio *audio, uint32_t token,
 	}
 }
 
+<<<<<<< HEAD
 /* Read buffer from DSP / Handle Ack from DSP */
 void audio_aio_async_read_ack(struct q6audio_aio *audio, uint32_t token,
 			uint32_t *payload)
@@ -360,6 +393,8 @@ void audio_aio_async_read_ack(struct q6audio_aio *audio, uint32_t token,
 	}
 }
 
+=======
+>>>>>>> cm-10.0
 /* ------------------- device --------------------- */
 void audio_aio_async_out_flush(struct q6audio_aio *audio)
 {
@@ -406,8 +441,13 @@ void audio_aio_async_in_flush(struct q6audio_aio *audio)
 		/* Forcefull send o/p eos buffer after flush, if no eos response
 		 * received by dsp even after sending eos command */
 		if ((audio->eos_rsp != 1) && audio->eos_flag) {
+<<<<<<< HEAD
 			pr_debug("%s[%p]: send eos on o/p buffer during"
 				"flush\n", __func__, audio);
+=======
+			pr_debug("%s[%p]: send eos on o/p buffer during flush\n",
+				 __func__, audio);
+>>>>>>> cm-10.0
 			payload.aio_buf = buf_node->buf;
 			payload.aio_buf.data_len =
 					insert_eos_buf(audio, buf_node);
@@ -424,6 +464,7 @@ void audio_aio_async_in_flush(struct q6audio_aio *audio)
 	}
 }
 
+<<<<<<< HEAD
 void audio_aio_cb(uint32_t opcode, uint32_t token,
 		uint32_t *payload,  struct q6audio_aio *audio)
 {
@@ -490,6 +531,8 @@ void audio_aio_cb(uint32_t opcode, uint32_t token,
 	}
 }
 
+=======
+>>>>>>> cm-10.0
 int audio_aio_enable(struct q6audio_aio  *audio)
 {
 	/* 2nd arg: 0 -> run immediately
@@ -527,9 +570,14 @@ void audio_aio_reset_ion_region(struct q6audio_aio *audio)
 	list_for_each_safe(ptr, next, &audio->ion_region_queue) {
 		region = list_entry(ptr, struct audio_aio_ion_region, list);
 		list_del(&region->list);
+<<<<<<< HEAD
 		ion_unmap_kernel(region->client, region->handle);
 		ion_free(region->client, region->handle);
 		ion_client_destroy(region->client);
+=======
+		ion_unmap_kernel(audio->client, region->handle);
+		ion_free(audio->client, region->handle);
+>>>>>>> cm-10.0
 		kfree(region);
 	}
 
@@ -595,6 +643,10 @@ int audio_aio_release(struct inode *inode, struct file *file)
 	audio_aio_unmap_ion_region(audio);
 	audio_aio_disable(audio);
 	audio_aio_reset_ion_region(audio);
+<<<<<<< HEAD
+=======
+	ion_client_destroy(audio->client);
+>>>>>>> cm-10.0
 	audio->event_abort = 1;
 	wake_up(&audio->event_wait);
 	audio_aio_reset_event_queue(audio);
@@ -613,7 +665,11 @@ int audio_aio_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 int audio_aio_fsync(struct file *file, int datasync)
+=======
+int audio_aio_fsync(struct file *file, loff_t start, loff_t end, int datasync)
+>>>>>>> cm-10.0
 {
 	int rc = 0;
 	struct q6audio_aio *audio = file->private_data;
@@ -784,9 +840,13 @@ static int audio_aio_ion_check(struct q6audio_aio *audio,
 	list_for_each_entry(region_elt, &audio->ion_region_queue, list) {
 		if (CONTAINS(region_elt, &t) || CONTAINS(&t, region_elt) ||
 			OVERLAPS(region_elt, &t)) {
+<<<<<<< HEAD
 			pr_err("%s[%p]:region (vaddr %p len %ld)"
 				" clashes with registered region"
 				" (vaddr %p paddr %p len %ld)\n",
+=======
+			pr_err("%s[%p]:region (vaddr %p len %ld) clashes with registered region (vaddr %p paddr %p len %ld)\n",
+>>>>>>> cm-10.0
 				__func__, audio, vaddr, len,
 				region_elt->vaddr,
 				(void *)region_elt->paddr, region_elt->len);
@@ -806,7 +866,10 @@ static int audio_aio_ion_add(struct q6audio_aio *audio,
 	struct audio_aio_ion_region *region;
 	int rc = -EINVAL;
 	struct ion_handle *handle;
+<<<<<<< HEAD
 	struct ion_client *client;
+=======
+>>>>>>> cm-10.0
 	unsigned long ionflag;
 	void *temp_ptr;
 
@@ -818,6 +881,7 @@ static int audio_aio_ion_add(struct q6audio_aio *audio,
 		goto end;
 	}
 
+<<<<<<< HEAD
 	client = msm_ion_client_create(UINT_MAX, "Audio_Dec_Client");
 	if (IS_ERR_OR_NULL(client)) {
 		pr_err("Unable to create ION client\n");
@@ -825,25 +889,40 @@ static int audio_aio_ion_add(struct q6audio_aio *audio,
 	}
 
 	handle = ion_import_fd(client, info->fd);
+=======
+	handle = ion_import_dma_buf(audio->client, info->fd);
+>>>>>>> cm-10.0
 	if (IS_ERR_OR_NULL(handle)) {
 		pr_err("%s: could not get handle of the given fd\n", __func__);
 		goto import_error;
 	}
 
+<<<<<<< HEAD
 	rc = ion_handle_get_flags(client, handle, &ionflag);
+=======
+	rc = ion_handle_get_flags(audio->client, handle, &ionflag);
+>>>>>>> cm-10.0
 	if (rc) {
 		pr_err("%s: could not get flags for the handle\n", __func__);
 		goto flag_error;
 	}
 
+<<<<<<< HEAD
 	temp_ptr = ion_map_kernel(client, handle, ionflag);
+=======
+	temp_ptr = ion_map_kernel(audio->client, handle, ionflag);
+>>>>>>> cm-10.0
 	if (IS_ERR_OR_NULL(temp_ptr)) {
 		pr_err("%s: could not get virtual address\n", __func__);
 		goto map_error;
 	}
 	kvaddr = (unsigned long)temp_ptr;
 
+<<<<<<< HEAD
 	rc = ion_phys(client, handle, &paddr, &len);
+=======
+	rc = ion_phys(audio->client, handle, &paddr, &len);
+>>>>>>> cm-10.0
 	if (rc) {
 		pr_err("%s: could not get physical address\n", __func__);
 		goto ion_error;
@@ -855,7 +934,10 @@ static int audio_aio_ion_add(struct q6audio_aio *audio,
 		goto ion_error;
 	}
 
+<<<<<<< HEAD
 	region->client = client;
+=======
+>>>>>>> cm-10.0
 	region->handle = handle;
 	region->vaddr = info->vaddr;
 	region->fd = info->fd;
@@ -877,6 +959,7 @@ static int audio_aio_ion_add(struct q6audio_aio *audio,
 	}
 
 ion_error:
+<<<<<<< HEAD
 	ion_unmap_kernel(client, handle);
 map_error:
 	ion_free(client, handle);
@@ -884,6 +967,13 @@ flag_error:
 import_error:
 	ion_client_destroy(client);
 client_error:
+=======
+	ion_unmap_kernel(audio->client, handle);
+map_error:
+flag_error:
+	ion_free(audio->client, handle);
+import_error:
+>>>>>>> cm-10.0
 	kfree(region);
 end:
 	return rc;
@@ -919,9 +1009,14 @@ static int audio_aio_ion_remove(struct q6audio_aio *audio,
 					__func__, audio);
 
 			list_del(&region->list);
+<<<<<<< HEAD
 			ion_unmap_kernel(region->client, region->handle);
 			ion_free(region->client, region->handle);
 			ion_client_destroy(region->client);
+=======
+			ion_unmap_kernel(audio->client, region->handle);
+			ion_free(audio->client, region->handle);
+>>>>>>> cm-10.0
 			kfree(region);
 			rc = 0;
 			break;
@@ -938,8 +1033,12 @@ static void audio_aio_async_write(struct q6audio_aio *audio,
 	struct audio_client *ac;
 	struct audio_aio_write_param param;
 
+<<<<<<< HEAD
 	pr_debug("%s[%p]: Send write buff %p phy %lx len %d"
 		"meta_enable = %d\n",
+=======
+	pr_debug("%s[%p]: Send write buff %p phy %lx len %d meta_enable = %d\n",
+>>>>>>> cm-10.0
 		__func__, audio, buf_node, buf_node->paddr,
 		buf_node->buf.data_len,
 		audio->buf_cfg.meta_info_enable);
@@ -957,10 +1056,16 @@ static void audio_aio_async_write(struct q6audio_aio *audio,
 	}
 	param.msw_ts = buf_node->meta_info.meta_in.ntimestamp.highpart;
 	param.lsw_ts = buf_node->meta_info.meta_in.ntimestamp.lowpart;
+<<<<<<< HEAD
 	/* If no meta_info enaled, indicate no time stamp valid */
 	if (audio->buf_cfg.meta_info_enable)
 		param.flags = 0;
 	else
+=======
+	param.flags  = buf_node->meta_info.meta_in.nflags;
+	/* If no meta_info enaled, indicate no time stamp valid */
+	if (!audio->buf_cfg.meta_info_enable)
+>>>>>>> cm-10.0
 		param.flags = 0xFF00;
 	param.uid = param.paddr;
 	/* Read command will populate paddr as token */
@@ -1041,8 +1146,13 @@ static int audio_aio_buf_add(struct q6audio_aio *audio, unsigned dir,
 		return -EFAULT;
 	}
 
+<<<<<<< HEAD
 	pr_debug("%s[%p]:node %p dir %x buf_addr %p buf_len %d data_len \
 		%d\n", __func__, audio, buf_node, dir, buf_node->buf.buf_addr,
+=======
+	pr_debug("%s[%p]:node %p dir %x buf_addr %p buf_len %d data_len %d\n",
+		 __func__, audio, buf_node, dir, buf_node->buf.buf_addr,
+>>>>>>> cm-10.0
 		buf_node->buf.buf_len, buf_node->buf.data_len);
 	buf_node->paddr = audio_aio_ion_fixup(audio, buf_node->buf.buf_addr,
 						buf_node->buf.buf_len, 1,
@@ -1195,12 +1305,30 @@ int audio_aio_open(struct q6audio_aio *audio, struct file *file)
 		else {
 			pr_err("%s[%p]:event pkt alloc failed\n",
 				__func__, audio);
+<<<<<<< HEAD
 			rc = -ENOMEM;
 			goto fail;
 		}
 	}
 fail:
 
+=======
+			break;
+		}
+	}
+	audio->client = msm_ion_client_create(UINT_MAX, "Audio_Dec_Client");
+	if (IS_ERR_OR_NULL(audio->client)) {
+		pr_err("Unable to create ION client\n");
+		rc = -EACCES;
+		goto fail;
+	}
+	pr_debug("Ion client create in audio_aio_open %p", audio->client);
+	return 0;
+fail:
+	q6asm_audio_client_free(audio->ac);
+	kfree(audio->codec_cfg);
+	kfree(audio);
+>>>>>>> cm-10.0
 	return rc;
 }
 
@@ -1291,9 +1419,18 @@ long audio_aio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		mutex_lock(&audio->lock);
 		if (arg == 1) {
 			rc = audio_aio_pause(audio);
+<<<<<<< HEAD
 			if (rc < 0)
 				pr_err("%s[%p]: pause FAILED rc=%d\n",
 					__func__, audio, rc);
+=======
+			if (rc < 0) {
+				pr_err("%s[%p]: pause FAILED rc=%d\n",
+					__func__, audio, rc);
+				mutex_unlock(&audio->lock);
+				break;
+			}
+>>>>>>> cm-10.0
 			audio->drv_status |= ADRV_STATUS_PAUSE;
 		} else if (arg == 0) {
 			if (audio->drv_status & ADRV_STATUS_PAUSE) {
@@ -1401,8 +1538,13 @@ long audio_aio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			break;
 		}
 		if (audio->feedback != NON_TUNNEL_MODE) {
+<<<<<<< HEAD
 			pr_err("%s[%p]:Not sufficient permission to"
 				"change the playback mode\n", __func__, audio);
+=======
+			pr_err("%s[%p]:Not sufficient permission to change the playback mode\n",
+				 __func__, audio);
+>>>>>>> cm-10.0
 			rc = -EACCES;
 			mutex_unlock(&audio->lock);
 			break;
@@ -1445,8 +1587,13 @@ long audio_aio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 	}
 	case AUDIO_GET_BUF_CFG: {
+<<<<<<< HEAD
 		pr_debug("%s[%p]:session id %d: Get-buf-cfg: meta[%d]\
 			framesperbuf[%d]\n", __func__, audio,
+=======
+		pr_debug("%s[%p]:session id %d: Get-buf-cfg: meta[%d] framesperbuf[%d]\n",
+			 __func__, audio,
+>>>>>>> cm-10.0
 			audio->ac->session, audio->buf_cfg.meta_info_enable,
 			audio->buf_cfg.frames_per_buf);
 

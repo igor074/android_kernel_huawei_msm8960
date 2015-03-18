@@ -47,6 +47,10 @@ static int dummy_set_address(struct net_device *dev, void *p)
 	if (!is_valid_ether_addr(sa->sa_data))
 		return -EADDRNOTAVAIL;
 
+<<<<<<< HEAD
+=======
+	dev->addr_assign_type &= ~NET_ADDR_RANDOM;
+>>>>>>> cm-10.0
 	memcpy(dev->dev_addr, sa->sa_data, ETH_ALEN);
 	return 0;
 }
@@ -106,17 +110,30 @@ static int dummy_dev_init(struct net_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void dummy_dev_free(struct net_device *dev)
 {
 	free_percpu(dev->dstats);
 	free_netdev(dev);
+=======
+static void dummy_dev_uninit(struct net_device *dev)
+{
+	free_percpu(dev->dstats);
+>>>>>>> cm-10.0
 }
 
 static const struct net_device_ops dummy_netdev_ops = {
 	.ndo_init		= dummy_dev_init,
+<<<<<<< HEAD
 	.ndo_start_xmit		= dummy_xmit,
 	.ndo_validate_addr	= eth_validate_addr,
 	.ndo_set_multicast_list = set_multicast_list,
+=======
+	.ndo_uninit		= dummy_dev_uninit,
+	.ndo_start_xmit		= dummy_xmit,
+	.ndo_validate_addr	= eth_validate_addr,
+	.ndo_set_rx_mode	= set_multicast_list,
+>>>>>>> cm-10.0
 	.ndo_set_mac_address	= dummy_set_address,
 	.ndo_get_stats64	= dummy_get_stats64,
 };
@@ -127,15 +144,24 @@ static void dummy_setup(struct net_device *dev)
 
 	/* Initialize the device structure. */
 	dev->netdev_ops = &dummy_netdev_ops;
+<<<<<<< HEAD
 	dev->destructor = dummy_dev_free;
+=======
+	dev->destructor = free_netdev;
+>>>>>>> cm-10.0
 
 	/* Fill in device structure with ethernet-generic values. */
 	dev->tx_queue_len = 0;
 	dev->flags |= IFF_NOARP;
 	dev->flags &= ~IFF_MULTICAST;
 	dev->features	|= NETIF_F_SG | NETIF_F_FRAGLIST | NETIF_F_TSO;
+<<<<<<< HEAD
 	dev->features	|= NETIF_F_NO_CSUM | NETIF_F_HIGHDMA | NETIF_F_LLTX;
 	random_ether_addr(dev->dev_addr);
+=======
+	dev->features	|= NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_LLTX;
+	eth_hw_addr_random(dev);
+>>>>>>> cm-10.0
 }
 
 static int dummy_validate(struct nlattr *tb[], struct nlattr *data[])

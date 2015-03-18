@@ -21,6 +21,10 @@
  */
 
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
 #include <sound/core.h>

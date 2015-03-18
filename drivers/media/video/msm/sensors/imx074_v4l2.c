@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -189,7 +193,10 @@ static struct msm_camera_csid_vc_cfg imx074_cid_cfg[] = {
 
 static struct msm_camera_csi2_params imx074_csi_params = {
 	.csid_params = {
+<<<<<<< HEAD
 		.lane_assign = 0xe4,
+=======
+>>>>>>> cm-10.0
 		.lane_cnt = 4,
 		.lut_params = {
 			.num_cid = ARRAY_SIZE(imx074_cid_cfg),
@@ -225,8 +232,11 @@ static struct msm_sensor_exp_gain_info_t imx074_exp_gain_info = {
 	.vert_offset = 3,
 };
 
+<<<<<<< HEAD
 static struct sensor_calib_data imx074_calib_data;
 
+=======
+>>>>>>> cm-10.0
 static const struct i2c_device_id imx074_i2c_id[] = {
 	{SENSOR_NAME, (kernel_ulong_t)&imx074_s_ctrl},
 	{ }
@@ -244,6 +254,7 @@ static struct msm_camera_i2c_client imx074_sensor_i2c_client = {
 	.addr_type = MSM_CAMERA_I2C_WORD_ADDR,
 };
 
+<<<<<<< HEAD
 static struct msm_camera_i2c_client imx074_eeprom_i2c_client = {
 	.addr_type = MSM_CAMERA_I2C_BYTE_ADDR,
 };
@@ -275,6 +286,8 @@ static struct msm_camera_eeprom_client imx074_eeprom_client = {
 	.data_tbl_size = ARRAY_SIZE(imx074_eeprom_data_tbl),
 };
 
+=======
+>>>>>>> cm-10.0
 static int __init msm_sensor_init_module(void)
 {
 	return i2c_add_driver(&imx074_i2c_driver);
@@ -311,6 +324,10 @@ static struct msm_sensor_fn_t imx074_func_tbl = {
 	.sensor_power_up = msm_sensor_power_up,
 	.sensor_power_down = msm_sensor_power_down,
 	.sensor_adjust_frame_lines = msm_sensor_adjust_frame_lines,
+<<<<<<< HEAD
+=======
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
+>>>>>>> cm-10.0
 };
 
 static struct msm_sensor_reg_t imx074_regs = {
@@ -335,7 +352,10 @@ static struct msm_sensor_ctrl_t imx074_s_ctrl = {
 	.msm_sensor_reg = &imx074_regs,
 	.sensor_i2c_client = &imx074_sensor_i2c_client,
 	.sensor_i2c_addr = 0x34,
+<<<<<<< HEAD
 	.sensor_eeprom_client = &imx074_eeprom_client,
+=======
+>>>>>>> cm-10.0
 	.sensor_output_reg_addr = &imx074_reg_addr,
 	.sensor_id_info = &imx074_id_info,
 	.sensor_exp_gain_info = &imx074_exp_gain_info,

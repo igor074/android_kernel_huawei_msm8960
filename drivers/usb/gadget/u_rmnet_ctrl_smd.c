@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -24,9 +28,15 @@
 
 #include "u_rmnet.h"
 
+<<<<<<< HEAD
 #define NR_CTRL_SMD_PORTS	1
 static int n_rmnet_ctrl_ports;
 static char *rmnet_ctrl_names[] = { "DATA40_CNTL" };
+=======
+#define NR_CTRL_SMD_PORTS	3
+static int n_rmnet_ctrl_ports;
+static char *rmnet_ctrl_names[] = {"DATA40_CNTL", "DATA39_CNTL", "DATA38_CNTL"};
+>>>>>>> cm-10.0
 static struct workqueue_struct *grmnet_ctrl_wq;
 
 #define SMD_CH_MAX_LEN	20

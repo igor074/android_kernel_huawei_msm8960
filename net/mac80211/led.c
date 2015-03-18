@@ -9,6 +9,10 @@
 /* just for IFNAMSIZ */
 #include <linux/if.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include "led.h"
 
 void ieee80211_led_rx(struct ieee80211_local *local)

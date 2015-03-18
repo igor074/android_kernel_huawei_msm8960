@@ -34,6 +34,10 @@
 #include <linux/interrupt.h>
 #include <linux/slab.h>
 #include <linux/usb.h>
+<<<<<<< HEAD
+=======
+#include <linux/moduleparam.h>
+>>>>>>> cm-10.0
 #include <sound/core.h>
 #include <sound/info.h>
 #include <sound/pcm.h>
@@ -79,7 +83,11 @@ static int usX2Y_urb_capt_retire(struct snd_usX2Y_substream *subs)
 		cp = (unsigned char*)urb->transfer_buffer + urb->iso_frame_desc[i].offset;
 		if (urb->iso_frame_desc[i].status) { /* active? hmm, skip this */
 			snd_printk(KERN_ERR "active frame status %i. "
+<<<<<<< HEAD
 				   "Most propably some hardware problem.\n",
+=======
+				   "Most probably some hardware problem.\n",
+>>>>>>> cm-10.0
 				   urb->iso_frame_desc[i].status);
 			return urb->iso_frame_desc[i].status;
 		}
@@ -299,7 +307,11 @@ static void usX2Y_error_sequence(struct usX2Ydev *usX2Y,
 {
 	snd_printk(KERN_ERR
 "Sequence Error!(hcd_frame=%i ep=%i%s;wait=%i,frame=%i).\n"
+<<<<<<< HEAD
 "Most propably some urb of usb-frame %i is still missing.\n"
+=======
+"Most probably some urb of usb-frame %i is still missing.\n"
+>>>>>>> cm-10.0
 "Cause could be too long delays in usb-hcd interrupt handling.\n",
 		   usb_get_current_frame_number(usX2Y->dev),
 		   subs->endpoint, usb_pipein(urb->pipe) ? "in" : "out",

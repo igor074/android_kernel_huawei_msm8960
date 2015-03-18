@@ -316,6 +316,14 @@ static const struct usb_device_id	products [] = {
 	ZAURUS_MASTER_INTERFACE,
 	.driver_info = ZAURUS_PXA_INFO,
 }, {
+<<<<<<< HEAD
+=======
+	/* C-750/C-760/C-860/SL-C3000 PDA in MDLM mode */
+	USB_DEVICE_AND_INTERFACE_INFO(0x04DD, 0x9031, USB_CLASS_COMM,
+			USB_CDC_SUBCLASS_MDLM, USB_CDC_PROTO_NONE),
+	.driver_info = (unsigned long) &bogus_mdlm_info,
+}, {
+>>>>>>> cm-10.0
 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
 		 | USB_DEVICE_ID_MATCH_DEVICE,
 	.idVendor               = 0x04DD,
@@ -332,6 +340,14 @@ static const struct usb_device_id	products [] = {
 	.driver_info = ZAURUS_PXA_INFO,
 },
 {
+<<<<<<< HEAD
+=======
+	/* Motorola Rokr E6 */
+	USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x6027, USB_CLASS_COMM,
+			USB_CDC_SUBCLASS_MDLM, USB_CDC_PROTO_NONE),
+	.driver_info = (unsigned long) &bogus_mdlm_info,
+}, {
+>>>>>>> cm-10.0
 	/* Motorola MOTOMAGX phones */
 	USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x6425, USB_CLASS_COMM,
 			USB_CDC_SUBCLASS_MDLM, USB_CDC_PROTO_NONE),
@@ -349,6 +365,16 @@ static const struct usb_device_id	products [] = {
 	ZAURUS_MASTER_INTERFACE,
 	.driver_info = OLYMPUS_MXL_INFO,
 },
+<<<<<<< HEAD
+=======
+
+/* Logitech Harmony 900 - uses the pseudo-MDLM (BLAN) driver */
+{
+	USB_DEVICE_AND_INTERFACE_INFO(0x046d, 0xc11f, USB_CLASS_COMM,
+			USB_CDC_SUBCLASS_MDLM, USB_CDC_PROTO_NONE),
+	.driver_info = (unsigned long) &bogus_mdlm_info,
+},
+>>>>>>> cm-10.0
 	{ },		// END
 };
 MODULE_DEVICE_TABLE(usb, products);
@@ -362,6 +388,7 @@ static struct usb_driver zaurus_driver = {
 	.resume =	usbnet_resume,
 };
 
+<<<<<<< HEAD
 static int __init zaurus_init(void)
 {
 	return usb_register(&zaurus_driver);
@@ -373,6 +400,9 @@ static void __exit zaurus_exit(void)
 	usb_deregister(&zaurus_driver);
 }
 module_exit(zaurus_exit);
+=======
+module_usb_driver(zaurus_driver);
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR("Pavel Machek, David Brownell");
 MODULE_DESCRIPTION("Sharp Zaurus PDA, and compatible products");

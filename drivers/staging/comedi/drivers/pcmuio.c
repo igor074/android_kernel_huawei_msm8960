@@ -295,15 +295,24 @@ static int pcmuio_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	irq[0] = it->options[1];
 	irq[1] = it->options[2];
 
+<<<<<<< HEAD
 	printk("comedi%d: %s: io: %lx ", dev->minor, driver.driver_name,
 	       iobase);
+=======
+	dev_dbg(dev->hw_dev, "comedi%d: %s: io: %lx attached\n", dev->minor,
+		driver.driver_name, iobase);
+>>>>>>> cm-10.0
 
 	dev->iobase = iobase;
 
 	if (!iobase || !request_region(iobase,
 				       thisboard->num_asics * ASIC_IOSIZE,
 				       driver.driver_name)) {
+<<<<<<< HEAD
 		printk("I/O port conflict\n");
+=======
+		dev_err(dev->hw_dev, "I/O port conflict\n");
+>>>>>>> cm-10.0
 		return -EIO;
 	}
 
@@ -318,7 +327,11 @@ static int pcmuio_attach(struct comedi_device *dev, struct comedi_devconfig *it)
  * convenient macro defined in comedidev.h.
  */
 	if (alloc_private(dev, sizeof(struct pcmuio_private)) < 0) {
+<<<<<<< HEAD
 		printk("cannot allocate private data structure\n");
+=======
+		dev_warn(dev->hw_dev, "cannot allocate private data structure\n");
+>>>>>>> cm-10.0
 		return -ENOMEM;
 	}
 
@@ -337,7 +350,11 @@ static int pcmuio_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	    kcalloc(n_subdevs, sizeof(struct pcmuio_subdev_private),
 		    GFP_KERNEL);
 	if (!devpriv->sprivs) {
+<<<<<<< HEAD
 		printk("cannot allocate subdevice private data structures\n");
+=======
+		dev_warn(dev->hw_dev, "cannot allocate subdevice private data structures\n");
+>>>>>>> cm-10.0
 		return -ENOMEM;
 	}
 	/*
@@ -348,7 +365,11 @@ static int pcmuio_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	 * 96-channel version of the board.
 	 */
 	if (alloc_subdevices(dev, n_subdevs) < 0) {
+<<<<<<< HEAD
 		printk("cannot allocate subdevice data structures\n");
+=======
+		dev_dbg(dev->hw_dev, "cannot allocate subdevice data structures\n");
+>>>>>>> cm-10.0
 		return -ENOMEM;
 	}
 
@@ -436,6 +457,7 @@ static int pcmuio_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 				   irqs.. */
 
 	if (irq[0]) {
+<<<<<<< HEAD
 		printk("irq: %u ", irq[0]);
 		if (irq[1] && thisboard->num_asics == 2)
 			printk("second ASIC irq: %u ", irq[1]);
@@ -444,6 +466,15 @@ static int pcmuio_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	}
 
 	printk("attached\n");
+=======
+		dev_dbg(dev->hw_dev, "irq: %u\n", irq[0]);
+		if (irq[1] && thisboard->num_asics == 2)
+			dev_dbg(dev->hw_dev, "second ASIC irq: %u\n", irq[1]);
+	} else {
+		dev_dbg(dev->hw_dev, "(IRQ mode disabled)\n");
+	}
+
+>>>>>>> cm-10.0
 
 	return 1;
 }
@@ -460,7 +491,12 @@ static int pcmuio_detach(struct comedi_device *dev)
 {
 	int i;
 
+<<<<<<< HEAD
 	printk("comedi%d: %s: remove\n", dev->minor, driver.driver_name);
+=======
+	dev_dbg(dev->hw_dev, "comedi%d: %s: remove\n", dev->minor,
+		driver.driver_name);
+>>>>>>> cm-10.0
 	if (dev->iobase)
 		release_region(dev->iobase, ASIC_IOSIZE * thisboard->num_asics);
 
@@ -501,7 +537,12 @@ static int pcmuio_dio_insn_bits(struct comedi_device *dev,
 
 #ifdef DAMMIT_ITS_BROKEN
 	/* DEBUG */
+<<<<<<< HEAD
 	printk("write mask: %08x  data: %08x\n", data[0], data[1]);
+=======
+	dev_dbg(dev->hw_dev, "write mask: %08x  data: %08x\n", data[0],
+		data[1]);
+>>>>>>> cm-10.0
 #endif
 
 	s->state = 0;
@@ -537,7 +578,11 @@ static int pcmuio_dio_insn_bits(struct comedi_device *dev,
 		}
 #ifdef DAMMIT_ITS_BROKEN
 		/* DEBUG */
+<<<<<<< HEAD
 		printk("data_out_byte %02x\n", (unsigned)byte);
+=======
+		dev_dbg(dev->hw_dev, "data_out_byte %02x\n", (unsigned)byte);
+>>>>>>> cm-10.0
 #endif
 		/* save the digital input lines for this byte.. */
 		s->state |= ((unsigned int)byte) << offset;
@@ -548,7 +593,12 @@ static int pcmuio_dio_insn_bits(struct comedi_device *dev,
 
 #ifdef DAMMIT_ITS_BROKEN
 	/* DEBUG */
+<<<<<<< HEAD
 	printk("s->state %08x data_out %08x\n", s->state, data[1]);
+=======
+	dev_dbg(dev->hw_dev, "s->state %08x data_out %08x\n", s->state,
+		data[1]);
+>>>>>>> cm-10.0
 #endif
 
 	return 2;
@@ -951,6 +1001,7 @@ pcmuio_inttrig_start_intr(struct comedi_device *dev, struct comedi_subdevice *s,
 
 	spin_lock_irqsave(&subpriv->intr.spinlock, flags);
 	s->async->inttrig = 0;
+<<<<<<< HEAD
 	if (subpriv->intr.active) {
 		event = pcmuio_start_intr(dev, s);
 	}
@@ -959,6 +1010,15 @@ pcmuio_inttrig_start_intr(struct comedi_device *dev, struct comedi_subdevice *s,
 	if (event) {
 		comedi_event(dev, s);
 	}
+=======
+	if (subpriv->intr.active)
+		event = pcmuio_start_intr(dev, s);
+
+	spin_unlock_irqrestore(&subpriv->intr.spinlock, flags);
+
+	if (event)
+		comedi_event(dev, s);
+>>>>>>> cm-10.0
 
 	return 1;
 }
@@ -1000,9 +1060,14 @@ static int pcmuio_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
 	}
 	spin_unlock_irqrestore(&subpriv->intr.spinlock, flags);
 
+<<<<<<< HEAD
 	if (event) {
 		comedi_event(dev, s);
 	}
+=======
+	if (event)
+		comedi_event(dev, s);
+>>>>>>> cm-10.0
 
 	return 0;
 }

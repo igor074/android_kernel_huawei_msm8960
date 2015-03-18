@@ -4,7 +4,10 @@
 #include <linux/futex.h>
 #include <linux/uaccess.h>
 #include <asm/errno.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 
 #define __futex_atomic_op1(insn, ret, oldval, uaddr, oparg) \
 do {									\
@@ -107,6 +110,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
 		return -EFAULT;
 
 	{
+<<<<<<< HEAD
 		register unsigned long r8 __asm ("r8") = 0;
 		unsigned long prev;
 		__asm__ __volatile__(
@@ -116,6 +120,18 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
 			"	.xdata4 \"__ex_table\", 1b-., 2f-.	\n"
 			"[2:]"
 			: "=r" (prev)
+=======
+		register unsigned long r8 __asm ("r8");
+		unsigned long prev;
+		__asm__ __volatile__(
+			"	mf;;					\n"
+			"	mov %0=r0				\n"
+			"	mov ar.ccv=%4;;				\n"
+			"[1:]	cmpxchg4.acq %1=[%2],%3,ar.ccv		\n"
+			"	.xdata4 \"__ex_table\", 1b-., 2f-.	\n"
+			"[2:]"
+			: "=r" (r8), "=r" (prev)
+>>>>>>> cm-10.0
 			: "r" (uaddr), "r" (newval),
 			  "rO" ((long) (unsigned) oldval)
 			: "memory");

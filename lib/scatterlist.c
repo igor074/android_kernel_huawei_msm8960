@@ -6,7 +6,11 @@
  * This source code is licensed under the GNU General Public License,
  * Version 2. See the file COPYING for more details.
  */
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/slab.h>
 #include <linux/scatterlist.h>
 #include <linux/highmem.h>
@@ -390,7 +394,11 @@ bool sg_miter_next(struct sg_mapping_iter *miter)
 	miter->consumed = miter->length;
 
 	if (miter->__flags & SG_MITER_ATOMIC)
+<<<<<<< HEAD
 		miter->addr = kmap_atomic(miter->page, KM_BIO_SRC_IRQ) + off;
+=======
+		miter->addr = kmap_atomic(miter->page) + off;
+>>>>>>> cm-10.0
 	else
 		miter->addr = kmap(miter->page) + off;
 
@@ -424,7 +432,11 @@ void sg_miter_stop(struct sg_mapping_iter *miter)
 
 		if (miter->__flags & SG_MITER_ATOMIC) {
 			WARN_ON(!irqs_disabled());
+<<<<<<< HEAD
 			kunmap_atomic(miter->addr, KM_BIO_SRC_IRQ);
+=======
+			kunmap_atomic(miter->addr);
+>>>>>>> cm-10.0
 		} else
 			kunmap(miter->page);
 

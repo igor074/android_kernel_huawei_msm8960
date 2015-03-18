@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -20,11 +24,14 @@
 #include <linux/mfd/pm8xxx/core.h>
 #include <linux/mfd/pm8xxx/rtc.h>
 
+<<<<<<< HEAD
 #include <linux/reboot.h>
 #include <linux/syscalls.h>
 #include <linux/workqueue.h>
 #include <linux/init.h>
 #include <linux/string.h>
+=======
+>>>>>>> cm-10.0
 
 /* RTC Register offsets from RTC CTRL REG */
 #define PM8XXX_ALARM_CTRL_OFFSET 0x01
@@ -41,8 +48,11 @@
 
 #define NUM_8_BIT_RTC_REGS	0x4
 
+<<<<<<< HEAD
 extern struct rtc_wkalrm poweroff_rtc_alarm;
 
+=======
+>>>>>>> cm-10.0
 /**
  * struct pm8xxx_rtc - rtc driver internal structure
  * @rtc: rtc device for this driver
@@ -364,6 +374,7 @@ static struct rtc_class_ops pm8xxx_rtc_ops = {
 	.alarm_irq_enable = pm8xxx_rtc_alarm_irq_enable,
 };
 
+<<<<<<< HEAD
 bool is_recoverychg(void)
 {
 	char *p;
@@ -381,6 +392,8 @@ static void oem_rtc_reboot(struct work_struct *work)
         sys_sync();
         kernel_restart("oem-rtc");
 }
+=======
+>>>>>>> cm-10.0
 static irqreturn_t pm8xxx_alarm_trigger(int irq, void *dev_id)
 {
 	struct pm8xxx_rtc *rtc_dd = dev_id;
@@ -389,6 +402,7 @@ static irqreturn_t pm8xxx_alarm_trigger(int irq, void *dev_id)
 	unsigned long irq_flags;
 
 	rtc_update_irq(rtc_dd->rtc, 1, RTC_IRQF | RTC_AF);
+<<<<<<< HEAD
 	/*
 	* The device is charging in recovery mode;
 	* When the power-off alarm irq is triggered,
@@ -397,6 +411,8 @@ static irqreturn_t pm8xxx_alarm_trigger(int irq, void *dev_id)
 	if(unlikely(is_recoverychg())) {
 		schedule_work(&oem_rtc_reboot_queue);
 	}
+=======
+>>>>>>> cm-10.0
 
 	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
 
@@ -591,6 +607,7 @@ static void pm8xxx_rtc_shutdown(struct platform_device *pdev)
 	struct pm8xxx_rtc *rtc_dd = platform_get_drvdata(pdev);
 	struct pm8xxx_rtc_platform_data *pdata = pdev->dev.platform_data;
 
+<<<<<<< HEAD
 	if(unlikely(is_recoverychg()))
 		return;
 
@@ -598,6 +615,12 @@ static void pm8xxx_rtc_shutdown(struct platform_device *pdev)
 		rtc_alarm_powerup =  pdata->rtc_alarm_powerup;
 
 	if (!rtc_alarm_powerup || !poweroff_rtc_alarm.enabled) {
+=======
+	if (pdata != NULL)
+		rtc_alarm_powerup =  pdata->rtc_alarm_powerup;
+
+	if (!rtc_alarm_powerup) {
+>>>>>>> cm-10.0
 
 		spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
 		dev_dbg(&pdev->dev, "Disabling alarm interrupts\n");
@@ -619,6 +642,7 @@ static void pm8xxx_rtc_shutdown(struct platform_device *pdev)
 
 fail_alarm_disable:
 		spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
+<<<<<<< HEAD
 	} else if (poweroff_rtc_alarm.enabled) {
 		/* Set poweroff rtc alarm again
 		 * This will clean the rtc irq state
@@ -632,6 +656,8 @@ fail_alarm_disable:
 				"Enabling poweroff alarm interrupts SUCCESS\n");
 		}
 
+=======
+>>>>>>> cm-10.0
 	}
 }
 
@@ -650,7 +676,10 @@ static struct platform_driver pm8xxx_rtc_driver = {
 
 static int __init pm8xxx_rtc_init(void)
 {
+<<<<<<< HEAD
 	INIT_WORK(&oem_rtc_reboot_queue, oem_rtc_reboot);
+=======
+>>>>>>> cm-10.0
 	return platform_driver_register(&pm8xxx_rtc_driver);
 }
 module_init(pm8xxx_rtc_init);

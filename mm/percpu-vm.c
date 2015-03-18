@@ -50,14 +50,23 @@ static struct page **pcpu_get_pages_and_bitmap(struct pcpu_chunk *chunk,
 
 	if (!pages || !bitmap) {
 		if (may_alloc && !pages)
+<<<<<<< HEAD
 			pages = pcpu_mem_alloc(pages_size);
 		if (may_alloc && !bitmap)
 			bitmap = pcpu_mem_alloc(bitmap_size);
+=======
+			pages = pcpu_mem_zalloc(pages_size);
+		if (may_alloc && !bitmap)
+			bitmap = pcpu_mem_zalloc(bitmap_size);
+>>>>>>> cm-10.0
 		if (!pages || !bitmap)
 			return NULL;
 	}
 
+<<<<<<< HEAD
 	memset(pages, 0, pages_size);
+=======
+>>>>>>> cm-10.0
 	bitmap_copy(bitmap, chunk->populated, pcpu_unit_pages);
 
 	*bitmapp = bitmap;
@@ -143,8 +152,13 @@ static void pcpu_pre_unmap_flush(struct pcpu_chunk *chunk,
 				 int page_start, int page_end)
 {
 	flush_cache_vunmap(
+<<<<<<< HEAD
 		pcpu_chunk_addr(chunk, pcpu_first_unit_cpu, page_start),
 		pcpu_chunk_addr(chunk, pcpu_last_unit_cpu, page_end));
+=======
+		pcpu_chunk_addr(chunk, pcpu_low_unit_cpu, page_start),
+		pcpu_chunk_addr(chunk, pcpu_high_unit_cpu, page_end));
+>>>>>>> cm-10.0
 }
 
 static void __pcpu_unmap_pages(unsigned long addr, int nr_pages)
@@ -185,8 +199,12 @@ static void pcpu_unmap_pages(struct pcpu_chunk *chunk,
 				   page_end - page_start);
 	}
 
+<<<<<<< HEAD
 	for (i = page_start; i < page_end; i++)
 		__clear_bit(i, populated);
+=======
+	bitmap_clear(populated, page_start, page_end - page_start);
+>>>>>>> cm-10.0
 }
 
 /**
@@ -206,8 +224,13 @@ static void pcpu_post_unmap_tlb_flush(struct pcpu_chunk *chunk,
 				      int page_start, int page_end)
 {
 	flush_tlb_kernel_range(
+<<<<<<< HEAD
 		pcpu_chunk_addr(chunk, pcpu_first_unit_cpu, page_start),
 		pcpu_chunk_addr(chunk, pcpu_last_unit_cpu, page_end));
+=======
+		pcpu_chunk_addr(chunk, pcpu_low_unit_cpu, page_start),
+		pcpu_chunk_addr(chunk, pcpu_high_unit_cpu, page_end));
+>>>>>>> cm-10.0
 }
 
 static int __pcpu_map_pages(unsigned long addr, struct page **pages,
@@ -284,8 +307,13 @@ static void pcpu_post_map_flush(struct pcpu_chunk *chunk,
 				int page_start, int page_end)
 {
 	flush_cache_vmap(
+<<<<<<< HEAD
 		pcpu_chunk_addr(chunk, pcpu_first_unit_cpu, page_start),
 		pcpu_chunk_addr(chunk, pcpu_last_unit_cpu, page_end));
+=======
+		pcpu_chunk_addr(chunk, pcpu_low_unit_cpu, page_start),
+		pcpu_chunk_addr(chunk, pcpu_high_unit_cpu, page_end));
+>>>>>>> cm-10.0
 }
 
 /**

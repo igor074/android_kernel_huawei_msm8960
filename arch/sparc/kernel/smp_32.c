@@ -22,7 +22,11 @@
 #include <linux/delay.h>
 
 #include <asm/ptrace.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 
 #include <asm/irq.h>
 #include <asm/page.h>

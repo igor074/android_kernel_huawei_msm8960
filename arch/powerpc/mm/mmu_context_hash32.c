@@ -24,6 +24,10 @@
 
 #include <linux/mm.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include <asm/mmu_context.h>
 #include <asm/tlbflush.h>

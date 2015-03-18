@@ -1,9 +1,15 @@
 /*
  *  'Standard' SDIO HOST CONTROLLER driver
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -21,7 +27,11 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
+<<<<<<< HEAD
  * $Id: bcmsdstd.h,v 13.21.2.6 2010-11-15 18:14:01 Exp $
+=======
+ * $Id: bcmsdstd.h 324797 2012-03-30 11:02:00Z $
+>>>>>>> cm-10.0
  */
 #ifndef	_BCM_SD_STD_H
 #define	_BCM_SD_STD_H
@@ -78,6 +88,10 @@ extern void sdstd_osfree(sdioh_info_t *sd);
 #define SDIOH_CMD7_EXP_STATUS   0x00001E00
 
 #define RETRIES_LARGE 100000
+<<<<<<< HEAD
+=======
+#define sdstd_os_yield(sd)	do {} while (0)
+>>>>>>> cm-10.0
 #define RETRIES_SMALL 100
 
 
@@ -148,16 +162,26 @@ struct sdioh_info {
 	bool		got_hcint;		/* local interrupt flag */
 	uint16		last_intrstatus;	/* to cache intrstatus */
 	int 	host_UHSISupported;		/* whether UHSI is supported for HC. */
+<<<<<<< HEAD
 	int 	card_UHSI_voltage_Supported; 	/* whether UHSI is supported for 
 						 * Card in terms of Voltage [1.8 or 3.3]. 
+=======
+	int 	card_UHSI_voltage_Supported; 	/* whether UHSI is supported for
+						 * Card in terms of Voltage [1.8 or 3.3].
+>>>>>>> cm-10.0
 						 */
 	int	global_UHSI_Supp;	/* type of UHSI support in both host and card.
 					 * HOST_SDR_UNSUPP: capabilities not supported/matched
 					 * HOST_SDR_12_25: SDR12 and SDR25 supported
 					 * HOST_SDR_50_104_DDR: one of SDR50/SDR104 or DDR50 supptd
 					 */
+<<<<<<< HEAD
 	int	sd3_dat_state; 		/* data transfer state used for retuning check */
 	int	sd3_tun_state; 		/* tuning state used for retuning check */
+=======
+	volatile int	sd3_dat_state; 		/* data transfer state used for retuning check */
+	volatile int	sd3_tun_state; 		/* tuning state used for retuning check */
+>>>>>>> cm-10.0
 	bool	sd3_tuning_reqd; 	/* tuning requirement parameter */
 	uint32	caps3;			/* cached value of 32 MSbits capabilities reg (SDIO 3.0) */
 };
@@ -171,6 +195,7 @@ struct sdioh_info {
 
 #define USE_DMA(sd)		((bool)((sd->sd_dma_mode > 0) ? TRUE : FALSE))
 
+<<<<<<< HEAD
 /* SDIO Host Control Register DMA Mode Definitions */
 #define SDIOH_SDMA_MODE			0
 #define SDIOH_ADMA1_MODE		1
@@ -186,6 +211,8 @@ struct sdioh_info {
 #define ADMA2_ATTRIBUTE_ACT_TRAN	(2 << 4)	/* Transfer Data of one descriptor line. */
 #define ADMA2_ATTRIBUTE_ACT_LINK	(3 << 4)	/* Link Descriptor */
 
+=======
+>>>>>>> cm-10.0
 /* States for Tuning and corr data */
 #define TUNING_IDLE 			0
 #define TUNING_START 			1
@@ -195,6 +222,7 @@ struct sdioh_info {
 #define DATA_TRANSFER_IDLE 		0
 #define DATA_TRANSFER_ONGOING	1
 
+<<<<<<< HEAD
 /* ADMA2 Descriptor Table Entry for 32-bit Address */
 typedef struct adma2_dscr_32b {
 	uint32 len_attr;
@@ -205,6 +233,10 @@ typedef struct adma2_dscr_32b {
 typedef struct adma1_dscr {
 	uint32 phys_addr_attr;
 } adma1_dscr_t;
+=======
+#define CHECK_TUNING_PRE_DATA	1
+#define CHECK_TUNING_POST_DATA	2
+>>>>>>> cm-10.0
 
 /************************************************************
  * Internal interfaces: per-port references into bcmsdstd.c
@@ -252,9 +284,18 @@ extern int sdstd_waitbits(sdioh_info_t *sd, uint16 norm, uint16 err, bool yield,
 extern void sdstd_3_enable_retuning_int(sdioh_info_t *sd);
 extern void sdstd_3_disable_retuning_int(sdioh_info_t *sd);
 extern bool sdstd_3_is_retuning_int_set(sdioh_info_t *sd);
+<<<<<<< HEAD
 extern bool sdstd_3_check_and_set_retuning(sdioh_info_t *sd);
 extern int sdstd_3_get_tune_state(sdioh_info_t *sd);
 extern void sdstd_3_set_tune_state(sdioh_info_t *sd, int state);
+=======
+extern void sdstd_3_check_and_do_tuning(sdioh_info_t *sd, int tuning_param);
+extern bool sdstd_3_check_and_set_retuning(sdioh_info_t *sd);
+extern int sdstd_3_get_tune_state(sdioh_info_t *sd);
+extern int sdstd_3_get_data_state(sdioh_info_t *sd);
+extern void sdstd_3_set_tune_state(sdioh_info_t *sd, int state);
+extern void sdstd_3_set_data_state(sdioh_info_t *sd, int state);
+>>>>>>> cm-10.0
 extern uint8 sdstd_3_get_tuning_exp(sdioh_info_t *sd);
 extern uint32 sdstd_3_get_uhsi_clkmode(sdioh_info_t *sd);
 extern int sdstd_3_clk_tuning(sdioh_info_t *sd, uint32 sd3ClkMode);

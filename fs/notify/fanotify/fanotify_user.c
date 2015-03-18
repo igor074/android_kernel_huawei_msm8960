@@ -16,6 +16,11 @@
 
 #include <asm/ioctls.h>
 
+<<<<<<< HEAD
+=======
+#include "../../mount.h"
+
+>>>>>>> cm-10.0
 #define FANOTIFY_DEFAULT_MAX_EVENTS	16384
 #define FANOTIFY_DEFAULT_MAX_MARKS	8192
 #define FANOTIFY_DEFAULT_MAX_LISTENERS	128
@@ -546,7 +551,11 @@ static int fanotify_remove_vfsmount_mark(struct fsnotify_group *group,
 
 	removed = fanotify_mark_remove_from_mask(fsn_mark, mask, flags);
 	fsnotify_put_mark(fsn_mark);
+<<<<<<< HEAD
 	if (removed & mnt->mnt_fsnotify_mask)
+=======
+	if (removed & real_mount(mnt)->mnt_fsnotify_mask)
+>>>>>>> cm-10.0
 		fsnotify_recalc_vfsmount_mask(mnt);
 
 	return 0;
@@ -623,7 +632,11 @@ static int fanotify_add_vfsmount_mark(struct fsnotify_group *group,
 	}
 	added = fanotify_mark_add_to_mask(fsn_mark, mask, flags);
 
+<<<<<<< HEAD
 	if (added & ~mnt->mnt_fsnotify_mask)
+=======
+	if (added & ~real_mount(mnt)->mnt_fsnotify_mask)
+>>>>>>> cm-10.0
 		fsnotify_recalc_vfsmount_mask(mnt);
 err:
 	fsnotify_put_mark(fsn_mark);

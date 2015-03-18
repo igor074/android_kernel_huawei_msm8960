@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Copyright (c) 2008-2009, Google Inc.
  * All rights reserved.
  *

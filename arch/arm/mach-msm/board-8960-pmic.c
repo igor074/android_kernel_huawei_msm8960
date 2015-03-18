@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 
 
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -24,10 +28,14 @@
 #include <mach/restart.h>
 #include "devices.h"
 #include "board-8960.h"
+<<<<<<< HEAD
 #include <hsad/config_interface.h>
 
 static struct pm8xxx_regulator_platform_data* HuaWei_pmic_replace_pdata = NULL;
 static int HuaWei_pmic_replace_num = 0;
+=======
+
+>>>>>>> cm-10.0
 struct pm8xxx_gpio_init {
 	unsigned			gpio;
 	struct pm_gpio			config;
@@ -93,6 +101,15 @@ struct pm8xxx_mpp_init {
 			PM_GPIO_STRENGTH_HIGH, \
 			PM_GPIO_FUNC_NORMAL, 0, 0)
 
+<<<<<<< HEAD
+=======
+#define PM8XXX_GPIO_OUTPUT_STRENGTH(_gpio, _val, _out_strength) \
+	PM8XXX_GPIO_INIT(_gpio, PM_GPIO_DIR_OUT, PM_GPIO_OUT_BUF_CMOS, _val, \
+			PM_GPIO_PULL_NO, PM_GPIO_VIN_S4, \
+			_out_strength, \
+			PM_GPIO_FUNC_NORMAL, 0, 0)
+
+>>>>>>> cm-10.0
 /* Initial PM8921 GPIO configurations */
 static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
 	PM8XXX_GPIO_OUTPUT_VIN(6, 1, PM_GPIO_VIN_VPH),	 /* MHL power EN_N */
@@ -100,11 +117,23 @@ static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
 	PM8XXX_GPIO_INPUT(16,	    PM_GPIO_PULL_UP_30), /* SD_CARD_WP */
     /* External regulator shared by display and touchscreen on LiQUID */
 	PM8XXX_GPIO_OUTPUT(17,	    0),			 /* DISP 3.3 V Boost */
+<<<<<<< HEAD
 	PM8XXX_GPIO_DISABLE(22),			 /* Disable NFC */
 	PM8XXX_GPIO_INPUT(26,	    PM_GPIO_PULL_UP_30), /* SD_CARD_DET_N */
 	PM8XXX_GPIO_OUTPUT(43, 1),                       /* DISP_RESET_N */
 	PM8XXX_GPIO_OUTPUT(42, 0),                      /* USB 5V reg enable */
         PM8XXX_GPIO_OUTPUT(32,      1),          /* DISP_RESET_N */
+=======
+	PM8XXX_GPIO_OUTPUT(18,	0),	/* TABLA SPKR_LEFT_EN=off */
+	PM8XXX_GPIO_OUTPUT(19,	0),	/* TABLA SPKR_RIGHT_EN=off */
+	PM8XXX_GPIO_DISABLE(22),			 /* Disable NFC */
+	PM8XXX_GPIO_OUTPUT_FUNC(25, 0, PM_GPIO_FUNC_2),	 /* TN_CLK */
+	PM8XXX_GPIO_INPUT(26,	    PM_GPIO_PULL_UP_30), /* SD_CARD_DET_N */
+	PM8XXX_GPIO_OUTPUT(43, 1),                       /* DISP_RESET_N */
+	PM8XXX_GPIO_OUTPUT(42, 0),                      /* USB 5V reg enable */
+	/* TABLA CODEC RESET */
+	PM8XXX_GPIO_OUTPUT_STRENGTH(34, 1, PM_GPIO_STRENGTH_MED)
+>>>>>>> cm-10.0
 };
 
 /* Initial PM8921 MPP configurations */
@@ -115,6 +144,7 @@ static struct pm8xxx_mpp_init pm8921_mpps[] __initdata = {
 								DOUT_CTRL_LOW),
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_GPIO_UNITE
 static struct pm8xxx_gpio_init hw_pm8921_gpios[PM8921_GPIO_NUM];
 static int hw_pm8921_gpio_init(void)
@@ -153,6 +183,8 @@ static int hw_pm8921_gpio_init(void)
 }
 #endif
 
+=======
+>>>>>>> cm-10.0
 void __init msm8960_pm8921_gpio_mpp_init(void)
 {
 	int i, rc;
@@ -174,6 +206,7 @@ void __init msm8960_pm8921_gpio_mpp_init(void)
 			break;
 		}
 	}
+<<<<<<< HEAD
 
 	#ifdef CONFIG_HUAWEI_GPIO_UNITE
 	rc = hw_pm8921_gpio_init();
@@ -182,6 +215,8 @@ void __init msm8960_pm8921_gpio_mpp_init(void)
 		pr_err("%s: hw_pm8921_gpio_init: rc=%d\n", __func__, rc);
 	}
 	#endif
+=======
+>>>>>>> cm-10.0
 }
 
 static struct pm8xxx_adc_amux pm8xxx_adc_channels_data[] = {
@@ -248,7 +283,11 @@ static struct pm8xxx_mpp_platform_data pm8xxx_mpp_pdata __devinitdata = {
 
 static struct pm8xxx_rtc_platform_data pm8xxx_rtc_pdata __devinitdata = {
 	.rtc_write_enable       = false,
+<<<<<<< HEAD
 	.rtc_alarm_powerup	= true,
+=======
+	.rtc_alarm_powerup	= false,
+>>>>>>> cm-10.0
 };
 
 static struct pm8xxx_pwrkey_platform_data pm8xxx_pwrkey_pdata = {
@@ -454,6 +493,7 @@ static int pm8921_therm_mitigation[] = {
 };
 
 #define MAX_VOLTAGE_MV		4200
+<<<<<<< HEAD
 #define RESUME_VOLTAGE_DROP   30
 
 static struct pm8921_charger_platform_data pm8921_chg_pdata __devinitdata = {
@@ -479,6 +519,29 @@ static struct pm8921_charger_platform_data pm8921_chg_pdata __devinitdata = {
 	.ovp_threshold      = PM_USB_OV_6P5V,
 	.ovp_hystersis      = PM_USB_DEBOUNCE_40P5MS,
 
+=======
+#define CHG_TERM_MA		100
+static struct pm8921_charger_platform_data pm8921_chg_pdata __devinitdata = {
+	.safety_time		= 180,
+	.update_time		= 60000,
+	.max_voltage		= MAX_VOLTAGE_MV,
+	.min_voltage		= 3200,
+	.uvd_thresh_voltage	= 4050,
+	.resume_voltage_delta	= 60,
+	.resume_charge_percent	= 99,
+	.term_current		= CHG_TERM_MA,
+	.cool_temp		= 10,
+	.warm_temp		= 40,
+	.temp_check_period	= 1,
+	.max_bat_chg_current	= 1100,
+	.cool_bat_chg_current	= 350,
+	.warm_bat_chg_current	= 350,
+	.cool_bat_voltage	= 4100,
+	.warm_bat_voltage	= 4100,
+	.thermal_mitigation	= pm8921_therm_mitigation,
+	.thermal_levels		= ARRAY_SIZE(pm8921_therm_mitigation),
+	.rconn_mohm		= 18,
+>>>>>>> cm-10.0
 };
 
 static struct pm8xxx_misc_platform_data pm8xxx_misc_pdata = {
@@ -486,6 +549,7 @@ static struct pm8xxx_misc_platform_data pm8xxx_misc_pdata = {
 };
 
 static struct pm8921_bms_platform_data pm8921_bms_pdata __devinitdata = {
+<<<<<<< HEAD
 	.battery_type	= BATT_UNKNOWN,
 	.r_sense		= 10,
 	.i_test			= 2500,
@@ -493,6 +557,16 @@ static struct pm8921_bms_platform_data pm8921_bms_pdata __devinitdata = {
 	.calib_delay_ms		= 600000,
 	.max_voltage_uv		= MAX_VOLTAGE_MV * 1000,
 	.rconn_mohm		= 30,
+=======
+	.battery_type			= BATT_UNKNOWN,
+	.r_sense			= 10,
+	.v_cutoff			= 3400,
+	.max_voltage_uv			= MAX_VOLTAGE_MV * 1000,
+	.rconn_mohm			= 18,
+	.shutdown_soc_valid_limit	= 20,
+	.adjust_soc_low_threshold	= 25,
+	.chg_term_ua			= CHG_TERM_MA * 1000,
+>>>>>>> cm-10.0
 };
 
 #define	PM8921_LC_LED_MAX_CURRENT	4	/* I = 4mA */
@@ -509,14 +583,26 @@ static struct led_info pm8921_led_info_liquid[] = {
 	{
 		.name		= "led:red",
 		.flags		= PM8XXX_ID_LED_0,
+<<<<<<< HEAD
+=======
+		.default_trigger	= "battery-charging",
+>>>>>>> cm-10.0
 	},
 	{
 		.name		= "led:green",
 		.flags		= PM8XXX_ID_LED_0,
+<<<<<<< HEAD
+=======
+		.default_trigger	= "battery-full",
+>>>>>>> cm-10.0
 	},
 	{
 		.name		= "led:blue",
 		.flags		= PM8XXX_ID_LED_2,
+<<<<<<< HEAD
+=======
+		.default_trigger	= "notification",
+>>>>>>> cm-10.0
 	},
 };
 
@@ -549,15 +635,21 @@ static struct pm8xxx_led_platform_data pm8xxx_leds_pdata_liquid = {
 	.num_configs = ARRAY_SIZE(pm8921_led_configs_liquid),
 };
 
+<<<<<<< HEAD
 
 static struct led_info pm8921_led_info[] = {
 	/*[0] = {
+=======
+static struct led_info pm8921_led_info[] = {
+	[0] = {
+>>>>>>> cm-10.0
 		.name			= "led:battery_charging",
 		.default_trigger	= "battery-charging",
 	},
 	[1] = {
 		.name			= "led:battery_full",
 		.default_trigger	= "battery-full",
+<<<<<<< HEAD
 	},*/
 #ifdef CONFIG_HUAWEI_KERNEL
 	[0] = {
@@ -581,6 +673,9 @@ static struct led_info pm8921_led_info[] = {
 		.default_trigger        = "led_blue",
 	},
 #endif
+=======
+	},
+>>>>>>> cm-10.0
 };
 
 static struct led_platform_data pm8921_led_core_pdata = {
@@ -588,7 +683,10 @@ static struct led_platform_data pm8921_led_core_pdata = {
 	.leds = pm8921_led_info,
 };
 
+<<<<<<< HEAD
 #ifndef CONFIG_HUAWEI_KERNEL
+=======
+>>>>>>> cm-10.0
 static int pm8921_led0_pwm_duty_pcts[56] = {
 		1, 4, 8, 12, 16, 20, 24, 28, 32, 36,
 		40, 44, 46, 52, 56, 60, 64, 68, 72, 76,
@@ -598,16 +696,31 @@ static int pm8921_led0_pwm_duty_pcts[56] = {
 		14, 10, 6, 4, 1
 };
 
+<<<<<<< HEAD
+=======
+/*
+ * Note: There is a bug in LPG module that results in incorrect
+ * behavior of pattern when LUT index 0 is used. So effectively
+ * there are 63 usable LUT entries.
+ */
+>>>>>>> cm-10.0
 static struct pm8xxx_pwm_duty_cycles pm8921_led0_pwm_duty_cycles = {
 	.duty_pcts = (int *)&pm8921_led0_pwm_duty_pcts,
 	.num_duty_pcts = ARRAY_SIZE(pm8921_led0_pwm_duty_pcts),
 	.duty_ms = PM8XXX_LED_PWM_DUTY_MS,
+<<<<<<< HEAD
 	.start_idx = 0,
 };
 #endif
 
 static struct pm8xxx_led_config pm8921_led_configs[] = {
 #ifndef CONFIG_HUAWEI_KERNEL
+=======
+	.start_idx = 1,
+};
+
+static struct pm8xxx_led_config pm8921_led_configs[] = {
+>>>>>>> cm-10.0
 	[0] = {
 		.id = PM8XXX_ID_LED_0,
 		.mode = PM8XXX_LED_MODE_PWM2,
@@ -622,6 +735,7 @@ static struct pm8xxx_led_config pm8921_led_configs[] = {
 		.max_current = PM8921_LC_LED_MAX_CURRENT,
 		.pwm_channel = 4,
 		.pwm_period_us = PM8XXX_LED_PWM_PERIOD,
+<<<<<<< HEAD
         },
 #else
      /* [0] = {
@@ -658,6 +772,9 @@ static struct pm8xxx_led_config pm8921_led_configs[] = {
 		.pwm_period_us = PM8XXX_LED_PWM_PERIOD,
 	},
 #endif
+=======
+	},
+>>>>>>> cm-10.0
 };
 
 static struct pm8xxx_led_platform_data pm8xxx_leds_pdata = {
@@ -668,6 +785,10 @@ static struct pm8xxx_led_platform_data pm8xxx_leds_pdata = {
 
 static struct pm8xxx_ccadc_platform_data pm8xxx_ccadc_pdata = {
 	.r_sense		= 10,
+<<<<<<< HEAD
+=======
+	.calib_delay_ms		= 600000,
+>>>>>>> cm-10.0
 };
 
 /**
@@ -681,6 +802,7 @@ static struct pm8xxx_pwm_platform_data pm8xxx_pwm_pdata = {
 	.dtest_channel	= PM8XXX_PWM_DTEST_CHANNEL_NONE,
 };
 
+<<<<<<< HEAD
 static struct pm8xxx_vibrator_platform_data pm8xxx_vib_pdata = {
         .initial_vibrate_ms = 500,
         .max_timeout_ms = 15000,
@@ -698,6 +820,8 @@ void __init msm8960_update_pmic(struct pm8xxx_regulator_platform_data* pData,int
 	  HuaWei_pmic_replace_num = msm_pm8921_regulator_pdata_len;
    }
 }
+=======
+>>>>>>> cm-10.0
 static struct pm8921_platform_data pm8921_platform_data __devinitdata = {
 	.irq_pdata		= &pm8xxx_irq_pdata,
 	.gpio_pdata		= &pm8xxx_gpio_pdata,
@@ -713,7 +837,10 @@ static struct pm8921_platform_data pm8921_platform_data __devinitdata = {
 	.leds_pdata		= &pm8xxx_leds_pdata,
 	.ccadc_pdata		= &pm8xxx_ccadc_pdata,
 	.pwm_pdata		= &pm8xxx_pwm_pdata,
+<<<<<<< HEAD
 	.vibrator_pdata = &pm8xxx_vib_pdata,
+=======
+>>>>>>> cm-10.0
 };
 
 static struct msm_ssbi_platform_data msm8960_ssbi_pm8921_pdata __devinitdata = {
@@ -726,6 +853,7 @@ static struct msm_ssbi_platform_data msm8960_ssbi_pm8921_pdata __devinitdata = {
 
 void __init msm8960_init_pmic(void)
 {
+<<<<<<< HEAD
        int charger_voltage=0;
        if(get_hw_config_int("pm/charge_voltage", &charger_voltage, NULL))
 		pm8921_platform_data.charger_pdata->max_voltage=charger_voltage;
@@ -734,6 +862,9 @@ void __init msm8960_init_pmic(void)
 	   pmic_reset_irq = PM8921_IRQ_BASE + PM8921_RESOUT_IRQ;
 	pm8921_platform_data.regulator_pdatas = HuaWei_pmic_replace_pdata;
 	msm_pm8921_regulator_pdata_len = HuaWei_pmic_replace_num;
+=======
+	pmic_reset_irq = PM8921_IRQ_BASE + PM8921_RESOUT_IRQ;
+>>>>>>> cm-10.0
 	msm8960_device_ssbi_pmic.dev.platform_data =
 				&msm8960_ssbi_pm8921_pdata;
 	pm8921_platform_data.num_regulators = msm_pm8921_regulator_pdata_len;
@@ -748,6 +879,11 @@ void __init msm8960_init_pmic(void)
 		pm8921_platform_data.bms_pdata->battery_type = BATT_DESAY;
 	} else if (machine_is_msm8960_mtp()) {
 		pm8921_platform_data.bms_pdata->battery_type = BATT_PALLADIUM;
+<<<<<<< HEAD
+=======
+	} else if (machine_is_msm8960_cdp()) {
+		pm8921_chg_pdata.has_dc_supply = true;
+>>>>>>> cm-10.0
 	}
 
 	if (machine_is_msm8960_fluid())

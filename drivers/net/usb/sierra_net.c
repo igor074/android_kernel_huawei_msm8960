@@ -618,7 +618,11 @@ static u32 sierra_net_get_link(struct net_device *net)
 	return sierra_net_get_private(dev)->link_up && netif_running(net);
 }
 
+<<<<<<< HEAD
 static struct ethtool_ops sierra_net_ethtool_ops = {
+=======
+static const struct ethtool_ops sierra_net_ethtool_ops = {
+>>>>>>> cm-10.0
 	.get_drvinfo = sierra_net_get_drvinfo,
 	.get_link = sierra_net_get_link,
 	.get_msglevel = usbnet_get_msglevel,
@@ -900,6 +904,12 @@ struct sk_buff *sierra_net_tx_fixup(struct usbnet *dev, struct sk_buff *skb,
 	u16 len;
 	bool need_tail;
 
+<<<<<<< HEAD
+=======
+	BUILD_BUG_ON(FIELD_SIZEOF(struct usbnet, data)
+				< sizeof(struct cdc_state));
+
+>>>>>>> cm-10.0
 	dev_dbg(&dev->udev->dev, "%s", __func__);
 	if (priv->link_up && check_ethip_packet(skb, dev) && is_ip(skb)) {
 		/* enough head room as is? */
@@ -981,6 +991,7 @@ static struct usb_driver sierra_net_driver = {
 	.no_dynamic_id = 1,
 };
 
+<<<<<<< HEAD
 static int __init sierra_net_init(void)
 {
 	BUILD_BUG_ON(FIELD_SIZEOF(struct usbnet, data)
@@ -996,6 +1007,9 @@ static void __exit sierra_net_exit(void)
 
 module_exit(sierra_net_exit);
 module_init(sierra_net_init);
+=======
+module_usb_driver(sierra_net_driver);
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);

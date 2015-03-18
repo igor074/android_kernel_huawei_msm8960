@@ -150,7 +150,11 @@ typedef struct sigaltstack {
 #ifdef __KERNEL__
 #include <asm/sigcontext.h>
 
+<<<<<<< HEAD
 #ifndef __uClinux__
+=======
+#ifndef CONFIG_CPU_HAS_NO_BITFIELDS
+>>>>>>> cm-10.0
 #define __HAVE_ARCH_SIG_BITOPS
 
 static inline void sigaddset(sigset_t *set, int _sig)
@@ -199,6 +203,7 @@ static inline int sigfindinword(unsigned long word)
 	return word ^ 31;
 }
 
+<<<<<<< HEAD
 struct pt_regs;
 extern void ptrace_signal_deliver(struct pt_regs *regs, void *cookie);
 
@@ -210,4 +215,16 @@ extern void ptrace_signal_deliver(struct pt_regs *regs, void *cookie);
 #endif /* __uClinux__ */
 #endif /* __KERNEL__ */
 
+=======
+#endif /* !CONFIG_CPU_HAS_NO_BITFIELDS */
+
+#ifdef __uClinux__
+#define ptrace_signal_deliver(regs, cookie) do { } while (0)
+#else
+struct pt_regs;
+extern void ptrace_signal_deliver(struct pt_regs *regs, void *cookie);
+#endif /* __uClinux__ */
+
+#endif /* __KERNEL__ */
+>>>>>>> cm-10.0
 #endif /* _M68K_SIGNAL_H */

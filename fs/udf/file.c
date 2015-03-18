@@ -87,10 +87,17 @@ static int udf_adinicb_write_end(struct file *file,
 	char *kaddr;
 	struct udf_inode_info *iinfo = UDF_I(inode);
 
+<<<<<<< HEAD
 	kaddr = kmap_atomic(page, KM_USER0);
 	memcpy(iinfo->i_ext.i_data + iinfo->i_lenEAttr + offset,
 		kaddr + offset, copied);
 	kunmap_atomic(kaddr, KM_USER0);
+=======
+	kaddr = kmap_atomic(page);
+	memcpy(iinfo->i_ext.i_data + iinfo->i_lenEAttr + offset,
+		kaddr + offset, copied);
+	kunmap_atomic(kaddr);
+>>>>>>> cm-10.0
 
 	return simple_write_end(file, mapping, pos, len, copied, page, fsdata);
 }
@@ -125,7 +132,10 @@ static ssize_t udf_file_aio_write(struct kiocb *iocb, const struct iovec *iov,
 			err = udf_expand_file_adinicb(inode);
 			if (err) {
 				udf_debug("udf_expand_adinicb: err=%d\n", err);
+<<<<<<< HEAD
 				up_write(&iinfo->i_data_sem);
+=======
+>>>>>>> cm-10.0
 				return err;
 			}
 		} else {
@@ -133,9 +143,16 @@ static ssize_t udf_file_aio_write(struct kiocb *iocb, const struct iovec *iov,
 				iinfo->i_lenAlloc = pos + count;
 			else
 				iinfo->i_lenAlloc = inode->i_size;
+<<<<<<< HEAD
 		}
 	}
 	up_write(&iinfo->i_data_sem);
+=======
+			up_write(&iinfo->i_data_sem);
+		}
+	} else
+		up_write(&iinfo->i_data_sem);
+>>>>>>> cm-10.0
 
 	retval = generic_file_aio_write(iocb, iov, nr_segs, ppos);
 	if (retval > 0)
@@ -150,7 +167,11 @@ long udf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	long old_block, new_block;
 	int result = -EINVAL;
 
+<<<<<<< HEAD
 	if (file_permission(filp, MAY_READ) != 0) {
+=======
+	if (inode_permission(inode, MAY_READ) != 0) {
+>>>>>>> cm-10.0
 		udf_debug("no permission to access inode %lu\n", inode->i_ino);
 		result = -EPERM;
 		goto out;
@@ -201,12 +222,18 @@ out:
 static int udf_release_file(struct inode *inode, struct file *filp)
 {
 	if (filp->f_mode & FMODE_WRITE) {
+<<<<<<< HEAD
 		mutex_lock(&inode->i_mutex);
+=======
+>>>>>>> cm-10.0
 		down_write(&UDF_I(inode)->i_data_sem);
 		udf_discard_prealloc(inode);
 		udf_truncate_tail_extent(inode);
 		up_write(&UDF_I(inode)->i_data_sem);
+<<<<<<< HEAD
 		mutex_unlock(&inode->i_mutex);
+=======
+>>>>>>> cm-10.0
 	}
 	return 0;
 }

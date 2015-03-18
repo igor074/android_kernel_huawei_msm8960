@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,6 +25,10 @@
 
 #define KGSL_PWRLEVEL_TURBO 0
 #define KGSL_PWRLEVEL_NOMINAL 1
+<<<<<<< HEAD
+=======
+#define KGSL_PWRLEVEL_LAST_OFFSET 2
+>>>>>>> cm-10.0
 
 #define KGSL_MAX_CLKS 5
 
@@ -38,7 +46,10 @@ struct kgsl_busy {
 
 struct kgsl_pwrctrl {
 	int interrupt_num;
+<<<<<<< HEAD
 	int have_irq;
+=======
+>>>>>>> cm-10.0
 	struct clk *ebi1_clk;
 	struct clk *grp_clks[KGSL_MAX_CLKS];
 	unsigned long power_flags;
@@ -50,10 +61,17 @@ struct kgsl_pwrctrl {
 	unsigned int interval_timeout;
 	bool strtstp_sleepwake;
 	struct regulator *gpu_reg;
+<<<<<<< HEAD
 	uint32_t pcl;
 	unsigned int nap_allowed;
 	unsigned int idle_needed;
 	const char *regulator_name;
+=======
+	struct regulator *gpu_dig;
+	uint32_t pcl;
+	unsigned int nap_allowed;
+	unsigned int idle_needed;
+>>>>>>> cm-10.0
 	const char *irq_name;
 	s64 time;
 	struct kgsl_busy busy;

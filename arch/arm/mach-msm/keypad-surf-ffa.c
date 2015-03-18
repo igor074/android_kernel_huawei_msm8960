@@ -1,6 +1,10 @@
 /*
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Author: Brian Swetland <swetland@google.com>
  *
  * This software is licensed under the terms of the GNU General Public
@@ -189,8 +193,13 @@ static struct gpio_event_matrix_info surf_keypad_matrix_info = {
 	.input_gpios	= keypad_col_gpios,
 	.noutputs	= ARRAY_SIZE(keypad_row_gpios),
 	.ninputs	= ARRAY_SIZE(keypad_col_gpios),
+<<<<<<< HEAD
 	.settle_time.tv_nsec = 40 * NSEC_PER_USEC,
 	.poll_time.tv_nsec = 20 * NSEC_PER_MSEC,
+=======
+	.settle_time.tv64 = 40 * NSEC_PER_USEC,
+	.poll_time.tv64 = 20 * NSEC_PER_MSEC,
+>>>>>>> cm-10.0
 	.flags		= GPIOKPF_LEVEL_TRIGGERED_IRQ | GPIOKPF_DRIVE_INACTIVE |
 			  GPIOKPF_PRINT_UNMAPPED_KEYS
 };
@@ -221,8 +230,13 @@ static struct gpio_event_matrix_info keypad_matrix_info_8k_ffa = {
 	.input_gpios	= keypad_col_gpios_8k_ffa,
 	.noutputs	= ARRAY_SIZE(keypad_row_gpios_8k_ffa),
 	.ninputs	= ARRAY_SIZE(keypad_col_gpios_8k_ffa),
+<<<<<<< HEAD
 	.settle_time.tv_nsec = 40 * NSEC_PER_USEC,
 	.poll_time.tv_nsec = 20 * NSEC_PER_MSEC,
+=======
+	.settle_time.tv64 = 40 * NSEC_PER_USEC,
+	.poll_time.tv64 = 20 * NSEC_PER_MSEC,
+>>>>>>> cm-10.0
 	.flags		= GPIOKPF_LEVEL_TRIGGERED_IRQ | GPIOKPF_DRIVE_INACTIVE |
 			  GPIOKPF_PRINT_UNMAPPED_KEYS
 };
@@ -253,8 +267,13 @@ static struct gpio_event_matrix_info keypad_matrix_info_7k_ffa = {
 	.input_gpios	= keypad_col_gpios,
 	.noutputs	= ARRAY_SIZE(keypad_row_gpios),
 	.ninputs	= ARRAY_SIZE(keypad_col_gpios),
+<<<<<<< HEAD
 	.settle_time.tv_nsec = 40 * NSEC_PER_USEC,
 	.poll_time.tv_nsec = 20 * NSEC_PER_MSEC,
+=======
+	.settle_time.tv64 = 40 * NSEC_PER_USEC,
+	.poll_time.tv64 = 20 * NSEC_PER_MSEC,
+>>>>>>> cm-10.0
 	.flags		= GPIOKPF_LEVEL_TRIGGERED_IRQ | GPIOKPF_DRIVE_INACTIVE |
 			  GPIOKPF_PRINT_UNMAPPED_KEYS
 };

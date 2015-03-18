@@ -25,12 +25,20 @@
 #include <linux/mm_inline.h>
 #include <linux/swap.h>
 #include <linux/writeback.h>
+<<<<<<< HEAD
 #include <linux/buffer_head.h>
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/syscalls.h>
 #include <linux/uio.h>
 #include <linux/security.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/socket.h>
+>>>>>>> cm-10.0
 
 /*
  * Attempt to steal a page from a pipe buffer. This should perhaps go into
@@ -132,7 +140,11 @@ error:
 	return err;
 }
 
+<<<<<<< HEAD
 static const struct pipe_buf_operations page_cache_pipe_buf_ops = {
+=======
+const struct pipe_buf_operations page_cache_pipe_buf_ops = {
+>>>>>>> cm-10.0
 	.can_merge = 0,
 	.map = generic_pipe_buf_map,
 	.unmap = generic_pipe_buf_unmap,
@@ -264,7 +276,11 @@ ssize_t splice_to_pipe(struct pipe_inode_info *pipe,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void spd_release_page(struct splice_pipe_desc *spd, unsigned int i)
+=======
+void spd_release_page(struct splice_pipe_desc *spd, unsigned int i)
+>>>>>>> cm-10.0
 {
 	page_cache_release(spd->pages[i]);
 }
@@ -691,7 +707,13 @@ static int pipe_to_sendpage(struct pipe_inode_info *pipe,
 	if (!likely(file->f_op && file->f_op->sendpage))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	more = (sd->flags & SPLICE_F_MORE) || sd->len < sd->total_len;
+=======
+	more = (sd->flags & SPLICE_F_MORE) ? MSG_MORE : 0;
+	if (sd->len < sd->total_len)
+		more |= MSG_SENDPAGE_NOTLAST;
+>>>>>>> cm-10.0
 	return file->f_op->sendpage(file, buf->page, buf->offset,
 				    sd->len, &pos, more);
 }
@@ -738,6 +760,7 @@ int pipe_to_file(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
 		goto out;
 
 	if (buf->page != page) {
+<<<<<<< HEAD
 		/*
 		 * Careful, ->map() uses KM_USER0!
 		 */
@@ -747,6 +770,14 @@ int pipe_to_file(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
 		memcpy(dst + offset, src + buf->offset, this_len);
 		flush_dcache_page(page);
 		kunmap_atomic(dst, KM_USER1);
+=======
+		char *src = buf->ops->map(pipe, buf, 1);
+		char *dst = kmap_atomic(page);
+
+		memcpy(dst + offset, src + buf->offset, this_len);
+		flush_dcache_page(page);
+		kunmap_atomic(dst);
+>>>>>>> cm-10.0
 		buf->ops->unmap(pipe, buf, src);
 	}
 	ret = pagecache_write_end(file, mapping, sd->pos, this_len, this_len,

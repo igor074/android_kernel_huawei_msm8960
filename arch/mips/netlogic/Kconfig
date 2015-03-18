@@ -1,5 +1,8 @@
 config NLM_COMMON
 	bool
+<<<<<<< HEAD
 
 config NLM_XLR
 	bool
+=======
+>>>>>>> cm-10.0

@@ -13,6 +13,7 @@
 #ifndef __ASSEMBLY__
 
 #include <linux/sched.h>
+<<<<<<< HEAD
 #include <linux/kernel_stat.h>
 #include <linux/regset.h>
 #include <linux/hardirq.h>
@@ -330,6 +331,20 @@ static inline bool irq_fpu_usable(void)
 	return !in_interrupt() || !(regs = get_irq_regs()) || \
 		user_mode(regs) || (read_cr0() & X86_CR0_TS);
 }
+=======
+#include <linux/hardirq.h>
+
+struct pt_regs;
+struct user_i387_struct;
+
+extern int init_fpu(struct task_struct *child);
+extern int dump_fpu(struct pt_regs *, struct user_i387_struct *);
+extern void math_state_restore(void);
+
+extern bool irq_fpu_usable(void);
+extern void kernel_fpu_begin(void);
+extern void kernel_fpu_end(void);
+>>>>>>> cm-10.0
 
 /*
  * Some instructions like VIA's padlock instructions generate a spurious
@@ -363,6 +378,7 @@ static inline void irq_ts_restore(int TS_state)
 }
 
 /*
+<<<<<<< HEAD
  * These disable preemption on their own and are safe
  */
 static inline void save_init_fpu(struct task_struct *tsk)
@@ -447,6 +463,23 @@ static inline void fpu_copy(struct fpu *dst, struct fpu *src)
 }
 
 extern void fpu_finit(struct fpu *fpu);
+=======
+ * The question "does this thread have fpu access?"
+ * is slightly racy, since preemption could come in
+ * and revoke it immediately after the test.
+ *
+ * However, even in that very unlikely scenario,
+ * we can just assume we have FPU access - typically
+ * to save the FP state - we'll just take a #NM
+ * fault and get the FPU access back.
+ */
+static inline int user_has_fpu(void)
+{
+	return current->thread.fpu.has_fpu;
+}
+
+extern void unlazy_fpu(struct task_struct *tsk);
+>>>>>>> cm-10.0
 
 #endif /* __ASSEMBLY__ */
 

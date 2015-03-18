@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,9 +19,12 @@
 
 #include <linux/errno.h>
 #include <linux/power_supply.h>
+<<<<<<< HEAD
 #ifdef CONFIG_BATTERY_BQ275x0
 #include<linux/i2c/bq275x0_battery.h>
 #endif
+=======
+>>>>>>> cm-10.0
 
 #define PM8921_CHARGER_DEV_NAME	"pm8921-charger"
 
@@ -25,7 +32,10 @@ struct pm8xxx_charger_core_data {
 	unsigned int	vbat_channel;
 	unsigned int	batt_temp_channel;
 	unsigned int	batt_id_channel;
+<<<<<<< HEAD
 	unsigned int    pa_therm_channel;
+=======
+>>>>>>> cm-10.0
 };
 
 enum pm8921_chg_cold_thr {
@@ -38,6 +48,7 @@ enum pm8921_chg_hot_thr	{
 	PM_SMBC_BATT_TEMP_HOT_THR__HIGH
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_BATTERY_BQ275x0
 struct msm_battery_8921gauge {
 	void * gauge_priv;
@@ -59,6 +70,8 @@ struct msm_battery_8921gauge {
 #endif
 
 
+=======
+>>>>>>> cm-10.0
 enum pm8921_usb_ov_threshold {
 	PM_USB_OV_5P5V,
 	PM_USB_OV_6V,
@@ -73,6 +86,17 @@ enum pm8921_usb_debounce_time {
 	PM_USB_DEBOUNCE_80P5MS,
 };
 
+<<<<<<< HEAD
+=======
+enum pm8921_chg_led_src_config {
+	LED_SRC_GND,
+	LED_SRC_VPH_PWR,
+	LED_SRC_5V,
+	LED_SRC_MIN_VPH_5V,
+	LED_SRC_BYPASS,
+};
+
+>>>>>>> cm-10.0
 /**
  * struct pm8921_charger_platform_data -
  * @safety_time:	max charging time in minutes incl. fast and trkl
@@ -84,8 +108,17 @@ enum pm8921_usb_debounce_time {
  * @min_voltage:	the voltage (mV) where charging method switches from
  *			trickle to fast. This is also the minimum voltage the
  *			system operates at
+<<<<<<< HEAD
  * @resume_voltage_delta:	the (mV) drop to wait for before resume charging
  *				after the battery has been fully charged
+=======
+ * @uvd_thresh_voltage:	the USB falling UVD threshold (mV) (PM8917 only)
+ * @resume_voltage_delta:	the (mV) drop to wait for before resume charging
+ *				after the battery has been fully charged
+ * @resume_charge_percent:	the % SOC the charger will drop to after the
+ *				battery is fully charged before resuming
+ *				charging.
+>>>>>>> cm-10.0
  * @term_current:	the charger current (mA) at which EOC happens
  * @cool_temp:		the temperature (degC) at which the battery is
  *			considered cool charging current and voltage is reduced.
@@ -98,6 +131,10 @@ enum pm8921_usb_debounce_time {
  *			area
  * @max_bat_chg_current:	Max charge current of the battery in mA
  *				Usually 70% of full charge capacity
+<<<<<<< HEAD
+=======
+ * @usb_max_current:		Maximum USB current in mA
+>>>>>>> cm-10.0
  * @cool_bat_chg_current:	chg current (mA) when the battery is cool
  * @warm_bat_chg_current:	chg current (mA)  when the battery is warm
  * @cool_bat_voltage:		chg voltage (mV) when the battery is cool
@@ -105,6 +142,14 @@ enum pm8921_usb_debounce_time {
  * @get_batt_capacity_percent:
  *			a board specific function to return battery
  *			capacity. If null - a default one will be used
+<<<<<<< HEAD
+=======
+ * @dc_unplug_check:	enables the reverse boosting fix for the DC_IN line
+ *			however, this should only be enabled for devices which
+ *			control the DC OVP FETs otherwise this option should
+ *			remain disabled
+ * @has_dc_supply:	report DC online if this bit is set in board file
+>>>>>>> cm-10.0
  * @trkl_voltage:	the trkl voltage in (mV) below which hw controlled
  *			 trkl charging happens with linear charger
  * @weak_voltage:	the weak voltage (mV) below which hw controlled
@@ -129,6 +174,10 @@ enum pm8921_usb_debounce_time {
  *			with the battery terminals shorted. This indicates
  *			resistance of the pads, connectors, battery terminals
  *			and rsense.
+<<<<<<< HEAD
+=======
+ * @led_src_config:	Power source for anode of charger indicator LED.
+>>>>>>> cm-10.0
  */
 struct pm8921_charger_platform_data {
 	struct pm8xxx_charger_core_data	charger_cdata;
@@ -137,12 +186,22 @@ struct pm8921_charger_platform_data {
 	unsigned int			update_time;
 	unsigned int			max_voltage;
 	unsigned int			min_voltage;
+<<<<<<< HEAD
 	unsigned int			resume_voltage_delta;
+=======
+	unsigned int			uvd_thresh_voltage;
+	unsigned int			resume_voltage_delta;
+	int				resume_charge_percent;
+>>>>>>> cm-10.0
 	unsigned int			term_current;
 	int				cool_temp;
 	int				warm_temp;
 	unsigned int			temp_check_period;
 	unsigned int			max_bat_chg_current;
+<<<<<<< HEAD
+=======
+	unsigned int			usb_max_current;
+>>>>>>> cm-10.0
 	unsigned int			cool_bat_chg_current;
 	unsigned int			warm_bat_chg_current;
 	unsigned int			cool_bat_voltage;
@@ -151,6 +210,11 @@ struct pm8921_charger_platform_data {
 	int64_t				batt_id_min;
 	int64_t				batt_id_max;
 	bool				keep_btm_on_suspend;
+<<<<<<< HEAD
+=======
+	bool				dc_unplug_check;
+	bool				has_dc_supply;
+>>>>>>> cm-10.0
 	int				trkl_voltage;
 	int				weak_voltage;
 	int				trkl_current;
@@ -161,9 +225,13 @@ struct pm8921_charger_platform_data {
 	enum pm8921_chg_cold_thr	cold_thr;
 	enum pm8921_chg_hot_thr		hot_thr;
 	int				rconn_mohm;
+<<<<<<< HEAD
 	enum pm8921_usb_ov_threshold ovp_threshold;
 	enum pm8921_usb_debounce_time ovp_hystersis;
 
+=======
+	enum pm8921_chg_led_src_config	led_src_config;
+>>>>>>> cm-10.0
 };
 
 enum pm8921_charger_source {
@@ -176,10 +244,13 @@ enum pm8921_charger_source {
 void pm8921_charger_vbus_draw(unsigned int mA);
 int pm8921_charger_register_vbus_sn(void (*callback)(int));
 void pm8921_charger_unregister_vbus_sn(void (*callback)(int));
+<<<<<<< HEAD
 #ifdef CONFIG_BATTERY_BQ275x0
 void msm_battery_8921gauge_register(struct msm_battery_8921gauge *batt_gauge);
 void msm_battery_8921gauge_unregister(struct msm_battery_8921gauge *batt_gauge);
 #endif
+=======
+>>>>>>> cm-10.0
 /**
  * pm8921_charger_enable -
  *
@@ -239,8 +310,12 @@ int pm8921_disable_input_current_limit(bool disable);
  * USB drivers can distinguish between types of USB connections
  * and set the appropriate type for the USB supply.
  */
+<<<<<<< HEAD
 void notify_usb_status_to_device(void (*callback)(uint8_t));
 void notify_usb_status_to_ate(void (*callback)(uint8_t));
+=======
+
+>>>>>>> cm-10.0
 int pm8921_set_usb_power_supply_type(enum power_supply_type type);
 
 /**
@@ -297,6 +372,7 @@ int pm8921_usb_ovp_set_hystersis(enum pm8921_usb_debounce_time ms);
  *
  */
 int pm8921_usb_ovp_disable(int disable);
+<<<<<<< HEAD
 
 int batt_therm_filter(int therm_value);
 
@@ -305,6 +381,15 @@ int pm8921_set_smps4_pwm(void);
 int pm8921_set_smps4_tcxo_en(void);
 /* Add PM8921 SMPS4 control end */
 
+=======
+/**
+ * pm8921_is_batfet_closed - battery fet status
+ *
+ * Returns 1 if batfet is closed 0 if open. On configurations without
+ * batfet this will return 0.
+ */
+int pm8921_is_batfet_closed(void);
+>>>>>>> cm-10.0
 #else
 static inline void pm8921_charger_vbus_draw(unsigned int mA)
 {
@@ -332,6 +417,13 @@ static inline int pm8921_is_battery_present(void)
 {
 	return -ENXIO;
 }
+<<<<<<< HEAD
+=======
+static inline int pm8917_set_under_voltage_detection_threshold(int mv)
+{
+	return -ENXIO;
+}
+>>>>>>> cm-10.0
 static inline int pm8921_disable_input_current_limit(bool disable)
 {
 	return -ENXIO;
@@ -373,6 +465,7 @@ static inline int pm8921_usb_ovp_disable(int disable)
 {
 	return -ENXIO;
 }
+<<<<<<< HEAD
 
 /* Add PM8921 SMPS4 control begin */
 int pm8921_set_smps4_pwm(void)
@@ -385,6 +478,12 @@ int pm8921_set_smps4_tcxo_en(void)
 	return -ENXIO;
 }
 /* Add PM8921 SMPS4 control end */
+=======
+static inline int pm8921_is_batfet_closed(void)
+{
+	return 1;
+}
+>>>>>>> cm-10.0
 #endif
 
 #endif

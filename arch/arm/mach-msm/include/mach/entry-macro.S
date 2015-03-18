@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2010, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,6 +14,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+<<<<<<< HEAD
 	.macro	disable_fiq
 	.endm
 
@@ -17,6 +22,10 @@
 	.endm
 
 #if !defined(CONFIG_ARM_GIC) && !defined(CONFIG_MULTI_IRQ_HANDLER)
+=======
+
+#if !defined(CONFIG_ARM_GIC)
+>>>>>>> cm-10.0
 #include <mach/msm_iomap.h>
 
 	.macro	get_irqnr_preamble, base, tmp

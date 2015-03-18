@@ -126,7 +126,12 @@ int ima_must_measure(struct inode *inode, int mask, int function)
  *
  * Return 0 on success, error code otherwise
  */
+<<<<<<< HEAD
 int ima_collect_measurement(struct ima_iint_cache *iint, struct file *file)
+=======
+int ima_collect_measurement(struct integrity_iint_cache *iint,
+			    struct file *file)
+>>>>>>> cm-10.0
 {
 	int result = -EEXIST;
 
@@ -156,8 +161,13 @@ int ima_collect_measurement(struct ima_iint_cache *iint, struct file *file)
  *
  * Must be called with iint->mutex held.
  */
+<<<<<<< HEAD
 void ima_store_measurement(struct ima_iint_cache *iint, struct file *file,
 			   const unsigned char *filename)
+=======
+void ima_store_measurement(struct integrity_iint_cache *iint,
+			   struct file *file, const unsigned char *filename)
+>>>>>>> cm-10.0
 {
 	const char *op = "add_template_measure";
 	const char *audit_cause = "ENOMEM";
@@ -177,8 +187,14 @@ void ima_store_measurement(struct ima_iint_cache *iint, struct file *file,
 	strncpy(entry->template.file_name, filename, IMA_EVENT_NAME_LEN_MAX);
 
 	result = ima_store_template(entry, violation, inode);
+<<<<<<< HEAD
 	if (!result)
 		iint->flags |= IMA_MEASURED;
 	else
+=======
+	if (!result || result == -EEXIST)
+		iint->flags |= IMA_MEASURED;
+	if (result < 0)
+>>>>>>> cm-10.0
 		kfree(entry);
 }

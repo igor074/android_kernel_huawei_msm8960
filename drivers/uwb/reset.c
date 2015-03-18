@@ -32,6 +32,10 @@
 #include <linux/err.h>
 #include <linux/slab.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "uwb-internal.h"
 

@@ -19,7 +19,10 @@
 
 #include "hw.h"
 
+<<<<<<< HEAD
 #define AR_PHY_CCA_FILTERWINDOW_LENGTH_INIT     3
+=======
+>>>>>>> cm-10.0
 #define AR_PHY_CCA_FILTERWINDOW_LENGTH          5
 
 #define NUM_NF_READINGS       6
@@ -108,6 +111,10 @@ void ath9k_init_nfcal_hist_buffer(struct ath_hw *ah,
 void ath9k_hw_bstuck_nfcal(struct ath_hw *ah);
 void ath9k_hw_reset_calibration(struct ath_hw *ah,
 				struct ath9k_cal_list *currCal);
+<<<<<<< HEAD
+=======
+s16 ath9k_hw_getchan_noise(struct ath_hw *ah, struct ath9k_channel *chan);
+>>>>>>> cm-10.0
 
 
 #endif /* CALIB_H */

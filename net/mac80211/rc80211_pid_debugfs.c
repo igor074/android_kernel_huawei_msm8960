@@ -13,6 +13,10 @@
 #include <linux/types.h>
 #include <linux/skbuff.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include <net/mac80211.h>
 #include "rate.h"

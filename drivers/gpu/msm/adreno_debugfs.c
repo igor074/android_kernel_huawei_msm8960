@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2008-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2002,2008-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/delay.h>
 #include <linux/debugfs.h>
 #include <linux/uaccess.h>
@@ -23,7 +31,12 @@
 #include "a2xx_reg.h"
 
 unsigned int kgsl_cff_dump_enable;
+<<<<<<< HEAD
 int kgsl_pm_regs_enabled;
+=======
+int adreno_pm_regs_enabled;
+int adreno_pm_ib_enabled;
+>>>>>>> cm-10.0
 
 static struct dentry *pm_d_debugfs;
 
@@ -46,20 +59,51 @@ DEFINE_SIMPLE_ATTRIBUTE(pm_dump_fops,
 
 static int pm_regs_enabled_set(void *data, u64 val)
 {
+<<<<<<< HEAD
 	kgsl_pm_regs_enabled = val ? 1 : 0;
+=======
+	adreno_pm_regs_enabled = val ? 1 : 0;
+>>>>>>> cm-10.0
 	return 0;
 }
 
 static int pm_regs_enabled_get(void *data, u64 *val)
 {
+<<<<<<< HEAD
 	*val = kgsl_pm_regs_enabled;
 	return 0;
 }
 
+=======
+	*val = adreno_pm_regs_enabled;
+	return 0;
+}
+
+static int pm_ib_enabled_set(void *data, u64 val)
+{
+	adreno_pm_ib_enabled = val ? 1 : 0;
+	return 0;
+}
+
+static int pm_ib_enabled_get(void *data, u64 *val)
+{
+	*val = adreno_pm_ib_enabled;
+	return 0;
+}
+
+
+>>>>>>> cm-10.0
 DEFINE_SIMPLE_ATTRIBUTE(pm_regs_enabled_fops,
 			pm_regs_enabled_get,
 			pm_regs_enabled_set, "%llu\n");
 
+<<<<<<< HEAD
+=======
+DEFINE_SIMPLE_ATTRIBUTE(pm_ib_enabled_fops,
+			pm_ib_enabled_get,
+			pm_ib_enabled_set, "%llu\n");
+
+>>>>>>> cm-10.0
 
 static int kgsl_cff_dump_enable_set(void *data, u64 val)
 {
@@ -80,6 +124,7 @@ static int kgsl_cff_dump_enable_get(void *data, u64 *val)
 DEFINE_SIMPLE_ATTRIBUTE(kgsl_cff_dump_enable_fops, kgsl_cff_dump_enable_get,
 			kgsl_cff_dump_enable_set, "%llu\n");
 
+<<<<<<< HEAD
 static int kgsl_dbgfs_open(struct inode *inode, struct file *file)
 {
 	file->f_mode &= ~(FMODE_PREAD | FMODE_PWRITE);
@@ -325,6 +370,11 @@ static const struct file_operations kgsl_mh_debug_fops = {
 	.release = kgsl_dbgfs_release,
 	.read = kgsl_mh_debug_read,
 };
+=======
+typedef void (*reg_read_init_t)(struct kgsl_device *device);
+typedef void (*reg_read_fill_t)(struct kgsl_device *device, int i,
+	unsigned int *vals, int linec);
+>>>>>>> cm-10.0
 
 void adreno_debugfs_init(struct kgsl_device *device)
 {
@@ -333,6 +383,7 @@ void adreno_debugfs_init(struct kgsl_device *device)
 	if (!device->d_debugfs || IS_ERR(device->d_debugfs))
 		return;
 
+<<<<<<< HEAD
 	debugfs_create_file("istore",   0400, device->d_debugfs, device,
 			    &kgsl_istore_fops);
 	debugfs_create_file("sx_debug", 0400, device->d_debugfs, device,
@@ -341,6 +392,8 @@ void adreno_debugfs_init(struct kgsl_device *device)
 			    &kgsl_cp_debug_fops);
 	debugfs_create_file("mh_debug", 0400, device->d_debugfs, device,
 			    &kgsl_mh_debug_fops);
+=======
+>>>>>>> cm-10.0
 	debugfs_create_file("cff_dump", 0644, device->d_debugfs, device,
 			    &kgsl_cff_dump_enable_fops);
 	debugfs_create_u32("wait_timeout", 0644, device->d_debugfs,
@@ -348,6 +401,14 @@ void adreno_debugfs_init(struct kgsl_device *device)
 	debugfs_create_u32("ib_check", 0644, device->d_debugfs,
 			   &adreno_dev->ib_check_level);
 
+<<<<<<< HEAD
+=======
+	/* By Default enable fast hang detection */
+	adreno_dev->fast_hang_detect = 1;
+	debugfs_create_u32("fast_hang_detect", 0644, device->d_debugfs,
+			   &adreno_dev->fast_hang_detect);
+
+>>>>>>> cm-10.0
 	/* Create post mortem control files */
 
 	pm_d_debugfs = debugfs_create_dir("postmortem", device->d_debugfs);
@@ -359,4 +420,9 @@ void adreno_debugfs_init(struct kgsl_device *device)
 			    &pm_dump_fops);
 	debugfs_create_file("regs_enabled", 0644, pm_d_debugfs, device,
 			    &pm_regs_enabled_fops);
+<<<<<<< HEAD
+=======
+	debugfs_create_file("ib_enabled", 0644, pm_d_debugfs, device,
+				    &pm_ib_enabled_fops);
+>>>>>>> cm-10.0
 }

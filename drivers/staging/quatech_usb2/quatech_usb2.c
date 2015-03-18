@@ -16,7 +16,11 @@
 #include <linux/usb/serial.h>
 #include <linux/uaccess.h>
 
+<<<<<<< HEAD
 static int debug;
+=======
+static bool debug;
+>>>>>>> cm-10.0
 
 /* Version Information */
 #define DRIVER_VERSION "v2.00"
@@ -135,7 +139,10 @@ static struct usb_driver quausb2_usb_driver = {
 	.probe = usb_serial_probe,
 	.disconnect = usb_serial_disconnect,
 	.id_table = quausb2_id_table,
+<<<<<<< HEAD
 	.no_dynamic_id = 1,
+=======
+>>>>>>> cm-10.0
 };
 
 /**
@@ -916,9 +923,16 @@ static int qt2_ioctl(struct tty_struct *tty,
 		dbg("%s() port %d, cmd == TIOCMIWAIT enter",
 			__func__, port->number);
 		prev_msr_value = port_extra->shadowMSR  & QT2_SERIAL_MSR_MASK;
+<<<<<<< HEAD
 		while (1) {
 			add_wait_queue(&port_extra->wait, &wait);
 			set_current_state(TASK_INTERRUPTIBLE);
+=======
+		barrier();
+		__set_current_state(TASK_INTERRUPTIBLE);
+		while (1) {
+			add_wait_queue(&port_extra->wait, &wait);
+>>>>>>> cm-10.0
 			schedule();
 			dbg("%s(): port %d, cmd == TIOCMIWAIT here\n",
 				__func__, port->number);
@@ -926,9 +940,18 @@ static int qt2_ioctl(struct tty_struct *tty,
 			/* see if a signal woke us up */
 			if (signal_pending(current))
 				return -ERESTARTSYS;
+<<<<<<< HEAD
 			msr_value = port_extra->shadowMSR & QT2_SERIAL_MSR_MASK;
 			if (msr_value == prev_msr_value)
 				return -EIO;  /* no change - error */
+=======
+			set_current_state(TASK_INTERRUPTIBLE);
+			msr_value = port_extra->shadowMSR & QT2_SERIAL_MSR_MASK;
+			if (msr_value == prev_msr_value) {
+				__set_current_state(TASK_RUNNING);
+				return -EIO;  /* no change - error */
+			}
+>>>>>>> cm-10.0
 			if ((arg & TIOCM_RNG &&
 				((prev_msr_value & QT2_SERIAL_MSR_RI) ==
 					(msr_value & QT2_SERIAL_MSR_RI))) ||
@@ -941,6 +964,10 @@ static int qt2_ioctl(struct tty_struct *tty,
 				(arg & TIOCM_CTS &&
 				((prev_msr_value & QT2_SERIAL_MSR_CTS) ==
 					(msr_value & QT2_SERIAL_MSR_CTS)))) {
+<<<<<<< HEAD
+=======
+				__set_current_state(TASK_RUNNING);
+>>>>>>> cm-10.0
 				return 0;
 			}
 		} /* end inifinite while */
@@ -1937,7 +1964,10 @@ static struct usb_serial_driver quatech2_device = {
 		.name = "quatech_usb2",
 	},
 	.description = DRIVER_DESC,
+<<<<<<< HEAD
 	.usb_driver = &quausb2_usb_driver,
+=======
+>>>>>>> cm-10.0
 	.id_table = quausb2_id_table,
 	.num_ports = 8,
 	.open = qt2_open,
@@ -1959,6 +1989,7 @@ static struct usb_serial_driver quatech2_device = {
 	.write_bulk_callback = qt2_write_bulk_callback,
 };
 
+<<<<<<< HEAD
 static int __init quausb2_usb_init(void)
 {
 	int retval;
@@ -1994,6 +2025,13 @@ static void __exit quausb2_usb_exit(void)
 
 module_init(quausb2_usb_init);
 module_exit(quausb2_usb_exit);
+=======
+static struct usb_serial_driver * const serial_drivers[] = {
+	&quatech2_device, NULL
+};
+
+module_usb_serial_driver(quausb2_usb_driver, serial_drivers);
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);

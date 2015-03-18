@@ -32,6 +32,10 @@
  */
 
 #include <linux/ctype.h>
+<<<<<<< HEAD
+=======
+#include <linux/stat.h>
+>>>>>>> cm-10.0
 
 #include "ipath_kernel.h"
 #include "ipath_verbs.h"

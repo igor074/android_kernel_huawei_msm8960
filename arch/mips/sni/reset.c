@@ -5,7 +5,10 @@
  */
 #include <asm/io.h>
 #include <asm/reboot.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/sni.h>
 
 /*

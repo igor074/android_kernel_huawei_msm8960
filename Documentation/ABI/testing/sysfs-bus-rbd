@@ -57,6 +57,7 @@ create_snap
 
 	 $ echo <snap-name> > /sys/bus/rbd/devices/<dev-id>/snap_create
 
+<<<<<<< HEAD
 rollback_snap
 
 	Rolls back data to the specified snapshot. This goes over the entire
@@ -64,6 +65,8 @@ rollback_snap
 
 	 $ echo <snap-name> > /sys/bus/rbd/devices/<dev-id>/snap_rollback
 
+=======
+>>>>>>> cm-10.0
 snap_*
 
 	A directory per each snapshot

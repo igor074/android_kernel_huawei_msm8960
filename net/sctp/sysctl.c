@@ -53,6 +53,13 @@ static int sack_timer_min = 1;
 static int sack_timer_max = 500;
 static int addr_scope_max = 3; /* check sctp_scope_policy_t in include/net/sctp/constants.h for max entries */
 static int rwnd_scale_max = 16;
+<<<<<<< HEAD
+=======
+static unsigned long max_autoclose_min = 0;
+static unsigned long max_autoclose_max =
+	(MAX_SCHEDULE_TIMEOUT / HZ > UINT_MAX)
+	? UINT_MAX : MAX_SCHEDULE_TIMEOUT / HZ;
+>>>>>>> cm-10.0
 
 extern long sysctl_sctp_mem[3];
 extern int sysctl_sctp_rmem[3];
@@ -183,6 +190,16 @@ static ctl_table sctp_table[] = {
 		.proc_handler	= proc_dointvec,
 	},
 	{
+<<<<<<< HEAD
+=======
+		.procname	= "default_auto_asconf",
+		.data		= &sctp_default_auto_asconf,
+		.maxlen		= sizeof(int),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec,
+	},
+	{
+>>>>>>> cm-10.0
 		.procname	= "prsctp_enable",
 		.data		= &sctp_prsctp_enable,
 		.maxlen		= sizeof(int),
@@ -251,6 +268,18 @@ static ctl_table sctp_table[] = {
 		.extra1		= &one,
 		.extra2		= &rwnd_scale_max,
 	},
+<<<<<<< HEAD
+=======
+	{
+		.procname	= "max_autoclose",
+		.data		= &sctp_max_autoclose,
+		.maxlen		= sizeof(unsigned long),
+		.mode		= 0644,
+		.proc_handler	= &proc_doulongvec_minmax,
+		.extra1		= &max_autoclose_min,
+		.extra2		= &max_autoclose_max,
+	},
+>>>>>>> cm-10.0
 
 	{ /* sentinel */ }
 };

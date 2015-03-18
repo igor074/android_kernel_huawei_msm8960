@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -37,6 +41,10 @@
 
 #define VCD_TIMESTAMP_RESOLUTION             1000000
 #define VCD_DEC_INITIAL_FRAME_RATE           30
+<<<<<<< HEAD
+=======
+#define VCD_MAXPERF_FPS_THRESHOLD_X_1000     (59*1000)
+>>>>>>> cm-10.0
 
 #define VCD_FIRST_IP_RCVD                    0x00000004
 #define VCD_FIRST_OP_RCVD                    0x00000008
@@ -146,7 +154,10 @@ struct vcd_dev_ctxt {
 	u32 reqd_perf_lvl;
 	u32 curr_perf_lvl;
 	u32 set_perf_lvl_pending;
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 };
 
 struct vcd_clnt_status {
@@ -185,6 +196,10 @@ struct vcd_clnt_ctxt {
 	u32 live;
 	u32 decoding;
 	u32 bframe;
+<<<<<<< HEAD
+=======
+	u32 num_slices;
+>>>>>>> cm-10.0
 
 	struct vcd_property_frame_rate frm_rate;
 	u32 frm_p_units;
@@ -210,8 +225,14 @@ struct vcd_clnt_ctxt {
 	u32 vcd_enable_ion;
 	struct vcd_clnt_ctxt *next;
 	u32 meta_mode;
+<<<<<<< HEAD
 	int secure;
 	int perf_set_by_client;
+=======
+	int perf_set_by_client;
+	int secure;
+	bool is_turbo_enabled;
+>>>>>>> cm-10.0
 };
 
 #define VCD_BUFFERPOOL_INUSE_DECREMENT(val) \

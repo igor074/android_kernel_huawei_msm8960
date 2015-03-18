@@ -11,6 +11,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/device.h>
+>>>>>>> cm-10.0
 #include <linux/power_supply.h>
 #include <linux/slab.h>
 

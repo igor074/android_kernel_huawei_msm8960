@@ -6,6 +6,11 @@
  */
 
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+#include <linux/async.h>
+>>>>>>> cm-10.0
 
 #include <scsi/scsi.h>
 #include <scsi/scsi_device.h>
@@ -48,8 +53,27 @@ static int scsi_bus_suspend_common(struct device *dev, pm_message_t msg)
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	if (scsi_is_sdev_device(dev))
 		err = scsi_dev_type_suspend(dev, msg);
+=======
+	if (scsi_is_sdev_device(dev)) {
+		/*
+		 * sd is the only high-level SCSI driver to implement runtime
+		 * PM, and sd treats runtime suspend, system suspend, and
+		 * system hibernate identically (but not system freeze).
+		 */
+		if (pm_runtime_suspended(dev)) {
+			if (msg.event == PM_EVENT_SUSPEND ||
+			    msg.event == PM_EVENT_HIBERNATE)
+				return 0;	/* already suspended */
+
+			/* wake up device so that FREEZE will succeed */
+			pm_runtime_resume(dev);
+		}
+		err = scsi_dev_type_suspend(dev, msg);
+	}
+>>>>>>> cm-10.0
 	return err;
 }
 
@@ -57,8 +81,22 @@ static int scsi_bus_resume_common(struct device *dev)
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	if (scsi_is_sdev_device(dev))
 		err = scsi_dev_type_resume(dev);
+=======
+	if (scsi_is_sdev_device(dev)) {
+		/*
+		 * Parent device may have runtime suspended as soon as
+		 * it is woken up during the system resume.
+		 *
+		 * Resume it on behalf of child.
+		 */
+		pm_runtime_get_sync(dev->parent);
+		err = scsi_dev_type_resume(dev);
+		pm_runtime_put_sync(dev->parent);
+	}
+>>>>>>> cm-10.0
 
 	if (err == 0) {
 		pm_runtime_disable(dev);
@@ -68,6 +106,22 @@ static int scsi_bus_resume_common(struct device *dev)
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int scsi_bus_prepare(struct device *dev)
+{
+	if (scsi_is_sdev_device(dev)) {
+		/* sd probing uses async_schedule.  Wait until it finishes. */
+		async_synchronize_full();
+
+	} else if (scsi_is_host_device(dev)) {
+		/* Wait until async scanning is finished */
+		scsi_complete_async_scans();
+	}
+	return 0;
+}
+
+>>>>>>> cm-10.0
 static int scsi_bus_suspend(struct device *dev)
 {
 	return scsi_bus_suspend_common(dev, PMSG_SUSPEND);
@@ -86,6 +140,10 @@ static int scsi_bus_poweroff(struct device *dev)
 #else /* CONFIG_PM_SLEEP */
 
 #define scsi_bus_resume_common		NULL
+<<<<<<< HEAD
+=======
+#define scsi_bus_prepare		NULL
+>>>>>>> cm-10.0
 #define scsi_bus_suspend		NULL
 #define scsi_bus_freeze			NULL
 #define scsi_bus_poweroff		NULL
@@ -144,9 +202,15 @@ int scsi_autopm_get_device(struct scsi_device *sdev)
 	int	err;
 
 	err = pm_runtime_get_sync(&sdev->sdev_gendev);
+<<<<<<< HEAD
 	if (err < 0)
 		pm_runtime_put_sync(&sdev->sdev_gendev);
 	else if (err > 0)
+=======
+	if (err < 0 && err !=-EACCES)
+		pm_runtime_put_sync(&sdev->sdev_gendev);
+	else
+>>>>>>> cm-10.0
 		err = 0;
 	return err;
 }
@@ -173,9 +237,15 @@ int scsi_autopm_get_host(struct Scsi_Host *shost)
 	int	err;
 
 	err = pm_runtime_get_sync(&shost->shost_gendev);
+<<<<<<< HEAD
 	if (err < 0)
 		pm_runtime_put_sync(&shost->shost_gendev);
 	else if (err > 0)
+=======
+	if (err < 0 && err !=-EACCES)
+		pm_runtime_put_sync(&shost->shost_gendev);
+	else
+>>>>>>> cm-10.0
 		err = 0;
 	return err;
 }
@@ -194,6 +264,10 @@ void scsi_autopm_put_host(struct Scsi_Host *shost)
 #endif /* CONFIG_PM_RUNTIME */
 
 const struct dev_pm_ops scsi_bus_pm_ops = {
+<<<<<<< HEAD
+=======
+	.prepare =		scsi_bus_prepare,
+>>>>>>> cm-10.0
 	.suspend =		scsi_bus_suspend,
 	.resume =		scsi_bus_resume_common,
 	.freeze =		scsi_bus_freeze,

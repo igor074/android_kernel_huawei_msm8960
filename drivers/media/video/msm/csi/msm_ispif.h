@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -43,6 +47,7 @@ struct ispif_isr_queue_cmd {
 };
 
 #define VIDIOC_MSM_ISPIF_CFG \
+<<<<<<< HEAD
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct msm_ispif_params)
 
 #define VIDIOC_MSM_ISPIF_INIT \
@@ -62,6 +67,9 @@ struct ispif_isr_queue_cmd {
 #define RDI_0 (0x01 << 1)
 #define PIX_1 (0x01 << 2)
 #define RDI_1 (0x01 << 3)
+=======
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 18, struct ispif_cfg_data*)
+>>>>>>> cm-10.0
 
 void msm_ispif_vfe_get_cid(uint8_t intftype, char *cids, int *num);
 

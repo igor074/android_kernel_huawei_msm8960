@@ -2,9 +2,15 @@
  * Misc utility routines for accessing PMU corerev specific features
  * of the SiliconBackplane-based Broadcom chips.
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -22,9 +28,16 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
+<<<<<<< HEAD
  * $Id: hndpmu.c,v 1.228.2.56 2011-02-11 22:49:07 Exp $
  */
 
+=======
+ * $Id: hndpmu.c 324060 2012-03-27 23:26:47Z $
+ */
+
+#include <bcm_cfg.h>
+>>>>>>> cm-10.0
 #include <typedefs.h>
 #include <bcmdefs.h>
 #include <osl.h>
@@ -93,6 +106,7 @@ static const sdiod_drive_str_t sdiod_drive_strength_tab4_1v8[] = {
 	{0, 0x1} };
 
 /* SDIO Drive Strength to sel value table for PMU Rev 11 (1.2v) */
+<<<<<<< HEAD
 static const sdiod_drive_str_t sdiod_drive_strength_tab4_1v2[] = {
 	{16, 0x3},
 	{13, 0x2},
@@ -113,6 +127,10 @@ static const sdiod_drive_str_t sdiod_drive_strength_tab4_2v5[] = {
 	{20, 0x0},
 	{10, 0x3},
 	{0, 0x2} };
+=======
+
+/* SDIO Drive Strength to sel value table for PMU Rev 11 (2.5v) */
+>>>>>>> cm-10.0
 
 /* SDIO Drive Strength to sel value table for PMU Rev 13 (1.8v) */
 static const sdiod_drive_str_t sdiod_drive_strength_tab5_1v8[] = {
@@ -125,6 +143,7 @@ static const sdiod_drive_str_t sdiod_drive_strength_tab5_1v8[] = {
 	{0, 0x0} };
 
 /* SDIO Drive Strength to sel value table for PMU Rev 13 (3.3v) */
+<<<<<<< HEAD
 static const sdiod_drive_str_t sdiod_drive_strength_tab5_3v3[] = {
 	{12, 0x7},
 	{10, 0x6},
@@ -133,6 +152,8 @@ static const sdiod_drive_str_t sdiod_drive_strength_tab5_3v3[] = {
 	{4, 0x2},
 	{2, 0x1},
 	{0, 0x0} };
+=======
+>>>>>>> cm-10.0
 
 
 #define SDIOD_DRVSTR_KEY(chip, pmu)	(((chip) << 16) | (pmu))

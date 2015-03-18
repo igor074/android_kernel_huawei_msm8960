@@ -8,7 +8,11 @@
 #include <linux/slab.h>
 #include <linux/sched.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 
 /**
  * Define this to get debugging messages.

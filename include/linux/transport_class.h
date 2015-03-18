@@ -10,6 +10,10 @@
 #define _TRANSPORT_CLASS_H_
 
 #include <linux/device.h>
+<<<<<<< HEAD
+=======
+#include <linux/bug.h>
+>>>>>>> cm-10.0
 #include <linux/attribute_container.h>
 
 struct transport_container;

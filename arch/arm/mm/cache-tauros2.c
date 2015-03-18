@@ -16,6 +16,10 @@
 
 #include <linux/init.h>
 #include <asm/cacheflush.h>
+<<<<<<< HEAD
+=======
+#include <asm/cp15.h>
+>>>>>>> cm-10.0
 #include <asm/hardware/cache-tauros2.h>
 
 

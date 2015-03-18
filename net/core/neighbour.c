@@ -98,7 +98,11 @@ static const struct file_operations neigh_stat_seq_fops;
 
 static DEFINE_RWLOCK(neigh_tbl_lock);
 
+<<<<<<< HEAD
 static int neigh_blackhole(struct sk_buff *skb)
+=======
+static int neigh_blackhole(struct neighbour *neigh, struct sk_buff *skb)
+>>>>>>> cm-10.0
 {
 	kfree_skb(skb);
 	return -ENETDOWN;
@@ -137,7 +141,11 @@ static int neigh_forced_gc(struct neigh_table *tbl)
 	write_lock_bh(&tbl->lock);
 	nht = rcu_dereference_protected(tbl->nht,
 					lockdep_is_held(&tbl->lock));
+<<<<<<< HEAD
 	for (i = 0; i <= nht->hash_mask; i++) {
+=======
+	for (i = 0; i < (1 << nht->hash_shift); i++) {
+>>>>>>> cm-10.0
 		struct neighbour *n;
 		struct neighbour __rcu **np;
 
@@ -210,7 +218,11 @@ static void neigh_flush_dev(struct neigh_table *tbl, struct net_device *dev)
 	nht = rcu_dereference_protected(tbl->nht,
 					lockdep_is_held(&tbl->lock));
 
+<<<<<<< HEAD
 	for (i = 0; i <= nht->hash_mask; i++) {
+=======
+	for (i = 0; i < (1 << nht->hash_shift); i++) {
+>>>>>>> cm-10.0
 		struct neighbour *n;
 		struct neighbour __rcu **np = &nht->hash_buckets[i];
 
@@ -238,6 +250,10 @@ static void neigh_flush_dev(struct neigh_table *tbl, struct net_device *dev)
 				   it to safe state.
 				 */
 				skb_queue_purge(&n->arp_queue);
+<<<<<<< HEAD
+=======
+				n->arp_queue_len_bytes = 0;
+>>>>>>> cm-10.0
 				n->output = neigh_blackhole;
 				if (n->nud_state & NUD_VALID)
 					n->nud_state = NUD_NOARP;
@@ -272,7 +288,11 @@ int neigh_ifdown(struct neigh_table *tbl, struct net_device *dev)
 }
 EXPORT_SYMBOL(neigh_ifdown);
 
+<<<<<<< HEAD
 static struct neighbour *neigh_alloc(struct neigh_table *tbl)
+=======
+static struct neighbour *neigh_alloc(struct neigh_table *tbl, struct net_device *dev)
+>>>>>>> cm-10.0
 {
 	struct neighbour *n = NULL;
 	unsigned long now = jiffies;
@@ -287,7 +307,19 @@ static struct neighbour *neigh_alloc(struct neigh_table *tbl)
 			goto out_entries;
 	}
 
+<<<<<<< HEAD
 	n = kmem_cache_zalloc(tbl->kmem_cachep, GFP_ATOMIC);
+=======
+	if (tbl->entry_size)
+		n = kzalloc(tbl->entry_size, GFP_ATOMIC);
+	else {
+		int sz = sizeof(*n) + tbl->key_len;
+
+		sz = ALIGN(sz, NEIGH_PRIV_ALIGN);
+		sz += dev->neigh_priv_len;
+		n = kzalloc(sz, GFP_ATOMIC);
+	}
+>>>>>>> cm-10.0
 	if (!n)
 		goto out_entries;
 
@@ -297,6 +329,10 @@ static struct neighbour *neigh_alloc(struct neigh_table *tbl)
 	n->updated	  = n->used = now;
 	n->nud_state	  = NUD_NONE;
 	n->output	  = neigh_blackhole;
+<<<<<<< HEAD
+=======
+	seqlock_init(&n->hh.hh_lock);
+>>>>>>> cm-10.0
 	n->parms	  = neigh_parms_clone(&tbl->parms);
 	setup_timer(&n->timer, neigh_timer_handler, (unsigned long)n);
 
@@ -312,11 +348,26 @@ out_entries:
 	goto out;
 }
 
+<<<<<<< HEAD
 static struct neigh_hash_table *neigh_hash_alloc(unsigned int entries)
 {
 	size_t size = entries * sizeof(struct neighbour *);
 	struct neigh_hash_table *ret;
 	struct neighbour __rcu **buckets;
+=======
+static void neigh_get_hash_rnd(u32 *x)
+{
+	get_random_bytes(x, sizeof(*x));
+	*x |= 1;
+}
+
+static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
+{
+	size_t size = (1 << shift) * sizeof(struct neighbour *);
+	struct neigh_hash_table *ret;
+	struct neighbour __rcu **buckets;
+	int i;
+>>>>>>> cm-10.0
 
 	ret = kmalloc(sizeof(*ret), GFP_ATOMIC);
 	if (!ret)
@@ -332,8 +383,14 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int entries)
 		return NULL;
 	}
 	ret->hash_buckets = buckets;
+<<<<<<< HEAD
 	ret->hash_mask = entries - 1;
 	get_random_bytes(&ret->hash_rnd, sizeof(ret->hash_rnd));
+=======
+	ret->hash_shift = shift;
+	for (i = 0; i < NEIGH_NUM_HASH_RND; i++)
+		neigh_get_hash_rnd(&ret->hash_rnd[i]);
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -342,7 +399,11 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
 	struct neigh_hash_table *nht = container_of(head,
 						    struct neigh_hash_table,
 						    rcu);
+<<<<<<< HEAD
 	size_t size = (nht->hash_mask + 1) * sizeof(struct neighbour *);
+=======
+	size_t size = (1 << nht->hash_shift) * sizeof(struct neighbour *);
+>>>>>>> cm-10.0
 	struct neighbour __rcu **buckets = nht->hash_buckets;
 
 	if (size <= PAGE_SIZE)
@@ -353,13 +414,18 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
 }
 
 static struct neigh_hash_table *neigh_hash_grow(struct neigh_table *tbl,
+<<<<<<< HEAD
 						unsigned long new_entries)
+=======
+						unsigned long new_shift)
+>>>>>>> cm-10.0
 {
 	unsigned int i, hash;
 	struct neigh_hash_table *new_nht, *old_nht;
 
 	NEIGH_CACHE_STAT_INC(tbl, hash_grows);
 
+<<<<<<< HEAD
 	BUG_ON(!is_power_of_2(new_entries));
 	old_nht = rcu_dereference_protected(tbl->nht,
 					    lockdep_is_held(&tbl->lock));
@@ -368,6 +434,15 @@ static struct neigh_hash_table *neigh_hash_grow(struct neigh_table *tbl,
 		return old_nht;
 
 	for (i = 0; i <= old_nht->hash_mask; i++) {
+=======
+	old_nht = rcu_dereference_protected(tbl->nht,
+					    lockdep_is_held(&tbl->lock));
+	new_nht = neigh_hash_alloc(new_shift);
+	if (!new_nht)
+		return old_nht;
+
+	for (i = 0; i < (1 << old_nht->hash_shift); i++) {
+>>>>>>> cm-10.0
 		struct neighbour *n, *next;
 
 		for (n = rcu_dereference_protected(old_nht->hash_buckets[i],
@@ -377,7 +452,11 @@ static struct neigh_hash_table *neigh_hash_grow(struct neigh_table *tbl,
 			hash = tbl->hash(n->primary_key, n->dev,
 					 new_nht->hash_rnd);
 
+<<<<<<< HEAD
 			hash &= new_nht->hash_mask;
+=======
+			hash >>= (32 - new_nht->hash_shift);
+>>>>>>> cm-10.0
 			next = rcu_dereference_protected(n->next,
 						lockdep_is_held(&tbl->lock));
 
@@ -406,7 +485,11 @@ struct neighbour *neigh_lookup(struct neigh_table *tbl, const void *pkey,
 
 	rcu_read_lock_bh();
 	nht = rcu_dereference_bh(tbl->nht);
+<<<<<<< HEAD
 	hash_val = tbl->hash(pkey, dev, nht->hash_rnd) & nht->hash_mask;
+=======
+	hash_val = tbl->hash(pkey, dev, nht->hash_rnd) >> (32 - nht->hash_shift);
+>>>>>>> cm-10.0
 
 	for (n = rcu_dereference_bh(nht->hash_buckets[hash_val]);
 	     n != NULL;
@@ -436,7 +519,11 @@ struct neighbour *neigh_lookup_nodev(struct neigh_table *tbl, struct net *net,
 
 	rcu_read_lock_bh();
 	nht = rcu_dereference_bh(tbl->nht);
+<<<<<<< HEAD
 	hash_val = tbl->hash(pkey, NULL, nht->hash_rnd) & nht->hash_mask;
+=======
+	hash_val = tbl->hash(pkey, NULL, nht->hash_rnd) >> (32 - nht->hash_shift);
+>>>>>>> cm-10.0
 
 	for (n = rcu_dereference_bh(nht->hash_buckets[hash_val]);
 	     n != NULL;
@@ -461,7 +548,11 @@ struct neighbour *neigh_create(struct neigh_table *tbl, const void *pkey,
 	u32 hash_val;
 	int key_len = tbl->key_len;
 	int error;
+<<<<<<< HEAD
 	struct neighbour *n1, *rc, *n = neigh_alloc(tbl);
+=======
+	struct neighbour *n1, *rc, *n = neigh_alloc(tbl, dev);
+>>>>>>> cm-10.0
 	struct neigh_hash_table *nht;
 
 	if (!n) {
@@ -479,6 +570,17 @@ struct neighbour *neigh_create(struct neigh_table *tbl, const void *pkey,
 		goto out_neigh_release;
 	}
 
+<<<<<<< HEAD
+=======
+	if (dev->netdev_ops->ndo_neigh_construct) {
+		error = dev->netdev_ops->ndo_neigh_construct(n);
+		if (error < 0) {
+			rc = ERR_PTR(error);
+			goto out_neigh_release;
+		}
+	}
+
+>>>>>>> cm-10.0
 	/* Device specific setup. */
 	if (n->parms->neigh_setup &&
 	    (error = n->parms->neigh_setup(n)) < 0) {
@@ -492,10 +594,17 @@ struct neighbour *neigh_create(struct neigh_table *tbl, const void *pkey,
 	nht = rcu_dereference_protected(tbl->nht,
 					lockdep_is_held(&tbl->lock));
 
+<<<<<<< HEAD
 	if (atomic_read(&tbl->entries) > (nht->hash_mask + 1))
 		nht = neigh_hash_grow(tbl, (nht->hash_mask + 1) << 1);
 
 	hash_val = tbl->hash(pkey, dev, nht->hash_rnd) & nht->hash_mask;
+=======
+	if (atomic_read(&tbl->entries) > (1 << nht->hash_shift))
+		nht = neigh_hash_grow(tbl, nht->hash_shift + 1);
+
+	hash_val = tbl->hash(pkey, dev, nht->hash_rnd) >> (32 - nht->hash_shift);
+>>>>>>> cm-10.0
 
 	if (n->parms->dead) {
 		rc = ERR_PTR(-EINVAL);
@@ -676,19 +785,26 @@ static inline void neigh_parms_put(struct neigh_parms *parms)
 		neigh_parms_destroy(parms);
 }
 
+<<<<<<< HEAD
 static void neigh_destroy_rcu(struct rcu_head *head)
 {
 	struct neighbour *neigh = container_of(head, struct neighbour, rcu);
 
 	kmem_cache_free(neigh->tbl->kmem_cachep, neigh);
 }
+=======
+>>>>>>> cm-10.0
 /*
  *	neighbour must already be out of the table;
  *
  */
 void neigh_destroy(struct neighbour *neigh)
 {
+<<<<<<< HEAD
 	struct hh_cache *hh;
+=======
+	struct net_device *dev = neigh->dev;
+>>>>>>> cm-10.0
 
 	NEIGH_CACHE_STAT_INC(neigh->tbl, destroys);
 
@@ -702,6 +818,7 @@ void neigh_destroy(struct neighbour *neigh)
 	if (neigh_del_timer(neigh))
 		printk(KERN_WARNING "Impossible event.\n");
 
+<<<<<<< HEAD
 	while ((hh = neigh->hh) != NULL) {
 		neigh->hh = hh->hh_next;
 		hh->hh_next = NULL;
@@ -715,12 +832,25 @@ void neigh_destroy(struct neighbour *neigh)
 	skb_queue_purge(&neigh->arp_queue);
 
 	dev_put(neigh->dev);
+=======
+	skb_queue_purge(&neigh->arp_queue);
+	neigh->arp_queue_len_bytes = 0;
+
+	if (dev->netdev_ops->ndo_neigh_destroy)
+		dev->netdev_ops->ndo_neigh_destroy(neigh);
+
+	dev_put(dev);
+>>>>>>> cm-10.0
 	neigh_parms_put(neigh->parms);
 
 	NEIGH_PRINTK2("neigh %p is destroyed.\n", neigh);
 
 	atomic_dec(&neigh->tbl->entries);
+<<<<<<< HEAD
 	call_rcu(&neigh->rcu, neigh_destroy_rcu);
+=======
+	kfree_rcu(neigh, rcu);
+>>>>>>> cm-10.0
 }
 EXPORT_SYMBOL(neigh_destroy);
 
@@ -731,6 +861,7 @@ EXPORT_SYMBOL(neigh_destroy);
  */
 static void neigh_suspect(struct neighbour *neigh)
 {
+<<<<<<< HEAD
 	struct hh_cache *hh;
 
 	NEIGH_PRINTK2("neigh %p is suspected.\n", neigh);
@@ -739,6 +870,11 @@ static void neigh_suspect(struct neighbour *neigh)
 
 	for (hh = neigh->hh; hh; hh = hh->hh_next)
 		hh->hh_output = neigh->ops->output;
+=======
+	NEIGH_PRINTK2("neigh %p is suspected.\n", neigh);
+
+	neigh->output = neigh->ops->output;
+>>>>>>> cm-10.0
 }
 
 /* Neighbour state is OK;
@@ -748,6 +884,7 @@ static void neigh_suspect(struct neighbour *neigh)
  */
 static void neigh_connect(struct neighbour *neigh)
 {
+<<<<<<< HEAD
 	struct hh_cache *hh;
 
 	NEIGH_PRINTK2("neigh %p is connected.\n", neigh);
@@ -756,6 +893,11 @@ static void neigh_connect(struct neighbour *neigh)
 
 	for (hh = neigh->hh; hh; hh = hh->hh_next)
 		hh->hh_output = neigh->ops->hh_output;
+=======
+	NEIGH_PRINTK2("neigh %p is connected.\n", neigh);
+
+	neigh->output = neigh->ops->connected_output;
+>>>>>>> cm-10.0
 }
 
 static void neigh_periodic_work(struct work_struct *work)
@@ -784,7 +926,11 @@ static void neigh_periodic_work(struct work_struct *work)
 				neigh_rand_reach_time(p->base_reachable_time);
 	}
 
+<<<<<<< HEAD
 	for (i = 0 ; i <= nht->hash_mask; i++) {
+=======
+	for (i = 0 ; i < (1 << nht->hash_shift); i++) {
+>>>>>>> cm-10.0
 		np = &nht->hash_buckets[i];
 
 		while ((n = rcu_dereference_protected(*np,
@@ -823,6 +969,11 @@ next_elt:
 		write_unlock_bh(&tbl->lock);
 		cond_resched();
 		write_lock_bh(&tbl->lock);
+<<<<<<< HEAD
+=======
+		nht = rcu_dereference_protected(tbl->nht,
+						lockdep_is_held(&tbl->lock));
+>>>>>>> cm-10.0
 	}
 	/* Cycle through all hash buckets every base_reachable_time/2 ticks.
 	 * ARP entry timeouts range from 1/2 base_reachable_time to 3/2
@@ -863,6 +1014,23 @@ static void neigh_invalidate(struct neighbour *neigh)
 		write_lock(&neigh->lock);
 	}
 	skb_queue_purge(&neigh->arp_queue);
+<<<<<<< HEAD
+=======
+	neigh->arp_queue_len_bytes = 0;
+}
+
+static void neigh_probe(struct neighbour *neigh)
+	__releases(neigh->lock)
+{
+	struct sk_buff *skb = skb_peek(&neigh->arp_queue);
+	/* keep skb alive even if arp_queue overflows */
+	if (skb)
+		skb = skb_copy(skb, GFP_ATOMIC);
+	write_unlock(&neigh->lock);
+	neigh->ops->solicit(neigh, skb);
+	atomic_inc(&neigh->probes);
+	kfree_skb(skb);
+>>>>>>> cm-10.0
 }
 
 /* Called when a timer expires for a neighbour entry. */
@@ -880,12 +1048,17 @@ static void neigh_timer_handler(unsigned long arg)
 	now = jiffies;
 	next = now + HZ;
 
+<<<<<<< HEAD
 	if (!(state & NUD_IN_TIMER)) {
 #ifndef CONFIG_SMP
 		printk(KERN_WARNING "neigh: timer & !nud_in_timer\n");
 #endif
 		goto out;
 	}
+=======
+	if (!(state & NUD_IN_TIMER))
+		goto out;
+>>>>>>> cm-10.0
 
 	if (state & NUD_REACHABLE) {
 		if (time_before_eq(now,
@@ -941,6 +1114,7 @@ static void neigh_timer_handler(unsigned long arg)
 			neigh_hold(neigh);
 	}
 	if (neigh->nud_state & (NUD_INCOMPLETE | NUD_PROBE)) {
+<<<<<<< HEAD
 		struct sk_buff *skb = skb_peek(&neigh->arp_queue);
 		/* keep skb alive even if arp_queue overflows */
 		if (skb)
@@ -949,6 +1123,9 @@ static void neigh_timer_handler(unsigned long arg)
 		neigh->ops->solicit(neigh, skb);
 		atomic_inc(&neigh->probes);
 		kfree_skb(skb);
+=======
+		neigh_probe(neigh);
+>>>>>>> cm-10.0
 	} else {
 out:
 		write_unlock(&neigh->lock);
@@ -963,7 +1140,11 @@ out:
 int __neigh_event_send(struct neighbour *neigh, struct sk_buff *skb)
 {
 	int rc;
+<<<<<<< HEAD
 	unsigned long now;
+=======
+	bool immediate_probe = false;
+>>>>>>> cm-10.0
 
 	write_lock_bh(&neigh->lock);
 
@@ -971,6 +1152,7 @@ int __neigh_event_send(struct neighbour *neigh, struct sk_buff *skb)
 	if (neigh->nud_state & (NUD_CONNECTED | NUD_DELAY | NUD_PROBE))
 		goto out_unlock_bh;
 
+<<<<<<< HEAD
 	now = jiffies;
 
 	if (!(neigh->nud_state & (NUD_STALE | NUD_INCOMPLETE))) {
@@ -979,6 +1161,18 @@ int __neigh_event_send(struct neighbour *neigh, struct sk_buff *skb)
 			neigh->nud_state     = NUD_INCOMPLETE;
 			neigh->updated = jiffies;
 			neigh_add_timer(neigh, now + 1);
+=======
+	if (!(neigh->nud_state & (NUD_STALE | NUD_INCOMPLETE))) {
+		if (neigh->parms->mcast_probes + neigh->parms->app_probes) {
+			unsigned long next, now = jiffies;
+
+			atomic_set(&neigh->probes, neigh->parms->ucast_probes);
+			neigh->nud_state     = NUD_INCOMPLETE;
+			neigh->updated = now;
+			next = now + max(neigh->parms->retrans_time, HZ/2);
+			neigh_add_timer(neigh, next);
+			immediate_probe = true;
+>>>>>>> cm-10.0
 		} else {
 			neigh->nud_state = NUD_FAILED;
 			neigh->updated = jiffies;
@@ -997,25 +1191,52 @@ int __neigh_event_send(struct neighbour *neigh, struct sk_buff *skb)
 
 	if (neigh->nud_state == NUD_INCOMPLETE) {
 		if (skb) {
+<<<<<<< HEAD
 			if (skb_queue_len(&neigh->arp_queue) >=
 			    neigh->parms->queue_len) {
 				struct sk_buff *buff;
 				buff = __skb_dequeue(&neigh->arp_queue);
+=======
+			while (neigh->arp_queue_len_bytes + skb->truesize >
+			       neigh->parms->queue_len_bytes) {
+				struct sk_buff *buff;
+
+				buff = __skb_dequeue(&neigh->arp_queue);
+				if (!buff)
+					break;
+				neigh->arp_queue_len_bytes -= buff->truesize;
+>>>>>>> cm-10.0
 				kfree_skb(buff);
 				NEIGH_CACHE_STAT_INC(neigh->tbl, unres_discards);
 			}
 			skb_dst_force(skb);
 			__skb_queue_tail(&neigh->arp_queue, skb);
+<<<<<<< HEAD
+=======
+			neigh->arp_queue_len_bytes += skb->truesize;
+>>>>>>> cm-10.0
 		}
 		rc = 1;
 	}
 out_unlock_bh:
+<<<<<<< HEAD
 	write_unlock_bh(&neigh->lock);
+=======
+	if (immediate_probe)
+		neigh_probe(neigh);
+	else
+		write_unlock(&neigh->lock);
+	local_bh_enable();
+>>>>>>> cm-10.0
 	return rc;
 }
 EXPORT_SYMBOL(__neigh_event_send);
 
+<<<<<<< HEAD
 static void neigh_update_hhs(const struct neighbour *neigh)
+=======
+static void neigh_update_hhs(struct neighbour *neigh)
+>>>>>>> cm-10.0
 {
 	struct hh_cache *hh;
 	void (*update)(struct hh_cache*, const struct net_device*, const unsigned char *)
@@ -1025,7 +1246,12 @@ static void neigh_update_hhs(const struct neighbour *neigh)
 		update = neigh->dev->header_ops->cache_update;
 
 	if (update) {
+<<<<<<< HEAD
 		for (hh = neigh->hh; hh; hh = hh->hh_next) {
+=======
+		hh = &neigh->hh;
+		if (hh->hh_len) {
+>>>>>>> cm-10.0
 			write_seqlock_bh(&hh->hh_lock);
 			update(hh, neigh->dev, neigh->ha);
 			write_sequnlock_bh(&hh->hh_lock);
@@ -1173,6 +1399,7 @@ int neigh_update(struct neighbour *neigh, const u8 *lladdr, u8 new,
 
 		while (neigh->nud_state & NUD_VALID &&
 		       (skb = __skb_dequeue(&neigh->arp_queue)) != NULL) {
+<<<<<<< HEAD
 			struct neighbour *n1 = neigh;
 			write_unlock_bh(&neigh->lock);
 			/* On shaper/eql skb->dst->neighbour != neigh :( */
@@ -1182,6 +1409,23 @@ int neigh_update(struct neighbour *neigh, const u8 *lladdr, u8 new,
 			write_lock_bh(&neigh->lock);
 		}
 		skb_queue_purge(&neigh->arp_queue);
+=======
+			struct dst_entry *dst = skb_dst(skb);
+			struct neighbour *n2, *n1 = neigh;
+			write_unlock_bh(&neigh->lock);
+
+			rcu_read_lock();
+			/* On shaper/eql skb->dst->neighbour != neigh :( */
+			if (dst && (n2 = dst_get_neighbour_noref(dst)) != NULL)
+				n1 = n2;
+			n1->output(n1, skb);
+			rcu_read_unlock();
+
+			write_lock_bh(&neigh->lock);
+		}
+		skb_queue_purge(&neigh->arp_queue);
+		neigh->arp_queue_len_bytes = 0;
+>>>>>>> cm-10.0
 	}
 out:
 	if (update_isrouter) {
@@ -1211,6 +1455,7 @@ struct neighbour *neigh_event_ns(struct neigh_table *tbl,
 }
 EXPORT_SYMBOL(neigh_event_ns);
 
+<<<<<<< HEAD
 static inline bool neigh_hh_lookup(struct neighbour *n, struct dst_entry *dst,
 				   __be16 protocol)
 {
@@ -1272,6 +1517,23 @@ static void neigh_hh_init(struct neighbour *n, struct dst_entry *dst,
 	if (unlikely(cmpxchg(&dst->hh, NULL, hh) != NULL))
 		hh_cache_put(hh);
 end:
+=======
+/* called with read_lock_bh(&n->lock); */
+static void neigh_hh_init(struct neighbour *n, struct dst_entry *dst)
+{
+	struct net_device *dev = dst->dev;
+	__be16 prot = dst->ops->protocol;
+	struct hh_cache	*hh = &n->hh;
+
+	write_lock_bh(&n->lock);
+
+	/* Only one thread can come in here and initialize the
+	 * hh_cache entry.
+	 */
+	if (!hh->hh_len)
+		dev->header_ops->cache(n, hh, prot);
+
+>>>>>>> cm-10.0
 	write_unlock_bh(&n->lock);
 }
 
@@ -1280,7 +1542,11 @@ end:
  * but resolution is not made yet.
  */
 
+<<<<<<< HEAD
 int neigh_compat_output(struct sk_buff *skb)
+=======
+int neigh_compat_output(struct neighbour *neigh, struct sk_buff *skb)
+>>>>>>> cm-10.0
 {
 	struct net_device *dev = skb->dev;
 
@@ -1297,6 +1563,7 @@ EXPORT_SYMBOL(neigh_compat_output);
 
 /* Slow and careful. */
 
+<<<<<<< HEAD
 int neigh_resolve_output(struct sk_buff *skb)
 {
 	struct dst_entry *dst = skb_dst(skb);
@@ -1304,6 +1571,14 @@ int neigh_resolve_output(struct sk_buff *skb)
 	int rc = 0;
 
 	if (!dst || !(neigh = dst->neighbour))
+=======
+int neigh_resolve_output(struct neighbour *neigh, struct sk_buff *skb)
+{
+	struct dst_entry *dst = skb_dst(skb);
+	int rc = 0;
+
+	if (!dst)
+>>>>>>> cm-10.0
 		goto discard;
 
 	__skb_pull(skb, skb_network_offset(skb));
@@ -1313,10 +1588,15 @@ int neigh_resolve_output(struct sk_buff *skb)
 		struct net_device *dev = neigh->dev;
 		unsigned int seq;
 
+<<<<<<< HEAD
 		if (dev->header_ops->cache &&
 		    !dst->hh &&
 		    !(dst->flags & DST_NOCACHE))
 			neigh_hh_init(neigh, dst, dst->ops->protocol);
+=======
+		if (dev->header_ops->cache && !neigh->hh.hh_len)
+			neigh_hh_init(neigh, dst);
+>>>>>>> cm-10.0
 
 		do {
 			seq = read_seqbegin(&neigh->ha_lock);
@@ -1325,7 +1605,11 @@ int neigh_resolve_output(struct sk_buff *skb)
 		} while (read_seqretry(&neigh->ha_lock, seq));
 
 		if (err >= 0)
+<<<<<<< HEAD
 			rc = neigh->ops->queue_xmit(skb);
+=======
+			rc = dev_queue_xmit(skb);
+>>>>>>> cm-10.0
 		else
 			goto out_kfree_skb;
 	}
@@ -1333,7 +1617,11 @@ out:
 	return rc;
 discard:
 	NEIGH_PRINTK1("neigh_resolve_output: dst=%p neigh=%p\n",
+<<<<<<< HEAD
 		      dst, dst ? dst->neighbour : NULL);
+=======
+		      dst, neigh);
+>>>>>>> cm-10.0
 out_kfree_skb:
 	rc = -EINVAL;
 	kfree_skb(skb);
@@ -1343,6 +1631,7 @@ EXPORT_SYMBOL(neigh_resolve_output);
 
 /* As fast as possible without hh cache */
 
+<<<<<<< HEAD
 int neigh_connected_output(struct sk_buff *skb)
 {
 	int err;
@@ -1350,6 +1639,13 @@ int neigh_connected_output(struct sk_buff *skb)
 	struct neighbour *neigh = dst->neighbour;
 	struct net_device *dev = neigh->dev;
 	unsigned int seq;
+=======
+int neigh_connected_output(struct neighbour *neigh, struct sk_buff *skb)
+{
+	struct net_device *dev = neigh->dev;
+	unsigned int seq;
+	int err;
+>>>>>>> cm-10.0
 
 	__skb_pull(skb, skb_network_offset(skb));
 
@@ -1360,7 +1656,11 @@ int neigh_connected_output(struct sk_buff *skb)
 	} while (read_seqretry(&neigh->ha_lock, seq));
 
 	if (err >= 0)
+<<<<<<< HEAD
 		err = neigh->ops->queue_xmit(skb);
+=======
+		err = dev_queue_xmit(skb);
+>>>>>>> cm-10.0
 	else {
 		err = -EINVAL;
 		kfree_skb(skb);
@@ -1369,6 +1669,15 @@ int neigh_connected_output(struct sk_buff *skb)
 }
 EXPORT_SYMBOL(neigh_connected_output);
 
+<<<<<<< HEAD
+=======
+int neigh_direct_output(struct neighbour *neigh, struct sk_buff *skb)
+{
+	return dev_queue_xmit(skb);
+}
+EXPORT_SYMBOL(neigh_direct_output);
+
+>>>>>>> cm-10.0
 static void neigh_proxy_process(unsigned long arg)
 {
 	struct neigh_table *tbl = (struct neigh_table *)arg;
@@ -1529,11 +1838,14 @@ void neigh_table_init_no_netlink(struct neigh_table *tbl)
 	tbl->parms.reachable_time =
 			  neigh_rand_reach_time(tbl->parms.base_reachable_time);
 
+<<<<<<< HEAD
 	if (!tbl->kmem_cachep)
 		tbl->kmem_cachep =
 			kmem_cache_create(tbl->id, tbl->entry_size, 0,
 					  SLAB_HWCACHE_ALIGN|SLAB_PANIC,
 					  NULL);
+=======
+>>>>>>> cm-10.0
 	tbl->stats = alloc_percpu(struct neigh_statistics);
 	if (!tbl->stats)
 		panic("cannot create neighbour cache statistics");
@@ -1544,7 +1856,11 @@ void neigh_table_init_no_netlink(struct neigh_table *tbl)
 		panic("cannot create neighbour proc dir entry");
 #endif
 
+<<<<<<< HEAD
 	RCU_INIT_POINTER(tbl->nht, neigh_hash_alloc(8));
+=======
+	RCU_INIT_POINTER(tbl->nht, neigh_hash_alloc(3));
+>>>>>>> cm-10.0
 
 	phsize = (PNEIGH_HASHMASK + 1) * sizeof(struct pneigh_entry *);
 	tbl->phash_buckets = kzalloc(phsize, GFP_KERNEL);
@@ -1618,9 +1934,12 @@ int neigh_table_clear(struct neigh_table *tbl)
 	free_percpu(tbl->stats);
 	tbl->stats = NULL;
 
+<<<<<<< HEAD
 	kmem_cache_destroy(tbl->kmem_cachep);
 	tbl->kmem_cachep = NULL;
 
+=======
+>>>>>>> cm-10.0
 	return 0;
 }
 EXPORT_SYMBOL(neigh_table_clear);
@@ -1799,7 +2118,15 @@ static int neightbl_fill_parms(struct sk_buff *skb, struct neigh_parms *parms)
 		NLA_PUT_U32(skb, NDTPA_IFINDEX, parms->dev->ifindex);
 
 	NLA_PUT_U32(skb, NDTPA_REFCNT, atomic_read(&parms->refcnt));
+<<<<<<< HEAD
 	NLA_PUT_U32(skb, NDTPA_QUEUE_LEN, parms->queue_len);
+=======
+	NLA_PUT_U32(skb, NDTPA_QUEUE_LENBYTES, parms->queue_len_bytes);
+	/* approximative value for deprecated QUEUE_LEN (in packets) */
+	NLA_PUT_U32(skb, NDTPA_QUEUE_LEN,
+		    DIV_ROUND_UP(parms->queue_len_bytes,
+				 SKB_TRUESIZE(ETH_FRAME_LEN)));
+>>>>>>> cm-10.0
 	NLA_PUT_U32(skb, NDTPA_PROXY_QLEN, parms->proxy_qlen);
 	NLA_PUT_U32(skb, NDTPA_APP_PROBES, parms->app_probes);
 	NLA_PUT_U32(skb, NDTPA_UCAST_PROBES, parms->ucast_probes);
@@ -1860,8 +2187,13 @@ static int neightbl_fill_info(struct sk_buff *skb, struct neigh_table *tbl,
 
 		rcu_read_lock_bh();
 		nht = rcu_dereference_bh(tbl->nht);
+<<<<<<< HEAD
 		ndc.ndtc_hash_rnd = nht->hash_rnd;
 		ndc.ndtc_hash_mask = nht->hash_mask;
+=======
+		ndc.ndtc_hash_rnd = nht->hash_rnd[0];
+		ndc.ndtc_hash_mask = ((1 << nht->hash_shift) - 1);
+>>>>>>> cm-10.0
 		rcu_read_unlock_bh();
 
 		NLA_PUT(skb, NDTA_CONFIG, sizeof(ndc), &ndc);
@@ -2026,7 +2358,15 @@ static int neightbl_set(struct sk_buff *skb, struct nlmsghdr *nlh, void *arg)
 
 			switch (i) {
 			case NDTPA_QUEUE_LEN:
+<<<<<<< HEAD
 				p->queue_len = nla_get_u32(tbp[i]);
+=======
+				p->queue_len_bytes = nla_get_u32(tbp[i]) *
+						     SKB_TRUESIZE(ETH_FRAME_LEN);
+				break;
+			case NDTPA_QUEUE_LENBYTES:
+				p->queue_len_bytes = nla_get_u32(tbp[i]);
+>>>>>>> cm-10.0
 				break;
 			case NDTPA_PROXY_QLEN:
 				p->proxy_qlen = nla_get_u32(tbp[i]);
@@ -2186,6 +2526,38 @@ nla_put_failure:
 	return -EMSGSIZE;
 }
 
+<<<<<<< HEAD
+=======
+static int pneigh_fill_info(struct sk_buff *skb, struct pneigh_entry *pn,
+			    u32 pid, u32 seq, int type, unsigned int flags,
+			    struct neigh_table *tbl)
+{
+	struct nlmsghdr *nlh;
+	struct ndmsg *ndm;
+
+	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*ndm), flags);
+	if (nlh == NULL)
+		return -EMSGSIZE;
+
+	ndm = nlmsg_data(nlh);
+	ndm->ndm_family	 = tbl->family;
+	ndm->ndm_pad1    = 0;
+	ndm->ndm_pad2    = 0;
+	ndm->ndm_flags	 = pn->flags | NTF_PROXY;
+	ndm->ndm_type	 = NDA_DST;
+	ndm->ndm_ifindex = pn->dev->ifindex;
+	ndm->ndm_state	 = NUD_NONE;
+
+	NLA_PUT(skb, NDA_DST, tbl->key_len, pn->key);
+
+	return nlmsg_end(skb, nlh);
+
+nla_put_failure:
+	nlmsg_cancel(skb, nlh);
+	return -EMSGSIZE;
+}
+
+>>>>>>> cm-10.0
 static void neigh_update_notify(struct neighbour *neigh)
 {
 	call_netevent_notifiers(NETEVENT_NEIGH_UPDATE, neigh);
@@ -2204,7 +2576,11 @@ static int neigh_dump_table(struct neigh_table *tbl, struct sk_buff *skb,
 	rcu_read_lock_bh();
 	nht = rcu_dereference_bh(tbl->nht);
 
+<<<<<<< HEAD
 	for (h = 0; h <= nht->hash_mask; h++) {
+=======
+	for (h = 0; h < (1 << nht->hash_shift); h++) {
+>>>>>>> cm-10.0
 		if (h < s_h)
 			continue;
 		if (h > s_h)
@@ -2235,23 +2611,95 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
+=======
+static int pneigh_dump_table(struct neigh_table *tbl, struct sk_buff *skb,
+			     struct netlink_callback *cb)
+{
+	struct pneigh_entry *n;
+	struct net *net = sock_net(skb->sk);
+	int rc, h, s_h = cb->args[3];
+	int idx, s_idx = idx = cb->args[4];
+
+	read_lock_bh(&tbl->lock);
+
+	for (h = 0; h <= PNEIGH_HASHMASK; h++) {
+		if (h < s_h)
+			continue;
+		if (h > s_h)
+			s_idx = 0;
+		for (n = tbl->phash_buckets[h], idx = 0; n; n = n->next) {
+			if (dev_net(n->dev) != net)
+				continue;
+			if (idx < s_idx)
+				goto next;
+			if (pneigh_fill_info(skb, n, NETLINK_CB(cb->skb).pid,
+					    cb->nlh->nlmsg_seq,
+					    RTM_NEWNEIGH,
+					    NLM_F_MULTI, tbl) <= 0) {
+				read_unlock_bh(&tbl->lock);
+				rc = -1;
+				goto out;
+			}
+		next:
+			idx++;
+		}
+	}
+
+	read_unlock_bh(&tbl->lock);
+	rc = skb->len;
+out:
+	cb->args[3] = h;
+	cb->args[4] = idx;
+	return rc;
+
+}
+
+>>>>>>> cm-10.0
 static int neigh_dump_info(struct sk_buff *skb, struct netlink_callback *cb)
 {
 	struct neigh_table *tbl;
 	int t, family, s_t;
+<<<<<<< HEAD
 
 	read_lock(&neigh_tbl_lock);
 	family = ((struct rtgenmsg *) nlmsg_data(cb->nlh))->rtgen_family;
 	s_t = cb->args[0];
 
 	for (tbl = neigh_tables, t = 0; tbl; tbl = tbl->next, t++) {
+=======
+	int proxy = 0;
+	int err = 0;
+
+	read_lock(&neigh_tbl_lock);
+	family = ((struct rtgenmsg *) nlmsg_data(cb->nlh))->rtgen_family;
+
+	/* check for full ndmsg structure presence, family member is
+	 * the same for both structures
+	 */
+	if (nlmsg_len(cb->nlh) >= sizeof(struct ndmsg) &&
+	    ((struct ndmsg *) nlmsg_data(cb->nlh))->ndm_flags == NTF_PROXY)
+		proxy = 1;
+
+	s_t = cb->args[0];
+
+	for (tbl = neigh_tables, t = 0; tbl && (err >= 0);
+	     tbl = tbl->next, t++) {
+>>>>>>> cm-10.0
 		if (t < s_t || (family && tbl->family != family))
 			continue;
 		if (t > s_t)
 			memset(&cb->args[1], 0, sizeof(cb->args) -
 						sizeof(cb->args[0]));
+<<<<<<< HEAD
 		if (neigh_dump_table(tbl, skb, cb) < 0)
 			break;
+=======
+		if (proxy)
+			err = pneigh_dump_table(tbl, skb, cb);
+		else
+			err = neigh_dump_table(tbl, skb, cb);
+>>>>>>> cm-10.0
 	}
 	read_unlock(&neigh_tbl_lock);
 
@@ -2268,7 +2716,11 @@ void neigh_for_each(struct neigh_table *tbl, void (*cb)(struct neighbour *, void
 	nht = rcu_dereference_bh(tbl->nht);
 
 	read_lock(&tbl->lock); /* avoid resizes */
+<<<<<<< HEAD
 	for (chain = 0; chain <= nht->hash_mask; chain++) {
+=======
+	for (chain = 0; chain < (1 << nht->hash_shift); chain++) {
+>>>>>>> cm-10.0
 		struct neighbour *n;
 
 		for (n = rcu_dereference_bh(nht->hash_buckets[chain]);
@@ -2290,7 +2742,11 @@ void __neigh_for_each_release(struct neigh_table *tbl,
 
 	nht = rcu_dereference_protected(tbl->nht,
 					lockdep_is_held(&tbl->lock));
+<<<<<<< HEAD
 	for (chain = 0; chain <= nht->hash_mask; chain++) {
+=======
+	for (chain = 0; chain < (1 << nht->hash_shift); chain++) {
+>>>>>>> cm-10.0
 		struct neighbour *n;
 		struct neighbour __rcu **np;
 
@@ -2327,7 +2783,11 @@ static struct neighbour *neigh_get_first(struct seq_file *seq)
 	int bucket = state->bucket;
 
 	state->flags &= ~NEIGH_SEQ_IS_PNEIGH;
+<<<<<<< HEAD
 	for (bucket = 0; bucket <= nht->hash_mask; bucket++) {
+=======
+	for (bucket = 0; bucket < (1 << nht->hash_shift); bucket++) {
+>>>>>>> cm-10.0
 		n = rcu_dereference_bh(nht->hash_buckets[bucket]);
 
 		while (n) {
@@ -2394,7 +2854,11 @@ next:
 		if (n)
 			break;
 
+<<<<<<< HEAD
 		if (++state->bucket > nht->hash_mask)
+=======
+		if (++state->bucket >= (1 << nht->hash_shift))
+>>>>>>> cm-10.0
 			break;
 
 		n = rcu_dereference_bh(nht->hash_buckets[state->bucket]);
@@ -2449,7 +2913,14 @@ static struct pneigh_entry *pneigh_get_next(struct seq_file *seq,
 	struct net *net = seq_file_net(seq);
 	struct neigh_table *tbl = state->tbl;
 
+<<<<<<< HEAD
 	pn = pn->next;
+=======
+	do {
+		pn = pn->next;
+	} while (pn && !net_eq(pneigh_net(pn), net));
+
+>>>>>>> cm-10.0
 	while (!pn) {
 		if (++state->bucket > PNEIGH_HASHMASK)
 			break;
@@ -2687,6 +3158,7 @@ EXPORT_SYMBOL(neigh_app_ns);
 
 #ifdef CONFIG_SYSCTL
 
+<<<<<<< HEAD
 #define NEIGH_VARS_MAX 19
 
 static struct neigh_sysctl_table {
@@ -2696,47 +3168,118 @@ static struct neigh_sysctl_table {
 } neigh_sysctl_template __read_mostly = {
 	.neigh_vars = {
 		{
+=======
+static int proc_unres_qlen(ctl_table *ctl, int write, void __user *buffer,
+			   size_t *lenp, loff_t *ppos)
+{
+	int size, ret;
+	ctl_table tmp = *ctl;
+
+	tmp.data = &size;
+	size = DIV_ROUND_UP(*(int *)ctl->data, SKB_TRUESIZE(ETH_FRAME_LEN));
+	ret = proc_dointvec(&tmp, write, buffer, lenp, ppos);
+	if (write && !ret)
+		*(int *)ctl->data = size * SKB_TRUESIZE(ETH_FRAME_LEN);
+	return ret;
+}
+
+enum {
+	NEIGH_VAR_MCAST_PROBE,
+	NEIGH_VAR_UCAST_PROBE,
+	NEIGH_VAR_APP_PROBE,
+	NEIGH_VAR_RETRANS_TIME,
+	NEIGH_VAR_BASE_REACHABLE_TIME,
+	NEIGH_VAR_DELAY_PROBE_TIME,
+	NEIGH_VAR_GC_STALETIME,
+	NEIGH_VAR_QUEUE_LEN,
+	NEIGH_VAR_QUEUE_LEN_BYTES,
+	NEIGH_VAR_PROXY_QLEN,
+	NEIGH_VAR_ANYCAST_DELAY,
+	NEIGH_VAR_PROXY_DELAY,
+	NEIGH_VAR_LOCKTIME,
+	NEIGH_VAR_RETRANS_TIME_MS,
+	NEIGH_VAR_BASE_REACHABLE_TIME_MS,
+	NEIGH_VAR_GC_INTERVAL,
+	NEIGH_VAR_GC_THRESH1,
+	NEIGH_VAR_GC_THRESH2,
+	NEIGH_VAR_GC_THRESH3,
+	NEIGH_VAR_MAX
+};
+
+static struct neigh_sysctl_table {
+	struct ctl_table_header *sysctl_header;
+	struct ctl_table neigh_vars[NEIGH_VAR_MAX + 1];
+	char *dev_name;
+} neigh_sysctl_template __read_mostly = {
+	.neigh_vars = {
+		[NEIGH_VAR_MCAST_PROBE] = {
+>>>>>>> cm-10.0
 			.procname	= "mcast_solicit",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_UCAST_PROBE] = {
+>>>>>>> cm-10.0
 			.procname	= "ucast_solicit",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_APP_PROBE] = {
+>>>>>>> cm-10.0
 			.procname	= "app_solicit",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_RETRANS_TIME] = {
+>>>>>>> cm-10.0
 			.procname	= "retrans_time",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_userhz_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_BASE_REACHABLE_TIME] = {
+>>>>>>> cm-10.0
 			.procname	= "base_reachable_time",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_DELAY_PROBE_TIME] = {
+>>>>>>> cm-10.0
 			.procname	= "delay_first_probe_time",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_GC_STALETIME] = {
+>>>>>>> cm-10.0
 			.procname	= "gc_stale_time",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_jiffies,
 		},
+<<<<<<< HEAD
 		{
 			.procname	= "unres_qlen",
 			.maxlen		= sizeof(int),
@@ -2744,60 +3287,111 @@ static struct neigh_sysctl_table {
 			.proc_handler	= proc_dointvec,
 		},
 		{
+=======
+		[NEIGH_VAR_QUEUE_LEN] = {
+			.procname	= "unres_qlen",
+			.maxlen		= sizeof(int),
+			.mode		= 0644,
+			.proc_handler	= proc_unres_qlen,
+		},
+		[NEIGH_VAR_QUEUE_LEN_BYTES] = {
+			.procname	= "unres_qlen_bytes",
+			.maxlen		= sizeof(int),
+			.mode		= 0644,
+			.proc_handler	= proc_dointvec,
+		},
+		[NEIGH_VAR_PROXY_QLEN] = {
+>>>>>>> cm-10.0
 			.procname	= "proxy_qlen",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_ANYCAST_DELAY] = {
+>>>>>>> cm-10.0
 			.procname	= "anycast_delay",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_userhz_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_PROXY_DELAY] = {
+>>>>>>> cm-10.0
 			.procname	= "proxy_delay",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_userhz_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_LOCKTIME] = {
+>>>>>>> cm-10.0
 			.procname	= "locktime",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_userhz_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_RETRANS_TIME_MS] = {
+>>>>>>> cm-10.0
 			.procname	= "retrans_time_ms",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_ms_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_BASE_REACHABLE_TIME_MS] = {
+>>>>>>> cm-10.0
 			.procname	= "base_reachable_time_ms",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_ms_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_GC_INTERVAL] = {
+>>>>>>> cm-10.0
 			.procname	= "gc_interval",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec_jiffies,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_GC_THRESH1] = {
+>>>>>>> cm-10.0
 			.procname	= "gc_thresh1",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_GC_THRESH2] = {
+>>>>>>> cm-10.0
 			.procname	= "gc_thresh2",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
 			.proc_handler	= proc_dointvec,
 		},
+<<<<<<< HEAD
 		{
+=======
+		[NEIGH_VAR_GC_THRESH3] = {
+>>>>>>> cm-10.0
 			.procname	= "gc_thresh3",
 			.maxlen		= sizeof(int),
 			.mode		= 0644,
@@ -2830,6 +3424,7 @@ int neigh_sysctl_register(struct net_device *dev, struct neigh_parms *p,
 	if (!t)
 		goto err;
 
+<<<<<<< HEAD
 	t->neigh_vars[0].data  = &p->mcast_probes;
 	t->neigh_vars[1].data  = &p->ucast_probes;
 	t->neigh_vars[2].data  = &p->app_probes;
@@ -2844,10 +3439,28 @@ int neigh_sysctl_register(struct net_device *dev, struct neigh_parms *p,
 	t->neigh_vars[11].data = &p->locktime;
 	t->neigh_vars[12].data  = &p->retrans_time;
 	t->neigh_vars[13].data  = &p->base_reachable_time;
+=======
+	t->neigh_vars[NEIGH_VAR_MCAST_PROBE].data  = &p->mcast_probes;
+	t->neigh_vars[NEIGH_VAR_UCAST_PROBE].data  = &p->ucast_probes;
+	t->neigh_vars[NEIGH_VAR_APP_PROBE].data  = &p->app_probes;
+	t->neigh_vars[NEIGH_VAR_RETRANS_TIME].data  = &p->retrans_time;
+	t->neigh_vars[NEIGH_VAR_BASE_REACHABLE_TIME].data  = &p->base_reachable_time;
+	t->neigh_vars[NEIGH_VAR_DELAY_PROBE_TIME].data  = &p->delay_probe_time;
+	t->neigh_vars[NEIGH_VAR_GC_STALETIME].data  = &p->gc_staletime;
+	t->neigh_vars[NEIGH_VAR_QUEUE_LEN].data  = &p->queue_len_bytes;
+	t->neigh_vars[NEIGH_VAR_QUEUE_LEN_BYTES].data  = &p->queue_len_bytes;
+	t->neigh_vars[NEIGH_VAR_PROXY_QLEN].data  = &p->proxy_qlen;
+	t->neigh_vars[NEIGH_VAR_ANYCAST_DELAY].data  = &p->anycast_delay;
+	t->neigh_vars[NEIGH_VAR_PROXY_DELAY].data = &p->proxy_delay;
+	t->neigh_vars[NEIGH_VAR_LOCKTIME].data = &p->locktime;
+	t->neigh_vars[NEIGH_VAR_RETRANS_TIME_MS].data  = &p->retrans_time;
+	t->neigh_vars[NEIGH_VAR_BASE_REACHABLE_TIME_MS].data  = &p->base_reachable_time;
+>>>>>>> cm-10.0
 
 	if (dev) {
 		dev_name_source = dev->name;
 		/* Terminate the table early */
+<<<<<<< HEAD
 		memset(&t->neigh_vars[14], 0, sizeof(t->neigh_vars[14]));
 	} else {
 		dev_name_source = neigh_path[NEIGH_CTL_PATH_DEV].procname;
@@ -2855,11 +3468,22 @@ int neigh_sysctl_register(struct net_device *dev, struct neigh_parms *p,
 		t->neigh_vars[15].data = (int *)(p + 1) + 1;
 		t->neigh_vars[16].data = (int *)(p + 1) + 2;
 		t->neigh_vars[17].data = (int *)(p + 1) + 3;
+=======
+		memset(&t->neigh_vars[NEIGH_VAR_GC_INTERVAL], 0,
+		       sizeof(t->neigh_vars[NEIGH_VAR_GC_INTERVAL]));
+	} else {
+		dev_name_source = neigh_path[NEIGH_CTL_PATH_DEV].procname;
+		t->neigh_vars[NEIGH_VAR_GC_INTERVAL].data = (int *)(p + 1);
+		t->neigh_vars[NEIGH_VAR_GC_THRESH1].data = (int *)(p + 1) + 1;
+		t->neigh_vars[NEIGH_VAR_GC_THRESH2].data = (int *)(p + 1) + 2;
+		t->neigh_vars[NEIGH_VAR_GC_THRESH3].data = (int *)(p + 1) + 3;
+>>>>>>> cm-10.0
 	}
 
 
 	if (handler) {
 		/* RetransTime */
+<<<<<<< HEAD
 		t->neigh_vars[3].proc_handler = handler;
 		t->neigh_vars[3].extra1 = dev;
 		/* ReachableTime */
@@ -2871,6 +3495,19 @@ int neigh_sysctl_register(struct net_device *dev, struct neigh_parms *p,
 		/* ReachableTime (in milliseconds) */
 		t->neigh_vars[13].proc_handler = handler;
 		t->neigh_vars[13].extra1 = dev;
+=======
+		t->neigh_vars[NEIGH_VAR_RETRANS_TIME].proc_handler = handler;
+		t->neigh_vars[NEIGH_VAR_RETRANS_TIME].extra1 = dev;
+		/* ReachableTime */
+		t->neigh_vars[NEIGH_VAR_BASE_REACHABLE_TIME].proc_handler = handler;
+		t->neigh_vars[NEIGH_VAR_BASE_REACHABLE_TIME].extra1 = dev;
+		/* RetransTime (in milliseconds)*/
+		t->neigh_vars[NEIGH_VAR_RETRANS_TIME_MS].proc_handler = handler;
+		t->neigh_vars[NEIGH_VAR_RETRANS_TIME_MS].extra1 = dev;
+		/* ReachableTime (in milliseconds) */
+		t->neigh_vars[NEIGH_VAR_BASE_REACHABLE_TIME_MS].proc_handler = handler;
+		t->neigh_vars[NEIGH_VAR_BASE_REACHABLE_TIME_MS].extra1 = dev;
+>>>>>>> cm-10.0
 	}
 
 	t->dev_name = kstrdup(dev_name_source, GFP_KERNEL);
@@ -2913,12 +3550,22 @@ EXPORT_SYMBOL(neigh_sysctl_unregister);
 
 static int __init neigh_init(void)
 {
+<<<<<<< HEAD
 	rtnl_register(PF_UNSPEC, RTM_NEWNEIGH, neigh_add, NULL);
 	rtnl_register(PF_UNSPEC, RTM_DELNEIGH, neigh_delete, NULL);
 	rtnl_register(PF_UNSPEC, RTM_GETNEIGH, NULL, neigh_dump_info);
 
 	rtnl_register(PF_UNSPEC, RTM_GETNEIGHTBL, NULL, neightbl_dump_info);
 	rtnl_register(PF_UNSPEC, RTM_SETNEIGHTBL, neightbl_set, NULL);
+=======
+	rtnl_register(PF_UNSPEC, RTM_NEWNEIGH, neigh_add, NULL, NULL);
+	rtnl_register(PF_UNSPEC, RTM_DELNEIGH, neigh_delete, NULL, NULL);
+	rtnl_register(PF_UNSPEC, RTM_GETNEIGH, NULL, neigh_dump_info, NULL);
+
+	rtnl_register(PF_UNSPEC, RTM_GETNEIGHTBL, NULL, neightbl_dump_info,
+		      NULL);
+	rtnl_register(PF_UNSPEC, RTM_SETNEIGHTBL, neightbl_set, NULL, NULL);
+>>>>>>> cm-10.0
 
 	return 0;
 }

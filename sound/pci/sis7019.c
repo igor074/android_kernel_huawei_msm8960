@@ -25,7 +25,11 @@
 #include <linux/pci.h>
 #include <linux/time.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/moduleparam.h>
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/interrupt.h>
 #include <linux/delay.h>
 #include <sound/core.h>
@@ -40,7 +44,12 @@ MODULE_SUPPORTED_DEVICE("{{SiS,SiS7019 Audio Accelerator}}");
 
 static int index = SNDRV_DEFAULT_IDX1;	/* Index 0-MAX */
 static char *id = SNDRV_DEFAULT_STR1;	/* ID for this card */
+<<<<<<< HEAD
 static int enable = 1;
+=======
+static bool enable = 1;
+static int codecs = 1;
+>>>>>>> cm-10.0
 
 module_param(index, int, 0444);
 MODULE_PARM_DESC(index, "Index value for SiS7019 Audio Accelerator.");
@@ -48,6 +57,11 @@ module_param(id, charp, 0444);
 MODULE_PARM_DESC(id, "ID string for SiS7019 Audio Accelerator.");
 module_param(enable, bool, 0444);
 MODULE_PARM_DESC(enable, "Enable SiS7019 Audio Accelerator.");
+<<<<<<< HEAD
+=======
+module_param(codecs, int, 0444);
+MODULE_PARM_DESC(codecs, "Set bit to indicate that codec number is expected to be present (default 1)");
+>>>>>>> cm-10.0
 
 static DEFINE_PCI_DEVICE_TABLE(snd_sis7019_ids) = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_SI, 0x7019) },
@@ -140,6 +154,12 @@ struct sis7019 {
 	dma_addr_t silence_dma_addr;
 };
 
+<<<<<<< HEAD
+=======
+/* These values are also used by the module param 'codecs' to indicate
+ * which codecs should be present.
+ */
+>>>>>>> cm-10.0
 #define SIS_PRIMARY_CODEC_PRESENT	0x0001
 #define SIS_SECONDARY_CODEC_PRESENT	0x0002
 #define SIS_TERTIARY_CODEC_PRESENT	0x0004
@@ -977,7 +997,11 @@ timeout:
 	mutex_unlock(&sis->ac97_mutex);
 
 	if (!count) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: ac97 codec %d timeout cmd 0x%08x\n",
+=======
+		dev_err(&sis->pci->dev, "ac97 codec %d timeout cmd 0x%08x\n",
+>>>>>>> cm-10.0
 					codec, cmd);
 	}
 
@@ -1078,6 +1102,10 @@ static int sis_chip_init(struct sis7019 *sis)
 {
 	unsigned long io = sis->ioport;
 	void __iomem *ioaddr = sis->ioaddr;
+<<<<<<< HEAD
+=======
+	unsigned long timeout;
+>>>>>>> cm-10.0
 	u16 status;
 	int count;
 	int i;
@@ -1104,6 +1132,7 @@ static int sis_chip_init(struct sis7019 *sis)
 	while ((inw(io + SIS_AC97_STATUS) & SIS_AC97_STATUS_BUSY) && --count)
 		udelay(1);
 
+<<<<<<< HEAD
 	/* Now that we've finished the reset, find out what's attached.
 	 */
 	status = inl(io + SIS_AC97_STATUS);
@@ -1119,6 +1148,47 @@ static int sis_chip_init(struct sis7019 *sis)
 	outl(SIS_AC97_SEMA_RELEASE, io + SIS_AC97_SEMA);
 	if (!sis->codecs_present || !count)
 		return -EIO;
+=======
+	/* Command complete, we can let go of the semaphore now.
+	 */
+	outl(SIS_AC97_SEMA_RELEASE, io + SIS_AC97_SEMA);
+	if (!count)
+		return -EIO;
+
+	/* Now that we've finished the reset, find out what's attached.
+	 * There are some codec/board combinations that take an extremely
+	 * long time to come up. 350+ ms has been observed in the field,
+	 * so we'll give them up to 500ms.
+	 */
+	sis->codecs_present = 0;
+	timeout = msecs_to_jiffies(500) + jiffies;
+	while (time_before_eq(jiffies, timeout)) {
+		status = inl(io + SIS_AC97_STATUS);
+		if (status & SIS_AC97_STATUS_CODEC_READY)
+			sis->codecs_present |= SIS_PRIMARY_CODEC_PRESENT;
+		if (status & SIS_AC97_STATUS_CODEC2_READY)
+			sis->codecs_present |= SIS_SECONDARY_CODEC_PRESENT;
+		if (status & SIS_AC97_STATUS_CODEC3_READY)
+			sis->codecs_present |= SIS_TERTIARY_CODEC_PRESENT;
+
+		if (sis->codecs_present == codecs)
+			break;
+
+		msleep(1);
+	}
+
+	/* All done, check for errors.
+	 */
+	if (!sis->codecs_present) {
+		dev_err(&sis->pci->dev, "could not find any codecs\n");
+		return -EIO;
+	}
+
+	if (sis->codecs_present != codecs) {
+		dev_warn(&sis->pci->dev, "missing codecs, found %0x, expected %0x\n",
+					 sis->codecs_present, codecs);
+	}
+>>>>>>> cm-10.0
 
 	/* Let the hardware know that the audio driver is alive,
 	 * and enable PCM slots on the AC-link for L/R playback (3 & 4) and
@@ -1225,11 +1295,16 @@ static int sis_resume(struct pci_dev *pci)
 	pci_restore_state(pci);
 
 	if (pci_enable_device(pci) < 0) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: unable to re-enable device\n");
+=======
+		dev_err(&pci->dev, "unable to re-enable device\n");
+>>>>>>> cm-10.0
 		goto error;
 	}
 
 	if (sis_chip_init(sis)) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: unable to re-init controller\n");
 		goto error;
 	}
@@ -1237,6 +1312,15 @@ static int sis_resume(struct pci_dev *pci)
 	if (request_irq(pci->irq, sis_interrupt, IRQF_DISABLED|IRQF_SHARED,
 				card->shortname, sis)) {
 		printk(KERN_ERR "sis7019: unable to regain IRQ %d\n", pci->irq);
+=======
+		dev_err(&pci->dev, "unable to re-init controller\n");
+		goto error;
+	}
+
+	if (request_irq(pci->irq, sis_interrupt, IRQF_SHARED,
+			KBUILD_MODNAME, sis)) {
+		dev_err(&pci->dev, "unable to regain IRQ %d\n", pci->irq);
+>>>>>>> cm-10.0
 		goto error;
 	}
 
@@ -1304,8 +1388,12 @@ static int __devinit sis_chip_create(struct snd_card *card,
 		goto error_out;
 
 	if (pci_set_dma_mask(pci, DMA_BIT_MASK(30)) < 0) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: architecture does not support "
 					"30-bit PCI busmaster DMA");
+=======
+		dev_err(&pci->dev, "architecture does not support 30-bit PCI busmaster DMA");
+>>>>>>> cm-10.0
 		goto error_out_enabled;
 	}
 
@@ -1319,20 +1407,32 @@ static int __devinit sis_chip_create(struct snd_card *card,
 
 	rc = pci_request_regions(pci, "SiS7019");
 	if (rc) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: unable request regions\n");
+=======
+		dev_err(&pci->dev, "unable request regions\n");
+>>>>>>> cm-10.0
 		goto error_out_enabled;
 	}
 
 	rc = -EIO;
 	sis->ioaddr = ioremap_nocache(pci_resource_start(pci, 1), 0x4000);
 	if (!sis->ioaddr) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: unable to remap MMIO, aborting\n");
+=======
+		dev_err(&pci->dev, "unable to remap MMIO, aborting\n");
+>>>>>>> cm-10.0
 		goto error_out_cleanup;
 	}
 
 	rc = sis_alloc_suspend(sis);
 	if (rc < 0) {
+<<<<<<< HEAD
 		printk(KERN_ERR "sis7019: unable to allocate state storage\n");
+=======
+		dev_err(&pci->dev, "unable to allocate state storage\n");
+>>>>>>> cm-10.0
 		goto error_out_cleanup;
 	}
 
@@ -1340,9 +1440,15 @@ static int __devinit sis_chip_create(struct snd_card *card,
 	if (rc)
 		goto error_out_cleanup;
 
+<<<<<<< HEAD
 	if (request_irq(pci->irq, sis_interrupt, IRQF_DISABLED|IRQF_SHARED,
 				card->shortname, sis)) {
 		printk(KERN_ERR "unable to allocate irq %d\n", sis->irq);
+=======
+	if (request_irq(pci->irq, sis_interrupt, IRQF_SHARED, KBUILD_MODNAME,
+			sis)) {
+		dev_err(&pci->dev, "unable to allocate irq %d\n", sis->irq);
+>>>>>>> cm-10.0
 		goto error_out_cleanup;
 	}
 
@@ -1390,6 +1496,20 @@ static int __devinit snd_sis7019_probe(struct pci_dev *pci,
 	if (!enable)
 		goto error_out;
 
+<<<<<<< HEAD
+=======
+	/* The user can specify which codecs should be present so that we
+	 * can wait for them to show up if they are slow to recover from
+	 * the AC97 cold reset. We default to a single codec, the primary.
+	 *
+	 * We assume that SIS_PRIMARY_*_PRESENT matches bits 0-2.
+	 */
+	codecs &= SIS_PRIMARY_CODEC_PRESENT | SIS_SECONDARY_CODEC_PRESENT |
+		  SIS_TERTIARY_CODEC_PRESENT;
+	if (!codecs)
+		codecs = SIS_PRIMARY_CODEC_PRESENT;
+
+>>>>>>> cm-10.0
 	rc = snd_card_create(index, id, THIS_MODULE, sizeof(*sis), &card);
 	if (rc < 0)
 		goto error_out;
@@ -1436,7 +1556,11 @@ static void __devexit snd_sis7019_remove(struct pci_dev *pci)
 }
 
 static struct pci_driver sis7019_driver = {
+<<<<<<< HEAD
 	.name = "SiS7019",
+=======
+	.name = KBUILD_MODNAME,
+>>>>>>> cm-10.0
 	.id_table = snd_sis7019_ids,
 	.probe = snd_sis7019_probe,
 	.remove = __devexit_p(snd_sis7019_remove),

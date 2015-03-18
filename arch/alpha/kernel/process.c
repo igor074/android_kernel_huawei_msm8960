@@ -31,7 +31,10 @@
 
 #include <asm/reg.h>
 #include <asm/uaccess.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/pgtable.h>
 #include <asm/hwrpb.h>
@@ -200,7 +203,10 @@ show_regs(struct pt_regs *regs)
 void
 start_thread(struct pt_regs * regs, unsigned long pc, unsigned long sp)
 {
+<<<<<<< HEAD
 	set_fs(USER_DS);
+=======
+>>>>>>> cm-10.0
 	regs->pc = pc;
 	regs->ps = 8;
 	wrusp(sp);

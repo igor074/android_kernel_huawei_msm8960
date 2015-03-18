@@ -32,6 +32,11 @@
  */
 #include <linux/highmem.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/cpu.h>
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "rds.h"
 

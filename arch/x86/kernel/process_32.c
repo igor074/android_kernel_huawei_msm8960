@@ -9,7 +9,10 @@
  * This file handles the architecture-dependent parts of process handling..
  */
 
+<<<<<<< HEAD
 #include <linux/stackprotector.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/cpu.h>
 #include <linux/errno.h>
 #include <linux/sched.h>
@@ -31,7 +34,10 @@
 #include <linux/kallsyms.h>
 #include <linux/ptrace.h>
 #include <linux/personality.h>
+<<<<<<< HEAD
 #include <linux/tick.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/percpu.h>
 #include <linux/prctl.h>
 #include <linux/ftrace.h>
@@ -40,10 +46,17 @@
 #include <linux/kdebug.h>
 
 #include <asm/pgtable.h>
+<<<<<<< HEAD
 #include <asm/system.h>
 #include <asm/ldt.h>
 #include <asm/processor.h>
 #include <asm/i387.h>
+=======
+#include <asm/ldt.h>
+#include <asm/processor.h>
+#include <asm/i387.h>
+#include <asm/fpu-internal.h>
+>>>>>>> cm-10.0
 #include <asm/desc.h>
 #ifdef CONFIG_MATH_EMULATION
 #include <asm/math_emu.h>
@@ -56,6 +69,10 @@
 #include <asm/idle.h>
 #include <asm/syscalls.h>
 #include <asm/debugreg.h>
+<<<<<<< HEAD
+=======
+#include <asm/switch_to.h>
+>>>>>>> cm-10.0
 
 asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
 
@@ -67,6 +84,7 @@ unsigned long thread_saved_pc(struct task_struct *tsk)
 	return ((unsigned long *)tsk->thread.sp)[3];
 }
 
+<<<<<<< HEAD
 #ifndef CONFIG_SMP
 static inline void play_dead(void)
 {
@@ -119,6 +137,8 @@ void cpu_idle(void)
 	}
 }
 
+=======
+>>>>>>> cm-10.0
 void __show_regs(struct pt_regs *regs, int all)
 {
 	unsigned long cr0 = 0L, cr2 = 0L, cr3 = 0L, cr4 = 0L;
@@ -208,6 +228,10 @@ int copy_thread(unsigned long clone_flags, unsigned long sp,
 
 	task_user_gs(p) = get_user_gs(regs);
 
+<<<<<<< HEAD
+=======
+	p->fpu_counter = 0;
+>>>>>>> cm-10.0
 	p->thread.io_bitmap_ptr = NULL;
 	tsk = current;
 	err = -ENOMEM;
@@ -260,7 +284,11 @@ EXPORT_SYMBOL_GPL(start_thread);
 
 
 /*
+<<<<<<< HEAD
  *	switch_to(x,yn) should switch tasks from x to y.
+=======
+ *	switch_to(x,y) should switch tasks from x to y.
+>>>>>>> cm-10.0
  *
  * We fsave/fwait so that an exception goes off at the right time
  * (as a call from the fsave or fwait in effect) rather than to
@@ -293,6 +321,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 				 *next = &next_p->thread;
 	int cpu = smp_processor_id();
 	struct tss_struct *tss = &per_cpu(init_tss, cpu);
+<<<<<<< HEAD
 	bool preload_fpu;
 
 	/* never put a printk in __switch_to... printk() calls wake_up*() indirectly */
@@ -309,6 +338,13 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 	/* we're going to use this soon, after a few expensive things */
 	if (preload_fpu)
 		prefetch(next->fpu.state);
+=======
+	fpu_switch_t fpu;
+
+	/* never put a printk in __switch_to... printk() calls wake_up*() indirectly */
+
+	fpu = switch_fpu_prepare(prev_p, next_p, cpu);
+>>>>>>> cm-10.0
 
 	/*
 	 * Reload esp0.
@@ -348,11 +384,14 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 		     task_thread_info(next_p)->flags & _TIF_WORK_CTXSW_NEXT))
 		__switch_to_xtra(prev_p, next_p, tss);
 
+<<<<<<< HEAD
 	/* If we're going to preload the fpu context, make sure clts
 	   is run while we're batching the cpu state updates. */
 	if (preload_fpu)
 		clts();
 
+=======
+>>>>>>> cm-10.0
 	/*
 	 * Leave lazy mode, flushing any hypercalls made here.
 	 * This must be done before restoring TLS segments so
@@ -362,15 +401,23 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
 	 */
 	arch_end_context_switch(next_p);
 
+<<<<<<< HEAD
 	if (preload_fpu)
 		__math_state_restore();
 
+=======
+>>>>>>> cm-10.0
 	/*
 	 * Restore %gs if needed (which is common)
 	 */
 	if (prev->gs | next->gs)
 		lazy_load_gs(next->gs);
 
+<<<<<<< HEAD
+=======
+	switch_fpu_finish(next_p, fpu);
+
+>>>>>>> cm-10.0
 	percpu_write(current_task, next_p);
 
 	return prev_p;

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -2820,7 +2824,11 @@ static int adie_codec_refcnt_write(u8 reg, u8 mask, u8 val, enum refcnt cnt,
 	u8 reg_mask = 0;
 	int rc = 0;
 
+<<<<<<< HEAD
 	for (i = 0; i < 0xEF; i++) {
+=======
+	for (i = 0; i < ARRAY_SIZE(timpani_regset); i++) {
+>>>>>>> cm-10.0
 		if (timpani_regset[i].reg_addr == reg) {
 			for (j = 0; j < TIMPANI_MAX_FIELDS; j++) {
 				fld_mask = timpani_regset[i].fld_ref_cnt[j].mask

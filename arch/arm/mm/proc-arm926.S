@@ -77,6 +77,10 @@ ENTRY(cpu_arm926_proc_fin)
  * loc: location to jump to for soft reset
  */
 	.align	5
+<<<<<<< HEAD
+=======
+	.pushsection	.idmap.text, "ax"
+>>>>>>> cm-10.0
 ENTRY(cpu_arm926_reset)
 	mov	ip, #0
 	mcr	p15, 0, ip, c7, c7, 0		@ invalidate I,D caches
@@ -89,6 +93,11 @@ ENTRY(cpu_arm926_reset)
 	bic	ip, ip, #0x1100			@ ...i...s........
 	mcr	p15, 0, ip, c1, c0, 0		@ ctrl register
 	mov	pc, r0
+<<<<<<< HEAD
+=======
+ENDPROC(cpu_arm926_reset)
+	.popsection
+>>>>>>> cm-10.0
 
 /*
  * cpu_arm926_do_idle()
@@ -335,6 +344,7 @@ ENTRY(arm926_dma_unmap_area)
 	mov	pc, lr
 ENDPROC(arm926_dma_unmap_area)
 
+<<<<<<< HEAD
 ENTRY(arm926_cache_fns)
 	.long	arm926_flush_icache_all
 	.long	arm926_flush_kern_cache_all
@@ -346,6 +356,10 @@ ENTRY(arm926_cache_fns)
 	.long	arm926_dma_map_area
 	.long	arm926_dma_unmap_area
 	.long	arm926_dma_flush_range
+=======
+	@ define struct cpu_cache_fns (see <asm/cacheflush.h> and proc-macros.S)
+	define_cache_functions arm926
+>>>>>>> cm-10.0
 
 ENTRY(cpu_arm926_dcache_clean_area)
 #ifndef CONFIG_CPU_DCACHE_WRITETHROUGH
@@ -406,6 +420,7 @@ ENTRY(cpu_arm926_set_pte_ext)
 .equ	cpu_arm926_suspend_size, 4 * 3
 #ifdef CONFIG_PM_SLEEP
 ENTRY(cpu_arm926_do_suspend)
+<<<<<<< HEAD
 	stmfd	sp!, {r4 - r7, lr}
 	mrc	p15, 0, r4, c13, c0, 0	@ PID
 	mrc	p15, 0, r5, c3, c0, 0	@ Domain ID
@@ -413,12 +428,21 @@ ENTRY(cpu_arm926_do_suspend)
 	mrc	p15, 0, r7, c1, c0, 0	@ Control register
 	stmia	r0, {r4 - r7}
 	ldmfd	sp!, {r4 - r7, pc}
+=======
+	stmfd	sp!, {r4 - r6, lr}
+	mrc	p15, 0, r4, c13, c0, 0	@ PID
+	mrc	p15, 0, r5, c3, c0, 0	@ Domain ID
+	mrc	p15, 0, r6, c1, c0, 0	@ Control register
+	stmia	r0, {r4 - r6}
+	ldmfd	sp!, {r4 - r6, pc}
+>>>>>>> cm-10.0
 ENDPROC(cpu_arm926_do_suspend)
 
 ENTRY(cpu_arm926_do_resume)
 	mov	ip, #0
 	mcr	p15, 0, ip, c8, c7, 0	@ invalidate I+D TLBs
 	mcr	p15, 0, ip, c7, c7, 0	@ invalidate I+D caches
+<<<<<<< HEAD
 	ldmia	r0, {r4 - r7}
 	mcr	p15, 0, r4, c13, c0, 0	@ PID
 	mcr	p15, 0, r5, c3, c0, 0	@ Domain ID
@@ -433,6 +457,15 @@ ENDPROC(cpu_arm926_do_resume)
 #else
 #define cpu_arm926_do_suspend	0
 #define cpu_arm926_do_resume	0
+=======
+	ldmia	r0, {r4 - r6}
+	mcr	p15, 0, r4, c13, c0, 0	@ PID
+	mcr	p15, 0, r5, c3, c0, 0	@ Domain ID
+	mcr	p15, 0, r1, c2, c0, 0	@ TTB address
+	mov	r0, r6			@ control register
+	b	cpu_resume_mmu
+ENDPROC(cpu_arm926_do_resume)
+>>>>>>> cm-10.0
 #endif
 
 	__CPUINIT
@@ -475,6 +508,7 @@ arm926_crval:
 
 	__INITDATA
 
+<<<<<<< HEAD
 /*
  * Purpose : Function pointers used to access above functions - all calls
  *	     come through these
@@ -511,6 +545,16 @@ cpu_elf_name:
 cpu_arm926_name:
 	.asciz	"ARM926EJ-S"
 	.size	cpu_arm926_name, . - cpu_arm926_name
+=======
+	@ define struct processor (see <asm/proc-fns.h> and proc-macros.S)
+	define_processor_functions arm926, dabort=v5tj_early_abort, pabort=legacy_pabort, suspend=1
+
+	.section ".rodata"
+
+	string	cpu_arch_name, "armv5tej"
+	string	cpu_elf_name, "v5"
+	string	cpu_arm926_name, "ARM926EJ-S"
+>>>>>>> cm-10.0
 
 	.align
 

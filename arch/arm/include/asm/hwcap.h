@@ -25,7 +25,12 @@
 #define HWCAP_IDIVT	(1 << 18)
 #define HWCAP_IDIV	(HWCAP_IDIVA | HWCAP_IDIVT)
 
+<<<<<<< HEAD
 #if defined(__KERNEL__) && !defined(__ASSEMBLY__)
+=======
+#if defined(__KERNEL__)
+#if !defined(__ASSEMBLY__)
+>>>>>>> cm-10.0
 /*
  * This yields a mask that user programs can use to figure out what
  * instruction set this cpu supports.
@@ -33,5 +38,9 @@
 #define ELF_HWCAP	(elf_hwcap)
 extern unsigned int elf_hwcap;
 #endif
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> cm-10.0
 
 #endif

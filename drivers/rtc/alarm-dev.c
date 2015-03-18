@@ -13,7 +13,11 @@
  *
  */
 
+<<<<<<< HEAD
 #include <asm/mach/time.h>
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/android_alarm.h>
 #include <linux/device.h>
 #include <linux/miscdevice.h>
@@ -21,10 +25,18 @@
 #include <linux/platform_device.h>
 #include <linux/sched.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #include <linux/sysdev.h>
 #include <linux/uaccess.h>
 #include <linux/wakelock.h>
 
+=======
+#include <linux/uaccess.h>
+#include <linux/wakelock.h>
+
+#include <asm/mach/time.h>
+
+>>>>>>> cm-10.0
 #define ANDROID_ALARM_PRINT_INFO (1U << 0)
 #define ANDROID_ALARM_PRINT_IO (1U << 1)
 #define ANDROID_ALARM_PRINT_INT (1U << 2)
@@ -118,8 +130,13 @@ static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		}
 from_old_alarm_set:
 		spin_lock_irqsave(&alarm_slock, flags);
+<<<<<<< HEAD
                 pr_alarm(IO, "alarm %d set %ld.%09ld\n", alarm_type,
                          new_alarm_time.tv_sec, new_alarm_time.tv_nsec);
+=======
+		pr_alarm(IO, "alarm %d set %ld.%09ld\n", alarm_type,
+			new_alarm_time.tv_sec, new_alarm_time.tv_nsec);
+>>>>>>> cm-10.0
 		alarm_enabled |= alarm_type_mask;
 		alarm_start_range(&alarms[alarm_type],
 			timespec_to_ktime(new_alarm_time),
@@ -182,6 +199,7 @@ from_old_alarm_set:
 			goto err1;
 		}
 		break;
+<<<<<<< HEAD
 	case ANDROID_RTC_ALARM_SET:
 		if (copy_from_user(&new_alarm_time, (void __user *)arg,
 				   sizeof(new_alarm_time))) {
@@ -190,6 +208,9 @@ from_old_alarm_set:
 		}
 		alarm_set_rtc_alarm(new_alarm_time.tv_sec, true);
 		break;
+=======
+
+>>>>>>> cm-10.0
 	default:
 		rv = -EINVAL;
 		goto err1;

@@ -15,7 +15,10 @@
 #include <linux/debug_locks.h>
 
 #include <asm/exceptions.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/unwind.h>
 
 void trap_init(void)

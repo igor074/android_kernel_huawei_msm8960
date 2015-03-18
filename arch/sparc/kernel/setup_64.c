@@ -31,7 +31,10 @@
 #include <linux/initrd.h>
 #include <linux/module.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/processor.h>
 #include <asm/oplib.h>
@@ -49,6 +52,10 @@
 #include <asm/btext.h>
 #include <asm/elf.h>
 #include <asm/mdesc.h>
+<<<<<<< HEAD
+=======
+#include <asm/cacheflush.h>
+>>>>>>> cm-10.0
 
 #ifdef CONFIG_IP_PNP
 #include <net/ipconfig.h>
@@ -106,7 +113,11 @@ static void __init process_switch(char c)
 		prom_halt();
 		break;
 	case 'p':
+<<<<<<< HEAD
 		/* Just ignore, this behavior is now the default.  */
+=======
+		prom_early_console.flags &= ~CON_BOOT;
+>>>>>>> cm-10.0
 		break;
 	case 'P':
 		/* Force UltraSPARC-III P-Cache on. */
@@ -234,6 +245,7 @@ void __init per_cpu_patch(void)
 	}
 }
 
+<<<<<<< HEAD
 void __init sun4v_patch(void)
 {
 	extern void sun4v_hvapi_init(void);
@@ -268,6 +280,52 @@ void __init sun4v_patch(void)
 
 		p2++;
 	}
+=======
+void sun4v_patch_1insn_range(struct sun4v_1insn_patch_entry *start,
+			     struct sun4v_1insn_patch_entry *end)
+{
+	while (start < end) {
+		unsigned long addr = start->addr;
+
+		*(unsigned int *) (addr +  0) = start->insn;
+		wmb();
+		__asm__ __volatile__("flush	%0" : : "r" (addr +  0));
+
+		start++;
+	}
+}
+
+void sun4v_patch_2insn_range(struct sun4v_2insn_patch_entry *start,
+			     struct sun4v_2insn_patch_entry *end)
+{
+	while (start < end) {
+		unsigned long addr = start->addr;
+
+		*(unsigned int *) (addr +  0) = start->insns[0];
+		wmb();
+		__asm__ __volatile__("flush	%0" : : "r" (addr +  0));
+
+		*(unsigned int *) (addr +  4) = start->insns[1];
+		wmb();
+		__asm__ __volatile__("flush	%0" : : "r" (addr +  4));
+
+		start++;
+	}
+}
+
+void __init sun4v_patch(void)
+{
+	extern void sun4v_hvapi_init(void);
+
+	if (tlb_type != hypervisor)
+		return;
+
+	sun4v_patch_1insn_range(&__sun4v_1insn_patch,
+				&__sun4v_1insn_patch_end);
+
+	sun4v_patch_2insn_range(&__sun4v_2insn_patch,
+				&__sun4v_2insn_patch_end);
+>>>>>>> cm-10.0
 
 	sun4v_hvapi_init();
 }
@@ -425,10 +483,21 @@ static void __init init_sparc64_elf_hwcap(void)
 	else if (tlb_type == hypervisor) {
 		if (sun4v_chip_type == SUN4V_CHIP_NIAGARA1 ||
 		    sun4v_chip_type == SUN4V_CHIP_NIAGARA2 ||
+<<<<<<< HEAD
 		    sun4v_chip_type == SUN4V_CHIP_NIAGARA3)
 			cap |= HWCAP_SPARC_BLKINIT;
 		if (sun4v_chip_type == SUN4V_CHIP_NIAGARA2 ||
 		    sun4v_chip_type == SUN4V_CHIP_NIAGARA3)
+=======
+		    sun4v_chip_type == SUN4V_CHIP_NIAGARA3 ||
+		    sun4v_chip_type == SUN4V_CHIP_NIAGARA4 ||
+		    sun4v_chip_type == SUN4V_CHIP_NIAGARA5)
+			cap |= HWCAP_SPARC_BLKINIT;
+		if (sun4v_chip_type == SUN4V_CHIP_NIAGARA2 ||
+		    sun4v_chip_type == SUN4V_CHIP_NIAGARA3 ||
+		    sun4v_chip_type == SUN4V_CHIP_NIAGARA4 ||
+		    sun4v_chip_type == SUN4V_CHIP_NIAGARA5)
+>>>>>>> cm-10.0
 			cap |= HWCAP_SPARC_N2;
 	}
 
@@ -452,11 +521,23 @@ static void __init init_sparc64_elf_hwcap(void)
 			if (sun4v_chip_type == SUN4V_CHIP_NIAGARA1)
 				cap |= AV_SPARC_ASI_BLK_INIT;
 			if (sun4v_chip_type == SUN4V_CHIP_NIAGARA2 ||
+<<<<<<< HEAD
 			    sun4v_chip_type == SUN4V_CHIP_NIAGARA3)
 				cap |= (AV_SPARC_VIS | AV_SPARC_VIS2 |
 					AV_SPARC_ASI_BLK_INIT |
 					AV_SPARC_POPC);
 			if (sun4v_chip_type == SUN4V_CHIP_NIAGARA3)
+=======
+			    sun4v_chip_type == SUN4V_CHIP_NIAGARA3 ||
+			    sun4v_chip_type == SUN4V_CHIP_NIAGARA4 ||
+			    sun4v_chip_type == SUN4V_CHIP_NIAGARA5)
+				cap |= (AV_SPARC_VIS | AV_SPARC_VIS2 |
+					AV_SPARC_ASI_BLK_INIT |
+					AV_SPARC_POPC);
+			if (sun4v_chip_type == SUN4V_CHIP_NIAGARA3 ||
+			    sun4v_chip_type == SUN4V_CHIP_NIAGARA4 ||
+			    sun4v_chip_type == SUN4V_CHIP_NIAGARA5)
+>>>>>>> cm-10.0
 				cap |= (AV_SPARC_VIS3 | AV_SPARC_HPC |
 					AV_SPARC_FMAF);
 		}

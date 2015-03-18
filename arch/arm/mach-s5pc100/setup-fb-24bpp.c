@@ -15,7 +15,10 @@
 #include <linux/fb.h>
 #include <linux/gpio.h>
 
+<<<<<<< HEAD
 #include <mach/regs-fb.h>
+=======
+>>>>>>> cm-10.0
 #include <mach/map.h>
 #include <plat/fb.h>
 #include <plat/gpio-cfg.h>

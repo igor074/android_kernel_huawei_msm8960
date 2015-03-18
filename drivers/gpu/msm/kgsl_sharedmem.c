@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,11 +14,20 @@
  * GNU General Public License for more details.
  *
  */
+<<<<<<< HEAD
+=======
+
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/vmalloc.h>
 #include <linux/memory_alloc.h>
 #include <asm/cacheflush.h>
 #include <linux/slab.h>
 #include <linux/kmemleak.h>
+<<<<<<< HEAD
+=======
+#include <linux/highmem.h>
+>>>>>>> cm-10.0
 
 #include "kgsl.h"
 #include "kgsl_sharedmem.h"
@@ -39,9 +52,12 @@ container_of(a, struct kgsl_mem_entry_attribute, attr)
 	.show = _show, \
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_VM_LOW_MEMORY_KILLER
 static void (*kgsl_shrink)(int largest, int rss_threshold) = NULL;
 #endif//CONFIG_HUAWEI_VM_LOW_MEMORY_KILLER
+=======
+>>>>>>> cm-10.0
 /*
  * A structure to hold the attributes for a particular memory type.
  * For each memory type in each process we store the current and maximum
@@ -66,6 +82,16 @@ struct mem_entry_stats {
 }
 
 
+<<<<<<< HEAD
+=======
+/*
+ * One page allocation for a guard region to protect against over-zealous
+ * GPU pre-fetch
+ */
+
+static struct page *kgsl_guard_page;
+
+>>>>>>> cm-10.0
 /**
  * Given a kobj, find the process structure attached to it
  */
@@ -155,7 +181,11 @@ static struct mem_entry_stats mem_stats[] = {
 #endif
 	MEM_ENTRY_STAT(KGSL_MEM_ENTRY_USER, user),
 #ifdef CONFIG_ION
+<<<<<<< HEAD
 	MEM_ENTRY_STAT(KGSL_MEM_ENTRY_USER, ion),
+=======
+	MEM_ENTRY_STAT(KGSL_MEM_ENTRY_ION, ion),
+>>>>>>> cm-10.0
 #endif
 };
 
@@ -336,14 +366,35 @@ static void kgsl_page_alloc_free(struct kgsl_memdesc *memdesc)
 {
 	int i = 0;
 	struct scatterlist *sg;
+<<<<<<< HEAD
 	kgsl_driver.stats.page_alloc -= memdesc->size;
+=======
+	int sglen = memdesc->sglen;
+
+	/* Don't free the guard page if it was used */
+	if (memdesc->flags & KGSL_MEMDESC_GUARD_PAGE)
+		sglen--;
+
+	kgsl_driver.stats.page_alloc -= memdesc->size;
+
+>>>>>>> cm-10.0
 	if (memdesc->hostptr) {
 		vunmap(memdesc->hostptr);
 		kgsl_driver.stats.vmalloc -= memdesc->size;
 	}
+<<<<<<< HEAD
 	if (memdesc->sg)
 		for_each_sg(memdesc->sg, sg, memdesc->sglen, i)
 			__free_page(sg_page(sg));
+=======
+	if (memdesc->sg) {
+		for_each_sg(memdesc->sg, sg, sglen, i) {
+			if (sg->length == 0)
+				break;
+			__free_page(sg_page(sg));
+		}
+	}
+>>>>>>> cm-10.0
 }
 
 static int kgsl_contiguous_vmflags(struct kgsl_memdesc *memdesc)
@@ -365,6 +416,7 @@ static int kgsl_page_alloc_map_kernel(struct kgsl_memdesc *memdesc)
 		pgprot_t page_prot = pgprot_writecombine(PAGE_KERNEL);
 		struct page **pages = NULL;
 		struct scatterlist *sg;
+<<<<<<< HEAD
 		int i;
 		/* create a list of pages to call vmap */
 		pages = vmalloc(memdesc->sglen * sizeof(struct page *));
@@ -376,6 +428,25 @@ static int kgsl_page_alloc_map_kernel(struct kgsl_memdesc *memdesc)
 		for_each_sg(memdesc->sg, sg, memdesc->sglen, i)
 			pages[i] = sg_page(sg);
 		memdesc->hostptr = vmap(pages, memdesc->sglen,
+=======
+		int sglen = memdesc->sglen;
+		int i;
+
+		/* Don't map the guard page if it exists */
+		if (memdesc->flags & KGSL_MEMDESC_GUARD_PAGE)
+			sglen--;
+
+		/* create a list of pages to call vmap */
+		pages = vmalloc(sglen * sizeof(struct page *));
+		if (!pages) {
+			KGSL_CORE_ERR("vmalloc(%d) failed\n",
+				sglen * sizeof(struct page *));
+			return -ENOMEM;
+		}
+		for_each_sg(memdesc->sg, sg, sglen, i)
+			pages[i] = sg_page(sg);
+		memdesc->hostptr = vmap(pages, sglen,
+>>>>>>> cm-10.0
 					VM_IOREMAP, page_prot);
 		KGSL_STATS_ADD(memdesc->size, kgsl_driver.stats.vmalloc,
 				kgsl_driver.stats.vmalloc_max);
@@ -470,15 +541,35 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 			struct kgsl_pagetable *pagetable,
 			size_t size, unsigned int protflags)
 {
+<<<<<<< HEAD
 	int order, ret = 0;
 	int sglen = PAGE_ALIGN(size) / PAGE_SIZE;
 	int i;
+=======
+	int i, order, ret = 0;
+	int sglen = PAGE_ALIGN(size) / PAGE_SIZE;
+	struct page **pages = NULL;
+	pgprot_t page_prot = pgprot_writecombine(PAGE_KERNEL);
+	void *ptr;
+
+	/*
+	 * Add guard page to the end of the allocation when the
+	 * IOMMU is in use.
+	 */
+
+	if (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_IOMMU)
+		sglen++;
+>>>>>>> cm-10.0
 
 	memdesc->size = size;
 	memdesc->pagetable = pagetable;
 	memdesc->priv = KGSL_MEMFLAGS_CACHED;
 	memdesc->ops = &kgsl_page_alloc_ops;
 
+<<<<<<< HEAD
+=======
+	memdesc->sglen = sglen;
+>>>>>>> cm-10.0
 	memdesc->sg = kgsl_sg_alloc(sglen);
 
 	if (memdesc->sg == NULL) {
@@ -488,6 +579,7 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 		goto done;
 	}
 
+<<<<<<< HEAD
 	kmemleak_not_leak(memdesc->sg);
 
 	memdesc->sglen = sglen;
@@ -504,6 +596,103 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 		flush_dcache_page(page);
 		sg_set_page(&memdesc->sg[i], page, PAGE_SIZE, 0);
 	}
+=======
+	/*
+	 * Allocate space to store the list of pages to send to vmap.
+	 * This is an array of pointers so we can track 1024 pages per page of
+	 * allocation which means we can handle up to a 8MB buffer request with
+	 * two pages; well within the acceptable limits for using kmalloc.
+	 */
+
+	pages = kmalloc(sglen * sizeof(struct page *), GFP_KERNEL);
+
+	if (pages == NULL) {
+		KGSL_CORE_ERR("kmalloc (%d) failed\n",
+			sglen * sizeof(struct page *));
+		ret = -ENOMEM;
+		goto done;
+	}
+
+	kmemleak_not_leak(memdesc->sg);
+
+	sg_init_table(memdesc->sg, sglen);
+
+	for (i = 0; i < PAGE_ALIGN(size) / PAGE_SIZE; i++) {
+
+		/*
+		 * Don't use GFP_ZERO here because it is faster to memset the
+		 * range ourselves (see below)
+		 */
+
+		pages[i] = alloc_page(GFP_KERNEL | __GFP_HIGHMEM);
+		if (pages[i] == NULL) {
+			ret = -ENOMEM;
+			goto done;
+		}
+
+		sg_set_page(&memdesc->sg[i], pages[i], PAGE_SIZE, 0);
+	}
+
+	/* ADd the guard page to the end of the sglist */
+
+	if (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_IOMMU) {
+		/*
+		 * It doesn't matter if we use GFP_ZERO here, this never
+		 * gets mapped, and we only allocate it once in the life
+		 * of the system
+		 */
+
+		if (kgsl_guard_page == NULL)
+			kgsl_guard_page = alloc_page(GFP_KERNEL | __GFP_ZERO |
+				__GFP_HIGHMEM);
+
+		if (kgsl_guard_page != NULL) {
+			sg_set_page(&memdesc->sg[sglen - 1], kgsl_guard_page,
+				PAGE_SIZE, 0);
+			memdesc->flags |= KGSL_MEMDESC_GUARD_PAGE;
+		} else
+			memdesc->sglen--;
+	}
+
+	/*
+	 * All memory that goes to the user has to be zeroed out before it gets
+	 * exposed to userspace. This means that the memory has to be mapped in
+	 * the kernel, zeroed (memset) and then unmapped.  This also means that
+	 * the dcache has to be flushed to ensure coherency between the kernel
+	 * and user pages. We used to pass __GFP_ZERO to alloc_page which mapped
+	 * zeroed and unmaped each individual page, and then we had to turn
+	 * around and call flush_dcache_page() on that page to clear the caches.
+	 * This was killing us for performance. Instead, we found it is much
+	 * faster to allocate the pages without GFP_ZERO, map the entire range,
+	 * memset it, flush the range and then unmap - this results in a factor
+	 * of 4 improvement for speed for large buffers.  There is a small
+	 * increase in speed for small buffers, but only on the order of a few
+	 * microseconds at best.  The only downside is that there needs to be
+	 * enough temporary space in vmalloc to accomodate the map. This
+	 * shouldn't be a problem, but if it happens, fall back to a much slower
+	 * path
+	 */
+
+	ptr = vmap(pages, i, VM_IOREMAP, page_prot);
+
+	if (ptr != NULL) {
+		memset(ptr, 0, memdesc->size);
+		dmac_flush_range(ptr, ptr + memdesc->size);
+		vunmap(ptr);
+	} else {
+		int j;
+
+		/* Very, very, very slow path */
+
+		for (j = 0; j < i; j++) {
+			ptr = kmap_atomic(pages[j]);
+			memset(ptr, 0, PAGE_SIZE);
+			dmac_flush_range(ptr, ptr + PAGE_SIZE);
+			kunmap_atomic(ptr);
+		}
+	}
+
+>>>>>>> cm-10.0
 	outer_cache_range_op_sg(memdesc->sg, memdesc->sglen,
 				KGSL_CACHE_OP_FLUSH);
 
@@ -515,6 +704,7 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	KGSL_STATS_ADD(size, kgsl_driver.stats.page_alloc,
 		kgsl_driver.stats.page_alloc_max);
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_VM_LOW_MEMORY_KILLER
 #if 0//def CONFIG_KGSL_PER_PROCESS_PAGE_TABLE
        allocated_pagetables = bitmap_weight(kgsl_driver.ptpool.bitmap, kgsl_pagetable_count);
@@ -541,12 +731,19 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 #endif
 #endif//CONFIG_HUAWEI_VM_LOW_MEMORY_KILLER
 
+=======
+>>>>>>> cm-10.0
 	order = get_order(size);
 
 	if (order < 16)
 		kgsl_driver.stats.histogram[order]++;
 
 done:
+<<<<<<< HEAD
+=======
+	kfree(pages);
+
+>>>>>>> cm-10.0
 	if (ret)
 		kgsl_sharedmem_free(memdesc);
 
@@ -579,7 +776,12 @@ kgsl_sharedmem_page_alloc_user(struct kgsl_memdesc *memdesc,
 {
 	unsigned int protflags;
 
+<<<<<<< HEAD
 	BUG_ON(size == 0);
+=======
+	if (size == 0)
+		return -EINVAL;
+>>>>>>> cm-10.0
 
 	protflags = GSL_PT_PAGE_RV;
 	if (!(flags & KGSL_MEMFLAGS_GPUREADONLY))
@@ -798,6 +1000,7 @@ kgsl_sharedmem_map_vma(struct vm_area_struct *vma,
 	return 0;
 }
 EXPORT_SYMBOL(kgsl_sharedmem_map_vma);
+<<<<<<< HEAD
 
 #ifdef CONFIG_HUAWEI_VM_LOW_MEMORY_KILLER
 void kgsl_register_shrinker(void (*shrink)(int largest, int rss_threshold))
@@ -813,3 +1016,5 @@ void kgsl_unregister_shrinker(void)
 EXPORT_SYMBOL(kgsl_register_shrinker);
 EXPORT_SYMBOL(kgsl_unregister_shrinker);
 #endif//CONFIG_HUAWEI_VM_LOW_MEMORY_KILLER
+=======
+>>>>>>> cm-10.0

@@ -18,10 +18,18 @@
 #include <linux/delay.h>
 #include <linux/backlight.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
 
 #include <mach/board.h>
 #include <mach/cpu.h>
 #include <mach/gpio.h>
+=======
+#include <linux/module.h>
+
+#include <mach/board.h>
+#include <mach/cpu.h>
+#include <asm/gpio.h>
+>>>>>>> cm-10.0
 
 #include <video/atmel_lcdc.h>
 
@@ -39,7 +47,12 @@
 					 | FBINFO_HWACCEL_YPAN)
 
 static inline void atmel_lcdfb_update_dma2d(struct atmel_lcdfb_info *sinfo,
+<<<<<<< HEAD
 					struct fb_var_screeninfo *var)
+=======
+					struct fb_var_screeninfo *var,
+					struct fb_info *info)
+>>>>>>> cm-10.0
 {
 
 }
@@ -50,14 +63,26 @@ static inline void atmel_lcdfb_update_dma2d(struct atmel_lcdfb_info *sinfo,
 					| FBINFO_HWACCEL_YPAN)
 
 static void atmel_lcdfb_update_dma2d(struct atmel_lcdfb_info *sinfo,
+<<<<<<< HEAD
 				     struct fb_var_screeninfo *var)
+=======
+				     struct fb_var_screeninfo *var,
+				     struct fb_info *info)
+>>>>>>> cm-10.0
 {
 	u32 dma2dcfg;
 	u32 pixeloff;
 
+<<<<<<< HEAD
 	pixeloff = (var->xoffset * var->bits_per_pixel) & 0x1f;
 
 	dma2dcfg = ((var->xres_virtual - var->xres) * var->bits_per_pixel) / 8;
+=======
+	pixeloff = (var->xoffset * info->var.bits_per_pixel) & 0x1f;
+
+	dma2dcfg = (info->var.xres_virtual - info->var.xres)
+		 * info->var.bits_per_pixel / 8;
+>>>>>>> cm-10.0
 	dma2dcfg |= pixeloff << ATMEL_LCDC_PIXELOFF_OFFSET;
 	lcdc_writel(sinfo, ATMEL_LCDC_DMA2DCFG, dma2dcfg);
 
@@ -96,8 +121,16 @@ static int atmel_bl_update_status(struct backlight_device *bl)
 		brightness = 0;
 
 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_VAL, brightness);
+<<<<<<< HEAD
 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR,
 			brightness ? contrast_ctr : 0);
+=======
+	if (contrast_ctr & ATMEL_LCDC_POL_POSITIVE)
+		lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR,
+			brightness ? contrast_ctr : 0);
+	else
+		lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, contrast_ctr);
+>>>>>>> cm-10.0
 
 	bl->props.fb_blank = bl->props.power = sinfo->bl_power = power;
 
@@ -249,14 +282,22 @@ static void atmel_lcdfb_update_dma(struct fb_info *info,
 	unsigned long dma_addr;
 
 	dma_addr = (fix->smem_start + var->yoffset * fix->line_length
+<<<<<<< HEAD
 		    + var->xoffset * var->bits_per_pixel / 8);
+=======
+		    + var->xoffset * info->var.bits_per_pixel / 8);
+>>>>>>> cm-10.0
 
 	dma_addr &= ~3UL;
 
 	/* Set framebuffer DMA base address and pixel offset */
 	lcdc_writel(sinfo, ATMEL_LCDC_DMABADDR1, dma_addr);
 
+<<<<<<< HEAD
 	atmel_lcdfb_update_dma2d(sinfo, var);
+=======
+	atmel_lcdfb_update_dma2d(sinfo, var, info);
+>>>>>>> cm-10.0
 }
 
 static inline void atmel_lcdfb_free_video_memory(struct atmel_lcdfb_info *sinfo)
@@ -414,12 +455,16 @@ static int atmel_lcdfb_check_var(struct fb_var_screeninfo *var,
 		var->red.length = var->green.length = var->blue.length
 			= var->bits_per_pixel;
 		break;
+<<<<<<< HEAD
 	case 15:
+=======
+>>>>>>> cm-10.0
 	case 16:
 		if (sinfo->lcd_wiring_mode == ATMEL_LCDC_WIRING_RGB) {
 			/* RGB:565 mode */
 			var->red.offset = 11;
 			var->blue.offset = 0;
+<<<<<<< HEAD
 			var->green.length = 6;
 		} else if (sinfo->lcd_wiring_mode == ATMEL_LCDC_WIRING_RGB555) {
 			var->red.offset = 10;
@@ -432,6 +477,15 @@ static int atmel_lcdfb_check_var(struct fb_var_screeninfo *var,
 			var->green.length = 5;
 		}
 		var->green.offset = 5;
+=======
+		} else {
+			/* BGR:565 mode */
+			var->red.offset = 0;
+			var->blue.offset = 11;
+		}
+		var->green.offset = 5;
+		var->green.length = 6;
+>>>>>>> cm-10.0
 		var->red.length = var->blue.length = 5;
 		break;
 	case 32:
@@ -678,6 +732,7 @@ static int atmel_lcdfb_setcolreg(unsigned int regno, unsigned int red,
 
 	case FB_VISUAL_PSEUDOCOLOR:
 		if (regno < 256) {
+<<<<<<< HEAD
 			val  = ((red   >> 11) & 0x001f);
 			val |= ((green >>  6) & 0x03e0);
 			val |= ((blue  >>  1) & 0x7c00);
@@ -686,6 +741,32 @@ static int atmel_lcdfb_setcolreg(unsigned int regno, unsigned int red,
 			 * TODO: intensity bit. Maybe something like
 			 *   ~(red[10] ^ green[10] ^ blue[10]) & 1
 			 */
+=======
+			if (cpu_is_at91sam9261() || cpu_is_at91sam9263()
+			    || cpu_is_at91sam9rl()) {
+				/* old style I+BGR:555 */
+				val  = ((red   >> 11) & 0x001f);
+				val |= ((green >>  6) & 0x03e0);
+				val |= ((blue  >>  1) & 0x7c00);
+
+				/*
+				 * TODO: intensity bit. Maybe something like
+				 *   ~(red[10] ^ green[10] ^ blue[10]) & 1
+				 */
+			} else {
+				/* new style BGR:565 / RGB:565 */
+				if (sinfo->lcd_wiring_mode ==
+				    ATMEL_LCDC_WIRING_RGB) {
+					val  = ((blue >> 11) & 0x001f);
+					val |= ((red  >>  0) & 0xf800);
+				} else {
+					val  = ((red  >> 11) & 0x001f);
+					val |= ((blue >>  0) & 0xf800);
+				}
+
+				val |= ((green >>  5) & 0x07e0);
+			}
+>>>>>>> cm-10.0
 
 			lcdc_writel(sinfo, ATMEL_LCDC_LUT(regno), val);
 			ret = 0;
@@ -906,7 +987,11 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
 	if (map) {
 		/* use a pre-allocated memory buffer */
 		info->fix.smem_start = map->start;
+<<<<<<< HEAD
 		info->fix.smem_len = map->end - map->start + 1;
+=======
+		info->fix.smem_len = resource_size(map);
+>>>>>>> cm-10.0
 		if (!request_mem_region(info->fix.smem_start,
 					info->fix.smem_len, pdev->name)) {
 			ret = -EBUSY;
@@ -932,7 +1017,11 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
 
 	/* LCDC registers */
 	info->fix.mmio_start = regs->start;
+<<<<<<< HEAD
 	info->fix.mmio_len = regs->end - regs->start + 1;
+=======
+	info->fix.mmio_len = resource_size(regs);
+>>>>>>> cm-10.0
 
 	if (!request_mem_region(info->fix.mmio_start,
 				info->fix.mmio_len, pdev->name)) {
@@ -1085,7 +1174,11 @@ static int atmel_lcdfb_suspend(struct platform_device *pdev, pm_message_t mesg)
 	 */
 	lcdc_writel(sinfo, ATMEL_LCDC_IDR, ~0UL);
 
+<<<<<<< HEAD
 	sinfo->saved_lcdcon = lcdc_readl(sinfo, ATMEL_LCDC_CONTRAST_VAL);
+=======
+	sinfo->saved_lcdcon = lcdc_readl(sinfo, ATMEL_LCDC_CONTRAST_CTR);
+>>>>>>> cm-10.0
 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, 0);
 	if (sinfo->atmel_lcdfb_power_control)
 		sinfo->atmel_lcdfb_power_control(0);

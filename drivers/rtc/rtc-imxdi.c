@@ -35,6 +35,10 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/rtc.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched.h>
+>>>>>>> cm-10.0
 #include <linux/workqueue.h>
 
 /* DryIce Register Definitions */

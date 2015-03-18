@@ -11,6 +11,10 @@
  *
  ********************************************************************/    
 
+<<<<<<< HEAD
+=======
+#include <linux/hardirq.h>
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>

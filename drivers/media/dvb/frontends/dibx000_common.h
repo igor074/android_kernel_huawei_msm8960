@@ -33,6 +33,10 @@ struct dibx000_i2c_master {
 	struct i2c_msg msg[34];
 	u8 i2c_write_buffer[8];
 	u8 i2c_read_buffer[2];
+<<<<<<< HEAD
+=======
+	struct mutex i2c_buffer_lock;
+>>>>>>> cm-10.0
 };
 
 extern int dibx000_init_i2c_master(struct dibx000_i2c_master *mst,
@@ -145,6 +149,7 @@ enum dibx000_adc_states {
 	DIBX000_VBG_DISABLE,
 };
 
+<<<<<<< HEAD
 #define BANDWIDTH_TO_KHZ(v) ((v) == BANDWIDTH_8_MHZ  ? 8000 : \
 				(v) == BANDWIDTH_7_MHZ  ? 7000 : \
 				(v) == BANDWIDTH_6_MHZ  ? 6000 : 8000)
@@ -153,6 +158,10 @@ enum dibx000_adc_states {
 	(v) == 8000 ? BANDWIDTH_8_MHZ : \
 		(v) == 7000 ? BANDWIDTH_7_MHZ : \
 		(v) == 6000 ? BANDWIDTH_6_MHZ : BANDWIDTH_8_MHZ )
+=======
+#define BANDWIDTH_TO_KHZ(v)	((v) / 1000)
+#define BANDWIDTH_TO_HZ(v)	((v) * 1000)
+>>>>>>> cm-10.0
 
 /* Chip output mode. */
 #define OUTMODE_HIGH_Z              0
@@ -275,4 +284,14 @@ struct dibSubbandSelection {
 #define DEMOD_TIMF_GET    0x01
 #define DEMOD_TIMF_UPDATE 0x02
 
+<<<<<<< HEAD
+=======
+#define MPEG_ON_DIBTX		1
+#define DIV_ON_DIBTX		2
+#define ADC_ON_DIBTX		3
+#define DEMOUT_ON_HOSTBUS	4
+#define DIBTX_ON_HOSTBUS	5
+#define MPEG_ON_HOSTBUS		6
+
+>>>>>>> cm-10.0
 #endif

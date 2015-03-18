@@ -58,7 +58,11 @@ struct prop_local_percpu {
 	 */
 	int shift;
 	unsigned long period;
+<<<<<<< HEAD
 	spinlock_t lock;		/* protect the snapshot state */
+=======
+	raw_spinlock_t lock;		/* protect the snapshot state */
+>>>>>>> cm-10.0
 };
 
 int prop_local_init_percpu(struct prop_local_percpu *pl);
@@ -81,7 +85,15 @@ void prop_inc_percpu(struct prop_descriptor *pd, struct prop_local_percpu *pl)
  * Limit the time part in order to ensure there are some bits left for the
  * cycle counter and fraction multiply.
  */
+<<<<<<< HEAD
 #define PROP_MAX_SHIFT (3*BITS_PER_LONG/4)
+=======
+#if BITS_PER_LONG == 32
+#define PROP_MAX_SHIFT (3*BITS_PER_LONG/4)
+#else
+#define PROP_MAX_SHIFT (BITS_PER_LONG/2)
+#endif
+>>>>>>> cm-10.0
 
 #define PROP_FRAC_SHIFT		(BITS_PER_LONG - PROP_MAX_SHIFT - 1)
 #define PROP_FRAC_BASE		(1UL << PROP_FRAC_SHIFT)
@@ -106,11 +118,19 @@ struct prop_local_single {
 	 */
 	unsigned long period;
 	int shift;
+<<<<<<< HEAD
 	spinlock_t lock;		/* protect the snapshot state */
 };
 
 #define INIT_PROP_LOCAL_SINGLE(name)			\
 {	.lock = __SPIN_LOCK_UNLOCKED(name.lock),	\
+=======
+	raw_spinlock_t lock;		/* protect the snapshot state */
+};
+
+#define INIT_PROP_LOCAL_SINGLE(name)			\
+{	.lock = __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
+>>>>>>> cm-10.0
 }
 
 int prop_local_init_single(struct prop_local_single *pl);

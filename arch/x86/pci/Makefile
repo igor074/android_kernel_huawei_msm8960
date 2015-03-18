@@ -15,11 +15,20 @@ obj-$(CONFIG_X86_VISWS)		+= visws.o
 
 obj-$(CONFIG_X86_NUMAQ)		+= numaq_32.o
 
+<<<<<<< HEAD
 obj-$(CONFIG_X86_MRST)		+= mrst.o
 
 obj-y				+= common.o early.o
 obj-y				+= amd_bus.o bus_numa.o
 
+=======
+obj-$(CONFIG_X86_INTEL_MID)	+= mrst.o
+
+obj-y				+= common.o early.o
+obj-y				+= bus_numa.o
+
+obj-$(CONFIG_AMD_NB)		+= amd_bus.o
+>>>>>>> cm-10.0
 obj-$(CONFIG_PCI_CNB20LE_QUIRK)	+= broadcom_bus.o
 
 ifeq ($(CONFIG_PCI_DEBUG),y)

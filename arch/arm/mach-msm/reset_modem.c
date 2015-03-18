@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,9 +21,15 @@
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/miscdevice.h>
+<<<<<<< HEAD
 
 #include "smd_private.h"
 #include "proc_comm.h"
+=======
+#include <mach/proc_comm.h>
+
+#include "smd_private.h"
+>>>>>>> cm-10.0
 
 #define DEBUG
 /* #undef DEBUG */

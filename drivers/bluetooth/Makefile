@@ -21,12 +21,15 @@ obj-$(CONFIG_BT_MRVL)		+= btmrvl.o
 obj-$(CONFIG_BT_MRVL_SDIO)	+= btmrvl_sdio.o
 obj-$(CONFIG_BT_WILINK)		+= btwilink.o
 
+<<<<<<< HEAD
 ifeq ($(CONNECTIVITY_TYPE),bcm)
 # add by broadcom for HID driver depends on the config:CONFIG_HID_SUPPORT=y CONFIG_HID=y
 # for module compilation, module will be loaded in init.omap4430.rc
 obj-y                           += bthid.o
 endif
 
+=======
+>>>>>>> cm-10.0
 btmrvl-y			:= btmrvl_main.o
 btmrvl-$(CONFIG_DEBUG_FS)	+= btmrvl_debugfs.o
 

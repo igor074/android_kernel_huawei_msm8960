@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -42,6 +46,10 @@ enum msm_camera_i2c_data_type {
 	MSM_CAMERA_I2C_UNSET_BYTE_MASK,
 	MSM_CAMERA_I2C_SET_WORD_MASK,
 	MSM_CAMERA_I2C_UNSET_WORD_MASK,
+<<<<<<< HEAD
+=======
+	MSM_CAMERA_I2C_SET_BYTE_WRITE_MASK_DATA,
+>>>>>>> cm-10.0
 };
 
 enum msm_camera_i2c_cmd_type {
@@ -49,12 +57,16 @@ enum msm_camera_i2c_cmd_type {
 	MSM_CAMERA_I2C_CMD_POLL,
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 struct msm_camera_i2c_reg_conf {
 	uint16_t reg_addr;
 	uint16_t reg_data;
 	enum msm_camera_i2c_data_type dt;
 	enum msm_camera_i2c_cmd_type cmd_type;
+<<<<<<< HEAD
 };
 
 struct msm_camera_i2c_reg_conf_delay {
@@ -68,6 +80,13 @@ struct msm_camera_i2c_reg_conf_delay {
 struct msm_camera_i2c_conf_array {
 	//struct msm_camera_i2c_reg_conf *conf;
         void * conf;
+=======
+	int16_t mask;
+};
+
+struct msm_camera_i2c_conf_array {
+	struct msm_camera_i2c_reg_conf *conf;
+>>>>>>> cm-10.0
 	uint16_t size;
 	uint16_t delay;
 	enum msm_camera_i2c_data_type data_type;
@@ -127,6 +146,7 @@ int32_t msm_sensor_write_enum_conf_array(struct msm_camera_i2c_client *client,
 
 int32_t msm_sensor_write_all_conf_array(struct msm_camera_i2c_client *client,
 	struct msm_camera_i2c_conf_array *array, uint16_t size);
+<<<<<<< HEAD
 
 
 int32_t msm_camera_i2c_write_tbl_delay(struct msm_camera_i2c_client *client,
@@ -138,4 +158,6 @@ int32_t msm_sensor_write_conf_array_delay(struct msm_camera_i2c_client *client,
 			
 int32_t msm_sensor_write_all_conf_array_delay(struct msm_camera_i2c_client *client,
 			struct msm_camera_i2c_conf_array *array, uint16_t size);
+=======
+>>>>>>> cm-10.0
 #endif

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -59,6 +63,13 @@
 #define MSG_ID_OUTPUT_PRIMARY           40
 #define MSG_ID_OUTPUT_SECONDARY         41
 #define MSG_ID_STATS_COMPOSITE          42
+<<<<<<< HEAD
+=======
+#define MSG_ID_STOP_LS_ACK              43
+#define MSG_ID_OUTPUT_TERTIARY1         44
+#define MSG_ID_OUTPUT_TERTIARY2         45
+
+>>>>>>> cm-10.0
 
 /* ISP command IDs */
 #define VFE_CMD_DUMMY_0                                 0
@@ -199,6 +210,10 @@
 #define VFE_CMD_SCALE_OUTPUT2_CONFIG                    135
 #define VFE_CMD_CAPTURE_RAW                             136
 #define VFE_CMD_STOP_LIVESHOT                           137
+<<<<<<< HEAD
+=======
+#define VFE_CMD_RECONFIG_VFE                            138
+>>>>>>> cm-10.0
 
 struct msm_isp_cmd {
 	int32_t  id;
@@ -314,6 +329,7 @@ struct msm_mctl_pp_frame_cmd {
 	/* TBD: 3D related */
 };
 
+<<<<<<< HEAD
 #define VFE_OUTPUTS_MAIN_AND_PREVIEW	BIT(0)
 #define VFE_OUTPUTS_MAIN_AND_VIDEO	BIT(1)
 #define VFE_OUTPUTS_MAIN_AND_THUMB	BIT(2)
@@ -325,6 +341,21 @@ struct msm_mctl_pp_frame_cmd {
 #define VFE_OUTPUTS_RAW			BIT(8)
 #define VFE_OUTPUTS_JPEG_AND_THUMB	BIT(9)
 #define VFE_OUTPUTS_THUMB_AND_JPEG	BIT(10)
+=======
+#define VFE_OUTPUTS_MAIN_AND_PREVIEW    BIT(0)
+#define VFE_OUTPUTS_MAIN_AND_VIDEO      BIT(1)
+#define VFE_OUTPUTS_MAIN_AND_THUMB      BIT(2)
+#define VFE_OUTPUTS_THUMB_AND_MAIN      BIT(3)
+#define VFE_OUTPUTS_PREVIEW_AND_VIDEO   BIT(4)
+#define VFE_OUTPUTS_VIDEO_AND_PREVIEW   BIT(5)
+#define VFE_OUTPUTS_PREVIEW             BIT(6)
+#define VFE_OUTPUTS_VIDEO               BIT(7)
+#define VFE_OUTPUTS_RAW                 BIT(8)
+#define VFE_OUTPUTS_JPEG_AND_THUMB      BIT(9)
+#define VFE_OUTPUTS_THUMB_AND_JPEG      BIT(10)
+#define VFE_OUTPUTS_RDI0                BIT(11)
+#define VFE_OUTPUTS_RDI1                BIT(12)
+>>>>>>> cm-10.0
 
 #endif /*__MSM_ISP_H__*/
 

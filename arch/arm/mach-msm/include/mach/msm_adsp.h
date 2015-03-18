@@ -1,7 +1,11 @@
 /* include/asm-arm/arch-msm/msm_adsp.h
  *
  * Copyright (C) 2008 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2010, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -52,6 +56,17 @@ int msm_adsp_write(struct msm_adsp_module *module,
 		   unsigned queue_id,
 		   void *data, size_t len);
 
+<<<<<<< HEAD
+=======
+/*Explicitly gererate adsp event */
+int msm_adsp_generate_event(void *data,
+			struct msm_adsp_module *mod,
+			unsigned event_id,
+			unsigned event_length,
+			unsigned event_size,
+			void *msg);
+
+>>>>>>> cm-10.0
 #define ADSP_MESSAGE_ID 0xFFFF
 
 /* Command Queue Indexes */

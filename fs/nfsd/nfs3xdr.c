@@ -803,13 +803,21 @@ encode_entry_baggage(struct nfsd3_readdirres *cd, __be32 *p, const char *name,
 	return p;
 }
 
+<<<<<<< HEAD
 static int
+=======
+static __be32
+>>>>>>> cm-10.0
 compose_entry_fh(struct nfsd3_readdirres *cd, struct svc_fh *fhp,
 		const char *name, int namlen)
 {
 	struct svc_export	*exp;
 	struct dentry		*dparent, *dchild;
+<<<<<<< HEAD
 	int rv = 0;
+=======
+	__be32 rv = nfserr_noent;
+>>>>>>> cm-10.0
 
 	dparent = cd->fh.fh_dentry;
 	exp  = cd->fh.fh_export;
@@ -817,16 +825,23 @@ compose_entry_fh(struct nfsd3_readdirres *cd, struct svc_fh *fhp,
 	if (isdotent(name, namlen)) {
 		if (namlen == 2) {
 			dchild = dget_parent(dparent);
+<<<<<<< HEAD
 			if (dchild == dparent) {
 				/* filesystem root - cannot return filehandle for ".." */
 				dput(dchild);
 				return -ENOENT;
 			}
+=======
+			/* filesystem root - cannot return filehandle for ".." */
+			if (dchild == dparent)
+				goto out;
+>>>>>>> cm-10.0
 		} else
 			dchild = dget(dparent);
 	} else
 		dchild = lookup_one_len(name, dparent, namlen);
 	if (IS_ERR(dchild))
+<<<<<<< HEAD
 		return -ENOENT;
 	rv = -ENOENT;
 	if (d_mountpoint(dchild))
@@ -837,6 +852,14 @@ compose_entry_fh(struct nfsd3_readdirres *cd, struct svc_fh *fhp,
 	if (!dchild->d_inode)
 		goto out;
 	rv = 0;
+=======
+		return rv;
+	if (d_mountpoint(dchild))
+		goto out;
+	if (!dchild->d_inode)
+		goto out;
+	rv = fh_compose(fhp, exp, dchild, &cd->fh);
+>>>>>>> cm-10.0
 out:
 	dput(dchild);
 	return rv;
@@ -845,7 +868,11 @@ out:
 static __be32 *encode_entryplus_baggage(struct nfsd3_readdirres *cd, __be32 *p, const char *name, int namlen)
 {
 	struct svc_fh	fh;
+<<<<<<< HEAD
 	int err;
+=======
+	__be32 err;
+>>>>>>> cm-10.0
 
 	fh_init(&fh, NFS3_FHSIZE);
 	err = compose_entry_fh(cd, &fh, name, namlen);

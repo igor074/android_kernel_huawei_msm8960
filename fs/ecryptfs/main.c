@@ -176,7 +176,10 @@ enum { ecryptfs_opt_sig, ecryptfs_opt_ecryptfs_sig,
        ecryptfs_opt_fn_cipher, ecryptfs_opt_fn_cipher_key_bytes,
        ecryptfs_opt_unlink_sigs, ecryptfs_opt_mount_auth_tok_only,
        ecryptfs_opt_check_dev_ruid,
+<<<<<<< HEAD
 	ecryptfs_opt_force_write_passthrough,
+=======
+>>>>>>> cm-10.0
        ecryptfs_opt_err };
 
 static const match_table_t tokens = {
@@ -194,7 +197,10 @@ static const match_table_t tokens = {
 	{ecryptfs_opt_unlink_sigs, "ecryptfs_unlink_sigs"},
 	{ecryptfs_opt_mount_auth_tok_only, "ecryptfs_mount_auth_tok_only"},
 	{ecryptfs_opt_check_dev_ruid, "ecryptfs_check_dev_ruid"},
+<<<<<<< HEAD
 	{ecryptfs_opt_force_write_passthrough, "force_write_passthrough"},
+=======
+>>>>>>> cm-10.0
 	{ecryptfs_opt_err, NULL}
 };
 
@@ -388,11 +394,14 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 			mount_crypt_stat->flags |=
 				ECRYPTFS_GLOBAL_MOUNT_AUTH_TOK_ONLY;
 			break;
+<<<<<<< HEAD
 		/* file encryption force write passthrough mount flag */
 		case ecryptfs_opt_force_write_passthrough:
 			mount_crypt_stat->flags |=
 				ECRYPTFS_FORCE_WRITE_PASSTHROUGH;
 			break;
+=======
+>>>>>>> cm-10.0
 		case ecryptfs_opt_check_dev_ruid:
 			*check_ruid = 1;
 			break;
@@ -557,9 +566,14 @@ static struct dentry *ecryptfs_mount(struct file_system_type *fs_type, int flags
 	if (IS_ERR(inode))
 		goto out_free;
 
+<<<<<<< HEAD
 	s->s_root = d_alloc_root(inode);
 	if (!s->s_root) {
 		iput(inode);
+=======
+	s->s_root = d_make_root(inode);
+	if (!s->s_root) {
+>>>>>>> cm-10.0
 		rc = -ENOMEM;
 		goto out_free;
 	}
@@ -802,6 +816,7 @@ static int __init ecryptfs_init(void)
 		       "Failed to allocate one or more kmem_cache objects\n");
 		goto out;
 	}
+<<<<<<< HEAD
 	rc = register_filesystem(&ecryptfs_fs_type);
 	if (rc) {
 		printk(KERN_ERR "Failed to register filesystem\n");
@@ -811,6 +826,12 @@ static int __init ecryptfs_init(void)
 	if (rc) {
 		printk(KERN_ERR "sysfs registration failed\n");
 		goto out_unregister_filesystem;
+=======
+	rc = do_sysfs_registration();
+	if (rc) {
+		printk(KERN_ERR "sysfs registration failed\n");
+		goto out_free_kmem_caches;
+>>>>>>> cm-10.0
 	}
 	rc = ecryptfs_init_kthread();
 	if (rc) {
@@ -831,19 +852,35 @@ static int __init ecryptfs_init(void)
 		       "rc = [%d]\n", rc);
 		goto out_release_messaging;
 	}
+<<<<<<< HEAD
+=======
+	rc = register_filesystem(&ecryptfs_fs_type);
+	if (rc) {
+		printk(KERN_ERR "Failed to register filesystem\n");
+		goto out_destroy_crypto;
+	}
+>>>>>>> cm-10.0
 	if (ecryptfs_verbosity > 0)
 		printk(KERN_CRIT "eCryptfs verbosity set to %d. Secret values "
 			"will be written to the syslog!\n", ecryptfs_verbosity);
 
 	goto out;
+<<<<<<< HEAD
+=======
+out_destroy_crypto:
+	ecryptfs_destroy_crypto();
+>>>>>>> cm-10.0
 out_release_messaging:
 	ecryptfs_release_messaging();
 out_destroy_kthread:
 	ecryptfs_destroy_kthread();
 out_do_sysfs_unregistration:
 	do_sysfs_unregistration();
+<<<<<<< HEAD
 out_unregister_filesystem:
 	unregister_filesystem(&ecryptfs_fs_type);
+=======
+>>>>>>> cm-10.0
 out_free_kmem_caches:
 	ecryptfs_free_kmem_caches();
 out:

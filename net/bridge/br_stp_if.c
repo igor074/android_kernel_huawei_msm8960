@@ -12,6 +12,10 @@
  */
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/kmod.h>
+>>>>>>> cm-10.0
 #include <linux/etherdevice.h>
 #include <linux/rtnetlink.h>
 
@@ -88,6 +92,10 @@ void br_stp_enable_port(struct net_bridge_port *p)
 	br_init_port(p);
 	br_port_state_selection(p->br);
 	br_log_state(p);
+<<<<<<< HEAD
+=======
+	br_ifinfo_notify(RTM_NEWLINK, p);
+>>>>>>> cm-10.0
 }
 
 /* called under bridge lock */
@@ -96,14 +104,23 @@ void br_stp_disable_port(struct net_bridge_port *p)
 	struct net_bridge *br = p->br;
 	int wasroot;
 
+<<<<<<< HEAD
 	br_log_state(p);
 
+=======
+>>>>>>> cm-10.0
 	wasroot = br_is_root_bridge(br);
 	br_become_designated_port(p);
 	p->state = BR_STATE_DISABLED;
 	p->topology_change_ack = 0;
 	p->config_pending = 0;
 
+<<<<<<< HEAD
+=======
+	br_log_state(p);
+	br_ifinfo_notify(RTM_NEWLINK, p);
+
+>>>>>>> cm-10.0
 	del_timer(&p->message_age_timer);
 	del_timer(&p->forward_delay_timer);
 	del_timer(&p->hold_timer);

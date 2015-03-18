@@ -55,7 +55,11 @@
 #include <net/protocol.h>
 
 #include <asm/byteorder.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 
 #include "l2tp_core.h"
 
@@ -397,6 +401,10 @@ static void l2tp_recv_dequeue(struct l2tp_session *session)
 	 * expect to send up next, dequeue it and any other
 	 * in-sequence packets behind it.
 	 */
+<<<<<<< HEAD
+=======
+start:
+>>>>>>> cm-10.0
 	spin_lock_bh(&session->reorder_q.lock);
 	skb_queue_walk_safe(&session->reorder_q, skb, tmp) {
 		if (time_after(jiffies, L2TP_SKB_CB(skb)->expires)) {
@@ -433,7 +441,11 @@ static void l2tp_recv_dequeue(struct l2tp_session *session)
 		 */
 		spin_unlock_bh(&session->reorder_q.lock);
 		l2tp_recv_dequeue_skb(session, skb);
+<<<<<<< HEAD
 		spin_lock_bh(&session->reorder_q.lock);
+=======
+		goto start;
+>>>>>>> cm-10.0
 	}
 
 out:
@@ -755,9 +767,12 @@ static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb,
 		goto error;
 	}
 
+<<<<<<< HEAD
 	/* Point to L2TP header */
 	optr = ptr = skb->data;
 
+=======
+>>>>>>> cm-10.0
 	/* Trace packet contents, if enabled */
 	if (tunnel->debug & L2TP_MSG_DATA) {
 		length = min(32u, skb->len);
@@ -768,12 +783,22 @@ static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb,
 
 		offset = 0;
 		do {
+<<<<<<< HEAD
 			printk(" %02X", ptr[offset]);
+=======
+			printk(" %02X", skb->data[offset]);
+>>>>>>> cm-10.0
 		} while (++offset < length);
 
 		printk("\n");
 	}
 
+<<<<<<< HEAD
+=======
+	/* Point to L2TP header */
+	optr = ptr = skb->data;
+
+>>>>>>> cm-10.0
 	/* Get L2TP header flags */
 	hdrflags = ntohs(*(__be16 *) ptr);
 
@@ -1045,8 +1070,15 @@ int l2tp_xmit_skb(struct l2tp_session *session, struct sk_buff *skb, int hdr_len
 	headroom = NET_SKB_PAD + sizeof(struct iphdr) +
 		uhlen + hdr_len;
 	old_headroom = skb_headroom(skb);
+<<<<<<< HEAD
 	if (skb_cow_head(skb, headroom))
 		goto abort;
+=======
+	if (skb_cow_head(skb, headroom)) {
+		dev_kfree_skb(skb);
+		goto abort;
+	}
+>>>>>>> cm-10.0
 
 	new_headroom = skb_headroom(skb);
 	skb_orphan(skb);
@@ -1069,7 +1101,11 @@ int l2tp_xmit_skb(struct l2tp_session *session, struct sk_buff *skb, int hdr_len
 
 	/* Get routing info from the tunnel socket */
 	skb_dst_drop(skb);
+<<<<<<< HEAD
 	skb_dst_set(skb, dst_clone(__sk_dst_get(sk)));
+=======
+	skb_dst_set(skb, dst_clone(__sk_dst_check(sk, 0)));
+>>>>>>> cm-10.0
 
 	inet = inet_sk(sk);
 	fl = &inet->cork.fl;

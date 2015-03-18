@@ -5,7 +5,11 @@
  *  changes by Thomas Schoebel-Theuer
  */
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/time.h>
 #include <linux/mm.h>
 #include <linux/string.h>
@@ -13,6 +17,10 @@
 #include <linux/fsnotify.h>
 #include <linux/fcntl.h>
 #include <linux/security.h>
+<<<<<<< HEAD
+=======
+#include <linux/evm.h>
+>>>>>>> cm-10.0
 
 /**
  * inode_change_ok - check if attribute changes to an inode are allowed
@@ -165,7 +173,11 @@ EXPORT_SYMBOL(setattr_copy);
 int notify_change(struct dentry * dentry, struct iattr * attr)
 {
 	struct inode *inode = dentry->d_inode;
+<<<<<<< HEAD
 	mode_t mode = inode->i_mode;
+=======
+	umode_t mode = inode->i_mode;
+>>>>>>> cm-10.0
 	int error;
 	struct timespec now;
 	unsigned int ia_valid = attr->ia_valid;
@@ -176,7 +188,11 @@ int notify_change(struct dentry * dentry, struct iattr * attr)
 	}
 
 	if ((ia_valid & ATTR_MODE)) {
+<<<<<<< HEAD
 		mode_t amode = attr->ia_mode;
+=======
+		umode_t amode = attr->ia_mode;
+>>>>>>> cm-10.0
 		/* Flag setting protected by i_mutex */
 		if (is_sxid(amode))
 			inode->i_flags &= ~S_NOSEC;
@@ -232,19 +248,29 @@ int notify_change(struct dentry * dentry, struct iattr * attr)
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	if (ia_valid & ATTR_SIZE)
 		down_write(&dentry->d_inode->i_alloc_sem);
 
+=======
+>>>>>>> cm-10.0
 	if (inode->i_op->setattr)
 		error = inode->i_op->setattr(dentry, attr);
 	else
 		error = simple_setattr(dentry, attr);
 
+<<<<<<< HEAD
 	if (ia_valid & ATTR_SIZE)
 		up_write(&dentry->d_inode->i_alloc_sem);
 
 	if (!error)
 		fsnotify_change(dentry, ia_valid);
+=======
+	if (!error) {
+		fsnotify_change(dentry, ia_valid);
+		evm_inode_post_setattr(dentry, ia_valid);
+	}
+>>>>>>> cm-10.0
 
 	return error;
 }

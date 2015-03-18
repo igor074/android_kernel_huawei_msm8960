@@ -20,6 +20,10 @@
  */
 
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <sound/core.h>
 
 #include "seq_info.h"

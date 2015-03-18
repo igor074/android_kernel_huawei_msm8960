@@ -30,7 +30,14 @@ int bpf_jit_enable __read_mostly;
  * assembly code in arch/x86/net/bpf_jit.S
  */
 extern u8 sk_load_word[], sk_load_half[], sk_load_byte[], sk_load_byte_msh[];
+<<<<<<< HEAD
 extern u8 sk_load_word_ind[], sk_load_half_ind[], sk_load_byte_ind[];
+=======
+extern u8 sk_load_word_positive_offset[], sk_load_half_positive_offset[];
+extern u8 sk_load_byte_positive_offset[], sk_load_byte_msh_positive_offset[];
+extern u8 sk_load_word_negative_offset[], sk_load_half_negative_offset[];
+extern u8 sk_load_byte_negative_offset[], sk_load_byte_msh_negative_offset[];
+>>>>>>> cm-10.0
 
 static inline u8 *emit_code(u8 *ptr, u32 bytes, unsigned int len)
 {
@@ -117,6 +124,11 @@ static inline void bpf_flush_icache(void *start, void *end)
 	set_fs(old_fs);
 }
 
+<<<<<<< HEAD
+=======
+#define CHOOSE_LOAD_FUNC(K, func) \
+	((int)K < 0 ? ((int)K >= SKF_LL_OFF ? func##_negative_offset : func) : func##_positive_offset)
+>>>>>>> cm-10.0
 
 void bpf_jit_compile(struct sk_filter *fp)
 {
@@ -151,10 +163,15 @@ void bpf_jit_compile(struct sk_filter *fp)
 	cleanup_addr = proglen; /* epilogue address */
 
 	for (pass = 0; pass < 10; pass++) {
+<<<<<<< HEAD
+=======
+		u8 seen_or_pass0 = (pass == 0) ? (SEEN_XREG | SEEN_DATAREF | SEEN_MEM) : seen;
+>>>>>>> cm-10.0
 		/* no prologue/epilogue for trivial filters (RET something) */
 		proglen = 0;
 		prog = temp;
 
+<<<<<<< HEAD
 		if (seen) {
 			EMIT4(0x55, 0x48, 0x89, 0xe5); /* push %rbp; mov %rsp,%rbp */
 			EMIT4(0x48, 0x83, 0xec, 96);	/* subq  $96,%rsp	*/
@@ -162,6 +179,15 @@ void bpf_jit_compile(struct sk_filter *fp)
 			if (seen & (SEEN_XREG | SEEN_DATAREF))
 				EMIT4(0x48, 0x89, 0x5d, 0xf8); /* mov %rbx, -8(%rbp) */
 			if (seen & SEEN_XREG)
+=======
+		if (seen_or_pass0) {
+			EMIT4(0x55, 0x48, 0x89, 0xe5); /* push %rbp; mov %rsp,%rbp */
+			EMIT4(0x48, 0x83, 0xec, 96);	/* subq  $96,%rsp	*/
+			/* note : must save %rbx in case bpf_error is hit */
+			if (seen_or_pass0 & (SEEN_XREG | SEEN_DATAREF))
+				EMIT4(0x48, 0x89, 0x5d, 0xf8); /* mov %rbx, -8(%rbp) */
+			if (seen_or_pass0 & SEEN_XREG)
+>>>>>>> cm-10.0
 				CLEAR_X(); /* make sure we dont leek kernel memory */
 
 			/*
@@ -170,7 +196,11 @@ void bpf_jit_compile(struct sk_filter *fp)
 			 *  r9 = skb->len - skb->data_len
 			 *  r8 = skb->data
 			 */
+<<<<<<< HEAD
 			if (seen & SEEN_DATAREF) {
+=======
+			if (seen_or_pass0 & SEEN_DATAREF) {
+>>>>>>> cm-10.0
 				if (offsetof(struct sk_buff, len) <= 127)
 					/* mov    off8(%rdi),%r9d */
 					EMIT4(0x44, 0x8b, 0x4f, offsetof(struct sk_buff, len));
@@ -260,9 +290,20 @@ void bpf_jit_compile(struct sk_filter *fp)
 			case BPF_S_ALU_DIV_X: /* A /= X; */
 				seen |= SEEN_XREG;
 				EMIT2(0x85, 0xdb);	/* test %ebx,%ebx */
+<<<<<<< HEAD
 				if (pc_ret0 != -1)
 					EMIT_COND_JMP(X86_JE, addrs[pc_ret0] - (addrs[i] - 4));
 				else {
+=======
+				if (pc_ret0 > 0) {
+					/* addrs[pc_ret0 - 1] is start address of target
+					 * (addrs[i] - 4) is the address following this jmp
+					 * ("xor %edx,%edx; div %ebx" being 4 bytes long)
+					 */
+					EMIT_COND_JMP(X86_JE, addrs[pc_ret0 - 1] -
+								(addrs[i] - 4));
+				} else {
+>>>>>>> cm-10.0
 					EMIT_COND_JMP(X86_JNE, 2 + 5);
 					CLEAR_A();
 					EMIT1_off32(0xe9, cleanup_addr - (addrs[i] - 4)); /* jmp .+off32 */
@@ -283,7 +324,11 @@ void bpf_jit_compile(struct sk_filter *fp)
 					EMIT2(0x24, K & 0xFF); /* and imm8,%al */
 				} else if (K >= 0xFFFF0000) {
 					EMIT2(0x66, 0x25);	/* and imm16,%ax */
+<<<<<<< HEAD
 					EMIT2(K, 2);
+=======
+					EMIT(K, 2);
+>>>>>>> cm-10.0
 				} else {
 					EMIT1_off32(0x25, K);	/* and imm32,%eax */
 				}
@@ -335,12 +380,20 @@ void bpf_jit_compile(struct sk_filter *fp)
 				}
 				/* fallinto */
 			case BPF_S_RET_A:
+<<<<<<< HEAD
 				if (seen) {
+=======
+				if (seen_or_pass0) {
+>>>>>>> cm-10.0
 					if (i != flen - 1) {
 						EMIT_JMP(cleanup_addr - addrs[i]);
 						break;
 					}
+<<<<<<< HEAD
 					if (seen & SEEN_XREG)
+=======
+					if (seen_or_pass0 & SEEN_XREG)
+>>>>>>> cm-10.0
 						EMIT4(0x48, 0x8b, 0x5d, 0xf8);  /* mov  -8(%rbp),%rbx */
 					EMIT1(0xc9);		/* leaveq */
 				}
@@ -467,15 +520,21 @@ void bpf_jit_compile(struct sk_filter *fp)
 #endif
 				break;
 			case BPF_S_LD_W_ABS:
+<<<<<<< HEAD
 				func = sk_load_word;
 common_load:			seen |= SEEN_DATAREF;
 				if ((int)K < 0)
 					goto out;
+=======
+				func = CHOOSE_LOAD_FUNC(K, sk_load_word);
+common_load:			seen |= SEEN_DATAREF;
+>>>>>>> cm-10.0
 				t_offset = func - (image + addrs[i]);
 				EMIT1_off32(0xbe, K); /* mov imm32,%esi */
 				EMIT1_off32(0xe8, t_offset); /* call */
 				break;
 			case BPF_S_LD_H_ABS:
+<<<<<<< HEAD
 				func = sk_load_half;
 				goto common_load;
 			case BPF_S_LD_B_ABS:
@@ -493,10 +552,22 @@ common_load:			seen |= SEEN_DATAREF;
 				}
 				seen |= SEEN_DATAREF | SEEN_XREG;
 				t_offset = sk_load_byte_msh - (image + addrs[i]);
+=======
+				func = CHOOSE_LOAD_FUNC(K, sk_load_half);
+				goto common_load;
+			case BPF_S_LD_B_ABS:
+				func = CHOOSE_LOAD_FUNC(K, sk_load_byte);
+				goto common_load;
+			case BPF_S_LDX_B_MSH:
+				func = CHOOSE_LOAD_FUNC(K, sk_load_byte_msh);
+				seen |= SEEN_DATAREF | SEEN_XREG;
+				t_offset = func - (image + addrs[i]);
+>>>>>>> cm-10.0
 				EMIT1_off32(0xbe, K);	/* mov imm32,%esi */
 				EMIT1_off32(0xe8, t_offset); /* call sk_load_byte_msh */
 				break;
 			case BPF_S_LD_W_IND:
+<<<<<<< HEAD
 				func = sk_load_word_ind;
 common_load_ind:		seen |= SEEN_DATAREF | SEEN_XREG;
 				t_offset = func - (image + addrs[i]);
@@ -508,6 +579,28 @@ common_load_ind:		seen |= SEEN_DATAREF | SEEN_XREG;
 				goto common_load_ind;
 			case BPF_S_LD_B_IND:
 				func = sk_load_byte_ind;
+=======
+				func = sk_load_word;
+common_load_ind:		seen |= SEEN_DATAREF | SEEN_XREG;
+				t_offset = func - (image + addrs[i]);
+				if (K) {
+					if (is_imm8(K)) {
+						EMIT3(0x8d, 0x73, K); /* lea imm8(%rbx), %esi */
+					} else {
+						EMIT2(0x8d, 0xb3); /* lea imm32(%rbx),%esi */
+						EMIT(K, 4);
+					}
+				} else {
+					EMIT2(0x89,0xde); /* mov %ebx,%esi */
+				}
+				EMIT1_off32(0xe8, t_offset);	/* call sk_load_xxx_ind */
+				break;
+			case BPF_S_LD_H_IND:
+				func = sk_load_half;
+				goto common_load_ind;
+			case BPF_S_LD_B_IND:
+				func = sk_load_byte;
+>>>>>>> cm-10.0
 				goto common_load_ind;
 			case BPF_S_JMP_JA:
 				t_offset = addrs[i + K] - addrs[i];
@@ -568,8 +661,13 @@ cond_branch:			f_offset = addrs[i + filter[i].jf] - addrs[i];
 					break;
 				}
 				if (filter[i].jt != 0) {
+<<<<<<< HEAD
 					if (filter[i].jf)
 						t_offset += is_near(f_offset) ? 2 : 6;
+=======
+					if (filter[i].jf && f_offset)
+						t_offset += is_near(f_offset) ? 2 : 5;
+>>>>>>> cm-10.0
 					EMIT_COND_JMP(t_op, t_offset);
 					if (filter[i].jf)
 						EMIT_JMP(f_offset);
@@ -599,6 +697,7 @@ cond_branch:			f_offset = addrs[i + filter[i].jf] - addrs[i];
 		 * use it to give the cleanup instruction(s) addr
 		 */
 		cleanup_addr = proglen - 1; /* ret */
+<<<<<<< HEAD
 		if (seen)
 			cleanup_addr -= 1; /* leaveq */
 		if (seen & SEEN_XREG)
@@ -606,6 +705,16 @@ cond_branch:			f_offset = addrs[i + filter[i].jf] - addrs[i];
 
 		if (image) {
 			WARN_ON(proglen != oldproglen);
+=======
+		if (seen_or_pass0)
+			cleanup_addr -= 1; /* leaveq */
+		if (seen_or_pass0 & SEEN_XREG)
+			cleanup_addr -= 4; /* mov  -8(%rbp),%rbx */
+
+		if (image) {
+			if (proglen != oldproglen)
+				pr_err("bpb_jit_compile proglen=%u != oldproglen=%u\n", proglen, oldproglen);
+>>>>>>> cm-10.0
 			break;
 		}
 		if (proglen == oldproglen) {

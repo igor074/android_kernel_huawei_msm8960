@@ -26,6 +26,10 @@
 */
 
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/interrupt.h>
+>>>>>>> cm-10.0
 #include <linux/slab.h>
 
 #include <linux/socket.h>
@@ -217,7 +221,11 @@ static const struct net_device_ops bnep_netdev_ops = {
 	.ndo_stop            = bnep_net_close,
 	.ndo_start_xmit	     = bnep_net_xmit,
 	.ndo_validate_addr   = eth_validate_addr,
+<<<<<<< HEAD
 	.ndo_set_multicast_list = bnep_net_set_mc_list,
+=======
+	.ndo_set_rx_mode     = bnep_net_set_mc_list,
+>>>>>>> cm-10.0
 	.ndo_set_mac_address = bnep_net_set_mac_addr,
 	.ndo_tx_timeout      = bnep_net_timeout,
 	.ndo_change_mtu	     = eth_change_mtu,

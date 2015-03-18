@@ -175,6 +175,7 @@ static int ohci_quirk_amd700(struct usb_hcd *hcd)
 	return 0;
 }
 
+<<<<<<< HEAD
 /* nVidia controllers continue to drive Reset signalling on the bus
  * even after system shutdown, wasting power.  This flag tells the
  * shutdown routine to leave the controller OPERATIONAL instead of RESET.
@@ -197,6 +198,8 @@ static int ohci_quirk_nvidia_shutdown(struct usb_hcd *hcd)
 	return 0;
 }
 
+=======
+>>>>>>> cm-10.0
 static void sb800_prefetch(struct ohci_hcd *ohci, int on)
 {
 	struct pci_dev *pdev;
@@ -260,10 +263,13 @@ static const struct pci_device_id ohci_pci_quirks[] = {
 		PCI_DEVICE(PCI_VENDOR_ID_ATI, 0x4399),
 		.driver_data = (unsigned long)ohci_quirk_amd700,
 	},
+<<<<<<< HEAD
 	{
 		PCI_DEVICE(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID),
 		.driver_data = (unsigned long) ohci_quirk_nvidia_shutdown,
 	},
+=======
+>>>>>>> cm-10.0
 
 	/* FIXME for some of the early AMD 760 southbridges, OHCI
 	 * won't work at all.  blacklist them.
@@ -334,12 +340,18 @@ static int ohci_pci_suspend(struct usb_hcd *hcd, bool do_wakeup)
 	 * mark HW unaccessible, bail out if RH has been resumed. Use
 	 * the spinlock to properly synchronize with possible pending
 	 * RH suspend or resume activity.
+<<<<<<< HEAD
 	 *
 	 * This is still racy as hcd->state is manipulated outside of
 	 * any locks =P But that will be a different fix.
 	 */
 	spin_lock_irqsave (&ohci->lock, flags);
 	if (hcd->state != HC_STATE_SUSPENDED) {
+=======
+	 */
+	spin_lock_irqsave (&ohci->lock, flags);
+	if (ohci->rh_state != OHCI_RH_SUSPENDED) {
+>>>>>>> cm-10.0
 		rc = -EINVAL;
 		goto bail;
 	}
@@ -426,6 +438,13 @@ static const struct pci_device_id pci_ids [] = { {
 	/* handle any USB OHCI controller */
 	PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_USB_OHCI, ~0),
 	.driver_data =	(unsigned long) &ohci_pci_hc_driver,
+<<<<<<< HEAD
+=======
+	}, {
+	/* The device in the ConneXT I/O hub has no class reg */
+	PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_USB_OHCI),
+	.driver_data =	(unsigned long) &ohci_pci_hc_driver,
+>>>>>>> cm-10.0
 	}, { /* end: all zeroes */ }
 };
 MODULE_DEVICE_TABLE (pci, pci_ids);

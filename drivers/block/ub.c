@@ -119,6 +119,7 @@
 
 /*
  */
+<<<<<<< HEAD
 
 /* command block wrapper */
 struct bulk_cb_wrap {
@@ -156,6 +157,8 @@ struct bulk_cs_wrap {
 
 /*
  */
+=======
+>>>>>>> cm-10.0
 struct ub_dev;
 
 #define UB_MAX_REQ_SG	9	/* cdrecord requires 32KB and maybe a header */
@@ -1744,12 +1747,19 @@ static int ub_bd_release(struct gendisk *disk, fmode_t mode)
 static int ub_bd_ioctl(struct block_device *bdev, fmode_t mode,
     unsigned int cmd, unsigned long arg)
 {
+<<<<<<< HEAD
 	struct gendisk *disk = bdev->bd_disk;
+=======
+>>>>>>> cm-10.0
 	void __user *usermem = (void __user *) arg;
 	int ret;
 
 	mutex_lock(&ub_mutex);
+<<<<<<< HEAD
 	ret = scsi_cmd_ioctl(disk->queue, disk, mode, cmd, usermem);
+=======
+	ret = scsi_cmd_blk_ioctl(bdev, mode, cmd, usermem);
+>>>>>>> cm-10.0
 	mutex_unlock(&ub_mutex);
 
 	return ret;
@@ -2478,6 +2488,11 @@ static int __init ub_init(void)
 	int rc;
 	int i;
 
+<<<<<<< HEAD
+=======
+	pr_info("'Low Performance USB Block' driver is deprecated. "
+			"Please switch to usb-storage\n");
+>>>>>>> cm-10.0
 	for (i = 0; i < UB_QLOCK_NUM; i++)
 		spin_lock_init(&ub_qlockv[i]);
 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,6 +25,10 @@
 struct msm_psy_batt_pdata {
 	u32 voltage_max_design;
 	u32 voltage_min_design;
+<<<<<<< HEAD
+=======
+	u32 voltage_fail_safe;
+>>>>>>> cm-10.0
 	u32 avail_chg_sources;
 	u32 batt_technology;
 	u32 (*calculate_capacity)(u32 voltage);

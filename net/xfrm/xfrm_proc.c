@@ -12,6 +12,10 @@
  */
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <net/snmp.h>
 #include <net/xfrm.h>
 

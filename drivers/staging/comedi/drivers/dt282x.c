@@ -61,6 +61,10 @@ Notes:
 #include <linux/gfp.h>
 #include <linux/ioport.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/io.h>
+>>>>>>> cm-10.0
 #include <asm/dma.h>
 #include "comedi_fc.h"
 

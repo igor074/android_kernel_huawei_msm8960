@@ -8,6 +8,10 @@
 
 #include <linux/sched.h>
 #include <linux/freezer.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/fs_struct.h>
 #include <linux/swap.h>
 
@@ -250,12 +254,21 @@ static void nfsd_shutdown(void)
 	nfsd_up = false;
 }
 
+<<<<<<< HEAD
 static void nfsd_last_thread(struct svc_serv *serv)
+=======
+static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
+>>>>>>> cm-10.0
 {
 	/* When last nfsd thread exits we need to do some clean-up */
 	nfsd_serv = NULL;
 	nfsd_shutdown();
 
+<<<<<<< HEAD
+=======
+	svc_rpcb_cleanup(serv, net);
+
+>>>>>>> cm-10.0
 	printk(KERN_WARNING "nfsd: last server has exited, flushing export "
 			    "cache\n");
 	nfsd_export_flush();
@@ -304,15 +317,42 @@ static void set_max_drc(void)
 	dprintk("%s nfsd_drc_max_mem %u \n", __func__, nfsd_drc_max_mem);
 }
 
+<<<<<<< HEAD
 int nfsd_create_serv(void)
 {
 	int err = 0;
 
+=======
+static int nfsd_get_default_max_blksize(void)
+{
+	struct sysinfo i;
+	unsigned long long target;
+	unsigned long ret;
+
+	si_meminfo(&i);
+	target = (i.totalram - i.totalhigh) << PAGE_SHIFT;
+	/*
+	 * Aim for 1/4096 of memory per thread This gives 1MB on 4Gig
+	 * machines, but only uses 32K on 128M machines.  Bottom out at
+	 * 8K on 32M and smaller.  Of course, this is only a default.
+	 */
+	target >>= 12;
+
+	ret = NFSSVC_MAXBLKSIZE;
+	while (ret > target && ret >= 8*1024*2)
+		ret /= 2;
+	return ret;
+}
+
+int nfsd_create_serv(void)
+{
+>>>>>>> cm-10.0
 	WARN_ON(!mutex_is_locked(&nfsd_mutex));
 	if (nfsd_serv) {
 		svc_get(nfsd_serv);
 		return 0;
 	}
+<<<<<<< HEAD
 	if (nfsd_max_blksize == 0) {
 		/* choose a suitable default */
 		struct sysinfo i;
@@ -331,6 +371,11 @@ int nfsd_create_serv(void)
 	}
 	nfsd_reset_versions();
 
+=======
+	if (nfsd_max_blksize == 0)
+		nfsd_max_blksize = nfsd_get_default_max_blksize();
+	nfsd_reset_versions();
+>>>>>>> cm-10.0
 	nfsd_serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize,
 				      nfsd_last_thread, nfsd, THIS_MODULE);
 	if (nfsd_serv == NULL)
@@ -338,7 +383,11 @@ int nfsd_create_serv(void)
 
 	set_max_drc();
 	do_gettimeofday(&nfssvc_boot);		/* record boot time */
+<<<<<<< HEAD
 	return err;
+=======
+	return 0;
+>>>>>>> cm-10.0
 }
 
 int nfsd_nrpools(void)
@@ -528,6 +577,7 @@ nfsd(void *vrqstp)
 			continue;
 		}
 
+<<<<<<< HEAD
 
 		/* Lock the export hash tables for reading. */
 		exp_readlock();
@@ -538,6 +588,11 @@ nfsd(void *vrqstp)
 
 		/* Unlock export hash tables */
 		exp_readunlock();
+=======
+		validate_process_creds();
+		svc_process(rqstp);
+		validate_process_creds();
+>>>>>>> cm-10.0
 	}
 
 	/* Clear signals before calling svc_exit_thread() */
@@ -577,8 +632,27 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
 				rqstp->rq_vers, rqstp->rq_proc);
 	proc = rqstp->rq_procinfo;
 
+<<<<<<< HEAD
 	/* Check whether we have this call in the cache. */
 	switch (nfsd_cache_lookup(rqstp, proc->pc_cachetype)) {
+=======
+	/*
+	 * Give the xdr decoder a chance to change this if it wants
+	 * (necessary in the NFSv4.0 compound case)
+	 */
+	rqstp->rq_cachetype = proc->pc_cachetype;
+	/* Decode arguments */
+	xdr = proc->pc_decode;
+	if (xdr && !xdr(rqstp, (__be32*)rqstp->rq_arg.head[0].iov_base,
+			rqstp->rq_argp)) {
+		dprintk("nfsd: failed to decode arguments!\n");
+		*statp = rpc_garbage_args;
+		return 1;
+	}
+
+	/* Check whether we have this call in the cache. */
+	switch (nfsd_cache_lookup(rqstp)) {
+>>>>>>> cm-10.0
 	case RC_INTR:
 	case RC_DROPIT:
 		return 0;
@@ -588,6 +662,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
 		/* do it */
 	}
 
+<<<<<<< HEAD
 	/* Decode arguments */
 	xdr = proc->pc_decode;
 	if (xdr && !xdr(rqstp, (__be32*)rqstp->rq_arg.head[0].iov_base,
@@ -598,6 +673,8 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
 		return 1;
 	}
 
+=======
+>>>>>>> cm-10.0
 	/* need to grab the location to store the status, as
 	 * nfsv4 does some encoding while processing 
 	 */

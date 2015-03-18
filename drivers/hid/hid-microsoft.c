@@ -23,11 +23,20 @@
 
 #include "hid-ids.h"
 
+<<<<<<< HEAD
 #define MS_HIDINPUT	0x01
 #define MS_ERGONOMY	0x02
 #define MS_PRESENTER	0x04
 #define MS_RDESC	0x08
 #define MS_NOGET	0x10
+=======
+#define MS_HIDINPUT		0x01
+#define MS_ERGONOMY		0x02
+#define MS_PRESENTER		0x04
+#define MS_RDESC		0x08
+#define MS_NOGET		0x10
+#define MS_DUPLICATE_USAGES	0x20
+>>>>>>> cm-10.0
 
 /*
  * Microsoft Wireless Desktop Receiver (Model 1028) has
@@ -109,6 +118,21 @@ static int ms_input_mapping(struct hid_device *hdev, struct hid_input *hi,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int ms_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+		struct hid_field *field, struct hid_usage *usage,
+		unsigned long **bit, int *max)
+{
+	unsigned long quirks = (unsigned long)hid_get_drvdata(hdev);
+
+	if (quirks & MS_DUPLICATE_USAGES)
+		clear_bit(usage->code, *bit);
+
+	return 0;
+}
+
+>>>>>>> cm-10.0
 static int ms_event(struct hid_device *hdev, struct hid_field *field,
 		struct hid_usage *usage, __s32 value)
 {
@@ -179,8 +203,17 @@ static const struct hid_device_id ms_devices[] = {
 		.driver_data = MS_ERGONOMY | MS_RDESC },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_PRESENTER_8K_USB),
 		.driver_data = MS_PRESENTER },
+<<<<<<< HEAD
 	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_WIRELESS_OPTICAL_DESKTOP_3_0),
 		.driver_data = MS_NOGET },
+=======
+	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_DIGITAL_MEDIA_3K),
+		.driver_data = MS_ERGONOMY },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_WIRELESS_OPTICAL_DESKTOP_3_0),
+		.driver_data = MS_NOGET },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_COMFORT_MOUSE_4500),
+		.driver_data = MS_DUPLICATE_USAGES },
+>>>>>>> cm-10.0
 
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_PRESENTER_8K_BT),
 		.driver_data = MS_PRESENTER },
@@ -193,6 +226,10 @@ static struct hid_driver ms_driver = {
 	.id_table = ms_devices,
 	.report_fixup = ms_report_fixup,
 	.input_mapping = ms_input_mapping,
+<<<<<<< HEAD
+=======
+	.input_mapped = ms_input_mapped,
+>>>>>>> cm-10.0
 	.event = ms_event,
 	.probe = ms_probe,
 };

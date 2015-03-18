@@ -12,6 +12,10 @@
  */
 
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/io.h>
+>>>>>>> cm-10.0
 #include <linux/kernel.h>
 #include <asm/mach-types.h>
 #include <plat/clock.h>

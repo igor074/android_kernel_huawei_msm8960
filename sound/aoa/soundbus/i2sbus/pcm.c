@@ -12,6 +12,10 @@
 #include <sound/core.h>
 #include <asm/macio.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include "../soundbus.h"
 #include "i2sbus.h"
 

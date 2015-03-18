@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -16,7 +20,10 @@
 #include "vcd_ddl_shared_mem.h"
 #include "vcd_res_tracker_api.h"
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 struct ddl_context *ddl_get_context(void)
 {
 	static struct ddl_context ddl_context;
@@ -169,6 +176,31 @@ u32 ddl_decoder_dpb_transact(struct ddl_decoder_data *decoder,
 			} else if (operation == DDL_DPB_OP_MARK_FREE) {
 				dpb_mask->client_mask |= (0x1 << loopc);
 				*found_frame = *in_out_frame;
+<<<<<<< HEAD
+=======
+				if ((decoder->meta_data_enable_flag) &&
+				    (in_out_frame->vcd_frm.buff_ion_handle)) {
+					struct ddl_context *ddl_context =
+						ddl_get_context();
+					unsigned long *vaddr =
+						(unsigned long *)((u32)
+						in_out_frame->vcd_frm.virtual +
+						decoder->meta_data_offset);
+					DDL_MSG_LOW("%s: Cache clean: vaddr"\
+						" (%p), offset %u, size %u",
+						__func__,
+						in_out_frame->vcd_frm.virtual,
+						decoder->meta_data_offset,
+						decoder->suffix);
+					msm_ion_do_cache_op(
+						ddl_context->video_ion_client,
+						in_out_frame->vcd_frm.\
+						buff_ion_handle,
+						vaddr,
+						(unsigned long)decoder->suffix,
+						ION_IOC_CLEAN_CACHES);
+				}
+>>>>>>> cm-10.0
 			}
 		} else {
 			in_out_frame->vcd_frm.physical = NULL;
@@ -249,7 +281,11 @@ u32 ddl_decoder_dpb_init(struct ddl_client_context *ddl)
 	if (dpb > DDL_MAX_BUFFER_COUNT)
 		dpb = DDL_MAX_BUFFER_COUNT;
 	for (i = 0; i < dpb; i++) {
+<<<<<<< HEAD
 		if (!res_trk_check_for_sec_session() &&
+=======
+		if (!(res_trk_check_for_sec_session()) &&
+>>>>>>> cm-10.0
 			frame[i].vcd_frm.virtual) {
 			if (luma_size <= frame[i].vcd_frm.alloc_len) {
 				memset(frame[i].vcd_frm.virtual,
@@ -376,6 +412,11 @@ void ddl_release_client_internal_buffers(struct ddl_client_context *ddl)
 		struct ddl_encoder_data *encoder =
 			&(ddl->codec_data.encoder);
 		ddl_pmem_free(&encoder->seq_header);
+<<<<<<< HEAD
+=======
+		ddl_pmem_free(&encoder->batch_frame.slice_batch_in);
+		ddl_pmem_free(&encoder->batch_frame.slice_batch_out);
+>>>>>>> cm-10.0
 		ddl_vidc_encode_dynamic_property(ddl, false);
 		encoder->dynamic_prop_change = 0;
 		ddl_free_enc_hw_buffers(ddl);
@@ -448,7 +489,11 @@ struct ddl_client_context *ddl_get_current_ddl_client_for_channel_id(
 		ddl = ddl_context->current_ddl[1];
 	else {
 		DDL_MSG_LOW("STATE-CRITICAL-FRMRUN");
+<<<<<<< HEAD
 		DDL_MSG_ERROR("Unexpected channel ID = %d", channel_id);
+=======
+		DDL_MSG_LOW("Unexpected channel ID = %d", channel_id);
+>>>>>>> cm-10.0
 		ddl = NULL;
 	}
 	return ddl;
@@ -739,6 +784,7 @@ u32 ddl_allocate_dec_hw_buffers(struct ddl_client_context *ddl)
 		if (!ptr)
 			goto fail_free_exit;
 		else {
+<<<<<<< HEAD
 			if (!res_trk_check_for_sec_session())
 				memset(dec_bufs->desc.align_virtual_addr,
 					0, buf_size.sz_desc);
@@ -747,6 +793,18 @@ u32 ddl_allocate_dec_hw_buffers(struct ddl_client_context *ddl)
 						dec_bufs->desc.alloc_handle,
 						dec_bufs->desc.buffer_size,
 						ION_IOC_CLEAN_INV_CACHES);
+=======
+			if (!res_trk_check_for_sec_session()) {
+				memset(dec_bufs->desc.align_virtual_addr,
+					   0, buf_size.sz_desc);
+				msm_ion_do_cache_op(
+					ddl_context->video_ion_client,
+					dec_bufs->desc.alloc_handle,
+					dec_bufs->desc.virtual_base_addr,
+					dec_bufs->desc.buffer_size,
+					ION_IOC_CLEAN_INV_CACHES);
+			}
+>>>>>>> cm-10.0
 		}
 	}
 	return status;
@@ -788,7 +846,11 @@ u32 ddl_calc_enc_hw_buffers_size(enum vcd_codec codec, u32 width,
 		sz_strm = DDL_ALIGN(ddl_get_yuv_buf_size(width, height,
 			DDL_YUV_BUF_TYPE_LINEAR) + ddl_get_yuv_buf_size(width,
 			height/2, DDL_YUV_BUF_TYPE_LINEAR), DDL_KILO_BYTE(4));
+<<<<<<< HEAD
 		sz_mv = DDL_ALIGN(2 * mb_x * mb_y * 8, DDL_KILO_BYTE(2));
+=======
+		sz_mv = DDL_ALIGN(2 * mb_x * 8, DDL_KILO_BYTE(2));
+>>>>>>> cm-10.0
 		if ((codec == VCD_CODEC_MPEG4) ||
 			(codec == VCD_CODEC_H264)) {
 			sz_col_zero = DDL_ALIGN(((mb_x * mb_y + 7) / 8) *
@@ -897,7 +959,13 @@ u32 ddl_allocate_enc_hw_buffers(struct ddl_client_context *ddl)
 				goto fail_enc_free_exit;
 		}
 		if (buf_size.sz_pred > 0) {
+<<<<<<< HEAD
 			enc_bufs->pred.mem_type = DDL_MM_MEM;
+=======
+			enc_bufs->pred.mem_type =
+				res_trk_check_for_sec_session() ?
+				DDL_MM_MEM : DDL_FW_MEM;
+>>>>>>> cm-10.0
 			ptr = ddl_pmem_alloc(&enc_bufs->pred,
 				buf_size.sz_pred, DDL_KILO_BYTE(2));
 			if (!ptr)
@@ -979,9 +1047,14 @@ u32 ddl_check_reconfig(struct ddl_client_context *ddl)
 	if (decoder->cont_mode) {
 		if ((decoder->actual_output_buf_req.sz <=
 			 decoder->client_output_buf_req.sz) &&
+<<<<<<< HEAD
 			(decoder->actual_output_buf_req.actual_count +
                         GRAPHICS_UNUSED_BUFFERS <=
                         decoder->client_output_buf_req.actual_count)) {
+=======
+			(decoder->actual_output_buf_req.actual_count <=
+			 decoder->client_output_buf_req.actual_count)) {
+>>>>>>> cm-10.0
 			need_reconfig = false;
 			if (decoder->min_dpb_num >
 				decoder->min_output_buf_req.min_count) {
@@ -1063,8 +1136,44 @@ void ddl_fill_dec_desc_buffer(struct ddl_client_context *ddl)
 void ddl_set_vidc_timeout(struct ddl_client_context *ddl)
 {
 	u32 vidc_time_out = 0;
+<<<<<<< HEAD
 	if (ddl->codec_data.decoder.idr_only_decoding)
 		vidc_time_out = 2 * DDL_VIDC_1080P_200MHZ_TIMEOUT_VALUE;
+=======
+	s32 multiplier = 1;
+	u32 temp = DDL_VIDC_1080P_200MHZ_TIMEOUT_VALUE;
+	struct ddl_decoder_data *decoder = &ddl->codec_data.decoder;
+	struct vcd_frame_data *ip_bitstream = &(ddl->input_frame.vcd_frm);
+
+	if (ddl->codec_data.decoder.idr_only_decoding)
+		vidc_time_out = 2 * DDL_VIDC_1080P_200MHZ_TIMEOUT_VALUE;
+	else {
+		vidc_time_out = DDL_VIDC_1080P_200MHZ_TIMEOUT_VALUE;
+		multiplier = decoder->yuv_size - (ip_bitstream->data_len +
+						(ip_bitstream->data_len / 2));
+		if (multiplier <= 0) {
+			multiplier = decoder->yuv_size - ip_bitstream->data_len;
+			if (multiplier <= 0) {
+				if (ip_bitstream->data_len)
+					multiplier =
+					DDL_VIDC_1080P_MAX_TIMEOUT_MULTIPLIER;
+			}
+		}
+		if (multiplier == DDL_VIDC_1080P_MAX_TIMEOUT_MULTIPLIER)
+			vidc_time_out = vidc_time_out *
+				DDL_VIDC_1080P_MAX_TIMEOUT_MULTIPLIER;
+		else if (multiplier > 1) {
+			temp = (decoder->yuv_size * 1000) / multiplier;
+			temp = (temp * vidc_time_out) / 1000;
+			if (temp > (u32)(vidc_time_out *
+				DDL_VIDC_1080P_MAX_TIMEOUT_MULTIPLIER))
+				vidc_time_out = vidc_time_out *
+					DDL_VIDC_1080P_MAX_TIMEOUT_MULTIPLIER;
+			else
+				vidc_time_out = temp;
+		}
+	}
+>>>>>>> cm-10.0
 	DDL_MSG_HIGH("%s Video core time out value = 0x%x",
 		 __func__, vidc_time_out);
 	vidc_sm_set_video_core_timeout_value(

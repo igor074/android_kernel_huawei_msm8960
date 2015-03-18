@@ -2,6 +2,7 @@ GCC_VERSION      := $(shell $(CONFIG_SHELL) $(PWD)/scripts/gcc-version.sh $(CROS
 EXTRA_CFLAGS += -Idrivers/media/video/msm
 EXTRA_CFLAGS += -Idrivers/media/video/msm/io
 obj-$(CONFIG_MSM_ACTUATOR) += msm_actuator.o
+<<<<<<< HEAD
 obj-$(CONFIG_IMX074_ACT) += imx074_act.o
 obj-$(CONFIG_DW9712_ACT) += dw9712_act.o
 
@@ -14,3 +15,5 @@ obj-$(CONFIG_HUAWEI_CAMERA_SENSOR_S5K4E1GX_LITEON_ACT) += s5k4e1gx_liteon_act.o
 obj-$(CONFIG_HUAWEI_CAMERA_SENSOR_S5K4E1GX_SEMCO_ACT) += s5k4e1gx_semco_act.o
 obj-$(CONFIG_HUAWEI_CAMERA_SENSOR_MT9P017_SUNNY_ACT) += mt9p017_sunny_act.o
 obj-$(CONFIG_HUAWEI_CAMERA_SENSOR_OV5647_SUNNY_ACT) += ov5647_sunny_act.o
+=======
+>>>>>>> cm-10.0

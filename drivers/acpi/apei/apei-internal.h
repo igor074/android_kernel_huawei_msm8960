@@ -50,13 +50,34 @@ static inline u64 apei_exec_ctx_get_output(struct apei_exec_context *ctx)
 	return ctx->value;
 }
 
+<<<<<<< HEAD
 int apei_exec_run(struct apei_exec_context *ctx, u8 action);
+=======
+int __apei_exec_run(struct apei_exec_context *ctx, u8 action, bool optional);
+
+static inline int apei_exec_run(struct apei_exec_context *ctx, u8 action)
+{
+	return __apei_exec_run(ctx, action, 0);
+}
+
+/* It is optional whether the firmware provides the action */
+static inline int apei_exec_run_optional(struct apei_exec_context *ctx, u8 action)
+{
+	return __apei_exec_run(ctx, action, 1);
+}
+>>>>>>> cm-10.0
 
 /* Common instruction implementation */
 
 /* IP has been set in instruction function */
 #define APEI_EXEC_SET_IP	1
 
+<<<<<<< HEAD
+=======
+int apei_read(u64 *val, struct acpi_generic_address *reg);
+int apei_write(u64 val, struct acpi_generic_address *reg);
+
+>>>>>>> cm-10.0
 int __apei_exec_read_register(struct acpi_whea_header *entry, u64 *val);
 int __apei_exec_write_register(struct acpi_whea_header *entry, u64 val);
 int apei_exec_read_register(struct apei_exec_context *ctx,
@@ -84,6 +105,12 @@ static inline void apei_resources_init(struct apei_resources *resources)
 }
 
 void apei_resources_fini(struct apei_resources *resources);
+<<<<<<< HEAD
+=======
+int apei_resources_add(struct apei_resources *resources,
+		       unsigned long start, unsigned long size,
+		       bool iomem);
+>>>>>>> cm-10.0
 int apei_resources_sub(struct apei_resources *resources1,
 		       struct apei_resources *resources2);
 int apei_resources_request(struct apei_resources *resources,
@@ -113,4 +140,9 @@ void apei_estatus_print(const char *pfx,
 			const struct acpi_hest_generic_status *estatus);
 int apei_estatus_check_header(const struct acpi_hest_generic_status *estatus);
 int apei_estatus_check(const struct acpi_hest_generic_status *estatus);
+<<<<<<< HEAD
+=======
+
+int apei_osc_setup(void);
+>>>>>>> cm-10.0
 #endif

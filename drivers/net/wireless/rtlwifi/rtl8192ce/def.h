@@ -1,6 +1,10 @@
 /******************************************************************************
  *
+<<<<<<< HEAD
  * Copyright(c) 2009-2010  Realtek Corporation.
+=======
+ * Copyright(c) 2009-2012  Realtek Corporation.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
@@ -142,8 +146,27 @@ enum version_8192c {
 	VERSION_UNKNOWN = 0x88,
 };
 
+<<<<<<< HEAD
 #define IS_CHIP_VER_B(version)  ((version & CHIP_VER_B) ? true : false)
 #define IS_92C_SERIAL(version)  ((version & CHIP_92C_BITMASK) ? true : false)
+=======
+#define CUT_VERSION_MASK		(BIT(6)|BIT(7))
+#define CHIP_VENDOR_UMC			BIT(5)
+#define CHIP_VENDOR_UMC_B_CUT		BIT(6) /* Chip version for ECO */
+#define IS_VENDOR_UMC_A_CUT(version)	((IS_CHIP_VENDOR_UMC(version)) ? \
+	((GET_CVID_CUT_VERSION(version)) ? false : true) : false)
+#define IS_CHIP_VER_B(version)  ((version & CHIP_VER_B) ? true : false)
+#define IS_VENDOR_UMC_A_CUT(version)	((IS_CHIP_VENDOR_UMC(version)) ? \
+	((GET_CVID_CUT_VERSION(version)) ? false : true) : false)
+#define IS_92C_SERIAL(version)  ((version & CHIP_92C_BITMASK) ? true : false)
+#define IS_CHIP_VENDOR_UMC(version)		\
+	((version & CHIP_VENDOR_UMC) ? true : false)
+#define GET_CVID_CUT_VERSION(version)	((version) & CUT_VERSION_MASK)
+#define IS_81xxC_VENDOR_UMC_B_CUT(version)		\
+	((IS_CHIP_VENDOR_UMC(version)) ? \
+	((GET_CVID_CUT_VERSION(version) == CHIP_VENDOR_UMC_B_CUT) ?	\
+	true : false) : false)
+>>>>>>> cm-10.0
 
 enum rtl819x_loopback_e {
 	RTL819X_NO_LOOPBACK = 0,
@@ -220,6 +243,7 @@ enum rtl_desc_qsel {
 	QSLT_CMD = 0x13,
 };
 
+<<<<<<< HEAD
 enum rtl_desc92c_rate {
 	DESC92C_RATE1M = 0x00,
 	DESC92C_RATE2M = 0x01,
@@ -255,6 +279,8 @@ enum rtl_desc92c_rate {
 	DESC92C_RATEMCS32 = 0x20,
 };
 
+=======
+>>>>>>> cm-10.0
 struct phy_sts_cck_8192s_t {
 	u8 adc_pwdb_X[4];
 	u8 sq_rpt;
@@ -267,6 +293,7 @@ struct h2c_cmd_8192c {
 	u8 *p_cmdbuffer;
 };
 
+<<<<<<< HEAD
 /* NOTE: reference to rtl8192c_rates struct */
 static inline int _rtl92c_rate_mapping(struct ieee80211_hw *hw, bool isHT,
 				       u8 desc_rate, bool first_ampdu)
@@ -371,4 +398,6 @@ static inline int _rtl92c_rate_mapping(struct ieee80211_hw *hw, bool isHT,
 	return rate_idx;
 }
 
+=======
+>>>>>>> cm-10.0
 #endif

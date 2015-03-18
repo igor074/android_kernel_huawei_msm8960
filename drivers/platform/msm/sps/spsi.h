@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -28,6 +32,10 @@
 #include "sps_map.h"
 
 #define BAM_MAX_PIPES              31
+<<<<<<< HEAD
+=======
+#define BAM_MAX_P_LOCK_GROUP_NUM   31
+>>>>>>> cm-10.0
 
 /* Adjust for offset of struct sps_q_event */
 #define SPS_EVENT_INDEX(e)    ((e) - 1)
@@ -36,6 +44,14 @@
 /* BAM identifier used in log messages */
 #define BAM_ID(dev)       ((dev)->props.phys_addr)
 
+<<<<<<< HEAD
+=======
+/* "Clear" value for the connection parameter struct */
+#define SPSRM_CLEAR     0xcccccccc
+
+extern u32 d_type;
+
+>>>>>>> cm-10.0
 #ifdef CONFIG_DEBUG_FS
 extern u8 debugfs_record_enabled;
 extern u8 logging_option;
@@ -127,6 +143,10 @@ struct sps_conn_end_pt {
 	u32 bam_phys;		/* Physical address of BAM. */
 	u32 pipe_index;		/* Pipe index */
 	u32 event_threshold;	/* Pipe event threshold */
+<<<<<<< HEAD
+=======
+	u32 lock_group;	/* The lock group this pipe belongs to */
+>>>>>>> cm-10.0
 	void *bam;
 };
 
@@ -188,6 +208,12 @@ void print_bam_selected_reg(void *);
 
 /* output the content of selected BAM pipe registers */
 void print_bam_pipe_selected_reg(void *, u32);
+<<<<<<< HEAD
+=======
+
+/* output descriptor FIFO of a pipe */
+void print_bam_pipe_desc_fifo(void *, u32);
+>>>>>>> cm-10.0
 #endif
 
 /**

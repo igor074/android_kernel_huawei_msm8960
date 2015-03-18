@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2010, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2010, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1874,6 +1878,7 @@ uint32 mddi_get_client_id(void)
 			MDDI_MSG_ERR("mddi_client_power return %d", ret);
 	}
 
+<<<<<<< HEAD
 #if 0
 	switch (mddi_client_capability_pkt.Mfr_Name) {
 	case 0x4474:
@@ -1910,6 +1915,8 @@ uint32 mddi_get_client_id(void)
 	}
 #endif
 
+=======
+>>>>>>> cm-10.0
 #endif
 
 	return mddi_client_id;

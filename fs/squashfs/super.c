@@ -95,7 +95,11 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
 	}
 	msblk = sb->s_fs_info;
 
+<<<<<<< HEAD
 	msblk->devblksize = sb_min_blocksize(sb, BLOCK_SIZE);
+=======
+	msblk->devblksize = sb_min_blocksize(sb, SQUASHFS_DEVBLK_SIZE);
+>>>>>>> cm-10.0
 	msblk->devblksize_log2 = ffz(~msblk->devblksize);
 
 	mutex_init(&msblk->read_data_mutex);
@@ -158,10 +162,21 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
 		goto failed_mount;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Check block log for sanity */
+>>>>>>> cm-10.0
 	msblk->block_log = le16_to_cpu(sblk->block_log);
 	if (msblk->block_log > SQUASHFS_FILE_MAX_LOG)
 		goto failed_mount;
 
+<<<<<<< HEAD
+=======
+	/* Check that block_size and block_log match */
+	if (msblk->block_size != (1 << msblk->block_log))
+		goto failed_mount;
+
+>>>>>>> cm-10.0
 	/* Check the root inode for sanity */
 	root_inode = le64_to_cpu(sblk->root_inode);
 	if (SQUASHFS_INODE_OFFSET(root_inode) > SQUASHFS_METADATA_SIZE)
@@ -290,7 +305,11 @@ handle_fragments:
 
 check_directory_table:
 	/* Sanity check directory_table */
+<<<<<<< HEAD
 	if (msblk->directory_table >= next_table) {
+=======
+	if (msblk->directory_table > next_table) {
+>>>>>>> cm-10.0
 		err = -EINVAL;
 		goto failed_mount;
 	}
@@ -316,11 +335,18 @@ check_directory_table:
 	}
 	insert_inode_hash(root);
 
+<<<<<<< HEAD
 	sb->s_root = d_alloc_root(root);
 	if (sb->s_root == NULL) {
 		ERROR("Root inode create failed\n");
 		err = -ENOMEM;
 		iput(root);
+=======
+	sb->s_root = d_make_root(root);
+	if (sb->s_root == NULL) {
+		ERROR("Root inode create failed\n");
+		err = -ENOMEM;
+>>>>>>> cm-10.0
 		goto failed_mount;
 	}
 
@@ -464,7 +490,10 @@ static struct inode *squashfs_alloc_inode(struct super_block *sb)
 static void squashfs_i_callback(struct rcu_head *head)
 {
 	struct inode *inode = container_of(head, struct inode, i_rcu);
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&inode->i_dentry);
+=======
+>>>>>>> cm-10.0
 	kmem_cache_free(squashfs_inode_cachep, squashfs_i(inode));
 }
 

@@ -17,6 +17,10 @@
 #include <linux/blkdev.h>
 #include <linux/delay.h>
 #include <linux/ide.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #include <asm/macintosh.h>
 #include <asm/macints.h>

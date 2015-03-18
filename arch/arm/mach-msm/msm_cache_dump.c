@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -26,11 +30,16 @@
 #include <mach/memory.h>
 #include <mach/msm_iomap.h>
 
+<<<<<<< HEAD
 #define L2C_IMEM_ADDR 0x2a03f014
+=======
+#define L2_DUMP_OFFSET 0x14
+>>>>>>> cm-10.0
 
 static unsigned long msm_cache_dump_addr;
 
 /*
+<<<<<<< HEAD
  * These are dummy pointers so the defintion of l1_cache_dump
  * and l2_cache_dump don't get optimized away. If they aren't
  * referenced, the structure definitions don't show up in the
@@ -38,11 +47,27 @@ static unsigned long msm_cache_dump_addr;
  */
 static struct l1_cache_dump __used *l1_dump;
 static struct l2_cache_dump __used *l2_dump;
+=======
+ * These should not actually be dereferenced. There's no
+ * need for a virtual mapping, but the physical address is
+ * necessary.
+ */
+static struct l1_cache_dump *l1_dump;
+static struct l2_cache_dump *l2_dump;
+>>>>>>> cm-10.0
 
 static int msm_cache_dump_panic(struct notifier_block *this,
 				unsigned long event, void *ptr)
 {
 #ifdef CONFIG_MSM_CACHE_DUMP_ON_PANIC
+<<<<<<< HEAD
+=======
+	/*
+	 * Clear the bootloader magic so the dumps aren't overwritten
+	 */
+	__raw_writel(0, MSM_IMEM_BASE + L2_DUMP_OFFSET);
+
+>>>>>>> cm-10.0
 	scm_call_atomic1(L1C_SERVICE_ID, CACHE_BUFFER_DUMP_COMMAND_ID, 2);
 	scm_call_atomic1(L1C_SERVICE_ID, CACHE_BUFFER_DUMP_COMMAND_ID, 1);
 #endif
@@ -66,9 +91,12 @@ static int msm_cache_dump_probe(struct platform_device *pdev)
 		unsigned long buf;
 		unsigned long size;
 	} l1_cache_data;
+<<<<<<< HEAD
 #ifndef CONFIG_MSM_CACHE_DUMP_ON_PANIC
 	unsigned int *imem_loc;
 #endif
+=======
+>>>>>>> cm-10.0
 	void *temp;
 	unsigned long total_size = d->l1_size + d->l2_size;
 
@@ -94,6 +122,11 @@ static int msm_cache_dump_probe(struct platform_device *pdev)
 		pr_err("%s: could not register L1 buffer ret = %d.\n",
 			__func__, ret);
 
+<<<<<<< HEAD
+=======
+	l1_dump = (struct l1_cache_dump *)msm_cache_dump_addr;
+
+>>>>>>> cm-10.0
 #if defined(CONFIG_MSM_CACHE_DUMP_ON_PANIC)
 	l1_cache_data.buf = msm_cache_dump_addr + d->l1_size;
 	l1_cache_data.size = d->l2_size;
@@ -104,11 +137,20 @@ static int msm_cache_dump_probe(struct platform_device *pdev)
 	if (ret)
 		pr_err("%s: could not register L2 buffer ret = %d.\n",
 			__func__, ret);
+<<<<<<< HEAD
 #else
 	imem_loc = ioremap(L2C_IMEM_ADDR, SZ_4K);
 	__raw_writel(msm_cache_dump_addr + d->l1_size, imem_loc);
 	iounmap(imem_loc);
 #endif
+=======
+#endif
+	__raw_writel(msm_cache_dump_addr + d->l1_size,
+			MSM_IMEM_BASE + L2_DUMP_OFFSET);
+
+
+	l2_dump = (struct l2_cache_dump *)(msm_cache_dump_addr + d->l1_size);
+>>>>>>> cm-10.0
 
 	atomic_notifier_chain_register(&panic_notifier_list,
 						&msm_cache_dump_blk);

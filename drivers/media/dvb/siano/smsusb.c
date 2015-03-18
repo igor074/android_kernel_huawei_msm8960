@@ -24,6 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <linux/usb.h>
 #include <linux/firmware.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #include "smscoreapi.h"
 #include "sms-cards.h"
@@ -556,6 +560,7 @@ static struct usb_driver smsusb_driver = {
 	.resume			= smsusb_resume,
 };
 
+<<<<<<< HEAD
 static int __init smsusb_module_init(void)
 {
 	int rc = usb_register(&smsusb_driver);
@@ -576,6 +581,9 @@ static void __exit smsusb_module_exit(void)
 
 module_init(smsusb_module_init);
 module_exit(smsusb_module_exit);
+=======
+module_usb_driver(smsusb_driver);
+>>>>>>> cm-10.0
 
 MODULE_DESCRIPTION("Driver for the Siano SMS1xxx USB dongle");
 MODULE_AUTHOR("Siano Mobile Silicon, INC. (uris@siano-ms.com)");

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,6 +19,10 @@
  * SMD RPC PING MODEM Driver
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/slab.h>
 #include <linux/kernel.h>
 #include <linux/err.h>
@@ -23,6 +31,10 @@
 #include <linux/debugfs.h>
 #include <linux/uaccess.h>
 #include <linux/kfifo.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <mach/msm_rpcrouter.h>
 
 #define PING_TEST_BASE 0x31

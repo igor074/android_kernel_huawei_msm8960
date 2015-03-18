@@ -36,6 +36,10 @@
 
 #include <linux/slab.h>
 #include <linux/nfs_fs.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include "acl.h"
 
 

@@ -9,9 +9,15 @@
 
 #include <asm/ptrace.h>
 #include <asm/pstate.h>
+<<<<<<< HEAD
 #include <asm/system.h>
 #include <asm/fpumacro.h>
 #include <asm/uaccess.h>
+=======
+#include <asm/fpumacro.h>
+#include <asm/uaccess.h>
+#include <asm/cacheflush.h>
+>>>>>>> cm-10.0
 
 /* OPF field of various VIS instructions.  */
 
@@ -713,17 +719,29 @@ static void pcmp(struct pt_regs *regs, unsigned int insn, unsigned int opf)
 			s16 b = (rs2 >> (i * 16)) & 0xffff;
 
 			if (a > b)
+<<<<<<< HEAD
 				rd_val |= 1 << i;
+=======
+				rd_val |= 8 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
 	case FCMPGT32_OPF:
 		for (i = 0; i < 2; i++) {
+<<<<<<< HEAD
 			s32 a = (rs1 >> (i * 32)) & 0xffff;
 			s32 b = (rs2 >> (i * 32)) & 0xffff;
 
 			if (a > b)
 				rd_val |= 1 << i;
+=======
+			s32 a = (rs1 >> (i * 32)) & 0xffffffff;
+			s32 b = (rs2 >> (i * 32)) & 0xffffffff;
+
+			if (a > b)
+				rd_val |= 2 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
@@ -733,17 +751,29 @@ static void pcmp(struct pt_regs *regs, unsigned int insn, unsigned int opf)
 			s16 b = (rs2 >> (i * 16)) & 0xffff;
 
 			if (a <= b)
+<<<<<<< HEAD
 				rd_val |= 1 << i;
+=======
+				rd_val |= 8 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
 	case FCMPLE32_OPF:
 		for (i = 0; i < 2; i++) {
+<<<<<<< HEAD
 			s32 a = (rs1 >> (i * 32)) & 0xffff;
 			s32 b = (rs2 >> (i * 32)) & 0xffff;
 
 			if (a <= b)
 				rd_val |= 1 << i;
+=======
+			s32 a = (rs1 >> (i * 32)) & 0xffffffff;
+			s32 b = (rs2 >> (i * 32)) & 0xffffffff;
+
+			if (a <= b)
+				rd_val |= 2 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
@@ -753,17 +783,29 @@ static void pcmp(struct pt_regs *regs, unsigned int insn, unsigned int opf)
 			s16 b = (rs2 >> (i * 16)) & 0xffff;
 
 			if (a != b)
+<<<<<<< HEAD
 				rd_val |= 1 << i;
+=======
+				rd_val |= 8 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
 	case FCMPNE32_OPF:
 		for (i = 0; i < 2; i++) {
+<<<<<<< HEAD
 			s32 a = (rs1 >> (i * 32)) & 0xffff;
 			s32 b = (rs2 >> (i * 32)) & 0xffff;
 
 			if (a != b)
 				rd_val |= 1 << i;
+=======
+			s32 a = (rs1 >> (i * 32)) & 0xffffffff;
+			s32 b = (rs2 >> (i * 32)) & 0xffffffff;
+
+			if (a != b)
+				rd_val |= 2 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
@@ -773,17 +815,29 @@ static void pcmp(struct pt_regs *regs, unsigned int insn, unsigned int opf)
 			s16 b = (rs2 >> (i * 16)) & 0xffff;
 
 			if (a == b)
+<<<<<<< HEAD
 				rd_val |= 1 << i;
+=======
+				rd_val |= 8 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 
 	case FCMPEQ32_OPF:
 		for (i = 0; i < 2; i++) {
+<<<<<<< HEAD
 			s32 a = (rs1 >> (i * 32)) & 0xffff;
 			s32 b = (rs2 >> (i * 32)) & 0xffff;
 
 			if (a == b)
 				rd_val |= 1 << i;
+=======
+			s32 a = (rs1 >> (i * 32)) & 0xffffffff;
+			s32 b = (rs2 >> (i * 32)) & 0xffffffff;
+
+			if (a == b)
+				rd_val |= 2 >> i;
+>>>>>>> cm-10.0
 		}
 		break;
 	}
@@ -802,7 +856,11 @@ int vis_emul(struct pt_regs *regs, unsigned int insn)
 
 	BUG_ON(regs->tstate & TSTATE_PRIV);
 
+<<<<<<< HEAD
 	perf_sw_event(PERF_COUNT_SW_EMULATION_FAULTS, 1, 0, regs, 0);
+=======
+	perf_sw_event(PERF_COUNT_SW_EMULATION_FAULTS, 1, regs, 0);
+>>>>>>> cm-10.0
 
 	if (test_thread_flag(TIF_32BIT))
 		pc = (u32)pc;

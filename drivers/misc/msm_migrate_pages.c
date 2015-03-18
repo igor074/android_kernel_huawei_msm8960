@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2010, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -14,6 +18,10 @@
 #include <linux/platform_device.h>
 #include <linux/memory.h>
 #include <linux/memory_hotplug.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <mach/msm_migrate_pages.h>
 
 static unsigned long unstable_memory_state;

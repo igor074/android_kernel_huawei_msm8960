@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,6 +29,7 @@ struct msm_cpuidle_state {
 	enum msm_pm_sleep_mode mode_nr;
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_CPU_IDLE
 void msm_cpuidle_set_states(struct msm_cpuidle_state *states,
 	int nr_states, struct msm_pm_platform_data *pm_data);
@@ -36,6 +41,18 @@ static inline void msm_cpuidle_set_states(struct msm_cpuidle_state *states,
 
 static inline int msm_cpuidle_init(void)
 { return -ENOSYS; }
+=======
+#ifdef CONFIG_PM
+s32 msm_cpuidle_get_deep_idle_latency(void);
+#else
+static inline s32 msm_cpuidle_get_deep_idle_latency(void) { return 0; }
+#endif
+
+#ifdef CONFIG_CPU_IDLE
+int msm_cpuidle_init(void);
+#else
+static inline int msm_cpuidle_init(void) { return -ENOSYS; }
+>>>>>>> cm-10.0
 #endif
 
 #ifdef CONFIG_MSM_SLEEP_STATS

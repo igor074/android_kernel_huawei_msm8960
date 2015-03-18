@@ -14,13 +14,20 @@ struct mm_struct;
 #include <asm/sigcontext.h>
 #include <asm/current.h>
 #include <asm/cpufeature.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/page.h>
 #include <asm/pgtable_types.h>
 #include <asm/percpu.h>
 #include <asm/msr.h>
 #include <asm/desc_defs.h>
 #include <asm/nops.h>
+<<<<<<< HEAD
+=======
+#include <asm/special_insns.h>
+>>>>>>> cm-10.0
 
 #include <linux/personality.h>
 #include <linux/cpumask.h>
@@ -29,6 +36,18 @@ struct mm_struct;
 #include <linux/math64.h>
 #include <linux/init.h>
 #include <linux/err.h>
+<<<<<<< HEAD
+=======
+#include <linux/irqflags.h>
+
+/*
+ * We handle most unaligned accesses in hardware.  On the other hand
+ * unaligned DMA can be quite expensive on some Nehalem processors.
+ *
+ * Based on this we disable the IP header alignment in network drivers.
+ */
+#define NET_IP_ALIGN	0
+>>>>>>> cm-10.0
 
 #define HBP_NUM 4
 /*
@@ -99,7 +118,10 @@ struct cpuinfo_x86 {
 	u16			apicid;
 	u16			initial_apicid;
 	u16			x86_clflush_size;
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
+=======
+>>>>>>> cm-10.0
 	/* number of cores as seen by the OS: */
 	u16			booted_cores;
 	/* Physical processor id: */
@@ -110,7 +132,11 @@ struct cpuinfo_x86 {
 	u8			compute_unit_id;
 	/* Index into per_cpu list: */
 	u16			cpu_index;
+<<<<<<< HEAD
 #endif
+=======
+	u32			microcode;
+>>>>>>> cm-10.0
 } __attribute__((__aligned__(SMP_CACHE_BYTES)));
 
 #define X86_VENDOR_INTEL	0
@@ -163,6 +189,10 @@ extern void early_cpu_init(void);
 extern void identify_boot_cpu(void);
 extern void identify_secondary_cpu(struct cpuinfo_x86 *);
 extern void print_cpu_info(struct cpuinfo_x86 *);
+<<<<<<< HEAD
+=======
+void print_cpu_msr(struct cpuinfo_x86 *);
+>>>>>>> cm-10.0
 extern void init_scattered_cpuid_features(struct cpuinfo_x86 *c);
 extern unsigned int init_intel_cacheinfo(struct cpuinfo_x86 *c);
 extern unsigned short num_cache_leaves;
@@ -179,7 +209,12 @@ static inline void native_cpuid(unsigned int *eax, unsigned int *ebx,
 	      "=b" (*ebx),
 	      "=c" (*ecx),
 	      "=d" (*edx)
+<<<<<<< HEAD
 	    : "0" (*eax), "2" (*ecx));
+=======
+	    : "0" (*eax), "2" (*ecx)
+	    : "memory");
+>>>>>>> cm-10.0
 }
 
 static inline void load_cr3(pgd_t *pgdir)
@@ -374,6 +409,11 @@ union thread_xstate {
 };
 
 struct fpu {
+<<<<<<< HEAD
+=======
+	unsigned int last_cpu;
+	unsigned int has_fpu;
+>>>>>>> cm-10.0
 	union thread_xstate *state;
 };
 
@@ -451,7 +491,11 @@ struct thread_struct {
 	unsigned long           ptrace_dr7;
 	/* Fault info: */
 	unsigned long		cr2;
+<<<<<<< HEAD
 	unsigned long		trap_no;
+=======
+	unsigned long		trap_nr;
+>>>>>>> cm-10.0
 	unsigned long		error_code;
 	/* floating point and extended processor state */
 	struct fpu		fpu;
@@ -472,6 +516,7 @@ struct thread_struct {
 	unsigned		io_bitmap_max;
 };
 
+<<<<<<< HEAD
 static inline unsigned long native_get_debugreg(int regno)
 {
 	unsigned long val = 0;	/* Damn you, gcc! */
@@ -527,6 +572,8 @@ static inline void native_set_debugreg(int regno, unsigned long value)
 	}
 }
 
+=======
+>>>>>>> cm-10.0
 /*
  * Set IOPL bits in EFLAGS from given mask
  */
@@ -572,6 +619,7 @@ static inline void native_swapgs(void)
 #define __cpuid			native_cpuid
 #define paravirt_enabled()	0
 
+<<<<<<< HEAD
 /*
  * These special macros can be used to get or set a debugging register
  */
@@ -580,6 +628,8 @@ static inline void native_swapgs(void)
 #define set_debugreg(value, register)				\
 	native_set_debugreg(register, value)
 
+=======
+>>>>>>> cm-10.0
 static inline void load_sp0(struct tss_struct *tss,
 			    struct thread_struct *thread)
 {
@@ -751,8 +801,11 @@ static inline void __sti_mwait(unsigned long eax, unsigned long ecx)
 		     :: "a" (eax), "c" (ecx));
 }
 
+<<<<<<< HEAD
 extern void mwait_idle_with_hints(unsigned long eax, unsigned long ecx);
 
+=======
+>>>>>>> cm-10.0
 extern void select_idle_routine(const struct cpuinfo_x86 *c);
 extern void init_amd_e400_c1e_mask(void);
 
@@ -926,9 +979,15 @@ extern unsigned long thread_saved_pc(struct task_struct *tsk);
 #define IA32_PAGE_OFFSET	((current->personality & ADDR_LIMIT_3GB) ? \
 					0xc0000000 : 0xFFFFe000)
 
+<<<<<<< HEAD
 #define TASK_SIZE		(test_thread_flag(TIF_IA32) ? \
 					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
 #define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child, TIF_IA32)) ? \
+=======
+#define TASK_SIZE		(test_thread_flag(TIF_ADDR32) ? \
+					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
+#define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child, TIF_ADDR32)) ? \
+>>>>>>> cm-10.0
 					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
 
 #define STACK_TOP		TASK_SIZE
@@ -950,6 +1009,15 @@ extern unsigned long thread_saved_pc(struct task_struct *tsk);
 
 #define task_pt_regs(tsk)	((struct pt_regs *)(tsk)->thread.sp0 - 1)
 extern unsigned long KSTK_ESP(struct task_struct *task);
+<<<<<<< HEAD
+=======
+
+/*
+ * User space RSP while inside the SYSCALL fast path
+ */
+DECLARE_PER_CPU(unsigned long, old_rsp);
+
+>>>>>>> cm-10.0
 #endif /* CONFIG_X86_64 */
 
 extern void start_thread(struct pt_regs *regs, unsigned long new_ip,
@@ -1021,4 +1089,17 @@ extern bool cpu_has_amd_erratum(const int *);
 #define cpu_has_amd_erratum(x)	(false)
 #endif /* CONFIG_CPU_SUP_AMD */
 
+<<<<<<< HEAD
+=======
+void cpu_idle_wait(void);
+
+extern unsigned long arch_align_stack(unsigned long sp);
+extern void free_init_pages(char *what, unsigned long begin, unsigned long end);
+
+void default_idle(void);
+bool set_pm_idle_to_default(void);
+
+void stop_this_cpu(void *dummy);
+
+>>>>>>> cm-10.0
 #endif /* _ASM_X86_PROCESSOR_H */

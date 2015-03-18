@@ -21,7 +21,10 @@
 #include <linux/if_ether.h>
 #include <linux/slab.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 
 #include <linux/inet.h>
@@ -96,11 +99,19 @@ static int rose_set_mac_address(struct net_device *dev, void *addr)
 	struct sockaddr *sa = addr;
 	int err;
 
+<<<<<<< HEAD
 	if (!memcpy(dev->dev_addr, sa->sa_data, dev->addr_len))
 		return 0;
 
 	if (dev->flags & IFF_UP) {
 		err = rose_add_loopback_node((rose_address *)dev->dev_addr);
+=======
+	if (!memcmp(dev->dev_addr, sa->sa_data, dev->addr_len))
+		return 0;
+
+	if (dev->flags & IFF_UP) {
+		err = rose_add_loopback_node((rose_address *)sa->sa_data);
+>>>>>>> cm-10.0
 		if (err)
 			return err;
 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -408,7 +412,11 @@ static struct msm_camera_i2c_reg_conf s5k3l1yx_recommend_settings[] = {
 	{0x3C13, 0xC0},
 	{0x3C14, 0x70},
 	{0x3C15, 0x80},
+<<<<<<< HEAD
 	{0x3C20, 0x00},
+=======
+	{0x3C20, 0x04},
+>>>>>>> cm-10.0
 	{0x3C23, 0x03},
 	{0x3C24, 0x00},
 	{0x3C50, 0x72},
@@ -481,7 +489,11 @@ static struct msm_sensor_output_info_t s5k3l1yx_dimensions[] = {
 		.line_length_pclk = 5336,
 		.frame_length_lines = 3052,
 		.vt_pixel_clk = 330000000,
+<<<<<<< HEAD
 		.op_pixel_clk = 320000000,
+=======
+		.op_pixel_clk = 264000000,
+>>>>>>> cm-10.0
 		.binning_factor = 1,
 	},
 	/* 30 fps preview */
@@ -491,7 +503,11 @@ static struct msm_sensor_output_info_t s5k3l1yx_dimensions[] = {
 		.line_length_pclk = 4480,
 		.frame_length_lines = 2456,
 		.vt_pixel_clk = 330000000,
+<<<<<<< HEAD
 		.op_pixel_clk = 320000000,
+=======
+		.op_pixel_clk = 264000000,
+>>>>>>> cm-10.0
 		.binning_factor = 1,
 	},
 	/* 60 fps video */
@@ -501,7 +517,11 @@ static struct msm_sensor_output_info_t s5k3l1yx_dimensions[] = {
 		.line_length_pclk = 5336,
 		.frame_length_lines = 992,
 		.vt_pixel_clk = 330000000,
+<<<<<<< HEAD
 		.op_pixel_clk = 320000000,
+=======
+		.op_pixel_clk = 264000000,
+>>>>>>> cm-10.0
 		.binning_factor = 1,
 	},
 	/* 90 fps video */
@@ -511,7 +531,11 @@ static struct msm_sensor_output_info_t s5k3l1yx_dimensions[] = {
 		.line_length_pclk = 5336,
 		.frame_length_lines = 664,
 		.vt_pixel_clk = 330000000,
+<<<<<<< HEAD
 		.op_pixel_clk = 320000000,
+=======
+		.op_pixel_clk = 264000000,
+>>>>>>> cm-10.0
 		.binning_factor = 1,
 	},
 	/* 120 fps video */
@@ -521,7 +545,11 @@ static struct msm_sensor_output_info_t s5k3l1yx_dimensions[] = {
 		.line_length_pclk = 5336,
 		.frame_length_lines = 514,
 		.vt_pixel_clk = 330000000,
+<<<<<<< HEAD
 		.op_pixel_clk = 320000000,
+=======
+		.op_pixel_clk = 264000000,
+>>>>>>> cm-10.0
 		.binning_factor = 1,
 	},
 	/* 24 fps snapshot */
@@ -543,7 +571,10 @@ static struct msm_camera_csid_vc_cfg s5k3l1yx_cid_cfg[] = {
 
 static struct msm_camera_csi2_params s5k3l1yx_csi_params = {
 	.csid_params = {
+<<<<<<< HEAD
 		.lane_assign = 0xe4,
+=======
+>>>>>>> cm-10.0
 		.lane_cnt = 4,
 		.lut_params = {
 			.num_cid = ARRAY_SIZE(s5k3l1yx_cid_cfg),
@@ -654,6 +685,10 @@ static struct msm_sensor_fn_t s5k3l1yx_func_tbl = {
 	.sensor_power_up = msm_sensor_power_up,
 	.sensor_power_down = msm_sensor_power_down,
 	.sensor_adjust_frame_lines = msm_sensor_adjust_frame_lines,
+<<<<<<< HEAD
+=======
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
+>>>>>>> cm-10.0
 };
 
 static struct msm_sensor_reg_t s5k3l1yx_regs = {

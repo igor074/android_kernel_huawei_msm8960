@@ -21,12 +21,20 @@
 
 #include <linux/init.h>
 #include <linux/sched.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/file.h>
 #include <linux/slab.h>
 #include <linux/time.h>
 #include <linux/ctype.h>
 #include <linux/pm.h>
+<<<<<<< HEAD
 
+=======
+#include <linux/device.h>
+>>>>>>> cm-10.0
 #include <sound/core.h>
 #include <sound/control.h>
 #include <sound/info.h>

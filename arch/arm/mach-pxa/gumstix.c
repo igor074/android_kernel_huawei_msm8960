@@ -106,7 +106,11 @@ static void __init gumstix_mmc_init(void)
 }
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_USB_GADGET_PXA25X
+=======
+#ifdef CONFIG_USB_PXA25X
+>>>>>>> cm-10.0
 static struct gpio_vbus_mach_info gumstix_udc_info = {
 	.gpio_vbus		= GPIO_GUMSTIX_USB_GPIOn,
 	.gpio_pullup		= GPIO_GUMSTIX_USB_GPIOx,
@@ -233,9 +237,20 @@ static void __init gumstix_init(void)
 }
 
 MACHINE_START(GUMSTIX, "Gumstix")
+<<<<<<< HEAD
 	.boot_params	= 0xa0000100, /* match u-boot bi_boot_params */
 	.map_io		= pxa25x_map_io,
 	.init_irq	= pxa25x_init_irq,
 	.timer		= &pxa_timer,
 	.init_machine	= gumstix_init,
+=======
+	.atag_offset	= 0x100, /* match u-boot bi_boot_params */
+	.map_io		= pxa25x_map_io,
+	.nr_irqs	= PXA_NR_IRQS,
+	.init_irq	= pxa25x_init_irq,
+	.handle_irq	= pxa25x_handle_irq,
+	.timer		= &pxa_timer,
+	.init_machine	= gumstix_init,
+	.restart	= pxa_restart,
+>>>>>>> cm-10.0
 MACHINE_END

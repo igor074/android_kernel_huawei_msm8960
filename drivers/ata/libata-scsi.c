@@ -37,6 +37,10 @@
 #include <linux/kernel.h>
 #include <linux/blkdev.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <scsi/scsi.h>
 #include <scsi/scsi_host.h>
 #include <scsi/scsi_cmnd.h>
@@ -1108,8 +1112,12 @@ static int ata_scsi_dev_config(struct scsi_device *sdev,
 		/* configure draining */
 		buf = kmalloc(ATAPI_MAX_DRAIN, q->bounce_gfp | GFP_KERNEL);
 		if (!buf) {
+<<<<<<< HEAD
 			ata_dev_printk(dev, KERN_ERR,
 				       "drain buffer allocation failed\n");
+=======
+			ata_dev_err(dev, "drain buffer allocation failed\n");
+>>>>>>> cm-10.0
 			return -ENOMEM;
 		}
 
@@ -1127,7 +1135,11 @@ static int ata_scsi_dev_config(struct scsi_device *sdev,
 	 * IDENTIFY_PACKET is executed as ATA_PROT_PIO.
 	 */
 	if (sdev->sector_size > PAGE_SIZE)
+<<<<<<< HEAD
 		ata_dev_printk(dev, KERN_WARNING,
+=======
+		ata_dev_warn(dev,
+>>>>>>> cm-10.0
 			"sector_size=%u > PAGE_SIZE, PIO may malfunction\n",
 			sdev->sector_size);
 
@@ -1216,11 +1228,17 @@ void ata_scsi_slave_destroy(struct scsi_device *sdev)
 }
 
 /**
+<<<<<<< HEAD
  *	ata_scsi_change_queue_depth - SCSI callback for queue depth config
+=======
+ *	__ata_change_queue_depth - helper for ata_scsi_change_queue_depth
+ *	@ap: ATA port to which the device change the queue depth
+>>>>>>> cm-10.0
  *	@sdev: SCSI device to configure queue depth for
  *	@queue_depth: new queue depth
  *	@reason: calling context
  *
+<<<<<<< HEAD
  *	This is libata standard hostt->change_queue_depth callback.
  *	SCSI will call into this callback when user tries to set queue
  *	depth via sysfs.
@@ -1235,6 +1253,15 @@ int ata_scsi_change_queue_depth(struct scsi_device *sdev, int queue_depth,
 				int reason)
 {
 	struct ata_port *ap = ata_shost_to_port(sdev->host);
+=======
+ *	libsas and libata have different approaches for associating a sdev to
+ *	its ata_port.
+ *
+ */
+int __ata_change_queue_depth(struct ata_port *ap, struct scsi_device *sdev,
+			     int queue_depth, int reason)
+{
+>>>>>>> cm-10.0
 	struct ata_device *dev;
 	unsigned long flags;
 
@@ -1270,6 +1297,33 @@ int ata_scsi_change_queue_depth(struct scsi_device *sdev, int queue_depth,
 }
 
 /**
+<<<<<<< HEAD
+=======
+ *	ata_scsi_change_queue_depth - SCSI callback for queue depth config
+ *	@sdev: SCSI device to configure queue depth for
+ *	@queue_depth: new queue depth
+ *	@reason: calling context
+ *
+ *	This is libata standard hostt->change_queue_depth callback.
+ *	SCSI will call into this callback when user tries to set queue
+ *	depth via sysfs.
+ *
+ *	LOCKING:
+ *	SCSI layer (we don't care)
+ *
+ *	RETURNS:
+ *	Newly configured queue depth.
+ */
+int ata_scsi_change_queue_depth(struct scsi_device *sdev, int queue_depth,
+				int reason)
+{
+	struct ata_port *ap = ata_shost_to_port(sdev->host);
+
+	return __ata_change_queue_depth(ap, sdev, queue_depth, reason);
+}
+
+/**
+>>>>>>> cm-10.0
  *	ata_scsi_start_stop_xlat - Translate SCSI START STOP UNIT command
  *	@qc: Storage for translated ATA taskfile
  *
@@ -1784,8 +1838,12 @@ static int ata_scsi_translate(struct ata_device *dev, struct scsi_cmnd *cmd,
 	if (cmd->sc_data_direction == DMA_FROM_DEVICE ||
 	    cmd->sc_data_direction == DMA_TO_DEVICE) {
 		if (unlikely(scsi_bufflen(cmd) < 1)) {
+<<<<<<< HEAD
 			ata_dev_printk(dev, KERN_WARNING,
 				       "WARNING: zero len r/w req\n");
+=======
+			ata_dev_warn(dev, "WARNING: zero len r/w req\n");
+>>>>>>> cm-10.0
 			goto err_did;
 		}
 
@@ -2969,9 +3027,14 @@ static unsigned int ata_scsi_pass_thru(struct ata_queued_cmd *qc)
 		 * with the cached multi_count of libata
 		 */
 		if (multi_count != dev->multi_count)
+<<<<<<< HEAD
 			ata_dev_printk(dev, KERN_WARNING,
 				       "invalid multi_count %u ignored\n",
 				       multi_count);
+=======
+			ata_dev_warn(dev, "invalid multi_count %u ignored\n",
+				     multi_count);
+>>>>>>> cm-10.0
 	}
 
 	/*
@@ -3365,6 +3428,10 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
 		if (!shost)
 			goto err_alloc;
 
+<<<<<<< HEAD
+=======
+		shost->eh_noresume = 1;
+>>>>>>> cm-10.0
 		*(struct ata_port **)&shost->hostdata[0] = ap;
 		ap->scsi_host = shost;
 
@@ -3382,7 +3449,12 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
 		 */
 		shost->max_host_blocked = 1;
 
+<<<<<<< HEAD
 		rc = scsi_add_host(ap->scsi_host, ap->host->dev);
+=======
+		rc = scsi_add_host_with_dma(ap->scsi_host,
+						&ap->tdev, ap->host->dev);
+>>>>>>> cm-10.0
 		if (rc)
 			goto err_add;
 	}
@@ -3466,9 +3538,14 @@ void ata_scsi_scan_host(struct ata_port *ap, int sync)
 			goto repeat;
 		}
 
+<<<<<<< HEAD
 		ata_port_printk(ap, KERN_ERR, "WARNING: synchronous SCSI scan "
 				"failed without making any progress,\n"
 				"                  switching to async\n");
+=======
+		ata_port_err(ap,
+			     "WARNING: synchronous SCSI scan failed without making any progress, switching to async\n");
+>>>>>>> cm-10.0
 	}
 
 	queue_delayed_work(system_long_wq, &ap->hotplug_task,
@@ -3550,8 +3627,13 @@ static void ata_scsi_remove_dev(struct ata_device *dev)
 	mutex_unlock(&ap->scsi_host->scan_mutex);
 
 	if (sdev) {
+<<<<<<< HEAD
 		ata_dev_printk(dev, KERN_INFO, "detaching (SCSI %s)\n",
 			       dev_name(&sdev->sdev_gendev));
+=======
+		ata_dev_info(dev, "detaching (SCSI %s)\n",
+			     dev_name(&sdev->sdev_gendev));
+>>>>>>> cm-10.0
 
 		scsi_remove_device(sdev);
 		scsi_device_put(sdev);
@@ -3823,6 +3905,29 @@ void ata_sas_port_stop(struct ata_port *ap)
 EXPORT_SYMBOL_GPL(ata_sas_port_stop);
 
 /**
+<<<<<<< HEAD
+=======
+ * ata_sas_async_probe - simply schedule probing and return
+ * @ap: Port to probe
+ *
+ * For batch scheduling of probe for sas attached ata devices, assumes
+ * the port has already been through ata_sas_port_init()
+ */
+void ata_sas_async_probe(struct ata_port *ap)
+{
+	__ata_port_probe(ap);
+}
+EXPORT_SYMBOL_GPL(ata_sas_async_probe);
+
+int ata_sas_sync_probe(struct ata_port *ap)
+{
+	return ata_port_probe(ap);
+}
+EXPORT_SYMBOL_GPL(ata_sas_sync_probe);
+
+
+/**
+>>>>>>> cm-10.0
  *	ata_sas_port_init - Initialize a SATA device
  *	@ap: SATA port to initialize
  *
@@ -3837,12 +3942,19 @@ int ata_sas_port_init(struct ata_port *ap)
 {
 	int rc = ap->ops->port_start(ap);
 
+<<<<<<< HEAD
 	if (!rc) {
 		ap->print_id = ata_print_id++;
 		rc = ata_port_probe(ap);
 	}
 
 	return rc;
+=======
+	if (rc)
+		return rc;
+	ap->print_id = atomic_inc_return(&ata_print_id);
+	return 0;
+>>>>>>> cm-10.0
 }
 EXPORT_SYMBOL_GPL(ata_sas_port_init);
 

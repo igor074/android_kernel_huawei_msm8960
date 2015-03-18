@@ -27,6 +27,10 @@
 
 #include <linux/cpufreq.h>
 #include <linux/timer.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #include <asm/hw_irq.h>
 #include <asm/io.h>

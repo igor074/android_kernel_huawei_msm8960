@@ -62,7 +62,12 @@ struct nlm_host *nlmclnt_init(const struct nlmclnt_initdata *nlm_init)
 
 	host = nlmclnt_lookup_host(nlm_init->address, nlm_init->addrlen,
 				   nlm_init->protocol, nlm_version,
+<<<<<<< HEAD
 				   nlm_init->hostname, nlm_init->noresvport);
+=======
+				   nlm_init->hostname, nlm_init->noresvport,
+				   nlm_init->net);
+>>>>>>> cm-10.0
 	if (host == NULL) {
 		lockd_down();
 		return ERR_PTR(-ENOLCK);

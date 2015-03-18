@@ -1134,7 +1134,11 @@ static int ocfs2_adjust_rightmost_branch(handle_t *handle,
 	}
 
 	el = path_leaf_el(path);
+<<<<<<< HEAD
 	rec = &el->l_recs[le32_to_cpu(el->l_next_free_rec) - 1];
+=======
+	rec = &el->l_recs[le16_to_cpu(el->l_next_free_rec) - 1];
+>>>>>>> cm-10.0
 
 	ocfs2_adjust_rightmost_records(handle, et, path, rec);
 
@@ -5699,7 +5703,11 @@ int ocfs2_remove_btree_range(struct inode *inode,
 					   OCFS2_JOURNAL_ACCESS_WRITE);
 	if (ret) {
 		mlog_errno(ret);
+<<<<<<< HEAD
 		goto out;
+=======
+		goto out_commit;
+>>>>>>> cm-10.0
 	}
 
 	dquot_free_space_nodirty(inode,

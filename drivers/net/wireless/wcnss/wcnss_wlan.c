@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -22,6 +26,13 @@
 #include <linux/jiffies.h>
 #include <linux/gpio.h>
 #include <mach/peripheral-loader.h>
+<<<<<<< HEAD
+=======
+#include <mach/msm_smd.h>
+#ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
+#include "wcnss_prealloc.h"
+#endif
+>>>>>>> cm-10.0
 
 #define DEVICE "wcnss_wlan"
 #define VERSION "1.01"
@@ -45,7 +56,11 @@ static struct {
 	int		smd_channel_ready;
 	unsigned int	serial_number;
 	int		thermal_mitigation;
+<<<<<<< HEAD
 	void		(*tm_notify)(int);
+=======
+	void		(*tm_notify)(struct device *, int);
+>>>>>>> cm-10.0
 	struct wcnss_wlan_config wlan_config;
 	struct delayed_work wcnss_work;
 } *penv = NULL;
@@ -99,7 +114,11 @@ static ssize_t wcnss_thermal_mitigation_store(struct device *dev,
 		return -EINVAL;
 	penv->thermal_mitigation = value;
 	if (penv->tm_notify)
+<<<<<<< HEAD
 		(penv->tm_notify)(value);
+=======
+		(penv->tm_notify)(dev, value);
+>>>>>>> cm-10.0
 	return count;
 }
 
@@ -275,14 +294,26 @@ void wcnss_wlan_unregister_pm_ops(struct device *dev,
 }
 EXPORT_SYMBOL(wcnss_wlan_unregister_pm_ops);
 
+<<<<<<< HEAD
 void wcnss_register_thermal_mitigation(void (*tm_notify)(int))
 {
 	if (penv && tm_notify)
+=======
+void wcnss_register_thermal_mitigation(struct device *dev,
+				void (*tm_notify)(struct device *, int))
+{
+	if (penv && dev && tm_notify)
+>>>>>>> cm-10.0
 		penv->tm_notify = tm_notify;
 }
 EXPORT_SYMBOL(wcnss_register_thermal_mitigation);
 
+<<<<<<< HEAD
 void wcnss_unregister_thermal_mitigation(void (*tm_notify)(int))
+=======
+void wcnss_unregister_thermal_mitigation(
+				void (*tm_notify)(struct device *, int))
+>>>>>>> cm-10.0
 {
 	if (penv && tm_notify) {
 		if (tm_notify != penv->tm_notify)
@@ -501,10 +532,25 @@ static struct platform_driver wcnss_wlan_driver = {
 
 static int __init wcnss_wlan_init(void)
 {
+<<<<<<< HEAD
 	platform_driver_register(&wcnss_wlan_driver);
 	platform_driver_register(&wcnss_wlan_ctrl_driver);
 
 	return 0;
+=======
+	int ret = 0;
+
+	platform_driver_register(&wcnss_wlan_driver);
+	platform_driver_register(&wcnss_wlan_ctrl_driver);
+
+#ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
+	ret = wcnss_prealloc_init();
+	if (ret < 0)
+		pr_err("wcnss: pre-allocation failed\n");
+#endif
+
+	return ret;
+>>>>>>> cm-10.0
 }
 
 static void __exit wcnss_wlan_exit(void)
@@ -520,6 +566,12 @@ static void __exit wcnss_wlan_exit(void)
 
 	platform_driver_unregister(&wcnss_wlan_ctrl_driver);
 	platform_driver_unregister(&wcnss_wlan_driver);
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
+	wcnss_prealloc_deinit();
+#endif
+>>>>>>> cm-10.0
 }
 
 module_init(wcnss_wlan_init);

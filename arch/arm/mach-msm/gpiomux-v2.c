@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,13 +17,17 @@
 #include <linux/io.h>
 #include <mach/msm_iomap.h>
 #include <mach/gpiomux.h>
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
 #include <linux/module.h>
 #endif
+=======
+>>>>>>> cm-10.0
 
 #define GPIO_CFG(n)    (MSM_TLMM_BASE + 0x1000 + (0x10 * n))
 #define GPIO_IN_OUT(n) (MSM_TLMM_BASE + 0x1004 + (0x10 * n))
 
+<<<<<<< HEAD
 #ifdef CONFIG_HUAWEI_KERNEL
 #define GPIO_OUT_0 (MSM_TLMM_BASE + 0x3000)
 #define GPIO_OUT_1 (MSM_TLMM_BASE + 0x3004)
@@ -29,6 +37,8 @@
 #define GPIO_OUT_5 (MSM_TLMM_BASE + 0x3014)
 #endif
 
+=======
+>>>>>>> cm-10.0
 void __msm_gpiomux_write(unsigned gpio, struct gpiomux_setting val)
 {
 	uint32_t bits;
@@ -42,6 +52,7 @@ void __msm_gpiomux_write(unsigned gpio, struct gpiomux_setting val)
 	__raw_writel(bits, GPIO_CFG(gpio));
 	mb();
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_HUAWEI_KERNEL
 unsigned gpio_func_config_read(unsigned gpio)
@@ -82,3 +93,5 @@ void gpio_0_out_config_write(uint32_t bits)
 EXPORT_SYMBOL(gpio_0_out_config_write);
 
 #endif
+=======
+>>>>>>> cm-10.0

@@ -135,4 +135,8 @@
 
 #define MV88F6282_DEV_ID	0x6282
 #define MV88F6282_REV_A0	0
+<<<<<<< HEAD
+=======
+#define MV88F6282_REV_A1	1
+>>>>>>> cm-10.0
 #endif

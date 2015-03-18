@@ -188,14 +188,23 @@ ip_vs_conn_stats(struct ip_vs_conn *cp, struct ip_vs_service *svc)
 }
 
 
+<<<<<<< HEAD
 static inline int
+=======
+static inline void
+>>>>>>> cm-10.0
 ip_vs_set_state(struct ip_vs_conn *cp, int direction,
 		const struct sk_buff *skb,
 		struct ip_vs_proto_data *pd)
 {
+<<<<<<< HEAD
 	if (unlikely(!pd->pp->state_transition))
 		return 0;
 	return pd->pp->state_transition(cp, direction, skb, pd);
+=======
+	if (likely(pd->pp->state_transition))
+		pd->pp->state_transition(cp, direction, skb, pd);
+>>>>>>> cm-10.0
 }
 
 static inline int
@@ -233,6 +242,10 @@ ip_vs_sched_persist(struct ip_vs_service *svc,
 	__be16 dport = 0;		/* destination port to forward */
 	unsigned int flags;
 	struct ip_vs_conn_param param;
+<<<<<<< HEAD
+=======
+	const union nf_inet_addr fwmark = { .ip = htonl(svc->fwmark) };
+>>>>>>> cm-10.0
 	union nf_inet_addr snet;	/* source network of the client,
 					   after masking */
 
@@ -268,7 +281,10 @@ ip_vs_sched_persist(struct ip_vs_service *svc,
 	{
 		int protocol = iph.protocol;
 		const union nf_inet_addr *vaddr = &iph.daddr;
+<<<<<<< HEAD
 		const union nf_inet_addr fwmark = { .ip = htonl(svc->fwmark) };
+=======
+>>>>>>> cm-10.0
 		__be16 vport = 0;
 
 		if (dst_port == svc->port) {
@@ -530,7 +546,11 @@ int ip_vs_leave(struct ip_vs_service *svc, struct sk_buff *skb,
 	   a cache_bypass connection entry */
 	ipvs = net_ipvs(net);
 	if (ipvs->sysctl_cache_bypass && svc->fwmark && unicast) {
+<<<<<<< HEAD
 		int ret, cs;
+=======
+		int ret;
+>>>>>>> cm-10.0
 		struct ip_vs_conn *cp;
 		unsigned int flags = (svc->flags & IP_VS_SVC_F_ONEPACKET &&
 				      iph.protocol == IPPROTO_UDP)?
@@ -557,7 +577,11 @@ int ip_vs_leave(struct ip_vs_service *svc, struct sk_buff *skb,
 		ip_vs_in_stats(cp, skb);
 
 		/* set state */
+<<<<<<< HEAD
 		cs = ip_vs_set_state(cp, IP_VS_DIR_INPUT, skb, pd);
+=======
+		ip_vs_set_state(cp, IP_VS_DIR_INPUT, skb, pd);
+>>>>>>> cm-10.0
 
 		/* transmit the first SYN packet */
 		ret = cp->packet_xmit(skb, cp, pd->pp);
@@ -852,7 +876,11 @@ static int ip_vs_out_icmp(struct sk_buff *skb, int *related,
 	*related = 1;
 
 	/* reassemble IP fragments */
+<<<<<<< HEAD
 	if (ip_hdr(skb)->frag_off & htons(IP_MF | IP_OFFSET)) {
+=======
+	if (ip_is_fragment(ip_hdr(skb))) {
+>>>>>>> cm-10.0
 		if (ip_vs_gather_frags(skb, ip_vs_defrag_user(hooknum)))
 			return NF_STOLEN;
 	}
@@ -984,7 +1012,11 @@ static int ip_vs_out_icmp_v6(struct sk_buff *skb, int *related,
 	if (!cp)
 		return NF_ACCEPT;
 
+<<<<<<< HEAD
 	ipv6_addr_copy(&snet.in6, &iph->saddr);
+=======
+	snet.in6 = iph->saddr;
+>>>>>>> cm-10.0
 	return handle_response_icmp(AF_INET6, skb, &snet, cih->nexthdr, cp,
 				    pp, offset, sizeof(struct ipv6hdr));
 }
@@ -1156,8 +1188,12 @@ ip_vs_out(unsigned int hooknum, struct sk_buff *skb, int af)
 		ip_vs_fill_iphdr(af, skb_network_header(skb), &iph);
 	} else
 #endif
+<<<<<<< HEAD
 		if (unlikely(ip_hdr(skb)->frag_off & htons(IP_MF|IP_OFFSET) &&
 			     !pp->dont_defrag)) {
+=======
+		if (unlikely(ip_is_fragment(ip_hdr(skb)) && !pp->dont_defrag)) {
+>>>>>>> cm-10.0
 			if (ip_vs_gather_frags(skb,
 					       ip_vs_defrag_user(hooknum)))
 				return NF_STOLEN;
@@ -1310,7 +1346,11 @@ ip_vs_in_icmp(struct sk_buff *skb, int *related, unsigned int hooknum)
 	*related = 1;
 
 	/* reassemble IP fragments */
+<<<<<<< HEAD
 	if (ip_hdr(skb)->frag_off & htons(IP_MF | IP_OFFSET)) {
+=======
+	if (ip_is_fragment(ip_hdr(skb))) {
+>>>>>>> cm-10.0
 		if (ip_vs_gather_frags(skb, ip_vs_defrag_user(hooknum)))
 			return NF_STOLEN;
 	}
@@ -1384,7 +1424,11 @@ ip_vs_in_icmp(struct sk_buff *skb, int *related, unsigned int hooknum)
 		offset += 2 * sizeof(__u16);
 	verdict = ip_vs_icmp_xmit(skb, cp, pp, offset, hooknum);
 
+<<<<<<< HEAD
   out:
+=======
+out:
+>>>>>>> cm-10.0
 	__ip_vs_conn_put(cp);
 
 	return verdict;
@@ -1491,7 +1535,11 @@ ip_vs_in(unsigned int hooknum, struct sk_buff *skb, int af)
 	struct ip_vs_protocol *pp;
 	struct ip_vs_proto_data *pd;
 	struct ip_vs_conn *cp;
+<<<<<<< HEAD
 	int ret, restart, pkts;
+=======
+	int ret, pkts;
+>>>>>>> cm-10.0
 	struct netns_ipvs *ipvs;
 
 	/* Already marked as IPVS request or reply? */
@@ -1592,7 +1640,11 @@ ip_vs_in(unsigned int hooknum, struct sk_buff *skb, int af)
 	}
 
 	ip_vs_in_stats(cp, skb);
+<<<<<<< HEAD
 	restart = ip_vs_set_state(cp, IP_VS_DIR_INPUT, skb, pd);
+=======
+	ip_vs_set_state(cp, IP_VS_DIR_INPUT, skb, pd);
+>>>>>>> cm-10.0
 	if (cp->packet_xmit)
 		ret = cp->packet_xmit(skb, cp, pp);
 		/* do not touch skb anymore */
@@ -1879,10 +1931,16 @@ static int __net_init __ip_vs_init(struct net *net)
 	struct netns_ipvs *ipvs;
 
 	ipvs = net_generic(net, ip_vs_net_id);
+<<<<<<< HEAD
 	if (ipvs == NULL) {
 		pr_err("%s(): no memory.\n", __func__);
 		return -ENOMEM;
 	}
+=======
+	if (ipvs == NULL)
+		return -ENOMEM;
+
+>>>>>>> cm-10.0
 	/* Hold the beast until a service is registerd */
 	ipvs->enable = 0;
 	ipvs->net = net;
@@ -1891,6 +1949,7 @@ static int __net_init __ip_vs_init(struct net *net)
 	atomic_inc(&ipvs_netns_cnt);
 	net->ipvs = ipvs;
 
+<<<<<<< HEAD
 	if (__ip_vs_estimator_init(net) < 0)
 		goto estimator_fail;
 
@@ -1907,6 +1966,24 @@ static int __net_init __ip_vs_init(struct net *net)
 		goto conn_fail;
 
 	if (__ip_vs_sync_init(net) < 0)
+=======
+	if (ip_vs_estimator_net_init(net) < 0)
+		goto estimator_fail;
+
+	if (ip_vs_control_net_init(net) < 0)
+		goto control_fail;
+
+	if (ip_vs_protocol_net_init(net) < 0)
+		goto protocol_fail;
+
+	if (ip_vs_app_net_init(net) < 0)
+		goto app_fail;
+
+	if (ip_vs_conn_net_init(net) < 0)
+		goto conn_fail;
+
+	if (ip_vs_sync_net_init(net) < 0)
+>>>>>>> cm-10.0
 		goto sync_fail;
 
 	printk(KERN_INFO "IPVS: Creating netns size=%zu id=%d\n",
@@ -1917,6 +1994,7 @@ static int __net_init __ip_vs_init(struct net *net)
  */
 
 sync_fail:
+<<<<<<< HEAD
 	__ip_vs_conn_cleanup(net);
 conn_fail:
 	__ip_vs_app_cleanup(net);
@@ -1927,11 +2005,25 @@ protocol_fail:
 control_fail:
 	__ip_vs_estimator_cleanup(net);
 estimator_fail:
+=======
+	ip_vs_conn_net_cleanup(net);
+conn_fail:
+	ip_vs_app_net_cleanup(net);
+app_fail:
+	ip_vs_protocol_net_cleanup(net);
+protocol_fail:
+	ip_vs_control_net_cleanup(net);
+control_fail:
+	ip_vs_estimator_net_cleanup(net);
+estimator_fail:
+	net->ipvs = NULL;
+>>>>>>> cm-10.0
 	return -ENOMEM;
 }
 
 static void __net_exit __ip_vs_cleanup(struct net *net)
 {
+<<<<<<< HEAD
 	__ip_vs_service_cleanup(net);	/* ip_vs_flush() with locks */
 	__ip_vs_conn_cleanup(net);
 	__ip_vs_app_cleanup(net);
@@ -1939,6 +2031,16 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
 	__ip_vs_control_cleanup(net);
 	__ip_vs_estimator_cleanup(net);
 	IP_VS_DBG(2, "ipvs netns %d released\n", net_ipvs(net)->gen);
+=======
+	ip_vs_service_net_cleanup(net);	/* ip_vs_flush() with locks */
+	ip_vs_conn_net_cleanup(net);
+	ip_vs_app_net_cleanup(net);
+	ip_vs_protocol_net_cleanup(net);
+	ip_vs_control_net_cleanup(net);
+	ip_vs_estimator_net_cleanup(net);
+	IP_VS_DBG(2, "ipvs netns %d released\n", net_ipvs(net)->gen);
+	net->ipvs = NULL;
+>>>>>>> cm-10.0
 }
 
 static void __net_exit __ip_vs_dev_cleanup(struct net *net)
@@ -1946,7 +2048,11 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
 	EnterFunction(2);
 	net_ipvs(net)->enable = 0;	/* Disable packet reception */
 	smp_wmb();
+<<<<<<< HEAD
 	__ip_vs_sync_cleanup(net);
+=======
+	ip_vs_sync_net_cleanup(net);
+>>>>>>> cm-10.0
 	LeaveFunction(2);
 }
 
@@ -1968,15 +2074,23 @@ static int __init ip_vs_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
 	ip_vs_estimator_init();
 	ret = ip_vs_control_init();
 	if (ret < 0) {
 		pr_err("can't setup control.\n");
 		goto cleanup_estimator;
+=======
+	ret = ip_vs_control_init();
+	if (ret < 0) {
+		pr_err("can't setup control.\n");
+		goto exit;
+>>>>>>> cm-10.0
 	}
 
 	ip_vs_protocol_init();
 
+<<<<<<< HEAD
 	ret = ip_vs_app_init();
 	if (ret < 0) {
 		pr_err("can't setup application helper.\n");
@@ -1993,11 +2107,21 @@ static int __init ip_vs_init(void)
 	if (ret < 0) {
 		pr_err("can't setup sync data.\n");
 		goto cleanup_conn;
+=======
+	ret = ip_vs_conn_init();
+	if (ret < 0) {
+		pr_err("can't setup connection table.\n");
+		goto cleanup_protocol;
+>>>>>>> cm-10.0
 	}
 
 	ret = register_pernet_subsys(&ipvs_core_ops);	/* Alloc ip_vs struct */
 	if (ret < 0)
+<<<<<<< HEAD
 		goto cleanup_sync;
+=======
+		goto cleanup_conn;
+>>>>>>> cm-10.0
 
 	ret = register_pernet_device(&ipvs_core_dev_ops);
 	if (ret < 0)
@@ -2009,14 +2133,29 @@ static int __init ip_vs_init(void)
 		goto cleanup_dev;
 	}
 
+<<<<<<< HEAD
+=======
+	ret = ip_vs_register_nl_ioctl();
+	if (ret < 0) {
+		pr_err("can't register netlink/ioctl.\n");
+		goto cleanup_hooks;
+	}
+
+>>>>>>> cm-10.0
 	pr_info("ipvs loaded.\n");
 
 	return ret;
 
+<<<<<<< HEAD
+=======
+cleanup_hooks:
+	nf_unregister_hooks(ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+>>>>>>> cm-10.0
 cleanup_dev:
 	unregister_pernet_device(&ipvs_core_dev_ops);
 cleanup_sub:
 	unregister_pernet_subsys(&ipvs_core_ops);
+<<<<<<< HEAD
 cleanup_sync:
 	ip_vs_sync_cleanup();
   cleanup_conn:
@@ -2028,11 +2167,20 @@ cleanup_sync:
 	ip_vs_control_cleanup();
   cleanup_estimator:
 	ip_vs_estimator_cleanup();
+=======
+cleanup_conn:
+	ip_vs_conn_cleanup();
+cleanup_protocol:
+	ip_vs_protocol_cleanup();
+	ip_vs_control_cleanup();
+exit:
+>>>>>>> cm-10.0
 	return ret;
 }
 
 static void __exit ip_vs_cleanup(void)
 {
+<<<<<<< HEAD
 	nf_unregister_hooks(ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
 	unregister_pernet_device(&ipvs_core_dev_ops);
 	unregister_pernet_subsys(&ipvs_core_ops);	/* free ip_vs struct */
@@ -2042,6 +2190,15 @@ static void __exit ip_vs_cleanup(void)
 	ip_vs_protocol_cleanup();
 	ip_vs_control_cleanup();
 	ip_vs_estimator_cleanup();
+=======
+	ip_vs_unregister_nl_ioctl();
+	nf_unregister_hooks(ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+	unregister_pernet_device(&ipvs_core_dev_ops);
+	unregister_pernet_subsys(&ipvs_core_ops);	/* free ip_vs struct */
+	ip_vs_conn_cleanup();
+	ip_vs_protocol_cleanup();
+	ip_vs_control_cleanup();
+>>>>>>> cm-10.0
 	pr_info("ipvs unloaded.\n");
 }
 

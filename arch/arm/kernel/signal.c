@@ -66,12 +66,22 @@ const unsigned long syscall_restart_code[2] = {
  */
 asmlinkage int sys_sigsuspend(int restart, unsigned long oldmask, old_sigset_t mask)
 {
+<<<<<<< HEAD
 	mask &= _BLOCKABLE;
 	spin_lock_irq(&current->sighand->siglock);
 	current->saved_sigmask = current->blocked;
 	siginitset(&current->blocked, mask);
 	recalc_sigpending();
 	spin_unlock_irq(&current->sighand->siglock);
+=======
+	sigset_t blocked;
+
+	current->saved_sigmask = current->blocked;
+
+	mask &= _BLOCKABLE;
+	siginitset(&blocked, mask);
+	set_current_blocked(&blocked);
+>>>>>>> cm-10.0
 
 	current->state = TASK_INTERRUPTIBLE;
 	schedule();
@@ -179,12 +189,16 @@ static int restore_iwmmxt_context(struct iwmmxt_sigframe *frame)
 
 static int preserve_vfp_context(struct vfp_sigframe __user *frame)
 {
+<<<<<<< HEAD
 	struct thread_info *thread = current_thread_info();
 	struct vfp_hard_struct *h = &thread->vfpstate.hard;
+=======
+>>>>>>> cm-10.0
 	const unsigned long magic = VFP_MAGIC;
 	const unsigned long size = VFP_STORAGE_SIZE;
 	int err = 0;
 
+<<<<<<< HEAD
 	vfp_sync_hwstate(thread);
 	__put_user_error(magic, &frame->magic, err);
 	__put_user_error(size, &frame->size, err);
@@ -208,15 +222,29 @@ static int preserve_vfp_context(struct vfp_sigframe __user *frame)
 	__put_user_error(h->fpinst2, &frame->ufp_exc.fpinst2, err);
 
 	return err ? -EFAULT : 0;
+=======
+	__put_user_error(magic, &frame->magic, err);
+	__put_user_error(size, &frame->size, err);
+
+	if (err)
+		return -EFAULT;
+
+	return vfp_preserve_user_clear_hwstate(&frame->ufp, &frame->ufp_exc);
+>>>>>>> cm-10.0
 }
 
 static int restore_vfp_context(struct vfp_sigframe __user *frame)
 {
+<<<<<<< HEAD
 	struct thread_info *thread = current_thread_info();
 	struct vfp_hard_struct *h = &thread->vfpstate.hard;
 	unsigned long magic;
 	unsigned long size;
 	unsigned long fpexc;
+=======
+	unsigned long magic;
+	unsigned long size;
+>>>>>>> cm-10.0
 	int err = 0;
 
 	__get_user_error(magic, &frame->magic, err);
@@ -227,6 +255,7 @@ static int restore_vfp_context(struct vfp_sigframe __user *frame)
 	if (magic != VFP_MAGIC || size != VFP_STORAGE_SIZE)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * Copy the floating point registers. There can be unused
 	 * registers see asm/hwcap.h for details.
@@ -255,6 +284,9 @@ static int restore_vfp_context(struct vfp_sigframe __user *frame)
 		vfp_flush_hwstate(thread);
 
 	return err ? -EFAULT : 0;
+=======
+	return vfp_restore_user_hwstate(&frame->ufp, &frame->ufp_exc);
+>>>>>>> cm-10.0
 }
 
 #endif
@@ -281,10 +313,14 @@ static int restore_sigframe(struct pt_regs *regs, struct sigframe __user *sf)
 	err = __copy_from_user(&set, &sf->uc.uc_sigmask, sizeof(set));
 	if (err == 0) {
 		sigdelsetmask(&set, ~_BLOCKABLE);
+<<<<<<< HEAD
 		spin_lock_irq(&current->sighand->siglock);
 		current->blocked = set;
 		recalc_sigpending();
 		spin_unlock_irq(&current->sighand->siglock);
+=======
+		set_current_blocked(&set);
+>>>>>>> cm-10.0
 	}
 
 	__get_user_error(regs->ARM_r0, &sf->uc.uc_mcontext.arm_r0, err);
@@ -637,6 +673,7 @@ handle_signal(unsigned long sig, struct k_sigaction *ka,
 	/*
 	 * Block the signal if we were successful.
 	 */
+<<<<<<< HEAD
 	spin_lock_irq(&tsk->sighand->siglock);
 	sigorsets(&tsk->blocked, &tsk->blocked,
 		  &ka->sa.sa_mask);
@@ -644,6 +681,9 @@ handle_signal(unsigned long sig, struct k_sigaction *ka,
 		sigaddset(&tsk->blocked, sig);
 	recalc_sigpending();
 	spin_unlock_irq(&tsk->sighand->siglock);
+=======
+	block_sigmask(ka, sig);
+>>>>>>> cm-10.0
 
 	return 0;
 }

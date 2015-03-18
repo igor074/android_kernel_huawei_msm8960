@@ -21,6 +21,10 @@
  */
 #include <linux/kernel.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/bug.h>
+>>>>>>> cm-10.0
 
 #include <mach/hardware.h>
 #include <asm/page.h>

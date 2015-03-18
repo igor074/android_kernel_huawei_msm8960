@@ -27,7 +27,10 @@
 
 
 #include <asm/uaccess.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/bitops.h>
 #include <linux/capability.h>
 #include <linux/module.h>
@@ -292,7 +295,11 @@ static void inetdev_destroy(struct in_device *in_dev)
 		inet_free_ifa(ifa);
 	}
 
+<<<<<<< HEAD
 	rcu_assign_pointer(dev->ip_ptr, NULL);
+=======
+	RCU_INIT_POINTER(dev->ip_ptr, NULL);
+>>>>>>> cm-10.0
 
 	devinet_sysctl_unregister(in_dev);
 	neigh_parms_release(&arp_tbl, in_dev->arp_parms);
@@ -1085,6 +1092,10 @@ __be32 inet_confirm_addr(struct in_device *in_dev,
 
 	return addr;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL(inet_confirm_addr);
+>>>>>>> cm-10.0
 
 /*
  *	Device notifier
@@ -1181,7 +1192,11 @@ static int inetdev_event(struct notifier_block *this, unsigned long event,
 	switch (event) {
 	case NETDEV_REGISTER:
 		printk(KERN_DEBUG "inetdev_event: bug\n");
+<<<<<<< HEAD
 		rcu_assign_pointer(dev->ip_ptr, NULL);
+=======
+		RCU_INIT_POINTER(dev->ip_ptr, NULL);
+>>>>>>> cm-10.0
 		break;
 	case NETDEV_UP:
 		if (!inetdev_valid_mtu(dev->mtu))
@@ -1496,7 +1511,13 @@ static int devinet_conf_proc(ctl_table *ctl, int write,
 			     void __user *buffer,
 			     size_t *lenp, loff_t *ppos)
 {
+<<<<<<< HEAD
 	int ret = proc_dointvec(ctl, write, buffer, lenp, ppos);
+=======
+	int old_value = *(int *)ctl->data;
+	int ret = proc_dointvec(ctl, write, buffer, lenp, ppos);
+	int new_value = *(int *)ctl->data;
+>>>>>>> cm-10.0
 
 	if (write) {
 		struct ipv4_devconf *cnf = ctl->extra1;
@@ -1507,6 +1528,12 @@ static int devinet_conf_proc(ctl_table *ctl, int write,
 
 		if (cnf == net->ipv4.devconf_dflt)
 			devinet_copy_dflt_conf(net, i);
+<<<<<<< HEAD
+=======
+		if (i == IPV4_DEVCONF_ACCEPT_LOCAL - 1)
+			if ((new_value == 0) && (old_value != 0))
+				rt_cache_flush(net, 0);
+>>>>>>> cm-10.0
 	}
 
 	return ret;
@@ -1839,8 +1866,14 @@ void __init devinet_init(void)
 
 	rtnl_af_register(&inet_af_ops);
 
+<<<<<<< HEAD
 	rtnl_register(PF_INET, RTM_NEWADDR, inet_rtm_newaddr, NULL);
 	rtnl_register(PF_INET, RTM_DELADDR, inet_rtm_deladdr, NULL);
 	rtnl_register(PF_INET, RTM_GETADDR, NULL, inet_dump_ifaddr);
+=======
+	rtnl_register(PF_INET, RTM_NEWADDR, inet_rtm_newaddr, NULL, NULL);
+	rtnl_register(PF_INET, RTM_DELADDR, inet_rtm_deladdr, NULL, NULL);
+	rtnl_register(PF_INET, RTM_GETADDR, NULL, inet_dump_ifaddr, NULL);
+>>>>>>> cm-10.0
 }
 

@@ -13,6 +13,10 @@
 #include <linux/pci.h>
 #include <linux/init.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/acpi.h>
 #include <linux/dmi.h>
 #include "pci-quirks.h"
@@ -36,6 +40,10 @@
 #define OHCI_INTRENABLE		0x10
 #define OHCI_INTRDISABLE	0x14
 #define OHCI_FMINTERVAL		0x34
+<<<<<<< HEAD
+=======
+#define OHCI_HCFS		(3 << 6)	/* hc functional state */
+>>>>>>> cm-10.0
 #define OHCI_HCR		(1 << 0)	/* host controller reset */
 #define OHCI_OCR		(1 << 3)	/* ownership change request */
 #define OHCI_CTRL_RWC		(1 << 9)	/* remote wakeup connected */
@@ -465,6 +473,11 @@ static void __devinit quirk_usb_handoff_ohci(struct pci_dev *pdev)
 {
 	void __iomem *base;
 	u32 control;
+<<<<<<< HEAD
+=======
+	u32 fminterval;
+	int cnt;
+>>>>>>> cm-10.0
 
 	if (!mmio_resource_enabled(pdev, 0))
 		return;
@@ -497,6 +510,7 @@ static void __devinit quirk_usb_handoff_ohci(struct pci_dev *pdev)
 	}
 #endif
 
+<<<<<<< HEAD
 	/* reset controller, preserving RWC (and possibly IR) */
 	writel(control & OHCI_CTRL_MASK, base + OHCI_CONTROL);
 	readl(base + OHCI_CONTROL);
@@ -532,6 +546,34 @@ static void __devinit quirk_usb_handoff_ohci(struct pci_dev *pdev)
 	writel(~(u32)0, base + OHCI_INTRDISABLE);
 	writel(~(u32)0, base + OHCI_INTRSTATUS);
 
+=======
+	/* disable interrupts */
+	writel((u32) ~0, base + OHCI_INTRDISABLE);
+
+	/* Reset the USB bus, if the controller isn't already in RESET */
+	if (control & OHCI_HCFS) {
+		/* Go into RESET, preserving RWC (and possibly IR) */
+		writel(control & OHCI_CTRL_MASK, base + OHCI_CONTROL);
+		readl(base + OHCI_CONTROL);
+
+		/* drive bus reset for at least 50 ms (7.1.7.5) */
+		msleep(50);
+	}
+
+	/* software reset of the controller, preserving HcFmInterval */
+	fminterval = readl(base + OHCI_FMINTERVAL);
+	writel(OHCI_HCR, base + OHCI_CMDSTATUS);
+
+	/* reset requires max 10 us delay */
+	for (cnt = 30; cnt > 0; --cnt) {	/* ... allow extra time */
+		if ((readl(base + OHCI_CMDSTATUS) & OHCI_HCR) == 0)
+			break;
+		udelay(1);
+	}
+	writel(fminterval, base + OHCI_FMINTERVAL);
+
+	/* Now the controller is safely in SUSPEND and nothing can wake it up */
+>>>>>>> cm-10.0
 	iounmap(base);
 }
 
@@ -626,7 +668,11 @@ static void __devinit quirk_usb_disable_ehci(struct pci_dev *pdev)
 	void __iomem *base, *op_reg_base;
 	u32	hcc_params, cap, val;
 	u8	offset, cap_length;
+<<<<<<< HEAD
 	int	wait_time, delta, count = 256/4;
+=======
+	int	wait_time, count = 256/4;
+>>>>>>> cm-10.0
 
 	if (!mmio_resource_enabled(pdev, 0))
 		return;
@@ -672,11 +718,18 @@ static void __devinit quirk_usb_disable_ehci(struct pci_dev *pdev)
 		writel(val, op_reg_base + EHCI_USBCMD);
 
 		wait_time = 2000;
+<<<<<<< HEAD
 		delta = 100;
 		do {
 			writel(0x3f, op_reg_base + EHCI_USBSTS);
 			udelay(delta);
 			wait_time -= delta;
+=======
+		do {
+			writel(0x3f, op_reg_base + EHCI_USBSTS);
+			udelay(100);
+			wait_time -= 100;
+>>>>>>> cm-10.0
 			val = readl(op_reg_base + EHCI_USBSTS);
 			if ((val == ~(u32)0) || (val & EHCI_USBSTS_HALTED)) {
 				break;
@@ -831,9 +884,19 @@ static void __devinit quirk_usb_handoff_xhci(struct pci_dev *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	/* Disable any BIOS SMIs */
 	writel(XHCI_LEGACY_DISABLE_SMI,
 			base + ext_cap_offset + XHCI_LEGACY_CONTROL_OFFSET);
+=======
+	val = readl(base + ext_cap_offset + XHCI_LEGACY_CONTROL_OFFSET);
+	/* Mask off (turn off) any enabled SMIs */
+	val &= XHCI_LEGACY_DISABLE_SMI;
+	/* Mask all SMI events bits, RW1C */
+	val |= XHCI_LEGACY_SMI_EVENTS;
+	/* Disable any BIOS SMIs and clear all SMI events*/
+	writel(val, base + ext_cap_offset + XHCI_LEGACY_CONTROL_OFFSET);
+>>>>>>> cm-10.0
 
 	if (usb_is_intel_switchable_xhci(pdev))
 		usb_enable_xhci_ports(pdev);
@@ -873,6 +936,25 @@ hc_init:
 
 static void __devinit quirk_usb_early_handoff(struct pci_dev *pdev)
 {
+<<<<<<< HEAD
+=======
+	/* Skip Netlogic mips SoC's internal PCI USB controller.
+	 * This device does not need/support EHCI/OHCI handoff
+	 */
+	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
+		return;
+	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
+			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
+			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
+			pdev->class != PCI_CLASS_SERIAL_USB_XHCI)
+		return;
+
+	if (pci_enable_device(pdev) < 0) {
+		dev_warn(&pdev->dev, "Can't enable PCI device, "
+				"BIOS handoff failed.\n");
+		return;
+	}
+>>>>>>> cm-10.0
 	if (pdev->class == PCI_CLASS_SERIAL_USB_UHCI)
 		quirk_usb_handoff_uhci(pdev);
 	else if (pdev->class == PCI_CLASS_SERIAL_USB_OHCI)
@@ -881,5 +963,12 @@ static void __devinit quirk_usb_early_handoff(struct pci_dev *pdev)
 		quirk_usb_disable_ehci(pdev);
 	else if (pdev->class == PCI_CLASS_SERIAL_USB_XHCI)
 		quirk_usb_handoff_xhci(pdev);
+<<<<<<< HEAD
 }
 DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_usb_early_handoff);
+=======
+	pci_disable_device(pdev);
+}
+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
+			PCI_CLASS_SERIAL_USB, 8, quirk_usb_early_handoff);
+>>>>>>> cm-10.0

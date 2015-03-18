@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -73,6 +77,10 @@ static int __init mipi_cmd_novatek_blue_qhd_pt_init(void)
 	pinfo.mipi.dst_format = DSI_CMD_DST_FORMAT_RGB888;
 	pinfo.mipi.vc = 0;
 	pinfo.mipi.data_lane0 = TRUE;
+<<<<<<< HEAD
+=======
+	pinfo.mipi.esc_byte_ratio = 4;
+>>>>>>> cm-10.0
 #if defined(NOVATEK_TWO_LANE)
 	pinfo.mipi.data_lane1 = TRUE;
 #endif

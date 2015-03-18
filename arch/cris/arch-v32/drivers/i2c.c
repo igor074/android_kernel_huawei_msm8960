@@ -36,7 +36,10 @@
 
 #include <asm/etraxi2c.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/delay.h>
 

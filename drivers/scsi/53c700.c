@@ -129,7 +129,10 @@
 #include <linux/interrupt.h>
 #include <linux/device.h>
 #include <asm/dma.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/pgtable.h>
 #include <asm/byteorder.h>

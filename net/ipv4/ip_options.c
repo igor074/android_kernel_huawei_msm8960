@@ -9,6 +9,11 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#define pr_fmt(fmt) "IPv4: " fmt
+
+>>>>>>> cm-10.0
 #include <linux/capability.h>
 #include <linux/module.h>
 #include <linux/slab.h>
@@ -568,15 +573,27 @@ void ip_forward_options(struct sk_buff *skb)
 		     ) {
 			if (srrptr + 3 > srrspace)
 				break;
+<<<<<<< HEAD
 			if (memcmp(&ip_hdr(skb)->daddr, &optptr[srrptr-1], 4) == 0)
+=======
+			if (memcmp(&opt->nexthop, &optptr[srrptr-1], 4) == 0)
+>>>>>>> cm-10.0
 				break;
 		}
 		if (srrptr + 3 <= srrspace) {
 			opt->is_changed = 1;
+<<<<<<< HEAD
 			ip_rt_get_source(&optptr[srrptr-1], skb, rt);
 			optptr[2] = srrptr+4;
 		} else if (net_ratelimit())
 			printk(KERN_CRIT "ip_forward(): Argh! Destination lost!\n");
+=======
+			ip_hdr(skb)->daddr = opt->nexthop;
+			ip_rt_get_source(&optptr[srrptr-1], skb, rt);
+			optptr[2] = srrptr+4;
+		} else if (net_ratelimit())
+			pr_crit("%s(): Argh! Destination lost!\n", __func__);
+>>>>>>> cm-10.0
 		if (opt->ts_needaddr) {
 			optptr = raw + opt->ts;
 			ip_rt_get_source(&optptr[optptr[2]-9], skb, rt);
@@ -640,6 +657,10 @@ int ip_options_rcv_srr(struct sk_buff *skb)
 	}
 	if (srrptr <= srrspace) {
 		opt->srr_is_hit = 1;
+<<<<<<< HEAD
+=======
+		opt->nexthop = nexthop;
+>>>>>>> cm-10.0
 		opt->is_changed = 1;
 	}
 	return 0;

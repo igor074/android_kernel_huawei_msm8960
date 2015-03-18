@@ -782,12 +782,15 @@ static void scsi_done(struct scsi_cmnd *cmd)
 	blk_complete_request(cmd->request);
 }
 
+<<<<<<< HEAD
 /* Move this to a header if it becomes more generally useful */
 static struct scsi_driver *scsi_cmd_to_driver(struct scsi_cmnd *cmd)
 {
 	return *(struct scsi_driver **)cmd->request->rq_disk->private_data;
 }
 
+=======
+>>>>>>> cm-10.0
 /**
  * scsi_finish_command - cleanup and pass command back to upper layer
  * @cmd: the command

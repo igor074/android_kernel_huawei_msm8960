@@ -16,11 +16,20 @@
 #include <linux/interrupt.h>
 #include <linux/clk.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+#include <linux/io.h>
+>>>>>>> cm-10.0
 
 #include <sound/ac97_codec.h>
 #include <sound/pxa2xx-lib.h>
 
+<<<<<<< HEAD
 #include <asm/irq.h>
+=======
+#include <mach/irqs.h>
+>>>>>>> cm-10.0
 #include <mach/regs-ac97.h>
 #include <mach/audio.h>
 
@@ -359,7 +368,11 @@ int __devinit pxa2xx_ac97_hw_probe(struct platform_device *dev)
 	if (ret)
 		goto err_clk2;
 
+<<<<<<< HEAD
 	ret = request_irq(IRQ_AC97, pxa2xx_ac97_irq, IRQF_DISABLED, "AC97", NULL);
+=======
+	ret = request_irq(IRQ_AC97, pxa2xx_ac97_irq, 0, "AC97", NULL);
+>>>>>>> cm-10.0
 	if (ret < 0)
 		goto err_irq;
 

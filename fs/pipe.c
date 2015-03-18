@@ -13,6 +13,10 @@
 #include <linux/fs.h>
 #include <linux/log2.h>
 #include <linux/mount.h>
+<<<<<<< HEAD
+=======
+#include <linux/magic.h>
+>>>>>>> cm-10.0
 #include <linux/pipe_fs_i.h>
 #include <linux/uio.h>
 #include <linux/highmem.h>
@@ -230,7 +234,11 @@ void *generic_pipe_buf_map(struct pipe_inode_info *pipe,
 {
 	if (atomic) {
 		buf->flags |= PIPE_BUF_FLAG_ATOMIC;
+<<<<<<< HEAD
 		return kmap_atomic(buf->page, KM_USER0);
+=======
+		return kmap_atomic(buf->page);
+>>>>>>> cm-10.0
 	}
 
 	return kmap(buf->page);
@@ -251,7 +259,11 @@ void generic_pipe_buf_unmap(struct pipe_inode_info *pipe,
 {
 	if (buf->flags & PIPE_BUF_FLAG_ATOMIC) {
 		buf->flags &= ~PIPE_BUF_FLAG_ATOMIC;
+<<<<<<< HEAD
 		kunmap_atomic(map_data, KM_USER0);
+=======
+		kunmap_atomic(map_data);
+>>>>>>> cm-10.0
 	} else
 		kunmap(buf->page);
 }
@@ -345,6 +357,19 @@ static const struct pipe_buf_operations anon_pipe_buf_ops = {
 	.get = generic_pipe_buf_get,
 };
 
+<<<<<<< HEAD
+=======
+static const struct pipe_buf_operations packet_pipe_buf_ops = {
+	.can_merge = 0,
+	.map = generic_pipe_buf_map,
+	.unmap = generic_pipe_buf_unmap,
+	.confirm = generic_pipe_buf_confirm,
+	.release = anon_pipe_buf_release,
+	.steal = generic_pipe_buf_steal,
+	.get = generic_pipe_buf_get,
+};
+
+>>>>>>> cm-10.0
 static ssize_t
 pipe_read(struct kiocb *iocb, const struct iovec *_iov,
 	   unsigned long nr_segs, loff_t pos)
@@ -406,6 +431,16 @@ redo:
 			ret += chars;
 			buf->offset += chars;
 			buf->len -= chars;
+<<<<<<< HEAD
+=======
+
+			/* Was it a packet buffer? Clean up and exit */
+			if (buf->flags & PIPE_BUF_FLAG_PACKET) {
+				total_len = chars;
+				buf->len = 0;
+			}
+
+>>>>>>> cm-10.0
 			if (!buf->len) {
 				buf->ops = NULL;
 				ops->release(pipe, buf);
@@ -458,6 +493,14 @@ redo:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static inline int is_packetized(struct file *file)
+{
+	return (file->f_flags & O_DIRECT) != 0;
+}
+
+>>>>>>> cm-10.0
 static ssize_t
 pipe_write(struct kiocb *iocb, const struct iovec *_iov,
 	    unsigned long nr_segs, loff_t ppos)
@@ -565,14 +608,22 @@ redo1:
 			iov_fault_in_pages_read(iov, chars);
 redo2:
 			if (atomic)
+<<<<<<< HEAD
 				src = kmap_atomic(page, KM_USER0);
+=======
+				src = kmap_atomic(page);
+>>>>>>> cm-10.0
 			else
 				src = kmap(page);
 
 			error = pipe_iov_copy_from_user(src, iov, chars,
 							atomic);
 			if (atomic)
+<<<<<<< HEAD
 				kunmap_atomic(src, KM_USER0);
+=======
+				kunmap_atomic(src);
+>>>>>>> cm-10.0
 			else
 				kunmap(page);
 
@@ -592,6 +643,14 @@ redo2:
 			buf->ops = &anon_pipe_buf_ops;
 			buf->offset = 0;
 			buf->len = chars;
+<<<<<<< HEAD
+=======
+			buf->flags = 0;
+			if (is_packetized(filp)) {
+				buf->ops = &packet_pipe_buf_ops;
+				buf->flags = PIPE_BUF_FLAG_PACKET;
+			}
+>>>>>>> cm-10.0
 			pipe->nrbufs = ++bufs;
 			pipe->tmp_page = NULL;
 
@@ -1012,7 +1071,11 @@ struct file *create_write_pipe(int flags)
 		goto err_dentry;
 	f->f_mapping = inode->i_mapping;
 
+<<<<<<< HEAD
 	f->f_flags = O_WRONLY | (flags & O_NONBLOCK);
+=======
+	f->f_flags = O_WRONLY | (flags & (O_NONBLOCK | O_DIRECT));
+>>>>>>> cm-10.0
 	f->f_version = 0;
 
 	return f;
@@ -1056,7 +1119,11 @@ int do_pipe_flags(int *fd, int flags)
 	int error;
 	int fdw, fdr;
 
+<<<<<<< HEAD
 	if (flags & ~(O_CLOEXEC | O_NONBLOCK))
+=======
+	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT))
+>>>>>>> cm-10.0
 		return -EINVAL;
 
 	fw = create_write_pipe(flags);
@@ -1137,7 +1204,11 @@ static long pipe_set_size(struct pipe_inode_info *pipe, unsigned long nr_pages)
 	if (nr_pages < pipe->nrbufs)
 		return -EBUSY;
 
+<<<<<<< HEAD
 	bufs = kcalloc(nr_pages, sizeof(struct pipe_buffer), GFP_KERNEL);
+=======
+	bufs = kcalloc(nr_pages, sizeof(*bufs), GFP_KERNEL | __GFP_NOWARN);
+>>>>>>> cm-10.0
 	if (unlikely(!bufs))
 		return -ENOMEM;
 
@@ -1254,6 +1325,10 @@ out:
 
 static const struct super_operations pipefs_ops = {
 	.destroy_inode = free_inode_nonrcu,
+<<<<<<< HEAD
+=======
+	.statfs = simple_statfs,
+>>>>>>> cm-10.0
 };
 
 /*
@@ -1289,6 +1364,7 @@ static int __init init_pipe_fs(void)
 	return err;
 }
 
+<<<<<<< HEAD
 static void __exit exit_pipe_fs(void)
 {
 	kern_unmount(pipe_mnt);
@@ -1297,3 +1373,6 @@ static void __exit exit_pipe_fs(void)
 
 fs_initcall(init_pipe_fs);
 module_exit(exit_pipe_fs);
+=======
+fs_initcall(init_pipe_fs);
+>>>>>>> cm-10.0

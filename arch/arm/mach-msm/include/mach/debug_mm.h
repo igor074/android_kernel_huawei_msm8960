@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,6 +17,11 @@
 #ifndef __ARCH_ARM_MACH_MSM_DEBUG_MM_H_
 #define __ARCH_ARM_MACH_MSM_DEBUG_MM_H_
 
+<<<<<<< HEAD
+=======
+#include <linux/string.h>
+
+>>>>>>> cm-10.0
 /* The below macro removes the directory path name and retains only the
  * file name to avoid long path names in log messages that comes as
  * part of __FILE__ to compiler.

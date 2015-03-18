@@ -30,6 +30,10 @@
 #define KPF_NOPAGE		20
 
 #define KPF_KSM			21
+<<<<<<< HEAD
+=======
+#define KPF_THP			22
+>>>>>>> cm-10.0
 
 /* kernel hacking assistances
  * WARNING: subject to change, never rely on them!

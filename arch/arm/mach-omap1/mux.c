@@ -27,7 +27,11 @@
 #include <linux/io.h>
 #include <linux/spinlock.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+#include <mach/hardware.h>
+>>>>>>> cm-10.0
 
 #include <plat/mux.h>
 

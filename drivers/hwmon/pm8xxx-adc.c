@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -32,6 +36,10 @@
 #include <linux/mfd/pm8xxx/core.h>
 #include <linux/regulator/consumer.h>
 #include <linux/mfd/pm8xxx/pm8xxx-adc.h>
+<<<<<<< HEAD
+=======
+#include <mach/msm_xo.h>
+>>>>>>> cm-10.0
 
 /* User Bank register set */
 #define PM8XXX_ADC_ARB_USRP_CNTRL1			0x197
@@ -142,9 +150,16 @@ struct pm8xxx_adc {
 	uint32_t				mpp_base;
 	struct device				*hwmon;
 	struct wake_lock			adc_wakelock;
+<<<<<<< HEAD
 	int					msm_suspend_check;
 	struct pm8xxx_adc_amux_properties	*conv;
 	struct pm8xxx_adc_arb_btm_param		batt[0];
+=======
+	struct msm_xo_voter			*adc_voter;
+	int					msm_suspend_check;
+	struct pm8xxx_adc_amux_properties	*conv;
+	struct pm8xxx_adc_arb_btm_param		batt;
+>>>>>>> cm-10.0
 	struct sensor_device_attribute		sens_attr[0];
 };
 
@@ -293,14 +308,43 @@ static int32_t pm8xxx_adc_patherm_power(bool on)
 	return rc;
 }
 
+<<<<<<< HEAD
+=======
+static int32_t pm8xxx_adc_xo_vote(bool on)
+{
+	struct pm8xxx_adc *adc_pmic = pmic_adc;
+
+	if (on)
+		msm_xo_mode_vote(adc_pmic->adc_voter, MSM_XO_MODE_ON);
+	else
+		msm_xo_mode_vote(adc_pmic->adc_voter, MSM_XO_MODE_OFF);
+
+	return 0;
+}
+
+>>>>>>> cm-10.0
 static int32_t pm8xxx_adc_channel_power_enable(uint32_t channel,
 							bool power_cntrl)
 {
 	int rc = 0;
 
+<<<<<<< HEAD
 	switch (channel)
 	case ADC_MPP_1_AMUX8:
 		rc = pm8xxx_adc_patherm_power(power_cntrl);
+=======
+	switch (channel) {
+	case ADC_MPP_1_AMUX8:
+		rc = pm8xxx_adc_patherm_power(power_cntrl);
+		break;
+	case CHANNEL_DIE_TEMP:
+	case CHANNEL_MUXOFF:
+		rc = pm8xxx_adc_xo_vote(power_cntrl);
+		break;
+	default:
+		break;
+	}
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -454,8 +498,13 @@ static void pm8xxx_adc_btm_warm_scheduler_fn(struct work_struct *work)
 
 	spin_lock_irqsave(&adc_pmic->btm_lock, flags);
 	warm_status = irq_read_line(adc_pmic->btm_warm_irq);
+<<<<<<< HEAD
 	if (adc_pmic->batt->btm_warm_fn != NULL)
 		adc_pmic->batt->btm_warm_fn(warm_status);
+=======
+	if (adc_pmic->batt.btm_warm_fn != NULL)
+		adc_pmic->batt.btm_warm_fn(warm_status);
+>>>>>>> cm-10.0
 	spin_unlock_irqrestore(&adc_pmic->btm_lock, flags);
 }
 
@@ -468,8 +517,13 @@ static void pm8xxx_adc_btm_cool_scheduler_fn(struct work_struct *work)
 
 	spin_lock_irqsave(&adc_pmic->btm_lock, flags);
 	cool_status = irq_read_line(adc_pmic->btm_cool_irq);
+<<<<<<< HEAD
 	if (adc_pmic->batt->btm_cool_fn != NULL)
 		adc_pmic->batt->btm_cool_fn(cool_status);
+=======
+	if (adc_pmic->batt.btm_cool_fn != NULL)
+		adc_pmic->batt.btm_cool_fn(cool_status);
+>>>>>>> cm-10.0
 	spin_unlock_irqrestore(&adc_pmic->btm_lock, flags);
 }
 
@@ -872,7 +926,11 @@ uint32_t pm8xxx_adc_btm_configure(struct pm8xxx_adc_arb_btm_param *btm_param)
 		if (rc < 0)
 			goto write_err;
 
+<<<<<<< HEAD
 		adc_pmic->batt->btm_cool_fn = btm_param->btm_cool_fn;
+=======
+		adc_pmic->batt.btm_cool_fn = btm_param->btm_cool_fn;
+>>>>>>> cm-10.0
 	}
 
 	if (btm_param->btm_warm_fn != NULL) {
@@ -886,7 +944,11 @@ uint32_t pm8xxx_adc_btm_configure(struct pm8xxx_adc_arb_btm_param *btm_param)
 		if (rc < 0)
 			goto write_err;
 
+<<<<<<< HEAD
 		adc_pmic->batt->btm_warm_fn = btm_param->btm_warm_fn;
+=======
+		adc_pmic->batt.btm_warm_fn = btm_param->btm_warm_fn;
+>>>>>>> cm-10.0
 	}
 
 	rc = pm8xxx_adc_read_reg(PM8XXX_ADC_ARB_BTM_CNTRL1, &arb_btm_cntrl1);
@@ -964,10 +1026,17 @@ static uint32_t pm8xxx_adc_btm_read(uint32_t channel)
 	if (rc < 0)
 		goto write_err;
 
+<<<<<<< HEAD
 	if (pmic_adc->batt->btm_warm_fn != NULL)
 		enable_irq(adc_pmic->btm_warm_irq);
 
 	if (pmic_adc->batt->btm_cool_fn != NULL)
+=======
+	if (pmic_adc->batt.btm_warm_fn != NULL)
+		enable_irq(adc_pmic->btm_warm_irq);
+
+	if (pmic_adc->batt.btm_cool_fn != NULL)
+>>>>>>> cm-10.0
 		enable_irq(adc_pmic->btm_cool_irq);
 
 write_err:
@@ -1042,6 +1111,7 @@ static int get_adc(void *data, u64 *val)
 }
 DEFINE_SIMPLE_ATTRIBUTE(reg_fops, get_adc, NULL, "%llu\n");
 
+<<<<<<< HEAD
 static int get_mpp_adc(void *data, u64 *val)
 {
 	struct pm8xxx_adc_chan_result result;
@@ -1059,6 +1129,8 @@ static int get_mpp_adc(void *data, u64 *val)
 }
 DEFINE_SIMPLE_ATTRIBUTE(reg_mpp_fops, get_mpp_adc, NULL, "%llu\n");
 
+=======
+>>>>>>> cm-10.0
 #ifdef CONFIG_DEBUG_FS
 static void create_debugfs_entries(void)
 {
@@ -1100,6 +1172,10 @@ static int32_t pm8xxx_adc_init_hwmon(struct platform_device *pdev)
 						adc_pmic->adc_channel[i].name;
 		memcpy(&adc_pmic->sens_attr[i], &pm8xxx_adc_attr,
 						sizeof(pm8xxx_adc_attr));
+<<<<<<< HEAD
+=======
+		sysfs_attr_init(&adc_pmic->sens_attr[i].dev_attr.attr);
+>>>>>>> cm-10.0
 		rc = device_create_file(&pdev->dev,
 				&adc_pmic->sens_attr[i].dev_attr);
 		if (rc) {
@@ -1151,6 +1227,10 @@ static int __devexit pm8xxx_adc_teardown(struct platform_device *pdev)
 	int i;
 
 	wake_lock_destroy(&adc_pmic->adc_wakelock);
+<<<<<<< HEAD
+=======
+	msm_xo_put(adc_pmic->adc_voter);
+>>>>>>> cm-10.0
 	platform_set_drvdata(pdev, NULL);
 	pmic_adc = NULL;
 	if (!pa_therm) {
@@ -1178,7 +1258,10 @@ static int __devinit pm8xxx_adc_probe(struct platform_device *pdev)
 	}
 
 	adc_pmic = devm_kzalloc(&pdev->dev, sizeof(struct pm8xxx_adc) +
+<<<<<<< HEAD
 			sizeof(struct pm8xxx_adc_arb_btm_param) +
+=======
+>>>>>>> cm-10.0
 			(sizeof(struct sensor_device_attribute) *
 			pdata->adc_num_board_channel), GFP_KERNEL);
 	if (!adc_pmic) {
@@ -1272,6 +1355,17 @@ static int __devinit pm8xxx_adc_probe(struct platform_device *pdev)
 	}
 	adc_pmic->hwmon = hwmon_device_register(adc_pmic->dev);
 
+<<<<<<< HEAD
+=======
+	if (adc_pmic->adc_voter == NULL) {
+		adc_pmic->adc_voter = msm_xo_get(MSM_XO_TCXO_D0, "pmic_xoadc");
+		if (IS_ERR(adc_pmic->adc_voter)) {
+			dev_err(&pdev->dev, "Failed to get XO vote\n");
+			return PTR_ERR(adc_pmic->adc_voter);
+		}
+	}
+
+>>>>>>> cm-10.0
 	pa_therm = regulator_get(adc_pmic->dev, "pa_therm");
 	if (IS_ERR(pa_therm)) {
 		rc = PTR_ERR(pa_therm);

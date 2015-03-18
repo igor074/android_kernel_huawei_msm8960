@@ -17,6 +17,10 @@
 #include <linux/init.h>
 #include <linux/pnp.h>
 #include <linux/ide.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #define DRV_NAME "ide-pnp"
 

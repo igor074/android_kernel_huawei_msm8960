@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -19,6 +23,10 @@
 #define PKT_TYPE			8
 #define DEINIT_TYPE			16
 #define USER_SPACE_LOG_TYPE		32
+<<<<<<< HEAD
+=======
+#define DCI_DATA_TYPE			64
+>>>>>>> cm-10.0
 #define USB_MODE			1
 #define MEMORY_DEVICE_MODE		2
 #define NO_LOGGING_MODE			3
@@ -35,6 +43,7 @@
 #define DIAG_IOCTL_SWITCH_LOGGING	7
 #define DIAG_IOCTL_GET_DELAYED_RSP_ID 	8
 #define DIAG_IOCTL_LSM_DEINIT		9
+<<<<<<< HEAD
 
 /* Machine ID and corresponding PC Tools IDs */
 #define APQ8060_MACHINE_ID	86
@@ -55,6 +64,25 @@
 #define APQ8064_TOOLS_ID	4072
 #define MSM8930_TOOLS_ID	4072
 #define MSM8974_TOOLS_ID	4072
+=======
+#define DIAG_IOCTL_DCI_INIT		20
+#define DIAG_IOCTL_DCI_DEINIT		21
+#define DIAG_IOCTL_DCI_SUPPORT		22
+#define DIAG_IOCTL_DCI_REG		23
+
+/* PC Tools IDs */
+#define APQ8060_TOOLS_ID	4062
+#define AO8960_TOOLS_ID		4064
+#define APQ8064_TOOLS_ID	4072
+#define MSM8625_TOOLS_ID	4075
+#define MSM8930_TOOLS_ID	4076
+#define MSM8630_TOOLS_ID	4077
+#define MSM8230_TOOLS_ID	4078
+#define APQ8030_TOOLS_ID	4079
+#define MSM8627_TOOLS_ID	4080
+#define MSM8227_TOOLS_ID	4081
+#define MSM8974_TOOLS_ID	4083
+>>>>>>> cm-10.0
 
 #define MSG_MASK_0			(0x00000001)
 #define MSG_MASK_1			(0x00000002)
@@ -109,11 +137,19 @@ the appropriate macros. */
 
 /* This needs to be modified manually now, when we add
  a new RANGE of SSIDs to the msg_mask_tbl */
+<<<<<<< HEAD
 #define MSG_MASK_TBL_CNT		23
 #define EVENT_LAST_ID			0x083F
 
 #define MSG_SSID_0			0
 #define MSG_SSID_0_LAST			90
+=======
+#define MSG_MASK_TBL_CNT		24
+#define EVENT_LAST_ID			0x08AD
+
+#define MSG_SSID_0			0
+#define MSG_SSID_0_LAST			91
+>>>>>>> cm-10.0
 #define MSG_SSID_1			500
 #define MSG_SSID_1_LAST			506
 #define MSG_SSID_2			1000
@@ -127,7 +163,11 @@ the appropriate macros. */
 #define MSG_SSID_6			4500
 #define MSG_SSID_6_LAST			4526
 #define MSG_SSID_7			4600
+<<<<<<< HEAD
 #define MSG_SSID_7_LAST			4612
+=======
+#define MSG_SSID_7_LAST			4613
+>>>>>>> cm-10.0
 #define MSG_SSID_8			5000
 #define MSG_SSID_8_LAST			5029
 #define MSG_SSID_9			5500
@@ -158,6 +198,11 @@ the appropriate macros. */
 #define MSG_SSID_21_LAST		10300
 #define MSG_SSID_22			10350
 #define MSG_SSID_22_LAST		10361
+<<<<<<< HEAD
+=======
+#define MSG_SSID_23			0xC000
+#define MSG_SSID_23_LAST		0xC063
+>>>>>>> cm-10.0
 
 struct diagpkt_delay_params {
 	void *rsp_ptr;
@@ -273,6 +318,10 @@ static const uint32_t msg_bld_masks_0[] = {
 	MSG_LVL_LOW|MSG_LVL_MED|MSG_LVL_HIGH|MSG_LVL_ERROR|MSG_LVL_FATAL,
 	MSG_LVL_LOW,
 	MSG_LVL_MED,
+<<<<<<< HEAD
+=======
+	MSG_LVL_LOW,
+>>>>>>> cm-10.0
 	MSG_LVL_LOW
 };
 
@@ -385,6 +434,10 @@ static const uint32_t msg_bld_masks_7[] = {
 	MSG_LVL_MED,
 	MSG_LVL_MED,
 	MSG_LVL_MED,
+<<<<<<< HEAD
+=======
+	MSG_LVL_LOW,
+>>>>>>> cm-10.0
 	MSG_LVL_LOW
 };
 

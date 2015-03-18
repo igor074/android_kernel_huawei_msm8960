@@ -44,7 +44,10 @@
 
 #include "ubi-media.h"
 #include "scan.h"
+<<<<<<< HEAD
 #include "debug.h"
+=======
+>>>>>>> cm-10.0
 
 /* Maximum number of supported UBI devices */
 #define UBI_MAX_DEVICES 32
@@ -119,15 +122,26 @@ enum {
  *                     PEB
  * MOVE_TARGET_WR_ERR: canceled because there was a write error to the target
  *                     PEB
+<<<<<<< HEAD
  * MOVE_CANCEL_BITFLIPS: canceled because a bit-flip was detected in the
  *                       target PEB
+=======
+ * MOVE_TARGET_BITFLIPS: canceled because a bit-flip was detected in the
+ *                       target PEB
+ * MOVE_RETRY: retry scrubbing the PEB
+>>>>>>> cm-10.0
  */
 enum {
 	MOVE_CANCEL_RACE = 1,
 	MOVE_SOURCE_RD_ERR,
 	MOVE_TARGET_RD_ERR,
 	MOVE_TARGET_WR_ERR,
+<<<<<<< HEAD
 	MOVE_CANCEL_BITFLIPS,
+=======
+	MOVE_TARGET_BITFLIPS,
+	MOVE_RETRY,
+>>>>>>> cm-10.0
 };
 
 /**
@@ -386,10 +400,18 @@ struct ubi_wl_entry;
  *                  time (MTD write buffer size)
  * @mtd: MTD device descriptor
  *
+<<<<<<< HEAD
  * @peb_buf1: a buffer of PEB size used for different purposes
  * @peb_buf2: another buffer of PEB size used for different purposes
  * @buf_mutex: protects @peb_buf1 and @peb_buf2
  * @ckvol_mutex: serializes static volume checking when opening
+=======
+ * @peb_buf: a buffer of PEB size used for different purposes
+ * @buf_mutex: protects @peb_buf
+ * @ckvol_mutex: serializes static volume checking when opening
+ *
+ * @dbg: debugging information for this UBI device
+>>>>>>> cm-10.0
  */
 struct ubi_device {
 	struct cdev cdev;
@@ -468,12 +490,24 @@ struct ubi_device {
 	int max_write_size;
 	struct mtd_info *mtd;
 
+<<<<<<< HEAD
 	void *peb_buf1;
 	void *peb_buf2;
 	struct mutex buf_mutex;
 	struct mutex ckvol_mutex;
 };
 
+=======
+	void *peb_buf;
+	struct mutex buf_mutex;
+	struct mutex ckvol_mutex;
+
+	struct ubi_debug_info *dbg;
+};
+
+#include "debug.h"
+
+>>>>>>> cm-10.0
 extern struct kmem_cache *ubi_wl_entry_slab;
 extern const struct file_operations ubi_ctrl_cdev_operations;
 extern const struct file_operations ubi_cdev_operations;
@@ -662,6 +696,10 @@ static inline void ubi_ro_mode(struct ubi_device *ubi)
 	if (!ubi->ro_mode) {
 		ubi->ro_mode = 1;
 		ubi_warn("switch to read-only mode");
+<<<<<<< HEAD
+=======
+		ubi_dbg_dump_stack();
+>>>>>>> cm-10.0
 	}
 }
 

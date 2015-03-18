@@ -513,7 +513,11 @@ static void process_page(unsigned long data)
 	}
 }
 
+<<<<<<< HEAD
 static int mm_make_request(struct request_queue *q, struct bio *bio)
+=======
+static void mm_make_request(struct request_queue *q, struct bio *bio)
+>>>>>>> cm-10.0
 {
 	struct cardinfo *card = q->queuedata;
 	pr_debug("mm_make_request %llu %u\n",
@@ -525,7 +529,11 @@ static int mm_make_request(struct request_queue *q, struct bio *bio)
 	card->biotail = &bio->bi_next;
 	spin_unlock_irq(&card->lock);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return;
+>>>>>>> cm-10.0
 }
 
 static irqreturn_t mm_interrupt(int irq, void *__card)

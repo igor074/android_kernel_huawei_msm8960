@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -595,6 +599,32 @@ static int pm8xxx_vreg_is_enabled(struct regulator_dev *rdev)
 	return enabled;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Adds delay when increasing in voltage to account for the slew rate of
+ * the regulator.
+ */
+static void pm8xxx_vreg_delay_for_slew(struct pm8xxx_vreg *vreg, int prev_uV,
+					int new_uV)
+{
+	int delay;
+
+	if (vreg->pdata.slew_rate == 0 || new_uV <= prev_uV ||
+	    !_pm8xxx_vreg_is_enabled(vreg))
+		return;
+
+	delay = DIV_ROUND_UP(new_uV - prev_uV, vreg->pdata.slew_rate);
+
+	if (delay >= 1000) {
+		mdelay(delay / 1000);
+		udelay(delay % 1000);
+	} else {
+		udelay(delay);
+	}
+}
+
+>>>>>>> cm-10.0
 static int pm8xxx_pldo_get_voltage(struct regulator_dev *rdev)
 {
 	struct pm8xxx_vreg *vreg = rdev_get_drvdata(rdev);
@@ -655,7 +685,11 @@ static int pm8xxx_pldo_set_voltage(struct regulator_dev *rdev, int min_uV,
 {
 	struct pm8xxx_vreg *vreg = rdev_get_drvdata(rdev);
 	int rc = 0, uV = min_uV;
+<<<<<<< HEAD
 	int vmin;
+=======
+	int vmin, prev_uV;
+>>>>>>> cm-10.0
 	unsigned vprog, fine_step;
 	u8 range_ext, range_sel, fine_step_reg, prev_reg;
 	bool reg_changed = false;
@@ -699,6 +733,11 @@ static int pm8xxx_pldo_set_voltage(struct regulator_dev *rdev, int min_uV,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	prev_uV = pm8xxx_pldo_get_voltage(rdev);
+
+>>>>>>> cm-10.0
 	mutex_lock(&vreg->pc_lock);
 
 	/* Write fine step, range select and program voltage update. */
@@ -746,8 +785,15 @@ bail:
 
 	if (rc)
 		vreg_err(vreg, "pm8xxx_vreg_masked_write failed, rc=%d\n", rc);
+<<<<<<< HEAD
 	else
 		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+=======
+	else {
+		pm8xxx_vreg_delay_for_slew(vreg, prev_uV, uV);
+		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+	}
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -783,7 +829,11 @@ static int pm8xxx_nldo_set_voltage(struct regulator_dev *rdev, int min_uV,
 {
 	struct pm8xxx_vreg *vreg = rdev_get_drvdata(rdev);
 	unsigned vprog, fine_step_reg, prev_reg;
+<<<<<<< HEAD
 	int rc;
+=======
+	int rc, prev_uV;
+>>>>>>> cm-10.0
 	int uV = min_uV;
 
 	if (uV < NLDO_UV_MIN && max_uV >= NLDO_UV_MIN)
@@ -808,6 +858,11 @@ static int pm8xxx_nldo_set_voltage(struct regulator_dev *rdev, int min_uV,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	prev_uV = pm8xxx_nldo_get_voltage(rdev);
+
+>>>>>>> cm-10.0
 	mutex_lock(&vreg->pc_lock);
 
 	/* Write fine step. */
@@ -840,8 +895,15 @@ bail:
 
 	if (rc)
 		vreg_err(vreg, "pm8xxx_vreg_masked_write failed, rc=%d\n", rc);
+<<<<<<< HEAD
 	else
 		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+=======
+	else {
+		pm8xxx_vreg_delay_for_slew(vreg, prev_uV, uV);
+		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+	}
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -897,7 +959,11 @@ static int _pm8xxx_nldo1200_set_voltage(struct pm8xxx_vreg *vreg, int min_uV,
 		int max_uV)
 {
 	u8 vprog, range;
+<<<<<<< HEAD
 	int rc;
+=======
+	int rc, prev_uV;
+>>>>>>> cm-10.0
 	int uV = min_uV;
 
 	if (uV < NLDO1200_LOW_UV_MIN && max_uV >= NLDO1200_LOW_UV_MIN)
@@ -931,6 +997,11 @@ static int _pm8xxx_nldo1200_set_voltage(struct pm8xxx_vreg *vreg, int min_uV,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	prev_uV = _pm8xxx_nldo1200_get_voltage(vreg);
+
+>>>>>>> cm-10.0
 	/* Set to advanced mode */
 	rc = pm8xxx_vreg_masked_write(vreg, vreg->test_addr,
 		NLDO1200_ADVANCED_MODE | REGULATOR_BANK_SEL(2)
@@ -948,6 +1019,10 @@ static int _pm8xxx_nldo1200_set_voltage(struct pm8xxx_vreg *vreg, int min_uV,
 
 	vreg->save_uV = uV;
 
+<<<<<<< HEAD
+=======
+	pm8xxx_vreg_delay_for_slew(vreg, prev_uV, uV);
+>>>>>>> cm-10.0
 bail:
 	if (rc)
 		vreg_err(vreg, "pm8xxx_vreg_masked_write failed, rc=%d\n", rc);
@@ -1208,6 +1283,12 @@ static int pm8xxx_smps_set_voltage(struct regulator_dev *rdev, int min_uV,
 {
 	struct pm8xxx_vreg *vreg = rdev_get_drvdata(rdev);
 	int rc = 0;
+<<<<<<< HEAD
+=======
+	int prev_uV, new_uV;
+
+	prev_uV = pm8xxx_smps_get_voltage(rdev);
+>>>>>>> cm-10.0
 
 	mutex_lock(&vreg->pc_lock);
 
@@ -1218,8 +1299,17 @@ static int pm8xxx_smps_set_voltage(struct regulator_dev *rdev, int min_uV,
 
 	mutex_unlock(&vreg->pc_lock);
 
+<<<<<<< HEAD
 	if (!rc)
 		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+=======
+	new_uV = pm8xxx_smps_get_voltage(rdev);
+
+	if (!rc) {
+		pm8xxx_vreg_delay_for_slew(vreg, prev_uV, new_uV);
+		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+	}
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -1291,6 +1381,10 @@ static int _pm8xxx_ftsmps_set_voltage(struct pm8xxx_vreg *vreg, int min_uV,
 	int rc = 0;
 	u8 vprog, band;
 	int uV = min_uV;
+<<<<<<< HEAD
+=======
+	int prev_uV;
+>>>>>>> cm-10.0
 
 	if (uV < FTSMPS_BAND1_UV_MIN && max_uV >= FTSMPS_BAND1_UV_MIN)
 		uV = FTSMPS_BAND1_UV_MIN;
@@ -1336,6 +1430,11 @@ static int _pm8xxx_ftsmps_set_voltage(struct pm8xxx_vreg *vreg, int min_uV,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	prev_uV = _pm8xxx_ftsmps_get_voltage(vreg);
+
+>>>>>>> cm-10.0
 	/*
 	 * Do not set voltage if regulator is currently disabled because doing
 	 * so will enable it.
@@ -1358,6 +1457,11 @@ static int _pm8xxx_ftsmps_set_voltage(struct pm8xxx_vreg *vreg, int min_uV,
 
 	vreg->save_uV = uV;
 
+<<<<<<< HEAD
+=======
+	pm8xxx_vreg_delay_for_slew(vreg, prev_uV, uV);
+
+>>>>>>> cm-10.0
 bail:
 	if (rc)
 		vreg_err(vreg, "pm8xxx_vreg_masked_write failed, rc=%d\n", rc);
@@ -1402,7 +1506,11 @@ static int pm8xxx_ncp_set_voltage(struct regulator_dev *rdev, int min_uV,
 				  int max_uV, unsigned *selector)
 {
 	struct pm8xxx_vreg *vreg = rdev_get_drvdata(rdev);
+<<<<<<< HEAD
 	int rc;
+=======
+	int rc, prev_uV;
+>>>>>>> cm-10.0
 	int uV = min_uV;
 	u8 val;
 
@@ -1426,13 +1534,25 @@ static int pm8xxx_ncp_set_voltage(struct regulator_dev *rdev, int min_uV,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	prev_uV = pm8xxx_ncp_get_voltage(rdev);
+
+>>>>>>> cm-10.0
 	/* voltage setting */
 	rc = pm8xxx_vreg_masked_write(vreg, vreg->ctrl_addr, val,
 			NCP_VPROG_MASK, &vreg->ctrl_reg);
 	if (rc)
 		vreg_err(vreg, "pm8xxx_vreg_masked_write failed, rc=%d\n", rc);
+<<<<<<< HEAD
 	else
 		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+=======
+	else {
+		pm8xxx_vreg_delay_for_slew(vreg, prev_uV, uV);
+		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+	}
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -1460,7 +1580,11 @@ static int pm8xxx_boost_set_voltage(struct regulator_dev *rdev, int min_uV,
 				   int max_uV, unsigned *selector)
 {
 	struct pm8xxx_vreg *vreg = rdev_get_drvdata(rdev);
+<<<<<<< HEAD
 	int rc;
+=======
+	int rc, prev_uV;
+>>>>>>> cm-10.0
 	int uV = min_uV;
 	u8 val;
 
@@ -1484,13 +1608,25 @@ static int pm8xxx_boost_set_voltage(struct regulator_dev *rdev, int min_uV,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	prev_uV = pm8xxx_boost_get_voltage(rdev);
+
+>>>>>>> cm-10.0
 	/* voltage setting */
 	rc = pm8xxx_vreg_masked_write(vreg, vreg->ctrl_addr, val,
 			BOOST_VPROG_MASK, &vreg->ctrl_reg);
 	if (rc)
 		vreg_err(vreg, "pm8xxx_vreg_masked_write failed, rc=%d\n", rc);
+<<<<<<< HEAD
 	else
 		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+=======
+	else {
+		pm8xxx_vreg_delay_for_slew(vreg, prev_uV, uV);
+		pm8xxx_vreg_show_state(rdev, PM8XXX_REGULATOR_ACTION_VOLTAGE);
+	}
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -3151,6 +3287,19 @@ static int __devinit pm8xxx_vreg_probe(struct platform_device *pdev)
 			sizeof(struct pm8xxx_regulator_platform_data));
 		vreg->pdata.pin_ctrl = pin_ctrl;
 		vreg->pdata.pin_fn = pin_fn;
+<<<<<<< HEAD
+=======
+		/*
+		 * If slew_rate isn't specified but enable_time is, then set
+		 * slew_rate = max_uV / enable_time.
+		 */
+		if (vreg->pdata.enable_time > 0
+		    && vreg->pdata.init_data.constraints.max_uV > 0
+		    && vreg->pdata.slew_rate <= 0)
+			vreg->pdata.slew_rate =
+			  DIV_ROUND_UP(vreg->pdata.init_data.constraints.max_uV,
+					vreg->pdata.enable_time);
+>>>>>>> cm-10.0
 		vreg->dev = &pdev->dev;
 	} else {
 		/* Pin control regulator */
@@ -3206,7 +3355,11 @@ static int __devinit pm8xxx_vreg_probe(struct platform_device *pdev)
 
 	if (!core_data->is_pin_controlled) {
 		vreg->rdev = regulator_register(rdesc, &pdev->dev,
+<<<<<<< HEAD
 				&(pdata->init_data), vreg);
+=======
+				&(pdata->init_data), vreg, NULL);
+>>>>>>> cm-10.0
 		if (IS_ERR(vreg->rdev)) {
 			rc = PTR_ERR(vreg->rdev);
 			vreg->rdev = NULL;
@@ -3215,7 +3368,11 @@ static int __devinit pm8xxx_vreg_probe(struct platform_device *pdev)
 		}
 	} else {
 		vreg->rdev_pc = regulator_register(rdesc, &pdev->dev,
+<<<<<<< HEAD
 				&(pdata->init_data), vreg);
+=======
+				&(pdata->init_data), vreg, NULL);
+>>>>>>> cm-10.0
 		if (IS_ERR(vreg->rdev_pc)) {
 			rc = PTR_ERR(vreg->rdev_pc);
 			vreg->rdev_pc = NULL;

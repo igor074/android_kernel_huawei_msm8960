@@ -26,10 +26,18 @@
 
 #include <linux/personality.h>
 #include <linux/mm.h>
+<<<<<<< HEAD
 #include <linux/module.h>
 #include <linux/random.h>
 #include <asm/pgalloc.h>
 #include <asm/compat.h>
+=======
+#include <linux/mman.h>
+#include <linux/module.h>
+#include <linux/random.h>
+#include <linux/compat.h>
+#include <asm/pgalloc.h>
+>>>>>>> cm-10.0
 
 static unsigned long stack_maxrandom_size(void)
 {
@@ -99,7 +107,10 @@ void arch_pick_mmap_layout(struct mm_struct *mm)
 		mm->unmap_area = arch_unmap_area_topdown;
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(arch_pick_mmap_layout);
+=======
+>>>>>>> cm-10.0
 
 #else
 
@@ -174,6 +185,9 @@ void arch_pick_mmap_layout(struct mm_struct *mm)
 		mm->unmap_area = arch_unmap_area_topdown;
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(arch_pick_mmap_layout);
+=======
+>>>>>>> cm-10.0
 
 #endif

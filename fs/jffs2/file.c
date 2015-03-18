@@ -10,6 +10,11 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+>>>>>>> cm-10.0
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/time.h>
@@ -27,6 +32,7 @@ static int jffs2_write_begin(struct file *filp, struct address_space *mapping,
 			struct page **pagep, void **fsdata);
 static int jffs2_readpage (struct file *filp, struct page *pg);
 
+<<<<<<< HEAD
 int jffs2_fsync(struct file *filp, int datasync)
 {
 	struct inode *inode = filp->f_mapping->host;
@@ -34,6 +40,22 @@ int jffs2_fsync(struct file *filp, int datasync)
 
 	/* Trigger GC to flush any pending writes for this inode */
 	jffs2_flush_wbuf_gc(c, inode->i_ino);
+=======
+int jffs2_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+{
+	struct inode *inode = filp->f_mapping->host;
+	struct jffs2_sb_info *c = JFFS2_SB_INFO(inode->i_sb);
+	int ret;
+
+	ret = filemap_write_and_wait_range(inode->i_mapping, start, end);
+	if (ret)
+		return ret;
+
+	mutex_lock(&inode->i_mutex);
+	/* Trigger GC to flush any pending writes for this inode */
+	jffs2_flush_wbuf_gc(c, inode->i_ino);
+	mutex_unlock(&inode->i_mutex);
+>>>>>>> cm-10.0
 
 	return 0;
 }
@@ -56,7 +78,11 @@ const struct file_operations jffs2_file_operations =
 
 const struct inode_operations jffs2_file_inode_operations =
 {
+<<<<<<< HEAD
 	.check_acl =	jffs2_check_acl,
+=======
+	.get_acl =	jffs2_get_acl,
+>>>>>>> cm-10.0
 	.setattr =	jffs2_setattr,
 	.setxattr =	jffs2_setxattr,
 	.getxattr =	jffs2_getxattr,
@@ -78,7 +104,12 @@ static int jffs2_do_readpage_nolock (struct inode *inode, struct page *pg)
 	unsigned char *pg_buf;
 	int ret;
 
+<<<<<<< HEAD
 	D2(printk(KERN_DEBUG "jffs2_do_readpage_nolock(): ino #%lu, page at offset 0x%lx\n", inode->i_ino, pg->index << PAGE_CACHE_SHIFT));
+=======
+	jffs2_dbg(2, "%s(): ino #%lu, page at offset 0x%lx\n",
+		  __func__, inode->i_ino, pg->index << PAGE_CACHE_SHIFT);
+>>>>>>> cm-10.0
 
 	BUG_ON(!PageLocked(pg));
 
@@ -98,7 +129,11 @@ static int jffs2_do_readpage_nolock (struct inode *inode, struct page *pg)
 	flush_dcache_page(pg);
 	kunmap(pg);
 
+<<<<<<< HEAD
 	D2(printk(KERN_DEBUG "readpage finished\n"));
+=======
+	jffs2_dbg(2, "readpage finished\n");
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -137,7 +172,11 @@ static int jffs2_write_begin(struct file *filp, struct address_space *mapping,
 		return -ENOMEM;
 	*pagep = pg;
 
+<<<<<<< HEAD
 	D1(printk(KERN_DEBUG "jffs2_write_begin()\n"));
+=======
+	jffs2_dbg(1, "%s()\n", __func__);
+>>>>>>> cm-10.0
 
 	if (pageofs > inode->i_size) {
 		/* Make new hole frag from old EOF to new page */
@@ -146,8 +185,13 @@ static int jffs2_write_begin(struct file *filp, struct address_space *mapping,
 		struct jffs2_full_dnode *fn;
 		uint32_t alloc_len;
 
+<<<<<<< HEAD
 		D1(printk(KERN_DEBUG "Writing new hole frag 0x%x-0x%x between current EOF and new page\n",
 			  (unsigned int)inode->i_size, pageofs));
+=======
+		jffs2_dbg(1, "Writing new hole frag 0x%x-0x%x between current EOF and new page\n",
+			  (unsigned int)inode->i_size, pageofs);
+>>>>>>> cm-10.0
 
 		ret = jffs2_reserve_space(c, sizeof(ri), &alloc_len,
 					  ALLOC_NORMAL, JFFS2_SUMMARY_INODE_SIZE);
@@ -191,7 +235,12 @@ static int jffs2_write_begin(struct file *filp, struct address_space *mapping,
 			f->metadata = NULL;
 		}
 		if (ret) {
+<<<<<<< HEAD
 			D1(printk(KERN_DEBUG "Eep. add_full_dnode_to_inode() failed in write_begin, returned %d\n", ret));
+=======
+			jffs2_dbg(1, "Eep. add_full_dnode_to_inode() failed in write_begin, returned %d\n",
+				  ret);
+>>>>>>> cm-10.0
 			jffs2_mark_node_obsolete(c, fn->raw);
 			jffs2_free_full_dnode(fn);
 			jffs2_complete_reservation(c);
@@ -215,7 +264,11 @@ static int jffs2_write_begin(struct file *filp, struct address_space *mapping,
 		if (ret)
 			goto out_page;
 	}
+<<<<<<< HEAD
 	D1(printk(KERN_DEBUG "end write_begin(). pg->flags %lx\n", pg->flags));
+=======
+	jffs2_dbg(1, "end write_begin(). pg->flags %lx\n", pg->flags);
+>>>>>>> cm-10.0
 	return ret;
 
 out_page:
@@ -241,8 +294,14 @@ static int jffs2_write_end(struct file *filp, struct address_space *mapping,
 	int ret = 0;
 	uint32_t writtenlen = 0;
 
+<<<<<<< HEAD
 	D1(printk(KERN_DEBUG "jffs2_write_end(): ino #%lu, page at 0x%lx, range %d-%d, flags %lx\n",
 		  inode->i_ino, pg->index << PAGE_CACHE_SHIFT, start, end, pg->flags));
+=======
+	jffs2_dbg(1, "%s(): ino #%lu, page at 0x%lx, range %d-%d, flags %lx\n",
+		  __func__, inode->i_ino, pg->index << PAGE_CACHE_SHIFT,
+		  start, end, pg->flags);
+>>>>>>> cm-10.0
 
 	/* We need to avoid deadlock with page_cache_read() in
 	   jffs2_garbage_collect_pass(). So the page must be
@@ -261,7 +320,12 @@ static int jffs2_write_end(struct file *filp, struct address_space *mapping,
 	ri = jffs2_alloc_raw_inode();
 
 	if (!ri) {
+<<<<<<< HEAD
 		D1(printk(KERN_DEBUG "jffs2_write_end(): Allocation of raw inode failed\n"));
+=======
+		jffs2_dbg(1, "%s(): Allocation of raw inode failed\n",
+			  __func__);
+>>>>>>> cm-10.0
 		unlock_page(pg);
 		page_cache_release(pg);
 		return -ENOMEM;
@@ -308,13 +372,23 @@ static int jffs2_write_end(struct file *filp, struct address_space *mapping,
 		/* generic_file_write has written more to the page cache than we've
 		   actually written to the medium. Mark the page !Uptodate so that
 		   it gets reread */
+<<<<<<< HEAD
 		D1(printk(KERN_DEBUG "jffs2_write_end(): Not all bytes written. Marking page !uptodate\n"));
+=======
+		jffs2_dbg(1, "%s(): Not all bytes written. Marking page !uptodate\n",
+			__func__);
+>>>>>>> cm-10.0
 		SetPageError(pg);
 		ClearPageUptodate(pg);
 	}
 
+<<<<<<< HEAD
 	D1(printk(KERN_DEBUG "jffs2_write_end() returning %d\n",
 					writtenlen > 0 ? writtenlen : ret));
+=======
+	jffs2_dbg(1, "%s() returning %d\n",
+		  __func__, writtenlen > 0 ? writtenlen : ret);
+>>>>>>> cm-10.0
 	unlock_page(pg);
 	page_cache_release(pg);
 	return writtenlen > 0 ? writtenlen : ret;

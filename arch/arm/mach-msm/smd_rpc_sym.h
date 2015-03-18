@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -9,7 +13,11 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
+<<<<<<< HEAD
  *     * Neither the name of Code Aurora Forum, Inc. nor the names of its
+=======
+ *     * Neither the name of The Linux Foundation nor the names of its
+>>>>>>> cm-10.0
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *

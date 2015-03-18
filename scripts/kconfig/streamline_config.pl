@@ -43,6 +43,10 @@
 #    make oldconfig
 #
 use strict;
+<<<<<<< HEAD
+=======
+use Getopt::Long;
+>>>>>>> cm-10.0
 
 my $config = ".config";
 
@@ -112,10 +116,24 @@ sub find_config {
 
 find_config;
 
+<<<<<<< HEAD
 # Get the build source and top level Kconfig file (passed in)
 my $ksource = $ARGV[0];
 my $kconfig = $ARGV[1];
 my $lsmod_file = $ARGV[2];
+=======
+# Parse options
+my $localmodconfig = 0;
+my $localyesconfig = 0;
+
+GetOptions("localmodconfig" => \$localmodconfig,
+	   "localyesconfig" => \$localyesconfig);
+
+# Get the build source and top level Kconfig file (passed in)
+my $ksource = $ARGV[0];
+my $kconfig = $ARGV[1];
+my $lsmod_file = $ENV{'LSMOD'};
+>>>>>>> cm-10.0
 
 my @makefiles = `find $ksource -name Makefile 2>/dev/null`;
 chomp @makefiles;
@@ -242,6 +260,7 @@ if ($kconfig) {
     read_kconfig($kconfig);
 }
 
+<<<<<<< HEAD
 # Read all Makefiles to map the configs to the objects
 foreach my $makefile (@makefiles) {
 
@@ -256,11 +275,58 @@ foreach my $makefile (@makefiles) {
 	    $objs = $1;
 	}
 	$cont = 0;
+=======
+sub convert_vars {
+    my ($line, %vars) = @_;
+
+    my $process = "";
+
+    while ($line =~ s/^(.*?)(\$\((.*?)\))//) {
+	my $start = $1;
+	my $variable = $2;
+	my $var = $3;
+
+	if (defined($vars{$var})) {
+	    $process .= $start . $vars{$var};
+	} else {
+	    $process .= $start . $variable;
+	}
+    }
+
+    $process .= $line;
+
+    return $process;
+}
+
+# Read all Makefiles to map the configs to the objects
+foreach my $makefile (@makefiles) {
+
+    my $line = "";
+    my %make_vars;
+
+    open(MIN,$makefile) || die "Can't open $makefile";
+    while (<MIN>) {
+	# if this line ends with a backslash, continue
+	chomp;
+	if (/^(.*)\\$/) {
+	    $line .= $1;
+	    next;
+	}
+
+	$line .= $_;
+	$_ = $line;
+	$line = "";
+
+	my $objs;
+
+	$_ = convert_vars($_, %make_vars);
+>>>>>>> cm-10.0
 
 	# collect objects after obj-$(CONFIG_FOO_BAR)
 	if (/obj-\$\((CONFIG_[^\)]*)\)\s*[+:]?=\s*(.*)/) {
 	    $var = $1;
 	    $objs = $2;
+<<<<<<< HEAD
 	}
 	if (defined($objs)) {
 	    # test if the line ends with a backslash
@@ -269,6 +335,14 @@ foreach my $makefile (@makefiles) {
 		$cont = 1;
 	    }
 
+=======
+
+	# check if variables are set
+	} elsif (/^\s*(\S+)\s*[:]?=\s*(.*\S)/) {
+	    $make_vars{$1} = $2;
+	}
+	if (defined($objs)) {
+>>>>>>> cm-10.0
 	    foreach my $obj (split /\s+/,$objs) {
 		$obj =~ s/-/_/g;
 		if ($obj =~ /(.*)\.o$/) {
@@ -296,7 +370,15 @@ my %modules;
 
 if (defined($lsmod_file)) {
     if ( ! -f $lsmod_file) {
+<<<<<<< HEAD
 	die "$lsmod_file not found";
+=======
+	if ( -f $ENV{'objtree'}."/".$lsmod_file) {
+	    $lsmod_file = $ENV{'objtree'}."/".$lsmod_file;
+	} else {
+		die "$lsmod_file not found";
+	}
+>>>>>>> cm-10.0
     }
     if ( -x $lsmod_file) {
 	# the file is executable, run it
@@ -421,7 +503,15 @@ while(<CIN>) {
 
     if (/^(CONFIG.*)=(m|y)/) {
 	if (defined($configs{$1})) {
+<<<<<<< HEAD
 	    $setconfigs{$1} = $2;
+=======
+	    if ($localyesconfig) {
+	        $setconfigs{$1} = 'y';
+	    } else {
+	        $setconfigs{$1} = $2;
+	    }
+>>>>>>> cm-10.0
 	} elsif ($2 eq "m") {
 	    print "# $1 is not set\n";
 	    next;

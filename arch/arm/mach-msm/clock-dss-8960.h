@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,7 +19,10 @@
 
 int hdmi_pll_enable(void);
 void hdmi_pll_disable(void);
+<<<<<<< HEAD
 unsigned hdmi_pll_get_rate(void);
+=======
+>>>>>>> cm-10.0
 int hdmi_pll_set_rate(unsigned rate);
 
 #endif

@@ -17,7 +17,10 @@
 #include <linux/kernel.h>
 #include <linux/ptrace.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/pgtable.h>
 
 /*

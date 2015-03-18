@@ -28,8 +28,13 @@
 
 #include <altivec.h>
 #ifdef __KERNEL__
+<<<<<<< HEAD
 # include <asm/system.h>
 # include <asm/cputable.h>
+=======
+# include <asm/cputable.h>
+# include <asm/switch_to.h>
+>>>>>>> cm-10.0
 #endif
 
 /*

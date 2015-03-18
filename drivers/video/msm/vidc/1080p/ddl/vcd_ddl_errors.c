@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -766,6 +770,10 @@ void print_core_recoverable_errors(u32 error_code)
 	break;
 	}
 	if (string)
+<<<<<<< HEAD
 		DDL_MSG_ERROR("Recoverable Error code = 0x%x : %s",
+=======
+		DDL_MSG_LOW("Recoverable Error code = 0x%x : %s",
+>>>>>>> cm-10.0
 					  error_code, string);
 }

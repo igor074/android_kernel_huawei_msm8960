@@ -34,13 +34,20 @@
 
 #include <asm/pgtable.h>
 #include <asm/uaccess.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/processor.h>
 #include <asm/platform.h>
 #include <asm/mmu.h>
 #include <asm/irq.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <asm/asm-offsets.h>
 #include <asm/regs.h>
 
@@ -113,9 +120,13 @@ void cpu_idle(void)
 	while (1) {
 		while (!need_resched())
 			platform_idle();
+<<<<<<< HEAD
 		preempt_enable_no_resched();
 		schedule();
 		preempt_disable();
+=======
+		schedule_preempt_disabled();
+>>>>>>> cm-10.0
 	}
 }
 

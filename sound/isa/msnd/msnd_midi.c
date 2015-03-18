@@ -29,6 +29,10 @@
 #include <linux/delay.h>
 #include <linux/ioport.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <sound/core.h>
 #include <sound/rawmidi.h>
 

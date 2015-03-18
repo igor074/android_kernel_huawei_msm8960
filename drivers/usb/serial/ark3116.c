@@ -37,12 +37,20 @@
 #include <linux/mutex.h>
 #include <linux/spinlock.h>
 
+<<<<<<< HEAD
 static int debug;
+=======
+static bool debug;
+>>>>>>> cm-10.0
 /*
  * Version information
  */
 
+<<<<<<< HEAD
 #define DRIVER_VERSION "v0.6"
+=======
+#define DRIVER_VERSION "v0.7"
+>>>>>>> cm-10.0
 #define DRIVER_AUTHOR "Bart Hartgers <bart.hartgers+ark3116@gmail.com>"
 #define DRIVER_DESC "USB ARK3116 serial/IrDA driver"
 #define DRIVER_DEV_DESC "ARK3116 RS232/IrDA"
@@ -380,10 +388,13 @@ static int ark3116_open(struct tty_struct *tty, struct usb_serial_port *port)
 		goto err_out;
 	}
 
+<<<<<<< HEAD
 	/* setup termios */
 	if (tty)
 		ark3116_set_termios(tty, port, NULL);
 
+=======
+>>>>>>> cm-10.0
 	/* remove any data still left: also clears error state */
 	ark3116_read_reg(serial, UART_RX, buf);
 
@@ -406,6 +417,13 @@ static int ark3116_open(struct tty_struct *tty, struct usb_serial_port *port)
 	/* enable DMA */
 	ark3116_write_reg(port->serial, UART_FCR, UART_FCR_DMA_SELECT);
 
+<<<<<<< HEAD
+=======
+	/* setup termios */
+	if (tty)
+		ark3116_set_termios(tty, port, NULL);
+
+>>>>>>> cm-10.0
 err_out:
 	kfree(buf);
 	return result;
@@ -719,7 +737,10 @@ static struct usb_driver ark3116_driver = {
 	.probe =	usb_serial_probe,
 	.disconnect =	usb_serial_disconnect,
 	.id_table =	id_table,
+<<<<<<< HEAD
 	.no_dynamic_id =	1,
+=======
+>>>>>>> cm-10.0
 };
 
 static struct usb_serial_driver ark3116_device = {
@@ -728,7 +749,10 @@ static struct usb_serial_driver ark3116_device = {
 		.name =		"ark3116",
 	},
 	.id_table =		id_table,
+<<<<<<< HEAD
 	.usb_driver =		&ark3116_driver,
+=======
+>>>>>>> cm-10.0
 	.num_ports =		1,
 	.attach =		ark3116_attach,
 	.release =		ark3116_release,
@@ -745,6 +769,7 @@ static struct usb_serial_driver ark3116_device = {
 	.process_read_urb =	ark3116_process_read_urb,
 };
 
+<<<<<<< HEAD
 static int __init ark3116_init(void)
 {
 	int retval;
@@ -771,6 +796,14 @@ static void __exit ark3116_exit(void)
 
 module_init(ark3116_init);
 module_exit(ark3116_exit);
+=======
+static struct usb_serial_driver * const serial_drivers[] = {
+	&ark3116_device, NULL
+};
+
+module_usb_serial_driver(ark3116_driver, serial_drivers);
+
+>>>>>>> cm-10.0
 MODULE_LICENSE("GPL");
 
 MODULE_AUTHOR(DRIVER_AUTHOR);

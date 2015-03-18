@@ -6,7 +6,11 @@
 #include <linux/mmzone.h>
 #include <linux/bootmem.h>
 #include <linux/highmem.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/spinlock.h>
 #include <linux/vmalloc.h>
 #include "internal.h"
@@ -40,7 +44,11 @@ static u8 section_to_node_table[NR_MEM_SECTIONS] __cacheline_aligned;
 static u16 section_to_node_table[NR_MEM_SECTIONS] __cacheline_aligned;
 #endif
 
+<<<<<<< HEAD
 int page_to_nid(struct page *page)
+=======
+int page_to_nid(const struct page *page)
+>>>>>>> cm-10.0
 {
 	return section_to_node_table[page_to_section(page)];
 }
@@ -355,6 +363,7 @@ static void __init sparse_early_usemaps_alloc_node(unsigned long**usemap_map,
 
 	usemap = sparse_early_usemaps_alloc_pgdat_section(NODE_DATA(nodeid),
 								 usemap_count);
+<<<<<<< HEAD
 	if (usemap) {
 		for (pnum = pnum_begin; pnum < pnum_end; pnum++) {
 			if (!present_section_nr(pnum))
@@ -378,6 +387,23 @@ static void __init sparse_early_usemaps_alloc_node(unsigned long**usemap_map,
 	}
 
 	printk(KERN_WARNING "%s: allocation failed\n", __func__);
+=======
+	if (!usemap) {
+		usemap = alloc_bootmem_node(NODE_DATA(nodeid), size * usemap_count);
+		if (!usemap) {
+			printk(KERN_WARNING "%s: allocation failed\n", __func__);
+			return;
+		}
+	}
+
+	for (pnum = pnum_begin; pnum < pnum_end; pnum++) {
+		if (!present_section_nr(pnum))
+			continue;
+		usemap_map[pnum] = usemap;
+		usemap += size;
+		check_usemap_section_nr(nodeid, usemap_map[pnum]);
+	}
+>>>>>>> cm-10.0
 }
 
 #ifndef CONFIG_SPARSEMEM_VMEMMAP

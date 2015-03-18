@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -110,7 +114,11 @@
 #define OTG_ID_POLL_MS	1000
 
 struct msm_otg {
+<<<<<<< HEAD
 	struct otg_transceiver otg;
+=======
+	struct usb_phy phy;
+>>>>>>> cm-10.0
 
 	/* usb clocks */
 	struct clk		*alt_core_clk;
@@ -134,9 +142,15 @@ struct msm_otg {
 
 	void (*start_host)	(struct usb_bus *bus, int suspend);
 	/* Enable/disable the clocks */
+<<<<<<< HEAD
 	int (*set_clk)		(struct otg_transceiver *otg, int on);
 	/* Reset phy and link */
 	void (*reset)		(struct otg_transceiver *otg, int phy_reset);
+=======
+	int (*set_clk)		(struct usb_phy *phy, int on);
+	/* Reset phy and link */
+	void (*reset)		(struct usb_phy *phy, int phy_reset);
+>>>>>>> cm-10.0
 	/* pmic notfications apis */
 	u8 pmic_vbus_notif_supp;
 	u8 pmic_id_notif_supp;

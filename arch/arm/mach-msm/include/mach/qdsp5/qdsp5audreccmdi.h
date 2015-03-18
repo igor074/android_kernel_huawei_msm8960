@@ -15,7 +15,11 @@
  * EXTERNALIZED FUNCTIONS
  *  None
  *
+<<<<<<< HEAD
  * Copyright (c) 1992-2009, 2011 Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 1992-2009, 2011 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and

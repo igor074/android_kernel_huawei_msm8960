@@ -1,7 +1,11 @@
 /*
  * Marimba TSADC driver.
  *
+<<<<<<< HEAD
  * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2010, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -437,7 +441,11 @@ marimba_tsadc_suspend(struct device *dev)
 	struct marimba_tsadc *tsadc = dev_get_drvdata(dev);
 
 	if (tsadc->clk_enabled == true) {
+<<<<<<< HEAD
 		clk_disable(tsadc->codec_ssbi);
+=======
+		clk_disable_unprepare(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 		tsadc->clk_enabled = false;
 	}
 
@@ -462,7 +470,11 @@ fail_tsadc_power:
 	marimba_tsadc_configure(tsadc_dev);
 fail_shutdown:
 	if (tsadc->clk_enabled == false) {
+<<<<<<< HEAD
 		ret = clk_enable(tsadc->codec_ssbi);
+=======
+		ret = clk_prepare_enable(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 		if (ret == 0)
 			tsadc->clk_enabled = true;
 	}
@@ -475,7 +487,11 @@ static int marimba_tsadc_resume(struct device *dev)
 	struct marimba_tsadc *tsadc = dev_get_drvdata(dev);
 
 	if (tsadc->clk_enabled == false) {
+<<<<<<< HEAD
 		rc = clk_enable(tsadc->codec_ssbi);
+=======
+		rc = clk_prepare_enable(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 		if (rc != 0) {
 			pr_err("%s: Clk enable failed\n", __func__);
 			return rc;
@@ -515,7 +531,11 @@ fail_tsadc_startup:
 		tsadc->pdata->marimba_tsadc_power(0);
 fail_tsadc_power:
 	if (tsadc->clk_enabled == true) {
+<<<<<<< HEAD
 		clk_disable(tsadc->codec_ssbi);
+=======
+		clk_disable_unprepare(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 		tsadc->clk_enabled = false;
 	}
 	return rc;
@@ -591,7 +611,11 @@ static int __devinit marimba_tsadc_probe(struct platform_device *pdev)
 		rc = PTR_ERR(tsadc->codec_ssbi);
 		goto fail_clk_get;
 	}
+<<<<<<< HEAD
 	rc = clk_enable(tsadc->codec_ssbi);
+=======
+	rc = clk_prepare_enable(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 	if (rc != 0)
 		goto fail_clk_enable;
 
@@ -623,7 +647,11 @@ static int __devinit marimba_tsadc_probe(struct platform_device *pdev)
 	return rc;
 
 fail_add_subdev:
+<<<<<<< HEAD
 	clk_disable(tsadc->codec_ssbi);
+=======
+	clk_disable_unprepare(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 
 fail_clk_enable:
 	clk_put(tsadc->codec_ssbi);
@@ -647,7 +675,11 @@ static int __devexit marimba_tsadc_remove(struct platform_device *pdev)
 	device_init_wakeup(&pdev->dev, 0);
 
 	if (tsadc->clk_enabled == true)
+<<<<<<< HEAD
 		clk_disable(tsadc->codec_ssbi);
+=======
+		clk_disable_unprepare(tsadc->codec_ssbi);
+>>>>>>> cm-10.0
 
 	clk_put(tsadc->codec_ssbi);
 

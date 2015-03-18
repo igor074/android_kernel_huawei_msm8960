@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * File:         Documentation/blackfin/bfin-gpio-note.txt
+=======
+ * File:         Documentation/blackfin/bfin-gpio-notes.txt
+>>>>>>> cm-10.0
  * Based on:
  * Author:
  *

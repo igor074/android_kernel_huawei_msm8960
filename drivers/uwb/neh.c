@@ -85,6 +85,10 @@
 #include <linux/timer.h>
 #include <linux/slab.h>
 #include <linux/err.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "uwb-internal.h"
 
@@ -106,6 +110,10 @@ struct uwb_rc_neh {
 	u8 evt_type;
 	__le16 evt;
 	u8 context;
+<<<<<<< HEAD
+=======
+	u8 completed;
+>>>>>>> cm-10.0
 	uwb_rc_cmd_cb_f cb;
 	void *arg;
 
@@ -408,6 +416,10 @@ static void uwb_rc_neh_grok_event(struct uwb_rc *rc, struct uwb_rceb *rceb, size
 	struct device *dev = &rc->uwb_dev.dev;
 	struct uwb_rc_neh *neh;
 	struct uwb_rceb *notif;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> cm-10.0
 
 	if (rceb->bEventContext == 0) {
 		notif = kmalloc(size, GFP_ATOMIC);
@@ -421,7 +433,15 @@ static void uwb_rc_neh_grok_event(struct uwb_rc *rc, struct uwb_rceb *rceb, size
 	} else {
 		neh = uwb_rc_neh_lookup(rc, rceb);
 		if (neh) {
+<<<<<<< HEAD
 			del_timer_sync(&neh->timer);
+=======
+			spin_lock_irqsave(&rc->neh_lock, flags);
+			/* to guard against a timeout */
+			neh->completed = 1;
+			del_timer(&neh->timer);
+			spin_unlock_irqrestore(&rc->neh_lock, flags);
+>>>>>>> cm-10.0
 			uwb_rc_neh_cb(neh, rceb, size);
 		} else
 			dev_warn(dev, "event 0x%02x/%04x/%02x (%zu bytes): nobody cared\n",
@@ -567,6 +587,13 @@ static void uwb_rc_neh_timer(unsigned long arg)
 	unsigned long flags;
 
 	spin_lock_irqsave(&rc->neh_lock, flags);
+<<<<<<< HEAD
+=======
+	if (neh->completed) {
+		spin_unlock_irqrestore(&rc->neh_lock, flags);
+		return;
+	}
+>>>>>>> cm-10.0
 	if (neh->context)
 		__uwb_rc_neh_rm(rc, neh);
 	else

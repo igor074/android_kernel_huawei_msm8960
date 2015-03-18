@@ -1,7 +1,11 @@
 /*
  * Copyright (c) 2010,2011, Dan Magenheimer, Oracle Corp.
  * Copyright (c) 2010,2011, Nitin Gupta
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * Qcache provides an in-kernel "host implementation" for transcendent memory
  * and, thus indirectly, for cleancache and frontswap.  Qcache includes a
@@ -426,13 +430,21 @@ static int zbud_decompress(struct page *page, struct zbud_hdr *zh)
 	}
 	ASSERT_SENTINEL(zh, ZBH);
 	BUG_ON(zh->size == 0 || zh->size > zbud_max_buddy_size());
+<<<<<<< HEAD
 	to_va = kmap_atomic(page, KM_USER0);
+=======
+	to_va = kmap_atomic(page);
+>>>>>>> cm-10.0
 	size = zh->size;
 	from_va = zbud_data(zh, size);
 	ret = lzo1x_decompress_safe(from_va, size, to_va, &out_len);
 	BUG_ON(ret != LZO_E_OK);
 	BUG_ON(out_len != PAGE_SIZE);
+<<<<<<< HEAD
 	kunmap_atomic(to_va, KM_USER0);
+=======
+	kunmap_atomic(to_va);
+>>>>>>> cm-10.0
 out:
 	spin_unlock(&zbpg->lock);
 	return ret;
@@ -910,12 +922,20 @@ static int zcache_compress(struct page *from, void **out_va, size_t *out_len)
 	BUG_ON(!irqs_disabled());
 	if (unlikely(dmem == NULL || wmem == NULL))
 		goto out;  /* no buffer, so can't compress */
+<<<<<<< HEAD
 	from_va = kmap_atomic(from, KM_USER0);
+=======
+	from_va = kmap_atomic(from);
+>>>>>>> cm-10.0
 	mb();
 	ret = lzo1x_1_compress(from_va, PAGE_SIZE, dmem, out_len, wmem);
 	BUG_ON(ret != LZO_E_OK);
 	*out_va = dmem;
+<<<<<<< HEAD
 	kunmap_atomic(from_va, KM_USER0);
+=======
+	kunmap_atomic(from_va);
+>>>>>>> cm-10.0
 	ret = 1;
 out:
 	return ret;
@@ -1273,9 +1293,15 @@ static int zcache_cleancache_init_shared_fs(char *uuid, size_t pagesize)
 static struct cleancache_ops zcache_cleancache_ops = {
 	.put_page = zcache_cleancache_put_page,
 	.get_page = zcache_cleancache_get_page,
+<<<<<<< HEAD
 	.flush_page = zcache_cleancache_flush_page,
 	.flush_inode = zcache_cleancache_flush_inode,
 	.flush_fs = zcache_cleancache_flush_fs,
+=======
+	.invalidate_page = zcache_cleancache_flush_page,
+	.invalidate_inode = zcache_cleancache_flush_inode,
+	.invalidate_fs = zcache_cleancache_flush_fs,
+>>>>>>> cm-10.0
 	.init_shared_fs = zcache_cleancache_init_shared_fs,
 	.init_fs = zcache_cleancache_init_fs
 };

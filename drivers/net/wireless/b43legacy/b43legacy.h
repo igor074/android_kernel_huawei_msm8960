@@ -8,13 +8,20 @@
 #include <linux/stringify.h>
 #include <linux/netdevice.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <linux/io.h>
 
 #include <linux/ssb/ssb.h>
 #include <linux/ssb/ssb_driver_chipcommon.h>
 
+<<<<<<< HEAD
 #include <linux/wireless.h>
+=======
+>>>>>>> cm-10.0
 #include <net/mac80211.h>
 
 #include "debugfs.h"
@@ -23,10 +30,13 @@
 #include "phy.h"
 
 
+<<<<<<< HEAD
 /* The unique identifier of the firmware that's officially supported by this
  * driver version. */
 #define B43legacy_SUPPORTED_FIRMWARE_ID	"FW10"
 
+=======
+>>>>>>> cm-10.0
 #define B43legacy_IRQWAIT_MAX_RETRIES	20
 
 /* MMIO offsets */
@@ -532,6 +542,11 @@ struct b43legacy_dma {
 
 	struct b43legacy_dmaring *rx_ring0;
 	struct b43legacy_dmaring *rx_ring3; /* only on core.rev < 5 */
+<<<<<<< HEAD
+=======
+
+	u32 translation; /* Routing bits */
+>>>>>>> cm-10.0
 };
 
 /* Data structures for PIO transmission, per 80211 core. */
@@ -563,8 +578,21 @@ struct b43legacy_key {
 	u8 algorithm;
 };
 
+<<<<<<< HEAD
 struct b43legacy_wldev;
 
+=======
+#define B43legacy_QOS_QUEUE_NUM	4
+
+struct b43legacy_wldev;
+
+/* QOS parameters for a queue. */
+struct b43legacy_qos_params {
+	/* The QOS parameters */
+	struct ieee80211_tx_queue_params p;
+};
+
+>>>>>>> cm-10.0
 /* Data structure for the WLAN parts (802.11 cores) of the b43legacy chip. */
 struct b43legacy_wl {
 	/* Pointer to the active wireless device on this chip */
@@ -576,6 +604,12 @@ struct b43legacy_wl {
 	struct mutex mutex;		/* locks wireless core state */
 	spinlock_t leds_lock;		/* lock for leds */
 
+<<<<<<< HEAD
+=======
+	/* firmware loading work */
+	struct work_struct firmware_load;
+
+>>>>>>> cm-10.0
 	/* We can only have one operating interface (802.11 core)
 	 * at a time. General information about this interface follows.
 	 */
@@ -614,6 +648,21 @@ struct b43legacy_wl {
 	bool beacon1_uploaded;
 	bool beacon_templates_virgin; /* Never wrote the templates? */
 	struct work_struct beacon_update_trigger;
+<<<<<<< HEAD
+=======
+	/* The current QOS parameters for the 4 queues. */
+	struct b43legacy_qos_params qos_params[B43legacy_QOS_QUEUE_NUM];
+
+	/* Packet transmit work */
+	struct work_struct tx_work;
+
+	/* Queue of packets to be transmitted. */
+	struct sk_buff_head tx_queue[B43legacy_QOS_QUEUE_NUM];
+
+	/* Flag that implement the queues stopping. */
+	bool tx_queue_stopped[B43legacy_QOS_QUEUE_NUM];
+
+>>>>>>> cm-10.0
 };
 
 /* Pointers to the firmware data and meta information about it. */
@@ -813,6 +862,7 @@ struct b43legacy_lopair *b43legacy_get_lopair(struct b43legacy_phy *phy,
 
 
 /* Message printing */
+<<<<<<< HEAD
 void b43legacyinfo(struct b43legacy_wl *wl, const char *fmt, ...)
 		__attribute__((format(printf, 2, 3)));
 void b43legacyerr(struct b43legacy_wl *wl, const char *fmt, ...)
@@ -822,6 +872,17 @@ void b43legacywarn(struct b43legacy_wl *wl, const char *fmt, ...)
 #if B43legacy_DEBUG
 void b43legacydbg(struct b43legacy_wl *wl, const char *fmt, ...)
 		__attribute__((format(printf, 2, 3)));
+=======
+__printf(2, 3)
+void b43legacyinfo(struct b43legacy_wl *wl, const char *fmt, ...);
+__printf(2, 3)
+void b43legacyerr(struct b43legacy_wl *wl, const char *fmt, ...);
+__printf(2, 3)
+void b43legacywarn(struct b43legacy_wl *wl, const char *fmt, ...);
+#if B43legacy_DEBUG
+__printf(2, 3)
+void b43legacydbg(struct b43legacy_wl *wl, const char *fmt, ...);
+>>>>>>> cm-10.0
 #else /* DEBUG */
 # define b43legacydbg(wl, fmt...) do { /* nothing */ } while (0)
 #endif /* DEBUG */

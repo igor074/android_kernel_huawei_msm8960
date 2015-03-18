@@ -110,7 +110,20 @@ void vt_event_post(unsigned int event, unsigned int old, unsigned int new)
 		wake_up_interruptible(&vt_event_waitqueue);
 }
 
+<<<<<<< HEAD
 static void __vt_event_queue(struct vt_event_wait *vw)
+=======
+/**
+ *	vt_event_wait		-	wait for an event
+ *	@vw: our event
+ *
+ *	Waits for an event to occur which completes our vt_event_wait
+ *	structure. On return the structure has wv->done set to 1 for success
+ *	or 0 if some event such as a signal ended the wait.
+ */
+
+static void vt_event_wait(struct vt_event_wait *vw)
+>>>>>>> cm-10.0
 {
 	unsigned long flags;
 	/* Prepare the event */
@@ -120,6 +133,7 @@ static void __vt_event_queue(struct vt_event_wait *vw)
 	spin_lock_irqsave(&vt_event_lock, flags);
 	list_add(&vw->list, &vt_events);
 	spin_unlock_irqrestore(&vt_event_lock, flags);
+<<<<<<< HEAD
 }
 
 static void __vt_event_wait(struct vt_event_wait *vw)
@@ -132,6 +146,10 @@ static void __vt_event_dequeue(struct vt_event_wait *vw)
 {
     unsigned long flags;
 
+=======
+	/* Wait for it to pass */
+	wait_event_interruptible(vt_event_waitqueue, vw->done);
+>>>>>>> cm-10.0
 	/* Dequeue it */
 	spin_lock_irqsave(&vt_event_lock, flags);
 	list_del(&vw->list);
@@ -139,6 +157,7 @@ static void __vt_event_dequeue(struct vt_event_wait *vw)
 }
 
 /**
+<<<<<<< HEAD
  *	vt_event_wait		-	wait for an event
  *	@vw: our event
  *
@@ -155,6 +174,8 @@ static void vt_event_wait(struct vt_event_wait *vw)
 }
 
 /**
+=======
+>>>>>>> cm-10.0
  *	vt_event_wait_ioctl	-	event ioctl handler
  *	@arg: argument to ioctl
  *
@@ -194,6 +215,7 @@ int vt_waitactive(int n)
 {
 	struct vt_event_wait vw;
 	do {
+<<<<<<< HEAD
 //		if (n == fg_console + 1)
 //			break;
 		vw.event.event = VT_EVENT_SWITCH;
@@ -205,6 +227,12 @@ int vt_waitactive(int n)
         }
         __vt_event_wait(&vw);
         __vt_event_dequeue(&vw);
+=======
+		if (n == fg_console + 1)
+			break;
+		vw.event.event = VT_EVENT_SWITCH;
+		vt_event_wait(&vw);
+>>>>>>> cm-10.0
 		if (vw.done == 0)
 			return -EINTR;
 	} while (vw.event.newev != n);
@@ -219,6 +247,7 @@ int vt_waitactive(int n)
 #define GPLAST 0x3df
 #define GPNUM (GPLAST - GPFIRST + 1)
 
+<<<<<<< HEAD
 #define i (tmp.kb_index)
 #define s (tmp.kb_table)
 #define v (tmp.kb_value)
@@ -445,6 +474,9 @@ reterr:
 	kfree(kbs);
 	return ret;
 }
+=======
+
+>>>>>>> cm-10.0
 
 static inline int 
 do_fontx_ioctl(int cmd, struct consolefontdesc __user *user_cfd, int perm, struct console_font_op *op)
@@ -521,7 +553,10 @@ int vt_ioctl(struct tty_struct *tty,
 {
 	struct vc_data *vc = tty->driver_data;
 	struct console_font_op op;	/* used in multiple places here */
+<<<<<<< HEAD
 	struct kbd_struct * kbd;
+=======
+>>>>>>> cm-10.0
 	unsigned int console;
 	unsigned char ucval;
 	unsigned int uival;
@@ -531,7 +566,10 @@ int vt_ioctl(struct tty_struct *tty,
 
 	console = vc->vc_num;
 
+<<<<<<< HEAD
 	tty_lock();
+=======
+>>>>>>> cm-10.0
 
 	if (!vc_cons_allocated(console)) { 	/* impossible? */
 		ret = -ENOIOCTLCMD;
@@ -547,19 +585,30 @@ int vt_ioctl(struct tty_struct *tty,
 	if (current->signal->tty == tty || capable(CAP_SYS_TTY_CONFIG))
 		perm = 1;
  
+<<<<<<< HEAD
 	kbd = kbd_table + console;
+=======
+>>>>>>> cm-10.0
 	switch (cmd) {
 	case TIOCLINUX:
 		ret = tioclinux(tty, arg);
 		break;
 	case KIOCSOUND:
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		/*
 		 * The use of PIT_TICK_RATE is historic, it used to be
 		 * the platform-dependent CLOCK_TICK_RATE between 2.6.12
 		 * and 2.6.36, which was a minor but unfortunate ABI
+<<<<<<< HEAD
 		 * change.
+=======
+		 * change. kd_mksound is locked by the input layer.
+>>>>>>> cm-10.0
 		 */
 		if (arg)
 			arg = PIT_TICK_RATE / arg;
@@ -568,7 +617,11 @@ int vt_ioctl(struct tty_struct *tty,
 
 	case KDMKTONE:
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 	{
 		unsigned int ticks, count;
 		
@@ -586,10 +639,18 @@ int vt_ioctl(struct tty_struct *tty,
 
 	case KDGKBTYPE:
 		/*
+<<<<<<< HEAD
 		 * this is naive.
 		 */
 		ucval = KB_101;
 		goto setchar;
+=======
+		 * this is naïve.
+		 */
+		ucval = KB_101;
+		ret = put_user(ucval, (char __user *)arg);
+		break;
+>>>>>>> cm-10.0
 
 		/*
 		 * These cannot be implemented on any machine that implements
@@ -603,6 +664,11 @@ int vt_ioctl(struct tty_struct *tty,
 		/*
 		 * KDADDIO and KDDELIO may be able to add ports beyond what
 		 * we reject here, but to be safe...
+<<<<<<< HEAD
+=======
+		 *
+		 * These are locked internally via sys_ioperm
+>>>>>>> cm-10.0
 		 */
 		if (arg < GPFIRST || arg > GPLAST) {
 			ret = -EINVAL;
@@ -625,7 +691,11 @@ int vt_ioctl(struct tty_struct *tty,
 		struct kbd_repeat kbrep;
 		
 		if (!capable(CAP_SYS_TTY_CONFIG))
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 
 		if (copy_from_user(&kbrep, up, sizeof(struct kbd_repeat))) {
 			ret =  -EFAULT;
@@ -649,7 +719,11 @@ int vt_ioctl(struct tty_struct *tty,
 		 * need to restore their engine state. --BenH
 		 */
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		switch (arg) {
 		case KD_GRAPHICS:
 			break;
@@ -662,6 +736,10 @@ int vt_ioctl(struct tty_struct *tty,
 			ret = -EINVAL;
 			goto out;
 		}
+<<<<<<< HEAD
+=======
+		/* FIXME: this needs the console lock extending */
+>>>>>>> cm-10.0
 		if (vc->vc_mode == (unsigned char) arg)
 			break;
 		vc->vc_mode = (unsigned char) arg;
@@ -693,6 +771,7 @@ int vt_ioctl(struct tty_struct *tty,
 
 	case KDSKBMODE:
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
 		switch(arg) {
 		  case K_RAW:
@@ -738,10 +817,23 @@ int vt_ioctl(struct tty_struct *tty,
 			break;
 		}
 		goto setint;
+=======
+			return -EPERM;
+		ret = vt_do_kdskbmode(console, arg);
+		if (ret == 0)
+			tty_ldisc_flush(tty);
+		break;
+
+	case KDGKBMODE:
+		uival = vt_do_kdgkbmode(console);
+		ret = put_user(uival, (int __user *)arg);
+		break;
+>>>>>>> cm-10.0
 
 	/* this could be folded into KDSKBMODE, but for compatibility
 	   reasons it is not so easy to fold KDGKBMETA into KDGKBMODE */
 	case KDSKBMETA:
+<<<<<<< HEAD
 		switch(arg) {
 		  case K_METABIT:
 			clr_vc_kbd_mode(kbd, VC_META);
@@ -756,6 +848,14 @@ int vt_ioctl(struct tty_struct *tty,
 
 	case KDGKBMETA:
 		uival = (vc_kbd_mode(kbd, VC_META) ? K_ESCPREFIX : K_METABIT);
+=======
+		ret = vt_do_kdskbmeta(console, arg);
+		break;
+
+	case KDGKBMETA:
+		/* FIXME: should review whether this is worth locking */
+		uival = vt_do_kdgkbmeta(console);
+>>>>>>> cm-10.0
 	setint:
 		ret = put_user(uival, (int __user *)arg);
 		break;
@@ -764,16 +864,25 @@ int vt_ioctl(struct tty_struct *tty,
 	case KDSETKEYCODE:
 		if(!capable(CAP_SYS_TTY_CONFIG))
 			perm = 0;
+<<<<<<< HEAD
 		ret = do_kbkeycode_ioctl(cmd, up, perm);
+=======
+		ret = vt_do_kbkeycode_ioctl(cmd, up, perm);
+>>>>>>> cm-10.0
 		break;
 
 	case KDGKBENT:
 	case KDSKBENT:
+<<<<<<< HEAD
 		ret = do_kdsk_ioctl(cmd, up, perm, kbd);
+=======
+		ret = vt_do_kdsk_ioctl(cmd, up, perm, console);
+>>>>>>> cm-10.0
 		break;
 
 	case KDGKBSENT:
 	case KDSKBSENT:
+<<<<<<< HEAD
 		ret = do_kdgkb_ioctl(cmd, up, perm);
 		break;
 
@@ -860,10 +969,24 @@ int vt_ioctl(struct tty_struct *tty,
 			ret = -EFAULT;
 		break;
 	}
+=======
+		ret = vt_do_kdgkb_ioctl(cmd, up, perm);
+		break;
+
+	/* Diacritical processing. Handled in keyboard.c as it has
+	   to operate on the keyboard locks and structures */
+	case KDGKBDIACR:
+	case KDGKBDIACRUC:
+	case KDSKBDIACR:
+	case KDSKBDIACRUC:
+		ret = vt_do_diacrit(cmd, up, perm);
+		break;
+>>>>>>> cm-10.0
 
 	/* the ioctls below read/set the flags usually shown in the leds */
 	/* don't use them - they will go away without warning */
 	case KDGKBLED:
+<<<<<<< HEAD
 		ucval = kbd->ledflagstate | (kbd->default_ledflagstate << 4);
 		goto setchar;
 
@@ -891,6 +1014,12 @@ int vt_ioctl(struct tty_struct *tty,
 		if (!perm)
 			goto eperm;
 		setledstate(kbd, arg);
+=======
+	case KDSKBLED:
+	case KDGETLED:
+	case KDSETLED:
+		ret = vt_do_kdskled(console, cmd, arg, perm);
+>>>>>>> cm-10.0
 		break;
 
 	/*
@@ -903,7 +1032,11 @@ int vt_ioctl(struct tty_struct *tty,
 	case KDSIGACCEPT:
 	{
 		if (!perm || !capable(CAP_KILL))
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		if (!valid_signal(arg) || arg < 1 || arg == SIGKILL)
 			ret = -EINVAL;
 		else {
@@ -921,7 +1054,11 @@ int vt_ioctl(struct tty_struct *tty,
 		struct vt_mode tmp;
 
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		if (copy_from_user(&tmp, up, sizeof(struct vt_mode))) {
 			ret = -EFAULT;
 			goto out;
@@ -967,6 +1104,10 @@ int vt_ioctl(struct tty_struct *tty,
 		struct vt_stat __user *vtstat = up;
 		unsigned short state, mask;
 
+<<<<<<< HEAD
+=======
+		/* Review: FIXME: Console lock ? */
+>>>>>>> cm-10.0
 		if (put_user(fg_console + 1, &vtstat->v_active))
 			ret = -EFAULT;
 		else {
@@ -984,6 +1125,10 @@ int vt_ioctl(struct tty_struct *tty,
 	 * Returns the first available (non-opened) console.
 	 */
 	case VT_OPENQRY:
+<<<<<<< HEAD
+=======
+		/* FIXME: locking ? - but then this is a stupid API */
+>>>>>>> cm-10.0
 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
 			if (! VT_IS_IN_USE(i))
 				break;
@@ -997,7 +1142,11 @@ int vt_ioctl(struct tty_struct *tty,
 	 */
 	case VT_ACTIVATE:
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		if (arg == 0 || arg > MAX_NR_CONSOLES)
 			ret =  -ENXIO;
 		else {
@@ -1016,7 +1165,11 @@ int vt_ioctl(struct tty_struct *tty,
 		struct vt_setactivate vsa;
 
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 
 		if (copy_from_user(&vsa, (struct vt_setactivate __user *)arg,
 					sizeof(struct vt_setactivate))) {
@@ -1044,6 +1197,10 @@ int vt_ioctl(struct tty_struct *tty,
 			if (ret)
 				break;
 			/* Commence switch and lock */
+<<<<<<< HEAD
+=======
+			/* Review set_console locks */
+>>>>>>> cm-10.0
 			set_console(vsa.console);
 		}
 		break;
@@ -1054,7 +1211,11 @@ int vt_ioctl(struct tty_struct *tty,
 	 */
 	case VT_WAITACTIVE:
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		if (arg == 0 || arg > MAX_NR_CONSOLES)
 			ret = -ENXIO;
 		else
@@ -1073,16 +1234,27 @@ int vt_ioctl(struct tty_struct *tty,
 	 */
 	case VT_RELDISP:
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
 
 		if (vc->vt_mode.mode != VT_PROCESS) {
+=======
+			return -EPERM;
+
+		console_lock();
+		if (vc->vt_mode.mode != VT_PROCESS) {
+			console_unlock();
+>>>>>>> cm-10.0
 			ret = -EINVAL;
 			break;
 		}
 		/*
 		 * Switching-from response
 		 */
+<<<<<<< HEAD
 		console_lock();
+=======
+>>>>>>> cm-10.0
 		if (vc->vt_newvt >= 0) {
 			if (arg == 0)
 				/*
@@ -1159,7 +1331,11 @@ int vt_ioctl(struct tty_struct *tty,
 
 		ushort ll,cc;
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		if (get_user(ll, &vtsizes->v_rows) ||
 		    get_user(cc, &vtsizes->v_cols))
 			ret = -EFAULT;
@@ -1170,6 +1346,10 @@ int vt_ioctl(struct tty_struct *tty,
 
 				if (vc) {
 					vc->vc_resize_user = 1;
+<<<<<<< HEAD
+=======
+					/* FIXME: review v tty lock */
+>>>>>>> cm-10.0
 					vc_resize(vc_cons[i].d, cc, ll);
 				}
 			}
@@ -1183,7 +1363,11 @@ int vt_ioctl(struct tty_struct *tty,
 		struct vt_consize __user *vtconsize = up;
 		ushort ll,cc,vlin,clin,vcol,ccol;
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		if (!access_ok(VERIFY_READ, vtconsize,
 				sizeof(struct vt_consize))) {
 			ret = -EFAULT;
@@ -1239,7 +1423,11 @@ int vt_ioctl(struct tty_struct *tty,
 
 	case PIO_FONT: {
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		op.op = KD_FONT_OP_SET;
 		op.flags = KD_FONT_FLAG_OLD | KD_FONT_FLAG_DONT_RECALC;	/* Compatibility */
 		op.width = 8;
@@ -1280,7 +1468,11 @@ int vt_ioctl(struct tty_struct *tty,
 	case PIO_FONTRESET:
 	{
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 
 #ifdef BROKEN_GRAPHICS_PROGRAMS
 		/* With BROKEN_GRAPHICS_PROGRAMS defined, the default
@@ -1306,7 +1498,11 @@ int vt_ioctl(struct tty_struct *tty,
 			break;
 		}
 		if (!perm && op.op != KD_FONT_OP_GET)
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		ret = con_font_op(vc, &op);
 		if (ret)
 			break;
@@ -1318,50 +1514,104 @@ int vt_ioctl(struct tty_struct *tty,
 	case PIO_SCRNMAP:
 		if (!perm)
 			ret = -EPERM;
+<<<<<<< HEAD
 		else
 			ret = con_set_trans_old(up);
 		break;
 
 	case GIO_SCRNMAP:
 		ret = con_get_trans_old(up);
+=======
+		else {
+			tty_lock();
+			ret = con_set_trans_old(up);
+			tty_unlock();
+		}
+		break;
+
+	case GIO_SCRNMAP:
+		tty_lock();
+		ret = con_get_trans_old(up);
+		tty_unlock();
+>>>>>>> cm-10.0
 		break;
 
 	case PIO_UNISCRNMAP:
 		if (!perm)
 			ret = -EPERM;
+<<<<<<< HEAD
 		else
 			ret = con_set_trans_new(up);
 		break;
 
 	case GIO_UNISCRNMAP:
 		ret = con_get_trans_new(up);
+=======
+		else {
+			tty_lock();
+			ret = con_set_trans_new(up);
+			tty_unlock();
+		}
+		break;
+
+	case GIO_UNISCRNMAP:
+		tty_lock();
+		ret = con_get_trans_new(up);
+		tty_unlock();
+>>>>>>> cm-10.0
 		break;
 
 	case PIO_UNIMAPCLR:
 	      { struct unimapinit ui;
 		if (!perm)
+<<<<<<< HEAD
 			goto eperm;
 		ret = copy_from_user(&ui, up, sizeof(struct unimapinit));
 		if (ret)
 			ret = -EFAULT;
 		else
 			con_clear_unimap(vc, &ui);
+=======
+			return -EPERM;
+		ret = copy_from_user(&ui, up, sizeof(struct unimapinit));
+		if (ret)
+			ret = -EFAULT;
+		else {
+			tty_lock();
+			con_clear_unimap(vc, &ui);
+			tty_unlock();
+		}
+>>>>>>> cm-10.0
 		break;
 	      }
 
 	case PIO_UNIMAP:
 	case GIO_UNIMAP:
+<<<<<<< HEAD
 		ret = do_unimap_ioctl(cmd, up, perm, vc);
+=======
+		tty_lock();
+		ret = do_unimap_ioctl(cmd, up, perm, vc);
+		tty_unlock();
+>>>>>>> cm-10.0
 		break;
 
 	case VT_LOCKSWITCH:
 		if (!capable(CAP_SYS_TTY_CONFIG))
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		vt_dont_switch = 1;
 		break;
 	case VT_UNLOCKSWITCH:
 		if (!capable(CAP_SYS_TTY_CONFIG))
+<<<<<<< HEAD
 			goto eperm;
+=======
+			return -EPERM;
+>>>>>>> cm-10.0
 		vt_dont_switch = 0;
 		break;
 	case VT_GETHIFONTMASK:
@@ -1375,17 +1625,25 @@ int vt_ioctl(struct tty_struct *tty,
 		ret = -ENOIOCTLCMD;
 	}
 out:
+<<<<<<< HEAD
 	tty_unlock();
 	return ret;
 eperm:
 	ret = -EPERM;
 	goto out;
+=======
+	return ret;
+>>>>>>> cm-10.0
 }
 
 void reset_vc(struct vc_data *vc)
 {
 	vc->vc_mode = KD_TEXT;
+<<<<<<< HEAD
 	kbd_table[vc->vc_num].kbdmode = default_utf8 ? VC_UNICODE : VC_XLATE;
+=======
+	vt_reset_unicode(vc->vc_num);
+>>>>>>> cm-10.0
 	vc->vt_mode.mode = VT_AUTO;
 	vc->vt_mode.waitv = 0;
 	vc->vt_mode.relsig = 0;
@@ -1408,6 +1666,10 @@ void vc_SAK(struct work_struct *work)
 	console_lock();
 	vc = vc_con->d;
 	if (vc) {
+<<<<<<< HEAD
+=======
+		/* FIXME: review tty ref counting */
+>>>>>>> cm-10.0
 		tty = vc->port.tty;
 		/*
 		 * SAK should also work in all raw modes and reset
@@ -1487,7 +1749,10 @@ compat_kdfontop_ioctl(struct compat_console_font_op __user *fontop,
 	if (!perm && op->op != KD_FONT_OP_GET)
 		return -EPERM;
 	op->data = compat_ptr(((struct compat_console_font_op *)op)->data);
+<<<<<<< HEAD
 	op->flags |= KD_FONT_FLAG_OLD;
+=======
+>>>>>>> cm-10.0
 	i = con_font_op(vc, op);
 	if (i)
 		return i;
@@ -1541,8 +1806,11 @@ long vt_compat_ioctl(struct tty_struct *tty,
 
 	console = vc->vc_num;
 
+<<<<<<< HEAD
 	tty_lock();
 
+=======
+>>>>>>> cm-10.0
 	if (!vc_cons_allocated(console)) { 	/* impossible? */
 		ret = -ENOIOCTLCMD;
 		goto out;
@@ -1571,7 +1839,13 @@ long vt_compat_ioctl(struct tty_struct *tty,
 
 	case PIO_UNIMAP:
 	case GIO_UNIMAP:
+<<<<<<< HEAD
 		ret = compat_unimap_ioctl(cmd, up, perm, vc);
+=======
+		tty_lock();
+		ret = compat_unimap_ioctl(cmd, up, perm, vc);
+		tty_unlock();
+>>>>>>> cm-10.0
 		break;
 
 	/*
@@ -1608,11 +1882,17 @@ long vt_compat_ioctl(struct tty_struct *tty,
 		goto fallback;
 	}
 out:
+<<<<<<< HEAD
 	tty_unlock();
 	return ret;
 
 fallback:
 	tty_unlock();
+=======
+	return ret;
+
+fallback:
+>>>>>>> cm-10.0
 	return vt_ioctl(tty, cmd, arg);
 }
 
@@ -1798,6 +2078,7 @@ int vt_move_to_console(unsigned int vt, int alloc)
 		return -EIO;
 	}
 	console_unlock();
+<<<<<<< HEAD
 	tty_lock();
 	if (vt_waitactive(vt + 1)) {
 		pr_debug("Suspend: Can't switch VCs.");
@@ -1805,6 +2086,12 @@ int vt_move_to_console(unsigned int vt, int alloc)
 		return -EINTR;
 	}
 	tty_unlock();
+=======
+	if (vt_waitactive(vt + 1)) {
+		pr_debug("Suspend: Can't switch VCs.");
+		return -EINTR;
+	}
+>>>>>>> cm-10.0
 	return prev;
 }
 

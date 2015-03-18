@@ -59,8 +59,22 @@ SUBSYS(net_cls)
 SUBSYS(blkio)
 #endif
 
+<<<<<<< HEAD
+=======
+/* */
+
+>>>>>>> cm-10.0
 #ifdef CONFIG_CGROUP_PERF
 SUBSYS(perf)
 #endif
 
 /* */
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_NETPRIO_CGROUP
+SUBSYS(net_prio)
+#endif
+
+/* */
+>>>>>>> cm-10.0

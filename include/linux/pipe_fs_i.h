@@ -1,13 +1,20 @@
 #ifndef _LINUX_PIPE_FS_I_H
 #define _LINUX_PIPE_FS_I_H
 
+<<<<<<< HEAD
 #define PIPEFS_MAGIC 0x50495045
 
+=======
+>>>>>>> cm-10.0
 #define PIPE_DEF_BUFFERS	16
 
 #define PIPE_BUF_FLAG_LRU	0x01	/* page is on the LRU */
 #define PIPE_BUF_FLAG_ATOMIC	0x02	/* was atomically mapped */
 #define PIPE_BUF_FLAG_GIFT	0x04	/* page is a gift */
+<<<<<<< HEAD
+=======
+#define PIPE_BUF_FLAG_PACKET	0x08	/* read() as a packet */
+>>>>>>> cm-10.0
 
 /**
  *	struct pipe_buffer - a linux kernel pipe buffer

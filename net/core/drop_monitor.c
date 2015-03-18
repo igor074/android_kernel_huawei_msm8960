@@ -42,6 +42,7 @@ static void send_dm_alert(struct work_struct *unused);
  * netlink alerts
  */
 static int trace_state = TRACE_OFF;
+<<<<<<< HEAD
 static DEFINE_SPINLOCK(trace_state_lock);
 
 struct per_cpu_dm_data {
@@ -49,6 +50,16 @@ struct per_cpu_dm_data {
 	struct sk_buff *skb;
 	atomic_t dm_hit_count;
 	struct timer_list send_timer;
+=======
+static DEFINE_MUTEX(trace_state_mutex);
+
+struct per_cpu_dm_data {
+	struct work_struct dm_alert_work;
+	struct sk_buff __rcu *skb;
+	atomic_t dm_hit_count;
+	struct timer_list send_timer;
+	int cpu;
+>>>>>>> cm-10.0
 };
 
 struct dm_hw_stat_delta {
@@ -79,11 +90,17 @@ static void reset_per_cpu_data(struct per_cpu_dm_data *data)
 	size_t al;
 	struct net_dm_alert_msg *msg;
 	struct nlattr *nla;
+<<<<<<< HEAD
+=======
+	struct sk_buff *skb;
+	struct sk_buff *oskb = rcu_dereference_protected(data->skb, 1);
+>>>>>>> cm-10.0
 
 	al = sizeof(struct net_dm_alert_msg);
 	al += dm_hit_limit * sizeof(struct net_dm_drop_point);
 	al += sizeof(struct nlattr);
 
+<<<<<<< HEAD
 	data->skb = genlmsg_new(al, GFP_KERNEL);
 	genlmsg_put(data->skb, 0, 0, &net_drop_monitor_family,
 			0, NET_DM_CMD_ALERT);
@@ -91,17 +108,56 @@ static void reset_per_cpu_data(struct per_cpu_dm_data *data)
 	msg = nla_data(nla);
 	memset(msg, 0, al);
 	atomic_set(&data->dm_hit_count, dm_hit_limit);
+=======
+	skb = genlmsg_new(al, GFP_KERNEL);
+
+	if (skb) {
+		genlmsg_put(skb, 0, 0, &net_drop_monitor_family,
+				0, NET_DM_CMD_ALERT);
+		nla = nla_reserve(skb, NLA_UNSPEC,
+				  sizeof(struct net_dm_alert_msg));
+		msg = nla_data(nla);
+		memset(msg, 0, al);
+	} else
+		schedule_work_on(data->cpu, &data->dm_alert_work);
+
+	/*
+	 * Don't need to lock this, since we are guaranteed to only
+	 * run this on a single cpu at a time.
+	 * Note also that we only update data->skb if the old and new skb
+	 * pointers don't match.  This ensures that we don't continually call
+	 * synchornize_rcu if we repeatedly fail to alloc a new netlink message.
+	 */
+	if (skb != oskb) {
+		rcu_assign_pointer(data->skb, skb);
+
+		synchronize_rcu();
+
+		atomic_set(&data->dm_hit_count, dm_hit_limit);
+	}
+
+>>>>>>> cm-10.0
 }
 
 static void send_dm_alert(struct work_struct *unused)
 {
 	struct sk_buff *skb;
+<<<<<<< HEAD
 	struct per_cpu_dm_data *data = &__get_cpu_var(dm_cpu_data);
+=======
+	struct per_cpu_dm_data *data = &get_cpu_var(dm_cpu_data);
+
+	WARN_ON_ONCE(data->cpu != smp_processor_id());
+>>>>>>> cm-10.0
 
 	/*
 	 * Grab the skb we're about to send
 	 */
+<<<<<<< HEAD
 	skb = data->skb;
+=======
+	skb = rcu_dereference_protected(data->skb, 1);
+>>>>>>> cm-10.0
 
 	/*
 	 * Replace it with a new one
@@ -111,8 +167,15 @@ static void send_dm_alert(struct work_struct *unused)
 	/*
 	 * Ship it!
 	 */
+<<<<<<< HEAD
 	genlmsg_multicast(skb, 0, NET_DM_GRP_ALERT, GFP_KERNEL);
 
+=======
+	if (skb)
+		genlmsg_multicast(skb, 0, NET_DM_GRP_ALERT, GFP_KERNEL);
+
+	put_cpu_var(dm_cpu_data);
+>>>>>>> cm-10.0
 }
 
 /*
@@ -123,9 +186,17 @@ static void send_dm_alert(struct work_struct *unused)
  */
 static void sched_send_work(unsigned long unused)
 {
+<<<<<<< HEAD
 	struct per_cpu_dm_data *data =  &__get_cpu_var(dm_cpu_data);
 
 	schedule_work(&data->dm_alert_work);
+=======
+	struct per_cpu_dm_data *data =  &get_cpu_var(dm_cpu_data);
+
+	schedule_work_on(smp_processor_id(), &data->dm_alert_work);
+
+	put_cpu_var(dm_cpu_data);
+>>>>>>> cm-10.0
 }
 
 static void trace_drop_common(struct sk_buff *skb, void *location)
@@ -134,8 +205,20 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
 	struct nlmsghdr *nlh;
 	struct nlattr *nla;
 	int i;
+<<<<<<< HEAD
 	struct per_cpu_dm_data *data = &__get_cpu_var(dm_cpu_data);
 
+=======
+	struct sk_buff *dskb;
+	struct per_cpu_dm_data *data = &get_cpu_var(dm_cpu_data);
+
+
+	rcu_read_lock();
+	dskb = rcu_dereference(data->skb);
+
+	if (!dskb)
+		goto out;
+>>>>>>> cm-10.0
 
 	if (!atomic_add_unless(&data->dm_hit_count, -1, 0)) {
 		/*
@@ -144,12 +227,20 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	nlh = (struct nlmsghdr *)data->skb->data;
+=======
+	nlh = (struct nlmsghdr *)dskb->data;
+>>>>>>> cm-10.0
 	nla = genlmsg_data(nlmsg_data(nlh));
 	msg = nla_data(nla);
 	for (i = 0; i < msg->entries; i++) {
 		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
 			msg->points[i].count++;
+<<<<<<< HEAD
+=======
+			atomic_inc(&data->dm_hit_count);
+>>>>>>> cm-10.0
 			goto out;
 		}
 	}
@@ -157,7 +248,11 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
 	/*
 	 * We need to create a new entry
 	 */
+<<<<<<< HEAD
 	__nla_reserve_nohdr(data->skb, sizeof(struct net_dm_drop_point));
+=======
+	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
+>>>>>>> cm-10.0
 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
 	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
 	msg->points[msg->entries].count = 1;
@@ -169,6 +264,11 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
 	}
 
 out:
+<<<<<<< HEAD
+=======
+	rcu_read_unlock();
+	put_cpu_var(dm_cpu_data);
+>>>>>>> cm-10.0
 	return;
 }
 
@@ -213,7 +313,11 @@ static int set_all_monitor_traces(int state)
 	struct dm_hw_stat_delta *new_stat = NULL;
 	struct dm_hw_stat_delta *temp;
 
+<<<<<<< HEAD
 	spin_lock(&trace_state_lock);
+=======
+	mutex_lock(&trace_state_mutex);
+>>>>>>> cm-10.0
 
 	if (state == trace_state) {
 		rc = -EAGAIN;
@@ -252,7 +356,11 @@ static int set_all_monitor_traces(int state)
 		rc = -EINPROGRESS;
 
 out_unlock:
+<<<<<<< HEAD
 	spin_unlock(&trace_state_lock);
+=======
+	mutex_unlock(&trace_state_mutex);
+>>>>>>> cm-10.0
 
 	return rc;
 }
@@ -295,12 +403,21 @@ static int dropmon_net_event(struct notifier_block *ev_block,
 
 		new_stat->dev = dev;
 		new_stat->last_rx = jiffies;
+<<<<<<< HEAD
 		spin_lock(&trace_state_lock);
 		list_add_rcu(&new_stat->list, &hw_stats_list);
 		spin_unlock(&trace_state_lock);
 		break;
 	case NETDEV_UNREGISTER:
 		spin_lock(&trace_state_lock);
+=======
+		mutex_lock(&trace_state_mutex);
+		list_add_rcu(&new_stat->list, &hw_stats_list);
+		mutex_unlock(&trace_state_mutex);
+		break;
+	case NETDEV_UNREGISTER:
+		mutex_lock(&trace_state_mutex);
+>>>>>>> cm-10.0
 		list_for_each_entry_safe(new_stat, tmp, &hw_stats_list, list) {
 			if (new_stat->dev == dev) {
 				new_stat->dev = NULL;
@@ -311,7 +428,11 @@ static int dropmon_net_event(struct notifier_block *ev_block,
 				}
 			}
 		}
+<<<<<<< HEAD
 		spin_unlock(&trace_state_lock);
+=======
+		mutex_unlock(&trace_state_mutex);
+>>>>>>> cm-10.0
 		break;
 	}
 out:
@@ -367,13 +488,24 @@ static int __init init_net_drop_monitor(void)
 
 	for_each_present_cpu(cpu) {
 		data = &per_cpu(dm_cpu_data, cpu);
+<<<<<<< HEAD
 		reset_per_cpu_data(data);
+=======
+		data->cpu = cpu;
+>>>>>>> cm-10.0
 		INIT_WORK(&data->dm_alert_work, send_dm_alert);
 		init_timer(&data->send_timer);
 		data->send_timer.data = cpu;
 		data->send_timer.function = sched_send_work;
+<<<<<<< HEAD
 	}
 
+=======
+		reset_per_cpu_data(data);
+	}
+
+
+>>>>>>> cm-10.0
 	goto out;
 
 out_unreg:

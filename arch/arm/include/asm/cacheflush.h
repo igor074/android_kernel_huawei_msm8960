@@ -16,6 +16,10 @@
 #include <asm/shmparam.h>
 #include <asm/cachetype.h>
 #include <asm/outercache.h>
+<<<<<<< HEAD
+=======
+#include <asm/rodata.h>
+>>>>>>> cm-10.0
 
 #define CACHE_COLOUR(vaddr)	((vaddr & (SHMLBA - 1)) >> PAGE_SHIFT)
 

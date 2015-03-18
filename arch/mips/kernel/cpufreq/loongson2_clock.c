@@ -7,6 +7,10 @@
  * for more details.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/cpufreq.h>
 #include <linux/platform_device.h>
 

@@ -12,6 +12,10 @@
 #include <linux/blkdev.h>
 #include <linux/completion.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/mempool.h>
 #include <linux/slab.h>
 #include <linux/init.h>
@@ -137,6 +141,10 @@ static int __scsi_queue_insert(struct scsi_cmnd *cmd, int reason, int unbusy)
 		host->host_blocked = host->max_host_blocked;
 		break;
 	case SCSI_MLQUEUE_DEVICE_BUSY:
+<<<<<<< HEAD
+=======
+	case SCSI_MLQUEUE_EH_RETRY:
+>>>>>>> cm-10.0
 		device->device_blocked = device->max_device_blocked;
 		break;
 	case SCSI_MLQUEUE_TARGET_BUSY:
@@ -680,11 +688,19 @@ static int __scsi_error_from_host_byte(struct scsi_cmnd *cmd, int result)
 		error = -ENOLINK;
 		break;
 	case DID_TARGET_FAILURE:
+<<<<<<< HEAD
 		cmd->result |= (DID_OK << 16);
 		error = -EREMOTEIO;
 		break;
 	case DID_NEXUS_FAILURE:
 		cmd->result |= (DID_OK << 16);
+=======
+		set_host_byte(cmd, DID_OK);
+		error = -EREMOTEIO;
+		break;
+	case DID_NEXUS_FAILURE:
+		set_host_byte(cmd, DID_OK);
+>>>>>>> cm-10.0
 		error = -EBADE;
 		break;
 	default:
@@ -878,6 +894,10 @@ void scsi_io_completion(struct scsi_cmnd *cmd, unsigned int good_bytes)
 				    cmd->cmnd[0] == WRITE_SAME)) {
 				description = "Discard failure";
 				action = ACTION_FAIL;
+<<<<<<< HEAD
+=======
+				error = -EREMOTEIO;
+>>>>>>> cm-10.0
 			} else
 				action = ACTION_FAIL;
 			break;
@@ -1314,6 +1334,7 @@ static inline int scsi_target_queue_ready(struct Scsi_Host *shost,
 	}
 
 	if (scsi_target_is_busy(starget)) {
+<<<<<<< HEAD
 		if (list_empty(&sdev->starved_entry))
 			list_add_tail(&sdev->starved_entry,
 				      &shost->starved_list);
@@ -1323,6 +1344,12 @@ static inline int scsi_target_queue_ready(struct Scsi_Host *shost,
 	/* We're OK to process the command, so we can't be starved */
 	if (!list_empty(&sdev->starved_entry))
 		list_del_init(&sdev->starved_entry);
+=======
+		list_move_tail(&sdev->starved_entry, &shost->starved_list);
+		return 0;
+	}
+
+>>>>>>> cm-10.0
 	return 1;
 }
 
@@ -1407,6 +1434,11 @@ static void scsi_kill_request(struct request *req, struct request_queue *q)
 
 	blk_start_request(req);
 
+<<<<<<< HEAD
+=======
+	scmd_printk(KERN_INFO, cmd, "killing request\n");
+
+>>>>>>> cm-10.0
 	sdev = cmd->device;
 	starget = scsi_target(sdev);
 	shost = sdev->host;
@@ -1488,7 +1520,10 @@ static void scsi_request_fn(struct request_queue *q)
 	struct request *req;
 
 	if (!sdev) {
+<<<<<<< HEAD
 		printk("scsi: killing requests for dead queue\n");
+=======
+>>>>>>> cm-10.0
 		while ((req = blk_peek_request(q)) != NULL)
 			scsi_kill_request(req, q);
 		return;
@@ -1639,7 +1674,11 @@ struct request_queue *__scsi_alloc_queue(struct Scsi_Host *shost,
 					 request_fn_proc *request_fn)
 {
 	struct request_queue *q;
+<<<<<<< HEAD
 	struct device *dev = shost->shost_gendev.parent;
+=======
+	struct device *dev = shost->dma_dev;
+>>>>>>> cm-10.0
 
 	q = blk_init_queue(request_fn, NULL);
 	if (!q)
@@ -1697,6 +1736,18 @@ struct request_queue *scsi_alloc_queue(struct scsi_device *sdev)
 
 void scsi_free_queue(struct request_queue *q)
 {
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+
+	WARN_ON(q->queuedata);
+
+	/* cause scsi_request_fn() to kill all non-finished requests */
+	spin_lock_irqsave(q->queue_lock, flags);
+	q->request_fn(q);
+	spin_unlock_irqrestore(q->queue_lock, flags);
+
+>>>>>>> cm-10.0
 	blk_cleanup_queue(q);
 }
 
@@ -2560,7 +2611,11 @@ void *scsi_kmap_atomic_sg(struct scatterlist *sgl, int sg_count,
 	if (*len > sg_len)
 		*len = sg_len;
 
+<<<<<<< HEAD
 	return kmap_atomic(page, KM_BIO_SRC_IRQ);
+=======
+	return kmap_atomic(page);
+>>>>>>> cm-10.0
 }
 EXPORT_SYMBOL(scsi_kmap_atomic_sg);
 
@@ -2570,6 +2625,10 @@ EXPORT_SYMBOL(scsi_kmap_atomic_sg);
  */
 void scsi_kunmap_atomic_sg(void *virt)
 {
+<<<<<<< HEAD
 	kunmap_atomic(virt, KM_BIO_SRC_IRQ);
+=======
+	kunmap_atomic(virt);
+>>>>>>> cm-10.0
 }
 EXPORT_SYMBOL(scsi_kunmap_atomic_sg);

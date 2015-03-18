@@ -1,7 +1,13 @@
 #ifndef _M68K_DIV64_H
 #define _M68K_DIV64_H
 
+<<<<<<< HEAD
 #ifdef CONFIG_MMU
+=======
+#ifdef CONFIG_CPU_HAS_NO_MULDIV64
+#include <asm-generic/div64.h>
+#else
+>>>>>>> cm-10.0
 
 #include <linux/types.h>
 
@@ -27,8 +33,12 @@
 	__rem;							\
 })
 
+<<<<<<< HEAD
 #else
 #include <asm-generic/div64.h>
 #endif /* CONFIG_MMU */
+=======
+#endif /* CONFIG_CPU_HAS_NO_MULDIV64 */
+>>>>>>> cm-10.0
 
 #endif /* _M68K_DIV64_H */

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <media/msm/vidc_type.h>
 #include "vcd.h"
 
@@ -110,12 +118,21 @@ static int vcd_get_clients_security_info(struct client_security_info *sec_info)
 	return count;
 }
 
+<<<<<<< HEAD
 static int is_session_invalid(u32 decoding, u32 flags) {
+=======
+static int is_session_invalid(u32 decoding, u32 flags)
+{
+>>>>>>> cm-10.0
 	int is_secure;
 	struct client_security_info sec_info;
 	int client_count = 0;
 	int secure_session_running = 0;
+<<<<<<< HEAD
 	is_secure = (flags & VCD_CP_SESSION) ? 1:0;
+=======
+	is_secure = (flags & VCD_CP_SESSION) ? 1 : 0;
+>>>>>>> cm-10.0
 	client_count = vcd_get_clients_security_info(&sec_info);
 	secure_session_running = (sec_info.secure_enc > 0) ||
 			(sec_info.secure_dec > 0);
@@ -158,7 +175,11 @@ u32 vcd_open(s32 driver_handle, u32 decoding,
 	u32 rc = 0;
 	struct vcd_drv_ctxt *drv_ctxt;
 	struct vcd_clnt_ctxt *cctxt;
+<<<<<<< HEAD
 	int is_secure = (flags & VCD_CP_SESSION) ? 1:0;
+=======
+	int is_secure = (flags & VCD_CP_SESSION) ? 1 : 0;
+>>>>>>> cm-10.0
 	VCD_MSG_MED("vcd_open:");
 
 	if (!callback) {
@@ -967,7 +988,10 @@ u8 vcd_get_num_of_clients(void)
 }
 EXPORT_SYMBOL(vcd_get_num_of_clients);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 u32 vcd_get_ion_status(void)
 {
 	return res_trk_get_enable_ion();

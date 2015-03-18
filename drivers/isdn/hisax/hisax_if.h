@@ -1,10 +1,18 @@
 /*
+<<<<<<< HEAD
  * Interface between low level (hardware) drivers and 
+=======
+ * Interface between low level (hardware) drivers and
+>>>>>>> cm-10.0
  * HiSax protocol stack
  *
  * Author       Kai Germaschewski
  * Copyright    2001 by Kai Germaschewski  <kai.germaschewski@gmx.de>
+<<<<<<< HEAD
  * 
+=======
+ *
+>>>>>>> cm-10.0
  * This software may be used and distributed according to the terms
  * of the GNU General Public License, incorporated herein by reference.
  *

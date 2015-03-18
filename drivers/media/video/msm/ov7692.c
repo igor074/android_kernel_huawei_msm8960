@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,6 +14,10 @@
  * GNU General Public License for more details.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/delay.h>
 #include <linux/types.h>
 #include <linux/i2c.h>
@@ -522,6 +530,11 @@ int ov7692_sensor_config(void __user *argp)
 	case CFG_PWR_DOWN:
 		rc = ov7692_power_down();
 		break;
+<<<<<<< HEAD
+=======
+	case CFG_SET_EFFECT:
+		break;
+>>>>>>> cm-10.0
 	default:
 		rc = -EFAULT;
 		break;

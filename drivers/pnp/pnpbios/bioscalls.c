@@ -17,7 +17,10 @@
 
 #include <asm/page.h>
 #include <asm/desc.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/byteorder.h>
 
 #include "pnpbios.h"

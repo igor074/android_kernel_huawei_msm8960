@@ -3,7 +3,11 @@
  * drivers/input/touchscreen/cy8c_ts.c
  *
  * Copyright (C) 2009, 2010 Cypress Semiconductor, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2010, 2011 Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2010-2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -387,6 +391,10 @@ static int cy8c_ts_init_ts(struct i2c_client *client, struct cy8c_ts *ts)
 	input_set_drvdata(input_device, ts);
 
 	__set_bit(EV_ABS, input_device->evbit);
+<<<<<<< HEAD
+=======
+	__set_bit(INPUT_PROP_DIRECT, input_device->propbit);
+>>>>>>> cm-10.0
 
 	if (ts->device_id == CY8CTMA340) {
 		/* set up virtual key */

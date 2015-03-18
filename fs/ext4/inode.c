@@ -12,17 +12,23 @@
  *
  *  Copyright (C) 1991, 1992  Linus Torvalds
  *
+<<<<<<< HEAD
  *  Goal-directed block allocation by Stephen Tweedie
  *	(sct@redhat.com), 1993, 1998
  *  Big-endian to little-endian byte-swapping/bitmaps by
  *        David S. Miller (davem@caip.rutgers.edu), 1995
+=======
+>>>>>>> cm-10.0
  *  64-bit file support on 64-bit platforms by Jakub Jelinek
  *	(jj@sunsite.ms.mff.cuni.cz)
  *
  *  Assorted race fixes, rewrite of ext4_get_block() by Al Viro, 2000
  */
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/fs.h>
 #include <linux/time.h>
 #include <linux/jbd2.h>
@@ -46,7 +52,11 @@
 #include "ext4_jbd2.h"
 #include "xattr.h"
 #include "acl.h"
+<<<<<<< HEAD
 #include "ext4_extents.h"
+=======
+#include "truncate.h"
+>>>>>>> cm-10.0
 
 #include <trace/events/ext4.h>
 
@@ -76,6 +86,12 @@ static int ext4_set_bh_endio(struct buffer_head *bh, struct inode *inode);
 static void ext4_end_io_buffer_write(struct buffer_head *bh, int uptodate);
 static int __ext4_journalled_writepage(struct page *page, unsigned int len);
 static int ext4_bh_delay_or_unwritten(handle_t *handle, struct buffer_head *bh);
+<<<<<<< HEAD
+=======
+static int ext4_discard_partial_page_buffers_no_lock(handle_t *handle,
+		struct inode *inode, struct page *page, loff_t from,
+		loff_t length, int flags);
+>>>>>>> cm-10.0
 
 /*
  * Test whether an inode is a fast symlink.
@@ -89,6 +105,7 @@ static int ext4_inode_is_fast_symlink(struct inode *inode)
 }
 
 /*
+<<<<<<< HEAD
  * Work out how many blocks we need to proceed with the next chunk of a
  * truncate transaction.
  */
@@ -155,6 +172,8 @@ static int try_to_extend_transaction(handle_t *handle, struct inode *inode)
 }
 
 /*
+=======
+>>>>>>> cm-10.0
  * Restart the transaction associated with *handle.  This does a commit,
  * so before we call here everything must be consistently dirtied against
  * this transaction.
@@ -190,12 +209,45 @@ void ext4_evict_inode(struct inode *inode)
 
 	trace_ext4_evict_inode(inode);
 
+<<<<<<< HEAD
 	mutex_lock(&inode->i_mutex);
 	ext4_flush_completed_IO(inode);
 	mutex_unlock(&inode->i_mutex);
 	ext4_ioend_wait(inode);
 
 	if (inode->i_nlink) {
+=======
+	ext4_ioend_wait(inode);
+
+	if (inode->i_nlink) {
+		/*
+		 * When journalling data dirty buffers are tracked only in the
+		 * journal. So although mm thinks everything is clean and
+		 * ready for reaping the inode might still have some pages to
+		 * write in the running transaction or waiting to be
+		 * checkpointed. Thus calling jbd2_journal_invalidatepage()
+		 * (via truncate_inode_pages()) to discard these buffers can
+		 * cause data loss. Also even if we did not discard these
+		 * buffers, we would have no way to find them after the inode
+		 * is reaped and thus user could see stale data if he tries to
+		 * read them before the transaction is checkpointed. So be
+		 * careful and force everything to disk here... We use
+		 * ei->i_datasync_tid to store the newest transaction
+		 * containing inode's data.
+		 *
+		 * Note that directories do not have this problem because they
+		 * don't use page cache.
+		 */
+		if (ext4_should_journal_data(inode) &&
+		    (S_ISLNK(inode->i_mode) || S_ISREG(inode->i_mode))) {
+			journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+			tid_t commit_tid = EXT4_I(inode)->i_datasync_tid;
+
+			jbd2_log_start_commit(journal, commit_tid);
+			jbd2_log_wait_commit(journal, commit_tid);
+			filemap_write_and_wait(&inode->i_data);
+		}
+>>>>>>> cm-10.0
 		truncate_inode_pages(&inode->i_data, 0);
 		goto no_delete;
 	}
@@ -210,7 +262,11 @@ void ext4_evict_inode(struct inode *inode)
 	if (is_bad_inode(inode))
 		goto no_delete;
 
+<<<<<<< HEAD
 	handle = ext4_journal_start(inode, blocks_for_truncate(inode)+3);
+=======
+	handle = ext4_journal_start(inode, ext4_blocks_for_truncate(inode)+3);
+>>>>>>> cm-10.0
 	if (IS_ERR(handle)) {
 		ext4_std_error(inode->i_sb, PTR_ERR(handle));
 		/*
@@ -283,6 +339,7 @@ no_delete:
 	ext4_clear_inode(inode);	/* We must guarantee clearing of inode... */
 }
 
+<<<<<<< HEAD
 typedef struct {
 	__le32	*p;
 	__le32	key;
@@ -1070,6 +1127,8 @@ out:
 	return err;
 }
 
+=======
+>>>>>>> cm-10.0
 #ifdef CONFIG_QUOTA
 qsize_t *ext4_get_reserved_space(struct inode *inode)
 {
@@ -1079,6 +1138,7 @@ qsize_t *ext4_get_reserved_space(struct inode *inode)
 
 /*
  * Calculate the number of metadata blocks need to reserve
+<<<<<<< HEAD
  * to allocate a new block at @lblocks for non extent file based file
  */
 static int ext4_indirect_calc_metadata_amount(struct inode *inode,
@@ -1106,6 +1166,8 @@ static int ext4_indirect_calc_metadata_amount(struct inode *inode,
 
 /*
  * Calculate the number of metadata blocks need to reserve
+=======
+>>>>>>> cm-10.0
  * to allocate a block located at @lblock
  */
 static int ext4_calc_metadata_amount(struct inode *inode, ext4_lblk_t lblock)
@@ -1113,7 +1175,11 @@ static int ext4_calc_metadata_amount(struct inode *inode, ext4_lblk_t lblock)
 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
 		return ext4_ext_calc_metadata_amount(inode, lblock);
 
+<<<<<<< HEAD
 	return ext4_indirect_calc_metadata_amount(inode, lblock);
+=======
+	return ext4_ind_calc_metadata_amount(inode, lblock);
+>>>>>>> cm-10.0
 }
 
 /*
@@ -1127,10 +1193,17 @@ void ext4_da_update_reserve_space(struct inode *inode,
 	struct ext4_inode_info *ei = EXT4_I(inode);
 
 	spin_lock(&ei->i_block_reservation_lock);
+<<<<<<< HEAD
 	trace_ext4_da_update_reserve_space(inode, used);
 	if (unlikely(used > ei->i_reserved_data_blocks)) {
 		ext4_msg(inode->i_sb, KERN_NOTICE, "%s: ino %lu, used %d "
 			 "with only %d reserved data blocks\n",
+=======
+	trace_ext4_da_update_reserve_space(inode, used, quota_claim);
+	if (unlikely(used > ei->i_reserved_data_blocks)) {
+		ext4_msg(inode->i_sb, KERN_NOTICE, "%s: ino %lu, used %d "
+			 "with only %d reserved data blocks",
+>>>>>>> cm-10.0
 			 __func__, inode->i_ino, used,
 			 ei->i_reserved_data_blocks);
 		WARN_ON(1);
@@ -1140,7 +1213,11 @@ void ext4_da_update_reserve_space(struct inode *inode,
 	/* Update per-inode reservations */
 	ei->i_reserved_data_blocks -= used;
 	ei->i_reserved_meta_blocks -= ei->i_allocated_meta_blocks;
+<<<<<<< HEAD
 	percpu_counter_sub(&sbi->s_dirtyblocks_counter,
+=======
+	percpu_counter_sub(&sbi->s_dirtyclusters_counter,
+>>>>>>> cm-10.0
 			   used + ei->i_allocated_meta_blocks);
 	ei->i_allocated_meta_blocks = 0;
 
@@ -1150,7 +1227,11 @@ void ext4_da_update_reserve_space(struct inode *inode,
 		 * only when we have written all of the delayed
 		 * allocation blocks.
 		 */
+<<<<<<< HEAD
 		percpu_counter_sub(&sbi->s_dirtyblocks_counter,
+=======
+		percpu_counter_sub(&sbi->s_dirtyclusters_counter,
+>>>>>>> cm-10.0
 				   ei->i_reserved_meta_blocks);
 		ei->i_reserved_meta_blocks = 0;
 		ei->i_da_metadata_calc_len = 0;
@@ -1159,14 +1240,22 @@ void ext4_da_update_reserve_space(struct inode *inode,
 
 	/* Update quota subsystem for data blocks */
 	if (quota_claim)
+<<<<<<< HEAD
 		dquot_claim_block(inode, used);
+=======
+		dquot_claim_block(inode, EXT4_C2B(sbi, used));
+>>>>>>> cm-10.0
 	else {
 		/*
 		 * We did fallocate with an offset that is already delayed
 		 * allocated. So on delayed allocated writeback we should
 		 * not re-claim the quota for fallocated blocks.
 		 */
+<<<<<<< HEAD
 		dquot_release_reservation_block(inode, used);
+=======
+		dquot_release_reservation_block(inode, EXT4_C2B(sbi, used));
+>>>>>>> cm-10.0
 	}
 
 	/*
@@ -1258,6 +1347,52 @@ static pgoff_t ext4_num_dirty_pages(struct inode *inode, pgoff_t idx,
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Sets the BH_Da_Mapped bit on the buffer heads corresponding to the given map.
+ */
+static void set_buffers_da_mapped(struct inode *inode,
+				   struct ext4_map_blocks *map)
+{
+	struct address_space *mapping = inode->i_mapping;
+	struct pagevec pvec;
+	int i, nr_pages;
+	pgoff_t index, end;
+
+	index = map->m_lblk >> (PAGE_CACHE_SHIFT - inode->i_blkbits);
+	end = (map->m_lblk + map->m_len - 1) >>
+		(PAGE_CACHE_SHIFT - inode->i_blkbits);
+
+	pagevec_init(&pvec, 0);
+	while (index <= end) {
+		nr_pages = pagevec_lookup(&pvec, mapping, index,
+					  min(end - index + 1,
+					      (pgoff_t)PAGEVEC_SIZE));
+		if (nr_pages == 0)
+			break;
+		for (i = 0; i < nr_pages; i++) {
+			struct page *page = pvec.pages[i];
+			struct buffer_head *bh, *head;
+
+			if (unlikely(page->mapping != mapping) ||
+			    !PageDirty(page))
+				break;
+
+			if (page_has_buffers(page)) {
+				bh = head = page_buffers(page);
+				do {
+					set_buffer_da_mapped(bh);
+					bh = bh->b_this_page;
+				} while (bh != head);
+			}
+			index++;
+		}
+		pagevec_release(&pvec);
+	}
+}
+
+/*
+>>>>>>> cm-10.0
  * The ext4_map_blocks() function tries to look up the requested blocks,
  * and returns if the blocks are already mapped.
  *
@@ -1275,7 +1410,11 @@ static pgoff_t ext4_num_dirty_pages(struct inode *inode, pgoff_t idx,
  * the buffer head is mapped.
  *
  * It returns 0 if plain look up failed (blocks have not been allocated), in
+<<<<<<< HEAD
  * that casem, buffer head is unmapped
+=======
+ * that case, buffer head is unmapped
+>>>>>>> cm-10.0
  *
  * It returns the error in case of allocation failure.
  */
@@ -1294,9 +1433,17 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
 	 */
 	down_read((&EXT4_I(inode)->i_data_sem));
 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
+<<<<<<< HEAD
 		retval = ext4_ext_map_blocks(handle, inode, map, 0);
 	} else {
 		retval = ext4_ind_map_blocks(handle, inode, map, 0);
+=======
+		retval = ext4_ext_map_blocks(handle, inode, map, flags &
+					     EXT4_GET_BLOCKS_KEEP_SIZE);
+	} else {
+		retval = ext4_ind_map_blocks(handle, inode, map, flags &
+					     EXT4_GET_BLOCKS_KEEP_SIZE);
+>>>>>>> cm-10.0
 	}
 	up_read((&EXT4_I(inode)->i_data_sem));
 
@@ -1314,7 +1461,11 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
 	 * Returns if the blocks have already allocated
 	 *
 	 * Note that if blocks have been preallocated
+<<<<<<< HEAD
 	 * ext4_ext_get_block() returns th create = 0
+=======
+	 * ext4_ext_get_block() returns the create = 0
+>>>>>>> cm-10.0
 	 * with buffer head unmapped.
 	 */
 	if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED)
@@ -1376,9 +1527,23 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
 			(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE))
 			ext4_da_update_reserve_space(inode, retval, 1);
 	}
+<<<<<<< HEAD
 	if (flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE)
 		ext4_clear_inode_state(inode, EXT4_STATE_DELALLOC_RESERVED);
 
+=======
+	if (flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) {
+		ext4_clear_inode_state(inode, EXT4_STATE_DELALLOC_RESERVED);
+
+		/* If we have successfully mapped the delayed allocated blocks,
+		 * set the BH_Da_Mapped bit on them. Its important to do this
+		 * under the protection of i_data_sem.
+		 */
+		if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED)
+			set_buffers_da_mapped(inode, map);
+	}
+
+>>>>>>> cm-10.0
 	up_write((&EXT4_I(inode)->i_data_sem));
 	if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
 		int ret = check_block_validity(inode, map);
@@ -1506,7 +1671,11 @@ struct buffer_head *ext4_bread(handle_t *handle, struct inode *inode,
 		return bh;
 	if (buffer_uptodate(bh))
 		return bh;
+<<<<<<< HEAD
 	ll_rw_block(READ_META, 1, &bh);
+=======
+	ll_rw_block(READ | REQ_META | REQ_PRIO, 1, &bh);
+>>>>>>> cm-10.0
 	wait_on_buffer(bh);
 	if (buffer_uptodate(bh))
 		return bh;
@@ -1595,6 +1764,7 @@ static int do_journal_get_write_access(handle_t *handle,
 	return ret;
 }
 
+<<<<<<< HEAD
 /*
  * Truncate blocks that were not used by write. We have to truncate the
  * pagecache as well so that corresponding buffers get properly unmapped.
@@ -1605,6 +1775,8 @@ static void ext4_truncate_failed_write(struct inode *inode)
 	ext4_truncate(inode);
 }
 
+=======
+>>>>>>> cm-10.0
 static int ext4_get_block_write(struct inode *inode, sector_t iblock,
 		   struct buffer_head *bh_result, int create);
 static int ext4_write_begin(struct file *file, struct address_space *mapping,
@@ -1778,7 +1950,15 @@ static int ext4_ordered_write_end(struct file *file,
 			ext4_orphan_add(handle, inode);
 		if (ret2 < 0)
 			ret = ret2;
+<<<<<<< HEAD
 	}
+=======
+	} else {
+		unlock_page(page);
+		page_cache_release(page);
+	}
+
+>>>>>>> cm-10.0
 	ret2 = ext4_journal_stop(handle);
 	if (!ret)
 		ret = ret2;
@@ -1871,6 +2051,10 @@ static int ext4_journalled_write_end(struct file *file,
 	if (new_i_size > inode->i_size)
 		i_size_write(inode, pos+copied);
 	ext4_set_inode_state(inode, EXT4_STATE_JDATA);
+<<<<<<< HEAD
+=======
+	EXT4_I(inode)->i_datasync_tid = handle->h_transaction->t_tid;
+>>>>>>> cm-10.0
 	if (new_i_size > EXT4_I(inode)->i_disksize) {
 		ext4_update_i_disksize(inode, new_i_size);
 		ret2 = ext4_mark_inode_dirty(handle, inode);
@@ -1905,14 +2089,22 @@ static int ext4_journalled_write_end(struct file *file,
 }
 
 /*
+<<<<<<< HEAD
  * Reserve a single block located at lblock
+=======
+ * Reserve a single cluster located at lblock
+>>>>>>> cm-10.0
  */
 static int ext4_da_reserve_space(struct inode *inode, ext4_lblk_t lblock)
 {
 	int retries = 0;
 	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
 	struct ext4_inode_info *ei = EXT4_I(inode);
+<<<<<<< HEAD
 	unsigned long md_needed;
+=======
+	unsigned int md_needed;
+>>>>>>> cm-10.0
 	int ret;
 
 	/*
@@ -1922,7 +2114,12 @@ static int ext4_da_reserve_space(struct inode *inode, ext4_lblk_t lblock)
 	 */
 repeat:
 	spin_lock(&ei->i_block_reservation_lock);
+<<<<<<< HEAD
 	md_needed = ext4_calc_metadata_amount(inode, lblock);
+=======
+	md_needed = EXT4_NUM_B2C(sbi,
+				 ext4_calc_metadata_amount(inode, lblock));
+>>>>>>> cm-10.0
 	trace_ext4_da_reserve_space(inode, md_needed);
 	spin_unlock(&ei->i_block_reservation_lock);
 
@@ -1931,15 +2128,24 @@ repeat:
 	 * us from metadata over-estimation, though we may go over by
 	 * a small amount in the end.  Here we just reserve for data.
 	 */
+<<<<<<< HEAD
 	ret = dquot_reserve_block(inode, 1);
+=======
+	ret = dquot_reserve_block(inode, EXT4_C2B(sbi, 1));
+>>>>>>> cm-10.0
 	if (ret)
 		return ret;
 	/*
 	 * We do still charge estimated metadata to the sb though;
 	 * we cannot afford to run out of free blocks.
 	 */
+<<<<<<< HEAD
 	if (ext4_claim_free_blocks(sbi, md_needed + 1, 0)) {
 		dquot_release_reservation_block(inode, 1);
+=======
+	if (ext4_claim_free_clusters(sbi, md_needed + 1, 0)) {
+		dquot_release_reservation_block(inode, EXT4_C2B(sbi, 1));
+>>>>>>> cm-10.0
 		if (ext4_should_retry_alloc(inode->i_sb, &retries)) {
 			yield();
 			goto repeat;
@@ -1974,7 +2180,11 @@ static void ext4_da_release_space(struct inode *inode, int to_free)
 		 */
 		ext4_msg(inode->i_sb, KERN_NOTICE, "ext4_da_release_space: "
 			 "ino %lu, to_free %d with only %d reserved "
+<<<<<<< HEAD
 			 "data blocks\n", inode->i_ino, to_free,
+=======
+			 "data blocks", inode->i_ino, to_free,
+>>>>>>> cm-10.0
 			 ei->i_reserved_data_blocks);
 		WARN_ON(1);
 		to_free = ei->i_reserved_data_blocks;
@@ -1986,19 +2196,34 @@ static void ext4_da_release_space(struct inode *inode, int to_free)
 		 * We can release all of the reserved metadata blocks
 		 * only when we have written all of the delayed
 		 * allocation blocks.
+<<<<<<< HEAD
 		 */
 		percpu_counter_sub(&sbi->s_dirtyblocks_counter,
+=======
+		 * Note that in case of bigalloc, i_reserved_meta_blocks,
+		 * i_reserved_data_blocks, etc. refer to number of clusters.
+		 */
+		percpu_counter_sub(&sbi->s_dirtyclusters_counter,
+>>>>>>> cm-10.0
 				   ei->i_reserved_meta_blocks);
 		ei->i_reserved_meta_blocks = 0;
 		ei->i_da_metadata_calc_len = 0;
 	}
 
 	/* update fs dirty data blocks counter */
+<<<<<<< HEAD
 	percpu_counter_sub(&sbi->s_dirtyblocks_counter, to_free);
 
 	spin_unlock(&EXT4_I(inode)->i_block_reservation_lock);
 
 	dquot_release_reservation_block(inode, to_free);
+=======
+	percpu_counter_sub(&sbi->s_dirtyclusters_counter, to_free);
+
+	spin_unlock(&EXT4_I(inode)->i_block_reservation_lock);
+
+	dquot_release_reservation_block(inode, EXT4_C2B(sbi, to_free));
+>>>>>>> cm-10.0
 }
 
 static void ext4_da_page_release_reservation(struct page *page,
@@ -2007,6 +2232,12 @@ static void ext4_da_page_release_reservation(struct page *page,
 	int to_release = 0;
 	struct buffer_head *head, *bh;
 	unsigned int curr_off = 0;
+<<<<<<< HEAD
+=======
+	struct inode *inode = page->mapping->host;
+	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+	int num_clusters;
+>>>>>>> cm-10.0
 
 	head = page_buffers(page);
 	bh = head;
@@ -2016,10 +2247,31 @@ static void ext4_da_page_release_reservation(struct page *page,
 		if ((offset <= curr_off) && (buffer_delay(bh))) {
 			to_release++;
 			clear_buffer_delay(bh);
+<<<<<<< HEAD
 		}
 		curr_off = next_off;
 	} while ((bh = bh->b_this_page) != head);
 	ext4_da_release_space(page->mapping->host, to_release);
+=======
+			clear_buffer_da_mapped(bh);
+		}
+		curr_off = next_off;
+	} while ((bh = bh->b_this_page) != head);
+
+	/* If we have released all the blocks belonging to a cluster, then we
+	 * need to release the reserved space for that cluster. */
+	num_clusters = EXT4_NUM_B2C(sbi, to_release);
+	while (num_clusters > 0) {
+		ext4_fsblk_t lblk;
+		lblk = (page->index << (PAGE_CACHE_SHIFT - inode->i_blkbits)) +
+			((num_clusters - 1) << sbi->s_cluster_bits);
+		if (sbi->s_cluster_ratio == 1 ||
+		    !ext4_find_delalloc_cluster(inode, lblk, 1))
+			ext4_da_release_space(inode, 1);
+
+		num_clusters--;
+	}
+>>>>>>> cm-10.0
 }
 
 /*
@@ -2121,6 +2373,11 @@ static int mpage_da_submit_io(struct mpage_da_data *mpd,
 						clear_buffer_delay(bh);
 						bh->b_blocknr = pblock;
 					}
+<<<<<<< HEAD
+=======
+					if (buffer_da_mapped(bh))
+						clear_buffer_da_mapped(bh);
+>>>>>>> cm-10.0
 					if (buffer_unwritten(bh) ||
 					    buffer_mapped(bh))
 						BUG_ON(bh->b_blocknr != pblock);
@@ -2129,8 +2386,16 @@ static int mpage_da_submit_io(struct mpage_da_data *mpd,
 					clear_buffer_unwritten(bh);
 				}
 
+<<<<<<< HEAD
 				/* skip page if block allocation undone */
 				if (buffer_delay(bh) || buffer_unwritten(bh))
+=======
+				/*
+				 * skip page if block allocation undone and
+				 * block is dirty
+				 */
+				if (ext4_bh_delay_or_unwritten(NULL, bh))
+>>>>>>> cm-10.0
 					skip_page = 1;
 				bh = bh->b_this_page;
 				block_start += bh->b_size;
@@ -2213,6 +2478,7 @@ static void ext4_da_block_invalidatepages(struct mpage_da_data *mpd)
 static void ext4_print_free_blocks(struct inode *inode)
 {
 	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+<<<<<<< HEAD
 	printk(KERN_CRIT "Total free blocks count %lld\n",
 	       ext4_count_free_blocks(inode->i_sb));
 	printk(KERN_CRIT "Free/Dirty block details\n");
@@ -2224,6 +2490,24 @@ static void ext4_print_free_blocks(struct inode *inode)
 	printk(KERN_CRIT "i_reserved_data_blocks=%u\n",
 	       EXT4_I(inode)->i_reserved_data_blocks);
 	printk(KERN_CRIT "i_reserved_meta_blocks=%u\n",
+=======
+	struct super_block *sb = inode->i_sb;
+
+	ext4_msg(sb, KERN_CRIT, "Total free blocks count %lld",
+	       EXT4_C2B(EXT4_SB(inode->i_sb),
+			ext4_count_free_clusters(inode->i_sb)));
+	ext4_msg(sb, KERN_CRIT, "Free/Dirty block details");
+	ext4_msg(sb, KERN_CRIT, "free_blocks=%lld",
+	       (long long) EXT4_C2B(EXT4_SB(inode->i_sb),
+		percpu_counter_sum(&sbi->s_freeclusters_counter)));
+	ext4_msg(sb, KERN_CRIT, "dirty_blocks=%lld",
+	       (long long) EXT4_C2B(EXT4_SB(inode->i_sb),
+		percpu_counter_sum(&sbi->s_dirtyclusters_counter)));
+	ext4_msg(sb, KERN_CRIT, "Block reservation details");
+	ext4_msg(sb, KERN_CRIT, "i_reserved_data_blocks=%u",
+		 EXT4_I(inode)->i_reserved_data_blocks);
+	ext4_msg(sb, KERN_CRIT, "i_reserved_meta_blocks=%u",
+>>>>>>> cm-10.0
 	       EXT4_I(inode)->i_reserved_meta_blocks);
 	return;
 }
@@ -2298,8 +2582,12 @@ static void mpage_da_map_and_submit(struct mpage_da_data *mpd)
 		if (err == -EAGAIN)
 			goto submit_io;
 
+<<<<<<< HEAD
 		if (err == -ENOSPC &&
 		    ext4_count_free_blocks(sb)) {
+=======
+		if (err == -ENOSPC && ext4_count_free_clusters(sb)) {
+>>>>>>> cm-10.0
 			mpd->retval = err;
 			goto submit_io;
 		}
@@ -2339,6 +2627,7 @@ static void mpage_da_map_and_submit(struct mpage_da_data *mpd)
 
 		for (i = 0; i < map.m_len; i++)
 			unmap_underlying_metadata(bdev, map.m_pblk + i);
+<<<<<<< HEAD
 	}
 
 	if (ext4_should_order_data(mpd->inode)) {
@@ -2346,6 +2635,17 @@ static void mpage_da_map_and_submit(struct mpage_da_data *mpd)
 		if (err)
 			/* This only happens if the journal is aborted */
 			return;
+=======
+
+		if (ext4_should_order_data(mpd->inode)) {
+			err = ext4_jbd2_file_inode(handle, mpd->inode);
+			if (err) {
+				/* Only if the journal is aborted */
+				mpd->retval = err;
+				goto submit_io;
+			}
+		}
+>>>>>>> cm-10.0
 	}
 
 	/*
@@ -2452,6 +2752,69 @@ static int ext4_bh_delay_or_unwritten(handle_t *handle, struct buffer_head *bh)
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * This function is grabs code from the very beginning of
+ * ext4_map_blocks, but assumes that the caller is from delayed write
+ * time. This function looks up the requested blocks and sets the
+ * buffer delay bit under the protection of i_data_sem.
+ */
+static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+			      struct ext4_map_blocks *map,
+			      struct buffer_head *bh)
+{
+	int retval;
+	sector_t invalid_block = ~((sector_t) 0xffff);
+
+	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
+		invalid_block = ~0;
+
+	map->m_flags = 0;
+	ext_debug("ext4_da_map_blocks(): inode %lu, max_blocks %u,"
+		  "logical block %lu\n", inode->i_ino, map->m_len,
+		  (unsigned long) map->m_lblk);
+	/*
+	 * Try to see if we can get the block without requesting a new
+	 * file system block.
+	 */
+	down_read((&EXT4_I(inode)->i_data_sem));
+	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+		retval = ext4_ext_map_blocks(NULL, inode, map, 0);
+	else
+		retval = ext4_ind_map_blocks(NULL, inode, map, 0);
+
+	if (retval == 0) {
+		/*
+		 * XXX: __block_prepare_write() unmaps passed block,
+		 * is it OK?
+		 */
+		/* If the block was allocated from previously allocated cluster,
+		 * then we dont need to reserve it again. */
+		if (!(map->m_flags & EXT4_MAP_FROM_CLUSTER)) {
+			retval = ext4_da_reserve_space(inode, iblock);
+			if (retval)
+				/* not enough space to reserve */
+				goto out_unlock;
+		}
+
+		/* Clear EXT4_MAP_FROM_CLUSTER flag since its purpose is served
+		 * and it should not appear on the bh->b_state.
+		 */
+		map->m_flags &= ~EXT4_MAP_FROM_CLUSTER;
+
+		map_bh(bh, inode->i_sb, invalid_block);
+		set_buffer_new(bh);
+		set_buffer_delay(bh);
+	}
+
+out_unlock:
+	up_read((&EXT4_I(inode)->i_data_sem));
+
+	return retval;
+}
+
+/*
+>>>>>>> cm-10.0
  * This is a special get_blocks_t callback which is used by
  * ext4_da_write_begin().  It will either return mapped block or
  * reserve space for a single block.
@@ -2468,10 +2831,13 @@ static int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
 {
 	struct ext4_map_blocks map;
 	int ret = 0;
+<<<<<<< HEAD
 	sector_t invalid_block = ~((sector_t) 0xffff);
 
 	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
 		invalid_block = ~0;
+=======
+>>>>>>> cm-10.0
 
 	BUG_ON(create == 0);
 	BUG_ON(bh->b_size != inode->i_sb->s_blocksize);
@@ -2484,6 +2850,7 @@ static int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
 	 * preallocated blocks are unmapped but should treated
 	 * the same as allocated blocks.
 	 */
+<<<<<<< HEAD
 	ret = ext4_map_blocks(NULL, inode, &map, 0);
 	if (ret < 0)
 		return ret;
@@ -2503,6 +2870,11 @@ static int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
 		set_buffer_delay(bh);
 		return 0;
 	}
+=======
+	ret = ext4_da_map_blocks(inode, iblock, &map, bh);
+	if (ret <= 0)
+		return ret;
+>>>>>>> cm-10.0
 
 	map_bh(bh, inode->i_sb, map.m_pblk);
 	bh->b_state = (bh->b_state & ~EXT4_MAP_FLAGS) | map.m_flags;
@@ -2586,6 +2958,10 @@ static int __ext4_journalled_writepage(struct page *page,
 				write_end_fn);
 	if (ret == 0)
 		ret = err;
+<<<<<<< HEAD
+=======
+	EXT4_I(inode)->i_datasync_tid = handle->h_transaction->t_tid;
+>>>>>>> cm-10.0
 	err = ext4_journal_stop(handle);
 	if (!ret)
 		ret = err;
@@ -2623,7 +2999,11 @@ static void ext4_end_io_buffer_write(struct buffer_head *bh, int uptodate);
  * a[0] = 'a';
  * truncate(f, 4096);
  * we have in the page first buffer_head mapped via page_mkwrite call back
+<<<<<<< HEAD
  * but other bufer_heads would be unmapped but dirty(dirty done via the
+=======
+ * but other buffer_heads would be unmapped but dirty (dirty done via the
+>>>>>>> cm-10.0
  * do_wp_page). So writepage should write the first block. If we modify
  * the mmap area beyond 1024 we will again get a page_fault and the
  * page_mkwrite callback will do the block allocation and mark the
@@ -2678,8 +3058,17 @@ static int ext4_writepage(struct page *page,
 		 * We don't want to do block allocation, so redirty
 		 * the page and return.  We may reach here when we do
 		 * a journal commit via journal_submit_inode_data_buffers.
+<<<<<<< HEAD
 		 * We can also reach here via shrink_page_list
 		 */
+=======
+		 * We can also reach here via shrink_page_list but it
+		 * should never be for direct reclaim so warn if that
+		 * happens
+		 */
+		WARN_ON_ONCE((current->flags & (PF_MEMALLOC|PF_KSWAPD)) ==
+								PF_MEMALLOC);
+>>>>>>> cm-10.0
 		goto redirty_page;
 	}
 	if (commit_write)
@@ -2913,6 +3302,10 @@ static int ext4_da_writepages(struct address_space *mapping,
 	struct ext4_sb_info *sbi = EXT4_SB(mapping->host->i_sb);
 	pgoff_t done_index = 0;
 	pgoff_t end;
+<<<<<<< HEAD
+=======
+	struct blk_plug plug;
+>>>>>>> cm-10.0
 
 	trace_ext4_da_writepages(inode, wbc);
 
@@ -2991,6 +3384,10 @@ retry:
 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
 		tag_pages_for_writeback(mapping, index, end);
 
+<<<<<<< HEAD
+=======
+	blk_start_plug(&plug);
+>>>>>>> cm-10.0
 	while (!ret && wbc->nr_to_write > 0) {
 
 		/*
@@ -3009,6 +3406,10 @@ retry:
 			ext4_msg(inode->i_sb, KERN_CRIT, "%s: jbd2_start: "
 			       "%ld pages, ino %lu; err %d", __func__,
 				wbc->nr_to_write, inode->i_ino, ret);
+<<<<<<< HEAD
+=======
+			blk_finish_plug(&plug);
+>>>>>>> cm-10.0
 			goto out_writepages;
 		}
 
@@ -3041,11 +3442,20 @@ retry:
 			ret = 0;
 		} else if (ret == MPAGE_DA_EXTENT_TAIL) {
 			/*
+<<<<<<< HEAD
 			 * got one extent now try with
 			 * rest of the pages
 			 */
 			pages_written += mpd.pages_written;
 			ret = 0;
+=======
+			 * Got one extent now try with rest of the pages.
+			 * If mpd.retval is set -EIO, journal is aborted.
+			 * So we don't need to write any more.
+			 */
+			pages_written += mpd.pages_written;
+			ret = mpd.retval;
+>>>>>>> cm-10.0
 			io_done = 1;
 		} else if (wbc->nr_to_write)
 			/*
@@ -3055,6 +3465,10 @@ retry:
 			 */
 			break;
 	}
+<<<<<<< HEAD
+=======
+	blk_finish_plug(&plug);
+>>>>>>> cm-10.0
 	if (!io_done && !cycled) {
 		cycled = 1;
 		index = 0;
@@ -3093,10 +3507,18 @@ static int ext4_nonda_switch(struct super_block *sb)
 	 * Delalloc need an accurate free block accounting. So switch
 	 * to non delalloc when we are near to error range.
 	 */
+<<<<<<< HEAD
 	free_blocks  = percpu_counter_read_positive(&sbi->s_freeblocks_counter);
 	dirty_blocks = percpu_counter_read_positive(&sbi->s_dirtyblocks_counter);
 	if (2 * free_blocks < 3 * dirty_blocks ||
 		free_blocks < (dirty_blocks + EXT4_FREEBLOCKS_WATERMARK)) {
+=======
+	free_blocks  = EXT4_C2B(sbi,
+		percpu_counter_read_positive(&sbi->s_freeclusters_counter));
+	dirty_blocks = percpu_counter_read_positive(&sbi->s_dirtyclusters_counter);
+	if (2 * free_blocks < 3 * dirty_blocks ||
+		free_blocks < (dirty_blocks + EXT4_FREECLUSTERS_WATERMARK)) {
+>>>>>>> cm-10.0
 		/*
 		 * free block count is less than 150% of dirty blocks
 		 * or free blocks is less than watermark
@@ -3108,7 +3530,11 @@ static int ext4_nonda_switch(struct super_block *sb)
 	 * start pushing delalloc when 1/2 of free blocks are dirty.
 	 */
 	if (free_blocks < 2 * dirty_blocks)
+<<<<<<< HEAD
 		writeback_inodes_sb_if_idle(sb);
+=======
+		writeback_inodes_sb_if_idle(sb, WB_REASON_FS_FREE_SPACE);
+>>>>>>> cm-10.0
 
 	return 0;
 }
@@ -3212,6 +3638,7 @@ static int ext4_da_write_end(struct file *file,
 	int write_mode = (int)(unsigned long)fsdata;
 
 	if (write_mode == FALL_BACK_TO_NONDELALLOC) {
+<<<<<<< HEAD
 		if (ext4_should_order_data(inode)) {
 			return ext4_ordered_write_end(file, mapping, pos,
 					len, copied, page, fsdata);
@@ -3219,6 +3646,16 @@ static int ext4_da_write_end(struct file *file,
 			return ext4_writeback_write_end(file, mapping, pos,
 					len, copied, page, fsdata);
 		} else {
+=======
+		switch (ext4_inode_journal_mode(inode)) {
+		case EXT4_INODE_ORDERED_DATA_MODE:
+			return ext4_ordered_write_end(file, mapping, pos,
+					len, copied, page, fsdata);
+		case EXT4_INODE_WRITEBACK_DATA_MODE:
+			return ext4_writeback_write_end(file, mapping, pos,
+					len, copied, page, fsdata);
+		default:
+>>>>>>> cm-10.0
 			BUG();
 		}
 	}
@@ -3234,7 +3671,11 @@ static int ext4_da_write_end(struct file *file,
 	 */
 
 	new_i_size = pos + copied;
+<<<<<<< HEAD
 	if (new_i_size > EXT4_I(inode)->i_disksize) {
+=======
+	if (copied && new_i_size > EXT4_I(inode)->i_disksize) {
+>>>>>>> cm-10.0
 		if (ext4_da_should_update_i_disksize(page, end)) {
 			down_write(&EXT4_I(inode)->i_data_sem);
 			if (new_i_size > EXT4_I(inode)->i_disksize) {
@@ -3465,6 +3906,7 @@ static int ext4_releasepage(struct page *page, gfp_t wait)
 }
 
 /*
+<<<<<<< HEAD
  * O_DIRECT for ext3 (or indirect map) based files
  *
  * If the O_DIRECT write will extend the file then add this inode to the
@@ -3573,6 +4015,8 @@ out:
 }
 
 /*
+=======
+>>>>>>> cm-10.0
  * ext4_get_block used when preparing for a DIO write or buffer write.
  * We allocate an uinitialized extent if blocks haven't been allocated.
  * The extent will be converted to initialized after the IO is complete.
@@ -3590,6 +4034,10 @@ static void ext4_end_io_dio(struct kiocb *iocb, loff_t offset,
 			    ssize_t size, void *private, int ret,
 			    bool is_async)
 {
+<<<<<<< HEAD
+=======
+	struct inode *inode = iocb->ki_filp->f_path.dentry->d_inode;
+>>>>>>> cm-10.0
         ext4_io_end_t *io_end = iocb->private;
 	struct workqueue_struct *wq;
 	unsigned long flags;
@@ -3599,6 +4047,7 @@ static void ext4_end_io_dio(struct kiocb *iocb, loff_t offset,
 	if (!io_end || !size)
 		goto out;
 
+<<<<<<< HEAD
 	ext_debug("ext4_end_io_dio(): io_end 0x%p"
 		  "for inode %lu, iocb 0x%p, offset %llu, size %llu\n",
  		  iocb->private, io_end->inode->i_ino, iocb, offset,
@@ -3611,6 +4060,22 @@ static void ext4_end_io_dio(struct kiocb *iocb, loff_t offset,
 out:
 		if (is_async)
 			aio_complete(iocb, ret, 0);
+=======
+	ext_debug("ext4_end_io_dio(): io_end 0x%p "
+		  "for inode %lu, iocb 0x%p, offset %llu, size %zd\n",
+ 		  iocb->private, io_end->inode->i_ino, iocb, offset,
+		  size);
+
+	iocb->private = NULL;
+
+	/* if not aio dio with unwritten extents, just free io and return */
+	if (!(io_end->flag & EXT4_IO_END_UNWRITTEN)) {
+		ext4_free_io_end(io_end);
+out:
+		if (is_async)
+			aio_complete(iocb, ret, 0);
+		inode_dio_done(inode);
+>>>>>>> cm-10.0
 		return;
 	}
 
@@ -3630,7 +4095,10 @@ out:
 
 	/* queue the work to convert unwritten extents to written */
 	queue_work(wq, &io_end->work);
+<<<<<<< HEAD
 	iocb->private = NULL;
+=======
+>>>>>>> cm-10.0
 }
 
 static void ext4_end_io_buffer_write(struct buffer_head *bh, int uptodate)
@@ -3644,8 +4112,14 @@ static void ext4_end_io_buffer_write(struct buffer_head *bh, int uptodate)
 		goto out;
 
 	if (!(io_end->inode->i_sb->s_flags & MS_ACTIVE)) {
+<<<<<<< HEAD
 		printk("sb umounted, discard end_io request for inode %lu\n",
 			io_end->inode->i_ino);
+=======
+		ext4_msg(io_end->inode->i_sb, KERN_INFO,
+			 "sb umounted, discard end_io request for inode %lu",
+			 io_end->inode->i_ino);
+>>>>>>> cm-10.0
 		ext4_free_io_end(io_end);
 		goto out;
 	}
@@ -3655,10 +4129,14 @@ static void ext4_end_io_buffer_write(struct buffer_head *bh, int uptodate)
 	 * but being more careful is always safe for the future change.
 	 */
 	inode = io_end->inode;
+<<<<<<< HEAD
 	if (!(io_end->flag & EXT4_IO_END_UNWRITTEN)) {
 		io_end->flag |= EXT4_IO_END_UNWRITTEN;
 		atomic_inc(&EXT4_I(inode)->i_aiodio_unwritten);
 	}
+=======
+	ext4_set_io_unwritten_flag(inode, io_end);
+>>>>>>> cm-10.0
 
 	/* Add the io_end to per-inode completed io list*/
 	spin_lock_irqsave(&EXT4_I(inode)->i_completed_io_lock, flags);
@@ -3757,9 +4235,18 @@ static ssize_t ext4_ext_direct_IO(int rw, struct kiocb *iocb,
 		iocb->private = NULL;
 		EXT4_I(inode)->cur_aio_dio = NULL;
 		if (!is_sync_kiocb(iocb)) {
+<<<<<<< HEAD
 			iocb->private = ext4_init_io_end(inode, GFP_NOFS);
 			if (!iocb->private)
 				return -ENOMEM;
+=======
+			ext4_io_end_t *io_end =
+				ext4_init_io_end(inode, GFP_NOFS);
+			if (!io_end)
+				return -ENOMEM;
+			io_end->flag |= EXT4_IO_END_DIRECT;
+			iocb->private = io_end;
+>>>>>>> cm-10.0
 			/*
 			 * we save the io structure for current async
 			 * direct IO, so that later ext4_map_blocks()
@@ -3770,11 +4257,21 @@ static ssize_t ext4_ext_direct_IO(int rw, struct kiocb *iocb,
 			EXT4_I(inode)->cur_aio_dio = iocb->private;
 		}
 
+<<<<<<< HEAD
 		ret = blockdev_direct_IO(rw, iocb, inode,
 					 inode->i_sb->s_bdev, iov,
 					 offset, nr_segs,
 					 ext4_get_block_write,
 					 ext4_end_io_dio);
+=======
+		ret = __blockdev_direct_IO(rw, iocb, inode,
+					 inode->i_sb->s_bdev, iov,
+					 offset, nr_segs,
+					 ext4_get_block_write,
+					 ext4_end_io_dio,
+					 NULL,
+					 DIO_LOCKING);
+>>>>>>> cm-10.0
 		if (iocb->private)
 			EXT4_I(inode)->cur_aio_dio = NULL;
 		/*
@@ -3822,6 +4319,15 @@ static ssize_t ext4_direct_IO(int rw, struct kiocb *iocb,
 	struct inode *inode = file->f_mapping->host;
 	ssize_t ret;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If we are doing data journalling we don't support O_DIRECT
+	 */
+	if (ext4_should_journal_data(inode))
+		return 0;
+
+>>>>>>> cm-10.0
 	trace_ext4_direct_IO_enter(inode, offset, iov_length(iov, nr_segs), rw);
 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
 		ret = ext4_ext_direct_IO(rw, iocb, iov, offset, nr_segs);
@@ -3891,6 +4397,10 @@ static const struct address_space_operations ext4_journalled_aops = {
 	.bmap			= ext4_bmap,
 	.invalidatepage		= ext4_invalidatepage,
 	.releasepage		= ext4_releasepage,
+<<<<<<< HEAD
+=======
+	.direct_IO		= ext4_direct_IO,
+>>>>>>> cm-10.0
 	.is_partially_uptodate  = block_is_partially_uptodate,
 	.error_remove_page	= generic_error_remove_page,
 };
@@ -3913,6 +4423,7 @@ static const struct address_space_operations ext4_da_aops = {
 
 void ext4_set_aops(struct inode *inode)
 {
+<<<<<<< HEAD
 	if (ext4_should_order_data(inode) &&
 		test_opt(inode->i_sb, DELALLOC))
 		inode->i_mapping->a_ops = &ext4_da_aops;
@@ -3977,6 +4488,112 @@ int ext4_block_zero_page_range(handle_t *handle,
 	/*
 	 * correct length if it does not fall between
 	 * 'from' and the end of the block
+=======
+	switch (ext4_inode_journal_mode(inode)) {
+	case EXT4_INODE_ORDERED_DATA_MODE:
+		if (test_opt(inode->i_sb, DELALLOC))
+			inode->i_mapping->a_ops = &ext4_da_aops;
+		else
+			inode->i_mapping->a_ops = &ext4_ordered_aops;
+		break;
+	case EXT4_INODE_WRITEBACK_DATA_MODE:
+		if (test_opt(inode->i_sb, DELALLOC))
+			inode->i_mapping->a_ops = &ext4_da_aops;
+		else
+			inode->i_mapping->a_ops = &ext4_writeback_aops;
+		break;
+	case EXT4_INODE_JOURNAL_DATA_MODE:
+		inode->i_mapping->a_ops = &ext4_journalled_aops;
+		break;
+	default:
+		BUG();
+	}
+}
+
+
+/*
+ * ext4_discard_partial_page_buffers()
+ * Wrapper function for ext4_discard_partial_page_buffers_no_lock.
+ * This function finds and locks the page containing the offset
+ * "from" and passes it to ext4_discard_partial_page_buffers_no_lock.
+ * Calling functions that already have the page locked should call
+ * ext4_discard_partial_page_buffers_no_lock directly.
+ */
+int ext4_discard_partial_page_buffers(handle_t *handle,
+		struct address_space *mapping, loff_t from,
+		loff_t length, int flags)
+{
+	struct inode *inode = mapping->host;
+	struct page *page;
+	int err = 0;
+
+	page = find_or_create_page(mapping, from >> PAGE_CACHE_SHIFT,
+				   mapping_gfp_mask(mapping) & ~__GFP_FS);
+	if (!page)
+		return -ENOMEM;
+
+	err = ext4_discard_partial_page_buffers_no_lock(handle, inode, page,
+		from, length, flags);
+
+	unlock_page(page);
+	page_cache_release(page);
+	return err;
+}
+
+/*
+ * ext4_discard_partial_page_buffers_no_lock()
+ * Zeros a page range of length 'length' starting from offset 'from'.
+ * Buffer heads that correspond to the block aligned regions of the
+ * zeroed range will be unmapped.  Unblock aligned regions
+ * will have the corresponding buffer head mapped if needed so that
+ * that region of the page can be updated with the partial zero out.
+ *
+ * This function assumes that the page has already been  locked.  The
+ * The range to be discarded must be contained with in the given page.
+ * If the specified range exceeds the end of the page it will be shortened
+ * to the end of the page that corresponds to 'from'.  This function is
+ * appropriate for updating a page and it buffer heads to be unmapped and
+ * zeroed for blocks that have been either released, or are going to be
+ * released.
+ *
+ * handle: The journal handle
+ * inode:  The files inode
+ * page:   A locked page that contains the offset "from"
+ * from:   The starting byte offset (from the begining of the file)
+ *         to begin discarding
+ * len:    The length of bytes to discard
+ * flags:  Optional flags that may be used:
+ *
+ *         EXT4_DISCARD_PARTIAL_PG_ZERO_UNMAPPED
+ *         Only zero the regions of the page whose buffer heads
+ *         have already been unmapped.  This flag is appropriate
+ *         for updateing the contents of a page whose blocks may
+ *         have already been released, and we only want to zero
+ *         out the regions that correspond to those released blocks.
+ *
+ * Returns zero on sucess or negative on failure.
+ */
+static int ext4_discard_partial_page_buffers_no_lock(handle_t *handle,
+		struct inode *inode, struct page *page, loff_t from,
+		loff_t length, int flags)
+{
+	ext4_fsblk_t index = from >> PAGE_CACHE_SHIFT;
+	unsigned int offset = from & (PAGE_CACHE_SIZE-1);
+	unsigned int blocksize, max, pos;
+	ext4_lblk_t iblock;
+	struct buffer_head *bh;
+	int err = 0;
+
+	blocksize = inode->i_sb->s_blocksize;
+	max = PAGE_CACHE_SIZE - offset;
+
+	if (index != page->index)
+		return -EINVAL;
+
+	/*
+	 * correct length if it does not fall between
+	 * 'from' and the end of the page
+>>>>>>> cm-10.0
 	 */
 	if (length > max || length < 0)
 		length = max;
@@ -3995,6 +4612,7 @@ int ext4_block_zero_page_range(handle_t *handle,
 		pos += blocksize;
 	}
 
+<<<<<<< HEAD
 	err = 0;
 	if (buffer_freed(bh)) {
 		BUFFER_TRACE(bh, "freed: skip");
@@ -4425,6 +5043,108 @@ static void ext4_free_branches(handle_t *handle, struct inode *inode,
 		BUFFER_TRACE(parent_bh, "free data blocks");
 		ext4_free_data(handle, inode, parent_bh, first, last);
 	}
+=======
+	pos = offset;
+	while (pos < offset + length) {
+		unsigned int end_of_block, range_to_discard;
+
+		err = 0;
+
+		/* The length of space left to zero and unmap */
+		range_to_discard = offset + length - pos;
+
+		/* The length of space until the end of the block */
+		end_of_block = blocksize - (pos & (blocksize-1));
+
+		/*
+		 * Do not unmap or zero past end of block
+		 * for this buffer head
+		 */
+		if (range_to_discard > end_of_block)
+			range_to_discard = end_of_block;
+
+
+		/*
+		 * Skip this buffer head if we are only zeroing unampped
+		 * regions of the page
+		 */
+		if (flags & EXT4_DISCARD_PARTIAL_PG_ZERO_UNMAPPED &&
+			buffer_mapped(bh))
+				goto next;
+
+		/* If the range is block aligned, unmap */
+		if (range_to_discard == blocksize) {
+			clear_buffer_dirty(bh);
+			bh->b_bdev = NULL;
+			clear_buffer_mapped(bh);
+			clear_buffer_req(bh);
+			clear_buffer_new(bh);
+			clear_buffer_delay(bh);
+			clear_buffer_unwritten(bh);
+			clear_buffer_uptodate(bh);
+			zero_user(page, pos, range_to_discard);
+			BUFFER_TRACE(bh, "Buffer discarded");
+			goto next;
+		}
+
+		/*
+		 * If this block is not completely contained in the range
+		 * to be discarded, then it is not going to be released. Because
+		 * we need to keep this block, we need to make sure this part
+		 * of the page is uptodate before we modify it by writeing
+		 * partial zeros on it.
+		 */
+		if (!buffer_mapped(bh)) {
+			/*
+			 * Buffer head must be mapped before we can read
+			 * from the block
+			 */
+			BUFFER_TRACE(bh, "unmapped");
+			ext4_get_block(inode, iblock, bh, 0);
+			/* unmapped? It's a hole - nothing to do */
+			if (!buffer_mapped(bh)) {
+				BUFFER_TRACE(bh, "still unmapped");
+				goto next;
+			}
+		}
+
+		/* Ok, it's mapped. Make sure it's up-to-date */
+		if (PageUptodate(page))
+			set_buffer_uptodate(bh);
+
+		if (!buffer_uptodate(bh)) {
+			err = -EIO;
+			ll_rw_block(READ, 1, &bh);
+			wait_on_buffer(bh);
+			/* Uhhuh. Read error. Complain and punt.*/
+			if (!buffer_uptodate(bh))
+				goto next;
+		}
+
+		if (ext4_should_journal_data(inode)) {
+			BUFFER_TRACE(bh, "get write access");
+			err = ext4_journal_get_write_access(handle, bh);
+			if (err)
+				goto next;
+		}
+
+		zero_user(page, pos, range_to_discard);
+
+		err = 0;
+		if (ext4_should_journal_data(inode)) {
+			err = ext4_handle_dirty_metadata(handle, inode, bh);
+		} else
+			mark_buffer_dirty(bh);
+
+		BUFFER_TRACE(bh, "Partial buffer zeroed");
+next:
+		bh = bh->b_this_page;
+		iblock++;
+		pos += range_to_discard;
+	}
+
+	return err;
+>>>>>>> cm-10.0
 }
 
 int ext4_can_truncate(struct inode *inode)
@@ -4453,11 +5173,24 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
 {
 	struct inode *inode = file->f_path.dentry->d_inode;
 	if (!S_ISREG(inode->i_mode))
+<<<<<<< HEAD
 		return -ENOTSUPP;
 
 	if (!ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
 		/* TODO: Add support for non extent hole punching */
 		return -ENOTSUPP;
+=======
+		return -EOPNOTSUPP;
+
+	if (!ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
+		/* TODO: Add support for non extent hole punching */
+		return -EOPNOTSUPP;
+	}
+
+	if (EXT4_SB(inode->i_sb)->s_cluster_ratio > 1) {
+		/* TODO: Add support for bigalloc file systems */
+		return -EOPNOTSUPP;
+>>>>>>> cm-10.0
 	}
 
 	return ext4_ext_punch_hole(file, offset, length);
@@ -4470,7 +5203,11 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
  * transaction, and VFS/VM ensures that ext4_truncate() cannot run
  * simultaneously on behalf of the same inode.
  *
+<<<<<<< HEAD
  * As we work through the truncate and commmit bits of it to the journal there
+=======
+ * As we work through the truncate and commit bits of it to the journal there
+>>>>>>> cm-10.0
  * is one core, guiding principle: the file's tree must always be consistent on
  * disk.  We must be able to restart the truncate after a crash.
  *
@@ -4493,6 +5230,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
  */
 void ext4_truncate(struct inode *inode)
 {
+<<<<<<< HEAD
 	handle_t *handle;
 	struct ext4_inode_info *ei = EXT4_I(inode);
 	__le32 *i_data = ei->i_data;
@@ -4506,6 +5244,8 @@ void ext4_truncate(struct inode *inode)
 	ext4_lblk_t last_block, max_block;
 	unsigned blocksize = inode->i_sb->s_blocksize;
 
+=======
+>>>>>>> cm-10.0
 	trace_ext4_truncate_enter(inode);
 
 	if (!ext4_can_truncate(inode))
@@ -4516,6 +5256,7 @@ void ext4_truncate(struct inode *inode)
 	if (inode->i_size == 0 && !test_opt(inode->i_sb, NO_AUTO_DA_ALLOC))
 		ext4_set_inode_state(inode, EXT4_STATE_DA_ALLOC_CLOSE);
 
+<<<<<<< HEAD
 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
 		ext4_ext_truncate(inode);
 		trace_ext4_truncate_exit(inode);
@@ -4659,6 +5400,13 @@ out_stop:
 		ext4_orphan_del(handle, inode);
 
 	ext4_journal_stop(handle);
+=======
+	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+		ext4_ext_truncate(inode);
+	else
+		ext4_ind_truncate(inode);
+
+>>>>>>> cm-10.0
 	trace_ext4_truncate_exit(inode);
 }
 
@@ -4794,7 +5542,11 @@ make_io:
 		trace_ext4_load_inode(inode);
 		get_bh(bh);
 		bh->b_end_io = end_buffer_read_sync;
+<<<<<<< HEAD
 		submit_bh(READ_META, bh);
+=======
+		submit_bh(READ | REQ_META | REQ_PRIO, bh);
+>>>>>>> cm-10.0
 		wait_on_buffer(bh);
 		if (!buffer_uptodate(bh)) {
 			EXT4_ERROR_INODE_BLOCK(inode, block,
@@ -4910,7 +5662,11 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 		inode->i_uid |= le16_to_cpu(raw_inode->i_uid_high) << 16;
 		inode->i_gid |= le16_to_cpu(raw_inode->i_gid_high) << 16;
 	}
+<<<<<<< HEAD
 	inode->i_nlink = le16_to_cpu(raw_inode->i_links_count);
+=======
+	set_nlink(inode, le16_to_cpu(raw_inode->i_links_count));
+>>>>>>> cm-10.0
 
 	ext4_clear_state_flags(ei);	/* Only relevant on 32-bit archs */
 	ei->i_dir_start_lookup = 0;
@@ -5029,7 +5785,11 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 		   (S_ISLNK(inode->i_mode) &&
 		    !ext4_inode_is_fast_symlink(inode))) {
 		/* Validate block references which are part of inode */
+<<<<<<< HEAD
 		ret = ext4_check_inode_blockref(inode);
+=======
+		ret = ext4_ind_check_inode(inode);
+>>>>>>> cm-10.0
 	}
 	if (ret)
 		goto bad_inode;
@@ -5194,10 +5954,15 @@ static int ext4_do_update_inode(handle_t *handle,
 			ext4_update_dynamic_rev(sb);
 			EXT4_SET_RO_COMPAT_FEATURE(sb,
 					EXT4_FEATURE_RO_COMPAT_LARGE_FILE);
+<<<<<<< HEAD
 			sb->s_dirt = 1;
 			ext4_handle_sync(handle);
 			err = ext4_handle_dirty_metadata(handle, NULL,
 					EXT4_SB(sb)->s_sbh);
+=======
+			ext4_handle_sync(handle);
+			err = ext4_handle_dirty_super(handle, sb);
+>>>>>>> cm-10.0
 		}
 	}
 	raw_inode->i_generation = cpu_to_le32(inode->i_generation);
@@ -5373,6 +6138,11 @@ int ext4_setattr(struct dentry *dentry, struct iattr *attr)
 	}
 
 	if (attr->ia_valid & ATTR_SIZE) {
+<<<<<<< HEAD
+=======
+		inode_dio_wait(inode);
+
+>>>>>>> cm-10.0
 		if (!(ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))) {
 			struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
 
@@ -5420,11 +6190,17 @@ int ext4_setattr(struct dentry *dentry, struct iattr *attr)
 	}
 
 	if (attr->ia_valid & ATTR_SIZE) {
+<<<<<<< HEAD
 		if (attr->ia_size != i_size_read(inode)) {
 			truncate_setsize(inode, attr->ia_size);
 			ext4_truncate(inode);
 		} else if (ext4_test_inode_flag(inode, EXT4_INODE_EOFBLOCKS))
 			ext4_truncate(inode);
+=======
+		if (attr->ia_size != i_size_read(inode))
+			truncate_setsize(inode, attr->ia_size);
+		ext4_truncate(inode);
+>>>>>>> cm-10.0
 	}
 
 	if (!rc) {
@@ -5474,6 +6250,7 @@ int ext4_getattr(struct vfsmount *mnt, struct dentry *dentry,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ext4_indirect_trans_blocks(struct inode *inode, int nrblocks,
 				      int chunk)
 {
@@ -5502,6 +6279,12 @@ static int ext4_index_trans_blocks(struct inode *inode, int nrblocks, int chunk)
 {
 	if (!(ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)))
 		return ext4_indirect_trans_blocks(inode, nrblocks, chunk);
+=======
+static int ext4_index_trans_blocks(struct inode *inode, int nrblocks, int chunk)
+{
+	if (!(ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)))
+		return ext4_ind_trans_blocks(inode, nrblocks, chunk);
+>>>>>>> cm-10.0
 	return ext4_ext_index_trans_blocks(inode, nrblocks, chunk);
 }
 
@@ -5606,7 +6389,11 @@ int ext4_mark_iloc_dirty(handle_t *handle,
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	if (test_opt(inode->i_sb, I_VERSION))
+=======
+	if (IS_I_VERSION(inode))
+>>>>>>> cm-10.0
 		inode_inc_iversion(inode);
 
 	/* the do_update_inode consumes one bh->b_count */
@@ -5821,9 +6608,25 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 		return 0;
 	if (is_journal_aborted(journal))
 		return -EROFS;
+<<<<<<< HEAD
 
 	jbd2_journal_lock_updates(journal);
 	jbd2_journal_flush(journal);
+=======
+	/* We have to allocate physical blocks for delalloc blocks
+	 * before flushing journal. otherwise delalloc blocks can not
+	 * be allocated any more. even more truncate on delalloc blocks
+	 * could trigger BUG by flushing delalloc blocks in journal.
+	 * There is no delalloc block in non-journal data mode.
+	 */
+	if (val && test_opt(inode->i_sb, DELALLOC)) {
+		err = ext4_alloc_da_blocks(inode);
+		if (err < 0)
+			return err;
+	}
+
+	jbd2_journal_lock_updates(journal);
+>>>>>>> cm-10.0
 
 	/*
 	 * OK, there are no updates running now, and all cached data is
@@ -5835,8 +6638,15 @@ int ext4_change_inode_journal_flag(struct inode *inode, int val)
 
 	if (val)
 		ext4_set_inode_flag(inode, EXT4_INODE_JOURNAL_DATA);
+<<<<<<< HEAD
 	else
 		ext4_clear_inode_flag(inode, EXT4_INODE_JOURNAL_DATA);
+=======
+	else {
+		jbd2_journal_flush(journal);
+		ext4_clear_inode_flag(inode, EXT4_INODE_JOURNAL_DATA);
+	}
+>>>>>>> cm-10.0
 	ext4_set_aops(inode);
 
 	jbd2_journal_unlock_updates(journal);
@@ -5865,6 +6675,7 @@ int ext4_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf)
 	struct page *page = vmf->page;
 	loff_t size;
 	unsigned long len;
+<<<<<<< HEAD
 	int ret = -EINVAL;
 	void *fsdata;
 	struct file *file = vma->vm_file;
@@ -5889,22 +6700,63 @@ int ext4_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf)
 	if (PageMappedToDisk(page)) {
 		up_read(&inode->i_alloc_sem);
 		return VM_FAULT_LOCKED;
+=======
+	int ret;
+	struct file *file = vma->vm_file;
+	struct inode *inode = file->f_path.dentry->d_inode;
+	struct address_space *mapping = inode->i_mapping;
+	handle_t *handle;
+	get_block_t *get_block;
+	int retries = 0;
+
+	/*
+	 * This check is racy but catches the common case. We rely on
+	 * __block_page_mkwrite() to do a reliable check.
+	 */
+	vfs_check_frozen(inode->i_sb, SB_FREEZE_WRITE);
+	/* Delalloc case is easy... */
+	if (test_opt(inode->i_sb, DELALLOC) &&
+	    !ext4_should_journal_data(inode) &&
+	    !ext4_nonda_switch(inode->i_sb)) {
+		do {
+			ret = __block_page_mkwrite(vma, vmf,
+						   ext4_da_get_block_prep);
+		} while (ret == -ENOSPC &&
+		       ext4_should_retry_alloc(inode->i_sb, &retries));
+		goto out_ret;
+	}
+
+	lock_page(page);
+	size = i_size_read(inode);
+	/* Page got truncated from under us? */
+	if (page->mapping != mapping || page_offset(page) > size) {
+		unlock_page(page);
+		ret = VM_FAULT_NOPAGE;
+		goto out;
+>>>>>>> cm-10.0
 	}
 
 	if (page->index == size >> PAGE_CACHE_SHIFT)
 		len = size & ~PAGE_CACHE_MASK;
 	else
 		len = PAGE_CACHE_SIZE;
+<<<<<<< HEAD
 
 	/*
 	 * return if we have all the buffers mapped. This avoid
 	 * the need to call write_begin/write_end which does a
 	 * journal_start/journal_stop which can block and take
 	 * long time
+=======
+	/*
+	 * Return if we have all the buffers mapped. This avoids the need to do
+	 * journal_start/journal_stop which can block and take a long time
+>>>>>>> cm-10.0
 	 */
 	if (page_has_buffers(page)) {
 		if (!walk_page_buffers(NULL, page_buffers(page), 0, len, NULL,
 					ext4_bh_unmapped)) {
+<<<<<<< HEAD
 			up_read(&inode->i_alloc_sem);
 			return VM_FAULT_LOCKED;
 		}
@@ -5940,5 +6792,42 @@ out_unlock:
 	if (ret)
 		ret = VM_FAULT_SIGBUS;
 	up_read(&inode->i_alloc_sem);
+=======
+			/* Wait so that we don't change page under IO */
+			wait_on_page_writeback(page);
+			ret = VM_FAULT_LOCKED;
+			goto out;
+		}
+	}
+	unlock_page(page);
+	/* OK, we need to fill the hole... */
+	if (ext4_should_dioread_nolock(inode))
+		get_block = ext4_get_block_write;
+	else
+		get_block = ext4_get_block;
+retry_alloc:
+	handle = ext4_journal_start(inode, ext4_writepage_trans_blocks(inode));
+	if (IS_ERR(handle)) {
+		ret = VM_FAULT_SIGBUS;
+		goto out;
+	}
+	ret = __block_page_mkwrite(vma, vmf, get_block);
+	if (!ret && ext4_should_journal_data(inode)) {
+		if (walk_page_buffers(handle, page_buffers(page), 0,
+			  PAGE_CACHE_SIZE, NULL, do_journal_get_write_access)) {
+			unlock_page(page);
+			ret = VM_FAULT_SIGBUS;
+			ext4_journal_stop(handle);
+			goto out;
+		}
+		ext4_set_inode_state(inode, EXT4_STATE_JDATA);
+	}
+	ext4_journal_stop(handle);
+	if (ret == -ENOSPC && ext4_should_retry_alloc(inode->i_sb, &retries))
+		goto retry_alloc;
+out_ret:
+	ret = block_page_mkwrite_return(ret);
+out:
+>>>>>>> cm-10.0
 	return ret;
 }

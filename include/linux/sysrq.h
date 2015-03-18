@@ -11,8 +11,11 @@
  *	based upon discusions in irc://irc.openprojects.net/#kernelnewbies
  */
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 #ifndef _LINUX_SYSRQ_H
 #define _LINUX_SYSRQ_H
 
@@ -22,8 +25,11 @@
 /* Enable/disable SYSRQ support by default (0==no, 1==yes). */
 #define SYSRQ_DEFAULT_ENABLE	1
 
+<<<<<<< HEAD
 #define SYSRQ_DEFAULT_DISABLE	0
 
+=======
+>>>>>>> cm-10.0
 /* Possible values of bitmask for enabling sysrq functions */
 /* 0x0001 is reserved for enable everything */
 #define SYSRQ_ENABLE_LOG	0x0002

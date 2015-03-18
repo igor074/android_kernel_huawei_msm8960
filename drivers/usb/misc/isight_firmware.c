@@ -55,8 +55,14 @@ static int isight_firmware_load(struct usb_interface *intf,
 
 	ptr = firmware->data;
 
+<<<<<<< HEAD
 	if (usb_control_msg
 	    (dev, usb_sndctrlpipe(dev, 0), 0xa0, 0x40, 0xe600, 0, "\1", 1,
+=======
+	buf[0] = 0x01;
+	if (usb_control_msg
+	    (dev, usb_sndctrlpipe(dev, 0), 0xa0, 0x40, 0xe600, 0, buf, 1,
+>>>>>>> cm-10.0
 	     300) != 1) {
 		printk(KERN_ERR
 		       "Failed to initialise isight firmware loader\n");
@@ -100,8 +106,14 @@ static int isight_firmware_load(struct usb_interface *intf,
 		}
 	}
 
+<<<<<<< HEAD
 	if (usb_control_msg
 	    (dev, usb_sndctrlpipe(dev, 0), 0xa0, 0x40, 0xe600, 0, "\0", 1,
+=======
+	buf[0] = 0x00;
+	if (usb_control_msg
+	    (dev, usb_sndctrlpipe(dev, 0), 0xa0, 0x40, 0xe600, 0, buf, 1,
+>>>>>>> cm-10.0
 	     300) != 1) {
 		printk(KERN_ERR "isight firmware loading completion failed\n");
 		ret = -ENODEV;
@@ -126,6 +138,7 @@ static struct usb_driver isight_firmware_driver = {
 	.id_table = id_table,
 };
 
+<<<<<<< HEAD
 static int __init isight_firmware_init(void)
 {
 	return usb_register(&isight_firmware_driver);
@@ -138,6 +151,9 @@ static void __exit isight_firmware_exit(void)
 
 module_init(isight_firmware_init);
 module_exit(isight_firmware_exit);
+=======
+module_usb_driver(isight_firmware_driver);
+>>>>>>> cm-10.0
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");

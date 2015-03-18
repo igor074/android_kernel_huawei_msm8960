@@ -215,7 +215,11 @@ static int blktrans_open(struct block_device *bdev, fmode_t mode)
 
 	mutex_lock(&dev->lock);
 
+<<<<<<< HEAD
 	if (dev->open++)
+=======
+	if (dev->open)
+>>>>>>> cm-10.0
 		goto unlock;
 
 	kref_get(&dev->ref);
@@ -233,8 +237,15 @@ static int blktrans_open(struct block_device *bdev, fmode_t mode)
 	ret = __get_mtd_device(dev->mtd);
 	if (ret)
 		goto error_release;
+<<<<<<< HEAD
 
 unlock:
+=======
+	dev->file_mode = mode;
+
+unlock:
+	dev->open++;
+>>>>>>> cm-10.0
 	mutex_unlock(&dev->lock);
 	blktrans_dev_put(dev);
 	return ret;
@@ -433,6 +444,11 @@ int add_mtd_blktrans_dev(struct mtd_blktrans_dev *new)
 
 	blk_queue_logical_block_size(new->rq, tr->blksize);
 
+<<<<<<< HEAD
+=======
+	queue_flag_set_unlocked(QUEUE_FLAG_NONROT, new->rq);
+
+>>>>>>> cm-10.0
 	if (tr->discard) {
 		queue_flag_set_unlocked(QUEUE_FLAG_DISCARD, new->rq);
 		new->rq->limits.max_discard_sectors = UINT_MAX;

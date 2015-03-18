@@ -29,7 +29,11 @@
  *           nxp,external-clock-frequency = <16000000>;
  *   };
  *
+<<<<<<< HEAD
  * See "Documentation/powerpc/dts-bindings/can/sja1000.txt" for further
+=======
+ * See "Documentation/devicetree/bindings/net/can/sja1000.txt" for further
+>>>>>>> cm-10.0
  * information.
  */
 
@@ -38,6 +42,10 @@
 #include <linux/interrupt.h>
 #include <linux/netdevice.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
+=======
+#include <linux/io.h>
+>>>>>>> cm-10.0
 #include <linux/can/dev.h>
 
 #include <linux/of_platform.h>
@@ -219,6 +227,7 @@ static struct platform_driver sja1000_ofp_driver = {
 	.remove = __devexit_p(sja1000_ofp_remove),
 };
 
+<<<<<<< HEAD
 static int __init sja1000_ofp_init(void)
 {
 	return platform_driver_register(&sja1000_ofp_driver);
@@ -230,3 +239,6 @@ static void __exit sja1000_ofp_exit(void)
 	return platform_driver_unregister(&sja1000_ofp_driver);
 };
 module_exit(sja1000_ofp_exit);
+=======
+module_platform_driver(sja1000_ofp_driver);
+>>>>>>> cm-10.0

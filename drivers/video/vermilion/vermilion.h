@@ -31,7 +31,11 @@
 
 #include <linux/kernel.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <linux/mutex.h>
 
 #define VML_DEVICE_GPU 0x5002

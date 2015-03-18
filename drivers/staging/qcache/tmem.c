@@ -2,7 +2,11 @@
  * In-kernel transcendent memory (generic implementation)
  *
  * Copyright (c) 2009-2011, Dan Magenheimer, Oracle Corp.
+<<<<<<< HEAD
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * The primary purpose of Transcedent Memory ("tmem") is to map object-oriented
  * "handles" (triples containing a pool id, and object id, and an index), to

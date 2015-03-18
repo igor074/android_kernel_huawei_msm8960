@@ -6,6 +6,10 @@
 #define PAGE_FLAGS_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
+=======
+#include <linux/bug.h>
+>>>>>>> cm-10.0
 #ifndef __GENERATING_BOUNDS_H
 #include <linux/mm_types.h>
 #include <generated/bounds.h>
@@ -124,9 +128,12 @@ enum pageflags {
 
 	/* SLOB */
 	PG_slob_free = PG_private,
+<<<<<<< HEAD
 
 	/* SLUB */
 	PG_slub_frozen = PG_active,
+=======
+>>>>>>> cm-10.0
 };
 
 #ifndef __GENERATING_BOUNDS_H
@@ -135,7 +142,11 @@ enum pageflags {
  * Macros to create function definitions for page flags
  */
 #define TESTPAGEFLAG(uname, lname)					\
+<<<<<<< HEAD
 static inline int Page##uname(struct page *page) 			\
+=======
+static inline int Page##uname(const struct page *page)			\
+>>>>>>> cm-10.0
 			{ return test_bit(PG_##lname, &page->flags); }
 
 #define SETPAGEFLAG(uname, lname)					\
@@ -173,7 +184,11 @@ static inline int __TestClearPage##uname(struct page *page)		\
 	__SETPAGEFLAG(uname, lname)  __CLEARPAGEFLAG(uname, lname)
 
 #define PAGEFLAG_FALSE(uname) 						\
+<<<<<<< HEAD
 static inline int Page##uname(struct page *page) 			\
+=======
+static inline int Page##uname(const struct page *page)			\
+>>>>>>> cm-10.0
 			{ return 0; }
 
 #define TESTSCFLAG(uname, lname)					\
@@ -212,8 +227,11 @@ PAGEFLAG(SwapBacked, swapbacked) __CLEARPAGEFLAG(SwapBacked, swapbacked)
 
 __PAGEFLAG(SlobFree, slob_free)
 
+<<<<<<< HEAD
 __PAGEFLAG(SlubFrozen, slub_frozen)
 
+=======
+>>>>>>> cm-10.0
 /*
  * Private page markings that may be used by the filesystem that owns the page
  * for its own purposes.
@@ -419,11 +437,32 @@ static inline int PageTransHuge(struct page *page)
 	return PageHead(page);
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * PageTransCompound returns true for both transparent huge pages
+ * and hugetlbfs pages, so it should only be called when it's known
+ * that hugetlbfs pages aren't involved.
+ */
+>>>>>>> cm-10.0
 static inline int PageTransCompound(struct page *page)
 {
 	return PageCompound(page);
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * PageTransTail returns true for both transparent huge pages
+ * and hugetlbfs pages, so it should only be called when it's known
+ * that hugetlbfs pages aren't involved.
+ */
+static inline int PageTransTail(struct page *page)
+{
+	return PageTail(page);
+}
+
+>>>>>>> cm-10.0
 #else
 
 static inline int PageTransHuge(struct page *page)
@@ -435,6 +474,14 @@ static inline int PageTransCompound(struct page *page)
 {
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+static inline int PageTransTail(struct page *page)
+{
+	return 0;
+}
+>>>>>>> cm-10.0
 #endif
 
 #ifdef CONFIG_MMU

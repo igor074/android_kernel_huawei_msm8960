@@ -25,6 +25,10 @@
 
 #include <asm/div64.h>
 
+<<<<<<< HEAD
+=======
+#include "soc.h"
+>>>>>>> cm-10.0
 
 struct clk {
 	struct clk	*parent;

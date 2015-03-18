@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -26,7 +30,11 @@
  *
  */
 #define BAM_MIN_VERSION 2
+<<<<<<< HEAD
 #define BAM_MAX_VERSION 0x1f
+=======
+#define BAM_MAX_VERSION 0x2f
+>>>>>>> cm-10.0
 
 #ifdef CONFIG_SPS_SUPPORT_NDP_BAM
 
@@ -94,6 +102,11 @@
  *
  */
 /* CTRL */
+<<<<<<< HEAD
+=======
+#define CACHE_MISS_ERR_RESP_EN                 0x80000
+#define LOCAL_CLK_GATING                       0x60000
+>>>>>>> cm-10.0
 #define IBC_DISABLE                            0x10000
 #define BAM_CACHED_DESC_STORE                   0x8000
 #define BAM_DESC_CACHE_SEL                      0x6000
@@ -171,17 +184,32 @@
 #define AHB_MASTER_ERR_CTRLS_BAM_ERR_HTRANS             0x3
 
 /* TRUST_REG  */
+<<<<<<< HEAD
+=======
+#define LOCK_EE_CTRL                            0x2000
+>>>>>>> cm-10.0
 #define BAM_VMID                                0x1f00
 #define BAM_RST_BLOCK                             0x80
 #define BAM_EE                                     0x7
 
 /* TEST_BUS_SEL */
+<<<<<<< HEAD
+=======
+#define BAM_SW_EVENTS_ZERO                    0x200000
+#define BAM_SW_EVENTS_SEL                     0x180000
+>>>>>>> cm-10.0
 #define BAM_DATA_ERASE                         0x40000
 #define BAM_DATA_FLUSH                         0x20000
 #define BAM_CLK_ALWAYS_ON                      0x10000
 #define BAM_TESTBUS_SEL                           0x7f
 
 /* CNFG_BITS */
+<<<<<<< HEAD
+=======
+#define CNFG_BITS_MULTIPLE_EVENTS_DESC_AVAIL_EN  0x40000000
+#define CNFG_BITS_MULTIPLE_EVENTS_SIZE_EN        0x20000000
+#define CNFG_BITS_BAM_ZLT_W_CD_SUPPORT           0x10000000
+>>>>>>> cm-10.0
 #define CNFG_BITS_BAM_CD_ENABLE                   0x8000000
 #define CNFG_BITS_BAM_AU_ACCUMED                  0x4000000
 #define CNFG_BITS_BAM_PSM_P_HD_DATA               0x2000000
@@ -221,6 +249,10 @@
 
 /* P_TRUST_REGn */
 #define BAM_P_VMID                              0x1f00
+<<<<<<< HEAD
+=======
+#define BAM_P_SUP_GROUP                           0xf8
+>>>>>>> cm-10.0
 #define BAM_P_EE                                   0x7
 
 /* P_IRQ_STTSn */
@@ -640,6 +672,11 @@ int bam_init(void *base, u32 ee,
 	u32 cfg_bits = 0xffffffff & ~(1 << 11);
 	u32 ver = 0;
 
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).ee=%d.", __func__, (u32) base, ee);
+
+>>>>>>> cm-10.0
 	ver = bam_read_reg_field(base, REVISION, BAM_REVISION);
 
 	if ((ver < BAM_MIN_VERSION) || (ver > BAM_MAX_VERSION)) {
@@ -662,6 +699,15 @@ int bam_init(void *base, u32 ee,
 
 	bam_write_reg_field(base, CTRL, BAM_EN, 1);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SPS_SUPPORT_NDP_BAM
+	bam_write_reg_field(base, CTRL, CACHE_MISS_ERR_RESP_EN, 1);
+
+	bam_write_reg_field(base, CTRL, LOCAL_CLK_GATING, 1);
+#endif
+
+>>>>>>> cm-10.0
 	bam_write_reg(base, DESC_CNT_TRSHLD, summing_threshold);
 
 	bam_write_reg(base, CNFG_BITS, cfg_bits);
@@ -728,6 +774,11 @@ int bam_security_init(void *base, u32 ee, u32 vmid, u32 pipe_mask)
 	u32 mask;
 	u32 pipe;
 
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).", __func__, (u32) base);
+
+>>>>>>> cm-10.0
 	/*
 	 * Discover the hardware version number and the number of pipes
 	 * supported by this BAM
@@ -767,6 +818,11 @@ int bam_check(void *base, u32 *version, u32 *num_pipes)
 {
 	u32 ver = 0;
 
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).", __func__, (u32) base);
+
+>>>>>>> cm-10.0
 	if (!bam_read_reg_field(base, CTRL, BAM_EN)) {
 		SPS_ERR("sps:%s:bam 0x%x(va) is not enabled.\n",
 				__func__, (u32) base);
@@ -798,6 +854,11 @@ int bam_check(void *base, u32 *version, u32 *num_pipes)
  */
 void bam_exit(void *base, u32 ee)
 {
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).ee=%d.", __func__, (u32) base, ee);
+
+>>>>>>> cm-10.0
 	bam_write_reg_field(base, IRQ_SRCS_MSK_EE(ee), BAM_IRQ, 0);
 
 	bam_write_reg(base, IRQ_EN, 0);
@@ -884,6 +945,11 @@ u32 bam_check_irq_source(void *base, u32 ee, u32 mask,
 int bam_pipe_init(void *base, u32 pipe,	struct bam_pipe_parameters *param,
 					u32 ee)
 {
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).pipe=%d.", __func__, (u32) base, pipe);
+
+>>>>>>> cm-10.0
 	/* Reset the BAM pipe */
 	bam_write_reg(base, P_RST(pipe), 1);
 	/* No delay needed */
@@ -906,6 +972,17 @@ int bam_pipe_init(void *base, u32 pipe,	struct bam_pipe_parameters *param,
 	bam_write_reg_field(base, P_CTRL(pipe), P_SYS_STRM,
 			    param->stream_mode);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SPS_SUPPORT_NDP_BAM
+	bam_write_reg_field(base, P_CTRL(pipe), P_LOCK_GROUP,
+				param->lock_group);
+
+	SPS_DBG("sps:bam=0x%x(va).pipe=%d.lock_group=%d.\n",
+			(u32) base, pipe, param->lock_group);
+#endif
+
+>>>>>>> cm-10.0
 	if (param->mode == BAM_PIPE_MODE_BAM2BAM) {
 		u32 peer_dest_addr = param->peer_phys_addr +
 				      P_EVNT_REG(param->peer_pipe);
@@ -922,6 +999,17 @@ int bam_pipe_init(void *base, u32 pipe,	struct bam_pipe_parameters *param,
 			(u32) base, pipe,
 			(u32) param->peer_phys_addr,
 			param->peer_pipe);
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_SPS_SUPPORT_NDP_BAM
+		bam_write_reg_field(base, P_CTRL(pipe), P_WRITE_NWD,
+					param->write_nwd);
+
+		SPS_DBG("sps:%s WRITE_NWD bit for this bam2bam pipe.",
+			param->write_nwd ? "Set" : "Do not set");
+#endif
+>>>>>>> cm-10.0
 	}
 
 	/* Pipe Enable - at last */
@@ -936,6 +1024,11 @@ int bam_pipe_init(void *base, u32 pipe,	struct bam_pipe_parameters *param,
  */
 void bam_pipe_exit(void *base, u32 pipe, u32 ee)
 {
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).pipe=%d.", __func__, (u32) base, pipe);
+
+>>>>>>> cm-10.0
 	bam_write_reg(base, P_IRQ_EN(pipe), 0);
 
 	/* Disable the Pipe Interrupt at the BAM level */
@@ -951,6 +1044,11 @@ void bam_pipe_exit(void *base, u32 pipe, u32 ee)
  */
 void bam_pipe_enable(void *base, u32 pipe)
 {
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).pipe=%d.", __func__, (u32) base, pipe);
+
+>>>>>>> cm-10.0
 	bam_write_reg_field(base, P_CTRL(pipe), P_EN, 1);
 }
 
@@ -960,6 +1058,11 @@ void bam_pipe_enable(void *base, u32 pipe)
  */
 void bam_pipe_disable(void *base, u32 pipe)
 {
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).pipe=%d.", __func__, (u32) base, pipe);
+
+>>>>>>> cm-10.0
 	bam_write_reg_field(base, P_CTRL(pipe), P_EN, 0);
 }
 
@@ -979,6 +1082,11 @@ int bam_pipe_is_enabled(void *base, u32 pipe)
 void bam_pipe_set_irq(void *base, u32 pipe, enum bam_enable irq_en,
 		      u32 src_mask, u32 ee)
 {
+<<<<<<< HEAD
+=======
+	SPS_DBG2("sps:%s:bam=0x%x(va).pipe=%d.", __func__, (u32) base, pipe);
+
+>>>>>>> cm-10.0
 	bam_write_reg(base, P_IRQ_EN(pipe), src_mask);
 	bam_write_reg_field(base, IRQ_SRCS_MSK_EE(ee), (1 << pipe), irq_en);
 }
@@ -1256,7 +1364,11 @@ void print_bam_pipe_selected_reg(void *virt_addr, u32 pipe_index)
 		"BAM_P_IRQ_STTS: 0x%x\n"
 		"BAM_P_IRQ_STTS_P_TRNSFR_END_IRQ: 0x%x\n"
 		"BAM_P_IRQ_STTS_P_PRCSD_DESC_IRQ: 0x%x\n"
+<<<<<<< HEAD
 		"BAM_P_IRQ_EN: %d\n"
+=======
+		"BAM_P_IRQ_EN: 0x%x\n"
+>>>>>>> cm-10.0
 		"BAM_P_PRDCR_SDBNDn_BAM_P_BYTES_FREE: 0x%x (%d)\n"
 		"BAM_P_CNSMR_SDBNDn_BAM_P_BYTES_AVAIL: 0x%x (%d)\n"
 		"BAM_P_SW_DESC_OFST: 0x%x\n"
@@ -1304,4 +1416,53 @@ void print_bam_pipe_selected_reg(void *virt_addr, u32 pipe_index)
 		bam_read_reg_field(base, P_EVNT_GEN_TRSHLD(pipe),
 					P_EVNT_GEN_TRSHLD_P_TRSHLD));
 }
+<<<<<<< HEAD
+=======
+
+/* output descriptor FIFO of a pipe */
+void print_bam_pipe_desc_fifo(void *virt_addr, u32 pipe_index)
+{
+	void *base = virt_addr;
+	u32 pipe = pipe_index;
+	u32 desc_fifo_addr;
+	u32 desc_fifo_size;
+	u32 *desc_fifo;
+	int i;
+
+	if (base == NULL)
+		return;
+
+	desc_fifo_addr = bam_read_reg(base, P_DESC_FIFO_ADDR(pipe));
+	desc_fifo_size = bam_read_reg_field(base, P_FIFO_SIZES(pipe),
+						P_DESC_FIFO_SIZE);
+
+	if (desc_fifo_addr == 0) {
+		SPS_ERR("sps:%s:desc FIFO address of Pipe %d is NULL.\n",
+			__func__, pipe);
+		return;
+	} else if (desc_fifo_size == 0) {
+		SPS_ERR("sps:%s:desc FIFO size of Pipe %d is 0.\n",
+			__func__, pipe);
+		return;
+	}
+
+	SPS_INFO("\nsps:----- descriptor FIFO of Pipe %d -----\n", pipe);
+
+	SPS_INFO("BAM_P_DESC_FIFO_ADDR: 0x%x\n"
+		"BAM_P_DESC_FIFO_SIZE: 0x%x (%d)\n\n",
+		desc_fifo_addr, desc_fifo_size, desc_fifo_size);
+
+	desc_fifo = (u32 *) phys_to_virt(desc_fifo_addr);
+
+	SPS_INFO("-------------------- begin of FIFO --------------------\n");
+
+	for (i = 0; i < desc_fifo_size; i += 0x10)
+		SPS_INFO("addr 0x%x: 0x%x, 0x%x, 0x%x, 0x%x.\n",
+			desc_fifo_addr + i,
+			desc_fifo[i / 4], desc_fifo[(i / 4) + 1],
+			desc_fifo[(i / 4) + 2], desc_fifo[(i / 4) + 3]);
+
+	SPS_INFO("--------------------  end of FIFO  --------------------\n");
+}
+>>>>>>> cm-10.0
 #endif

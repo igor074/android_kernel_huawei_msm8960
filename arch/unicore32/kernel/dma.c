@@ -18,7 +18,10 @@
 #include <linux/errno.h>
 #include <linux/io.h>
 
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/irq.h>
 #include <mach/hardware.h>
 #include <mach/dma.h>

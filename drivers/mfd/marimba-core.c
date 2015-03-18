@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -24,6 +28,10 @@
 #include <linux/mfd/marimba.h>
 #include <linux/slab.h>
 #include <linux/debugfs.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #define MARIMBA_MODE				0x00
 
@@ -759,7 +767,11 @@ static void marimba_init_reg(struct i2c_client *client, u8 driver_data)
 	}
 }
 
+<<<<<<< HEAD
 static int marimba_probe(struct i2c_client *client,
+=======
+static int __devinit marimba_probe(struct i2c_client *client,
+>>>>>>> cm-10.0
 				const struct i2c_device_id *id)
 {
 	struct marimba_platform_data *pdata = client->dev.platform_data;

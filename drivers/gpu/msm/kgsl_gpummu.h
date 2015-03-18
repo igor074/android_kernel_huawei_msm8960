@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -47,7 +51,10 @@ struct kgsl_tlbflushfilter {
 struct kgsl_gpummu_pt {
 	struct kgsl_memdesc  base;
 	unsigned int   last_superpte;
+<<<<<<< HEAD
 	unsigned int tlb_flags;
+=======
+>>>>>>> cm-10.0
 	/* Maintain filter to manage tlb flushing */
 	struct kgsl_tlbflushfilter tlbflushfilter;
 };
@@ -73,6 +80,7 @@ struct kgsl_ptpool {
 	int chunks;
 };
 
+<<<<<<< HEAD
 void *kgsl_gpummu_ptpool_init(int ptsize,
 			int entries);
 void kgsl_gpummu_ptpool_destroy(void *ptpool);
@@ -82,4 +90,9 @@ static inline unsigned int kgsl_pt_get_base_addr(struct kgsl_pagetable *pt)
 	struct kgsl_gpummu_pt *gpummu_pt = pt->priv;
 	return gpummu_pt->base.gpuaddr;
 }
+=======
+void *kgsl_gpummu_ptpool_init(int entries);
+void kgsl_gpummu_ptpool_destroy(void *ptpool);
+
+>>>>>>> cm-10.0
 #endif /* __KGSL_GPUMMU_H */

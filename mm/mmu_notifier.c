@@ -11,7 +11,11 @@
 
 #include <linux/rculist.h>
 #include <linux/mmu_notifier.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/mm.h>
 #include <linux/err.h>
 #include <linux/rcupdate.h>

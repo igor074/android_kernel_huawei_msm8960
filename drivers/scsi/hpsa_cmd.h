@@ -23,7 +23,11 @@
 
 /* general boundary defintions */
 #define SENSEINFOBYTES          32 /* may vary between hbas */
+<<<<<<< HEAD
 #define MAXSGENTRIES            32
+=======
+#define SG_ENTRIES_IN_CMD	32 /* Max SG entries excluding chain blocks */
+>>>>>>> cm-10.0
 #define HPSA_SG_CHAIN		0x80000000
 #define MAXREPLYQS              256
 
@@ -122,9 +126,17 @@ union u64bit {
 };
 
 /* FIXME this is a per controller value (barf!) */
+<<<<<<< HEAD
 #define HPSA_MAX_TARGETS_PER_CTLR 16
 #define HPSA_MAX_LUN 256
 #define HPSA_MAX_PHYS_LUN 1024
+=======
+#define HPSA_MAX_LUN 1024
+#define HPSA_MAX_PHYS_LUN 1024
+#define MAX_EXT_TARGETS 32
+#define HPSA_MAX_DEVICES (HPSA_MAX_PHYS_LUN + HPSA_MAX_LUN + \
+	MAX_EXT_TARGETS + 1) /* + 1 is for the controller itself */
+>>>>>>> cm-10.0
 
 /* SCSI-3 Commands */
 #pragma pack(1)
@@ -279,7 +291,11 @@ struct CommandList {
 	struct CommandListHeader Header;
 	struct RequestBlock      Request;
 	struct ErrDescriptor     ErrDesc;
+<<<<<<< HEAD
 	struct SGDescriptor      SG[MAXSGENTRIES];
+=======
+	struct SGDescriptor      SG[SG_ENTRIES_IN_CMD];
+>>>>>>> cm-10.0
 	/* information associated with the command */
 	u32			   busaddr; /* physical addr of this record */
 	struct ErrorInfo *err_info; /* pointer to the allocated mem */

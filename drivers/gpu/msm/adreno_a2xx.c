@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,13 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/delay.h>
+#include <linux/sched.h>
+#include <mach/socinfo.h>
+
+>>>>>>> cm-10.0
 #include "kgsl.h"
 #include "kgsl_sharedmem.h"
 #include "kgsl_cffdump.h"
@@ -52,7 +63,10 @@ const unsigned int a200_registers[] = {
 	0x4000, 0x4003, 0x4800, 0x4805, 0x4900, 0x4900, 0x4908, 0x4908,
 };
 
+<<<<<<< HEAD
 /* A220, A225 */
+=======
+>>>>>>> cm-10.0
 const unsigned int a220_registers[] = {
 	0x0000, 0x0002, 0x0004, 0x000B, 0x003B, 0x003D, 0x0040, 0x0044,
 	0x0046, 0x0047, 0x01C0, 0x01C1, 0x01C3, 0x01C8, 0x01D5, 0x01D9,
@@ -82,8 +96,45 @@ const unsigned int a220_registers[] = {
 	0x4900, 0x4900, 0x4908, 0x4908,
 };
 
+<<<<<<< HEAD
 const unsigned int a200_registers_count = ARRAY_SIZE(a200_registers) / 2;
 const unsigned int a220_registers_count = ARRAY_SIZE(a220_registers) / 2;
+=======
+const unsigned int a225_registers[] = {
+	0x0000, 0x0002, 0x0004, 0x000B, 0x003B, 0x003D, 0x0040, 0x0044,
+	0x0046, 0x0047, 0x013C, 0x013C, 0x0140, 0x014F, 0x01C0, 0x01C1,
+	0x01C3, 0x01C8, 0x01D5, 0x01D9, 0x01DC, 0x01DD, 0x01EA, 0x01EA,
+	0x01EE, 0x01F3, 0x01F6, 0x01F7, 0x01FC, 0x01FF, 0x0391, 0x0392,
+	0x039B, 0x039E, 0x03B2, 0x03B5, 0x03B7, 0x03B7, 0x03F8, 0x03FB,
+	0x0440, 0x0440, 0x0443, 0x0444, 0x044B, 0x044B, 0x044D, 0x044F,
+	0x0452, 0x0452, 0x0454, 0x045B, 0x047F, 0x047F, 0x0578, 0x0587,
+	0x05C9, 0x05C9, 0x05D0, 0x05D0, 0x0601, 0x0604, 0x0606, 0x0609,
+	0x060B, 0x060E, 0x0613, 0x0614, 0x0A29, 0x0A2B, 0x0A2F, 0x0A31,
+	0x0A40, 0x0A40, 0x0A42, 0x0A43, 0x0A45, 0x0A45, 0x0A4E, 0x0A4F,
+	0x0C01, 0x0C1D, 0x0C30, 0x0C30, 0x0C38, 0x0C39, 0x0C3C, 0x0C3C,
+	0x0C80, 0x0C81, 0x0C88, 0x0C93, 0x0D00, 0x0D03, 0x0D05, 0x0D06,
+	0x0D08, 0x0D0B, 0x0D34, 0x0D35, 0x0DAE, 0x0DC1, 0x0DC8, 0x0DD4,
+	0x0DD8, 0x0DD9, 0x0E00, 0x0E00, 0x0E02, 0x0E04, 0x0E17, 0x0E1E,
+	0x0EC0, 0x0EC9, 0x0ECB, 0x0ECC, 0x0ED0, 0x0ED0, 0x0ED4, 0x0ED7,
+	0x0EE0, 0x0EE2, 0x0F01, 0x0F02, 0x2000, 0x200F, 0x2080, 0x2082,
+	0x2100, 0x2109, 0x210C, 0x2114, 0x2180, 0x2184, 0x21F5, 0x21F7,
+	0x2200, 0x2202, 0x2204, 0x2206, 0x2208, 0x2210, 0x2220, 0x2222,
+	0x2280, 0x2282, 0x2294, 0x2294, 0x2297, 0x2297, 0x2300, 0x230A,
+	0x2312, 0x2312, 0x2315, 0x2316, 0x2318, 0x231D, 0x2324, 0x2326,
+	0x2340, 0x2357, 0x2360, 0x2360, 0x2380, 0x2383, 0x2400, 0x240F,
+	0x2480, 0x2482, 0x2500, 0x2509, 0x250C, 0x2514, 0x2580, 0x2584,
+	0x25F5, 0x25F7, 0x2600, 0x2602, 0x2604, 0x2606, 0x2608, 0x2610,
+	0x2620, 0x2622, 0x2680, 0x2682, 0x2694, 0x2694, 0x2697, 0x2697,
+	0x2700, 0x270A, 0x2712, 0x2712, 0x2715, 0x2716, 0x2718, 0x271D,
+	0x2724, 0x2726, 0x2740, 0x2757, 0x2760, 0x2760, 0x2780, 0x2783,
+	0x4000, 0x4003, 0x4800, 0x4806, 0x4808, 0x4808, 0x4900, 0x4900,
+	0x4908, 0x4908,
+};
+
+const unsigned int a200_registers_count = ARRAY_SIZE(a200_registers) / 2;
+const unsigned int a220_registers_count = ARRAY_SIZE(a220_registers) / 2;
+const unsigned int a225_registers_count = ARRAY_SIZE(a225_registers) / 2;
+>>>>>>> cm-10.0
 
 /*
  *
@@ -161,7 +212,12 @@ const unsigned int a220_registers_count = ARRAY_SIZE(a220_registers) / 2;
 
 static inline int _shader_shadow_size(struct adreno_device *adreno_dev)
 {
+<<<<<<< HEAD
 	return adreno_dev->istore_size*ADRENO_ISTORE_BYTES;
+=======
+	return adreno_dev->istore_size *
+		(adreno_dev->instruction_size * sizeof(unsigned int));
+>>>>>>> cm-10.0
 }
 
 static inline int _context_size(struct adreno_device *adreno_dev)
@@ -795,9 +851,12 @@ static unsigned int *build_gmem2sys_cmds(struct adreno_device *adreno_dev,
 	*cmds++ = 0x00010000;
 
 	if (adreno_is_a22x(adreno_dev)) {
+<<<<<<< HEAD
 		*cmds++ = cp_type3_packet(CP_SET_DRAW_INIT_FLAGS, 1);
 		*cmds++ = 0;
 
+=======
+>>>>>>> cm-10.0
 		*cmds++ = cp_type3_packet(CP_SET_CONSTANT, 2);
 		*cmds++ = CP_REG(REG_A220_RB_LRZ_VSC_CONTROL);
 		*cmds++ = 0x0000000;
@@ -1017,9 +1076,12 @@ static unsigned int *build_sys2gmem_cmds(struct adreno_device *adreno_dev,
 	*cmds++ = 0x00010000;
 
 	if (adreno_is_a22x(adreno_dev)) {
+<<<<<<< HEAD
 		*cmds++ = cp_type3_packet(CP_SET_DRAW_INIT_FLAGS, 1);
 		*cmds++ = 0;
 
+=======
+>>>>>>> cm-10.0
 		*cmds++ = cp_type3_packet(CP_SET_CONSTANT, 2);
 		*cmds++ = CP_REG(REG_A220_RB_LRZ_VSC_CONTROL);
 		*cmds++ = 0x0000000;
@@ -1321,9 +1383,14 @@ static int a2xx_create_gmem_shadow(struct adreno_device *adreno_dev,
 {
 	int result;
 
+<<<<<<< HEAD
 	calc_gmemsize(&drawctxt->context_gmem_shadow,
 		adreno_dev->gmemspace.sizebytes);
 	tmp_ctx.gmem_base = adreno_dev->gmemspace.gpu_base;
+=======
+	calc_gmemsize(&drawctxt->context_gmem_shadow, adreno_dev->gmem_size);
+	tmp_ctx.gmem_base = adreno_dev->gmem_base;
+>>>>>>> cm-10.0
 
 	result = kgsl_allocate(&drawctxt->context_gmem_shadow.gmemshadow,
 		drawctxt->pagetable, drawctxt->context_gmem_shadow.size);
@@ -1331,8 +1398,13 @@ static int a2xx_create_gmem_shadow(struct adreno_device *adreno_dev,
 	if (result)
 		return result;
 
+<<<<<<< HEAD
 	/* we've allocated the shadow, when swapped out, GMEM must be saved. */
 	drawctxt->flags |= CTXT_FLAGS_GMEM_SHADOW | CTXT_FLAGS_GMEM_SAVE;
+=======
+	/* set the gmem shadow flag for the context */
+	drawctxt->flags |= CTXT_FLAGS_GMEM_SHADOW;
+>>>>>>> cm-10.0
 
 	/* blank out gmem shadow. */
 	kgsl_sharedmem_set(&drawctxt->context_gmem_shadow.gmemshadow, 0, 0,
@@ -1421,7 +1493,12 @@ done:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void a2xx_drawctxt_workaround(struct adreno_device *adreno_dev)
+=======
+static void a2xx_drawctxt_draw_workaround(struct adreno_device *adreno_dev,
+					struct adreno_context *context)
+>>>>>>> cm-10.0
 {
 	struct kgsl_device *device = &adreno_dev->dev;
 	unsigned int cmd[11];
@@ -1468,7 +1545,11 @@ static void a2xx_drawctxt_workaround(struct adreno_device *adreno_dev)
 					| adreno_dev->pix_shader_start;
 	}
 
+<<<<<<< HEAD
 	adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_PMODE,
+=======
+	adreno_ringbuffer_issuecmds(device, context, KGSL_CMD_FLAGS_PMODE,
+>>>>>>> cm-10.0
 			&cmd[0], cmds - cmd);
 }
 
@@ -1487,12 +1568,21 @@ static void a2xx_drawctxt_save(struct adreno_device *adreno_dev,
 	if (!(context->flags & CTXT_FLAGS_PREAMBLE)) {
 
 		/* save registers and constants. */
+<<<<<<< HEAD
 		adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE,
+=======
+		adreno_ringbuffer_issuecmds(device, context,
+			KGSL_CMD_FLAGS_NONE,
+>>>>>>> cm-10.0
 			context->reg_save, 3);
 
 		if (context->flags & CTXT_FLAGS_SHADER_SAVE) {
 			/* save shader partitioning and instructions. */
+<<<<<<< HEAD
 			adreno_ringbuffer_issuecmds(device,
+=======
+			adreno_ringbuffer_issuecmds(device, context,
+>>>>>>> cm-10.0
 				KGSL_CMD_FLAGS_PMODE,
 				context->shader_save, 3);
 
@@ -1500,7 +1590,12 @@ static void a2xx_drawctxt_save(struct adreno_device *adreno_dev,
 			 * fixup shader partitioning parameter for
 			 *  SET_SHADER_BASES.
 			 */
+<<<<<<< HEAD
 			adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE,
+=======
+			adreno_ringbuffer_issuecmds(device, context,
+				KGSL_CMD_FLAGS_NONE,
+>>>>>>> cm-10.0
 				context->shader_fixup, 3);
 
 			context->flags |= CTXT_FLAGS_SHADER_RESTORE;
@@ -1512,19 +1607,33 @@ static void a2xx_drawctxt_save(struct adreno_device *adreno_dev,
 		/* save gmem.
 		 * (note: changes shader. shader must already be saved.)
 		 */
+<<<<<<< HEAD
 		adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_PMODE,
+=======
+		adreno_ringbuffer_issuecmds(device, context,
+			KGSL_CMD_FLAGS_PMODE,
+>>>>>>> cm-10.0
 			context->context_gmem_shadow.gmem_save, 3);
 
 		/* Restore TP0_CHICKEN */
 		if (!(context->flags & CTXT_FLAGS_PREAMBLE)) {
+<<<<<<< HEAD
 			adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE,
+=======
+			adreno_ringbuffer_issuecmds(device, context,
+				KGSL_CMD_FLAGS_NONE,
+>>>>>>> cm-10.0
 				context->chicken_restore, 3);
 		}
 		adreno_dev->gpudev->ctx_switches_since_last_draw = 0;
 
 		context->flags |= CTXT_FLAGS_GMEM_RESTORE;
 	} else if (adreno_is_a2xx(adreno_dev))
+<<<<<<< HEAD
 		a2xx_drawctxt_workaround(adreno_dev);
+=======
+		a2xx_drawctxt_draw_workaround(adreno_dev, context);
+>>>>>>> cm-10.0
 }
 
 static void a2xx_drawctxt_restore(struct adreno_device *adreno_dev,
@@ -1535,7 +1644,12 @@ static void a2xx_drawctxt_restore(struct adreno_device *adreno_dev,
 
 	if (context == NULL) {
 		/* No context - set the default apgetable and thats it */
+<<<<<<< HEAD
 		kgsl_mmu_setstate(device, device->mmu.defaultpagetable);
+=======
+		kgsl_mmu_setstate(&device->mmu, device->mmu.defaultpagetable,
+				adreno_dev->drawctxt_active->id);
+>>>>>>> cm-10.0
 		return;
 	}
 
@@ -1545,10 +1659,18 @@ static void a2xx_drawctxt_restore(struct adreno_device *adreno_dev,
 	cmds[1] = KGSL_CONTEXT_TO_MEM_IDENTIFIER;
 	cmds[2] = cp_type3_packet(CP_MEM_WRITE, 2);
 	cmds[3] = device->memstore.gpuaddr +
+<<<<<<< HEAD
 		KGSL_DEVICE_MEMSTORE_OFFSET(current_context);
 	cmds[4] = (unsigned int) context;
 	adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE, cmds, 5);
 	kgsl_mmu_setstate(device, context->pagetable);
+=======
+		KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL, current_context);
+	cmds[4] = context->id;
+	adreno_ringbuffer_issuecmds(device, context, KGSL_CMD_FLAGS_NONE,
+					cmds, 5);
+	kgsl_mmu_setstate(&device->mmu, context->pagetable, context->id);
+>>>>>>> cm-10.0
 
 #ifndef CONFIG_MSM_KGSL_CFF_DUMP_NO_CONTEXT_MEM_DUMP
 	kgsl_cffdump_syncmem(NULL, &context->gpustate,
@@ -1560,12 +1682,22 @@ static void a2xx_drawctxt_restore(struct adreno_device *adreno_dev,
 	 *  (note: changes shader. shader must not already be restored.)
 	 */
 	if (context->flags & CTXT_FLAGS_GMEM_RESTORE) {
+<<<<<<< HEAD
 		adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_PMODE,
+=======
+		adreno_ringbuffer_issuecmds(device, context,
+			KGSL_CMD_FLAGS_PMODE,
+>>>>>>> cm-10.0
 			context->context_gmem_shadow.gmem_restore, 3);
 
 		if (!(context->flags & CTXT_FLAGS_PREAMBLE)) {
 			/* Restore TP0_CHICKEN */
+<<<<<<< HEAD
 			adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE,
+=======
+			adreno_ringbuffer_issuecmds(device, context,
+				KGSL_CMD_FLAGS_NONE,
+>>>>>>> cm-10.0
 				context->chicken_restore, 3);
 		}
 
@@ -1575,12 +1707,21 @@ static void a2xx_drawctxt_restore(struct adreno_device *adreno_dev,
 	if (!(context->flags & CTXT_FLAGS_PREAMBLE)) {
 
 		/* restore registers and constants. */
+<<<<<<< HEAD
 		adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE,
 			context->reg_restore, 3);
 
 		/* restore shader instructions & partitioning. */
 		if (context->flags & CTXT_FLAGS_SHADER_RESTORE) {
 			adreno_ringbuffer_issuecmds(device,
+=======
+		adreno_ringbuffer_issuecmds(device, context,
+			KGSL_CMD_FLAGS_NONE, context->reg_restore, 3);
+
+		/* restore shader instructions & partitioning. */
+		if (context->flags & CTXT_FLAGS_SHADER_RESTORE) {
+			adreno_ringbuffer_issuecmds(device, context,
+>>>>>>> cm-10.0
 				KGSL_CMD_FLAGS_NONE,
 				context->shader_restore, 3);
 		}
@@ -1589,8 +1730,13 @@ static void a2xx_drawctxt_restore(struct adreno_device *adreno_dev,
 	if (adreno_is_a20x(adreno_dev)) {
 		cmds[0] = cp_type3_packet(CP_SET_BIN_BASE_OFFSET, 1);
 		cmds[1] = context->bin_base_offset;
+<<<<<<< HEAD
 		adreno_ringbuffer_issuecmds(device, KGSL_CMD_FLAGS_NONE,
 			cmds, 2);
+=======
+		adreno_ringbuffer_issuecmds(device, context,
+			KGSL_CMD_FLAGS_NONE, cmds, 2);
+>>>>>>> cm-10.0
 	}
 }
 
@@ -1672,11 +1818,25 @@ static void a2xx_cp_intrcallback(struct kgsl_device *device)
 
 	if (status & CP_INT_CNTL__RB_INT_MASK) {
 		/* signal intr completion event */
+<<<<<<< HEAD
 		unsigned int enableflag = 0;
 		kgsl_sharedmem_writel(&rb->device->memstore,
 			KGSL_DEVICE_MEMSTORE_OFFSET(ts_cmp_enable),
 			enableflag);
 		wmb();
+=======
+		unsigned int context_id;
+		kgsl_sharedmem_readl(&device->memstore,
+				&context_id,
+				KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL,
+					current_context));
+		if (context_id < KGSL_MEMSTORE_MAX) {
+			kgsl_sharedmem_writel(&rb->device->memstore,
+					KGSL_MEMSTORE_OFFSET(context_id,
+						ts_cmp_enable), 0);
+			wmb();
+		}
+>>>>>>> cm-10.0
 		KGSL_CMD_WARN(rb->device, "ringbuffer rb interrupt\n");
 	}
 
@@ -1712,10 +1872,16 @@ static void a2xx_rbbm_intrcallback(struct kgsl_device *device)
 {
 	unsigned int status = 0;
 	unsigned int rderr = 0;
+<<<<<<< HEAD
+=======
+	unsigned int addr = 0;
+	const char *source;
+>>>>>>> cm-10.0
 
 	adreno_regread(device, REG_RBBM_INT_STATUS, &status);
 
 	if (status & RBBM_INT_CNTL__RDERR_INT_MASK) {
+<<<<<<< HEAD
 		union rbbm_read_error_u rerr;
 		adreno_regread(device, REG_RBBM_READ_ERROR, &rderr);
 		rerr.val = rderr;
@@ -1727,6 +1893,29 @@ static void a2xx_rbbm_intrcallback(struct kgsl_device *device)
 		else
 			KGSL_DRV_CRIT(device,
 				"rbbm read error interrupt: %08x\n", rderr);
+=======
+		adreno_regread(device, REG_RBBM_READ_ERROR, &rderr);
+		source = (rderr & RBBM_READ_ERROR_REQUESTER)
+			 ? "host" : "cp";
+		/* convert to dword address */
+		addr = (rderr & RBBM_READ_ERROR_ADDRESS_MASK) >> 2;
+
+		/*
+		 * Log CP_INT_STATUS interrupts from the CP at a
+		 * lower level because they can happen frequently
+		 * and are worked around in a2xx_irq_handler.
+		 */
+		if (addr == REG_CP_INT_STATUS &&
+			rderr & RBBM_READ_ERROR_ERROR &&
+			rderr & RBBM_READ_ERROR_REQUESTER)
+			KGSL_DRV_WARN(device,
+				"rbbm read error interrupt: %s reg: %04X\n",
+				source, addr);
+		else
+			KGSL_DRV_CRIT(device,
+				"rbbm read error interrupt: %s reg: %04X\n",
+				source, addr);
+>>>>>>> cm-10.0
 	}
 
 	status &= RBBM_INT_MASK;
@@ -1766,7 +1955,12 @@ static void a2xx_irq_control(struct adreno_device *adreno_dev, int state)
 	if (state) {
 		adreno_regwrite(device, REG_RBBM_INT_CNTL, RBBM_INT_MASK);
 		adreno_regwrite(device, REG_CP_INT_CNTL, CP_INT_MASK);
+<<<<<<< HEAD
 		adreno_regwrite(device, MH_INTERRUPT_MASK, KGSL_MMU_INT_MASK);
+=======
+		adreno_regwrite(device, MH_INTERRUPT_MASK,
+			kgsl_mmu_get_int_mask());
+>>>>>>> cm-10.0
 	} else {
 		adreno_regwrite(device, REG_RBBM_INT_CNTL, 0);
 		adreno_regwrite(device, REG_CP_INT_CNTL, 0);
@@ -1777,11 +1971,195 @@ static void a2xx_irq_control(struct adreno_device *adreno_dev, int state)
 	wmb();
 }
 
+<<<<<<< HEAD
+=======
+static void a2xx_rb_init(struct adreno_device *adreno_dev,
+			struct adreno_ringbuffer *rb)
+{
+	unsigned int *cmds, cmds_gpu;
+
+	/* ME_INIT */
+	cmds = adreno_ringbuffer_allocspace(rb, 19);
+	cmds_gpu = rb->buffer_desc.gpuaddr + sizeof(uint)*(rb->wptr-19);
+
+	GSL_RB_WRITE(cmds, cmds_gpu, cp_type3_packet(CP_ME_INIT, 18));
+	/* All fields present (bits 9:0) */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x000003ff);
+	/* Disable/Enable Real-Time Stream processing (present but ignored) */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000000);
+	/* Enable (2D <-> 3D) implicit synchronization (present but ignored) */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000000);
+
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_RB_SURFACE_INFO));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_PA_SC_WINDOW_OFFSET));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_VGT_MAX_VTX_INDX));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_SQ_PROGRAM_CNTL));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_RB_DEPTHCONTROL));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_PA_SU_POINT_SIZE));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_PA_SC_LINE_CNTL));
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		SUBBLOCK_OFFSET(REG_PA_SU_POLY_OFFSET_FRONT_SCALE));
+
+	/* Instruction memory size: */
+	GSL_RB_WRITE(cmds, cmds_gpu,
+		(adreno_encode_istore_size(adreno_dev)
+		| adreno_dev->pix_shader_start));
+	/* Maximum Contexts */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000001);
+	/* Write Confirm Interval and The CP will wait the
+	* wait_interval * 16 clocks between polling  */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000000);
+
+	/* NQ and External Memory Swap */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000000);
+	/* Protected mode error checking
+	 * If iommu is used then protection needs to be turned off
+	 * to enable context bank switching */
+	if (KGSL_MMU_TYPE_IOMMU == kgsl_mmu_get_mmutype())
+		GSL_RB_WRITE(cmds, cmds_gpu, 0);
+	else
+		GSL_RB_WRITE(cmds, cmds_gpu, GSL_RB_PROTECTED_MODE_CONTROL);
+	/* Disable header dumping and Header dump address */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000000);
+	/* Header dump size */
+	GSL_RB_WRITE(cmds, cmds_gpu, 0x00000000);
+
+	adreno_ringbuffer_submit(rb);
+}
+
+static unsigned int a2xx_busy_cycles(struct adreno_device *adreno_dev)
+{
+	struct kgsl_device *device = &adreno_dev->dev;
+	unsigned int reg, val;
+
+	/* Freeze the counter */
+	adreno_regwrite(device, REG_CP_PERFMON_CNTL,
+		REG_PERF_MODE_CNT | REG_PERF_STATE_FREEZE);
+
+	/* Get the value */
+	adreno_regread(device, REG_RBBM_PERFCOUNTER1_LO, &val);
+
+	/* Reset the counter */
+	adreno_regwrite(device, REG_CP_PERFMON_CNTL,
+		REG_PERF_MODE_CNT | REG_PERF_STATE_RESET);
+
+	/* Re-Enable the performance monitors */
+	adreno_regread(device, REG_RBBM_PM_OVERRIDE2, &reg);
+	adreno_regwrite(device, REG_RBBM_PM_OVERRIDE2, (reg | 0x40));
+	adreno_regwrite(device, REG_RBBM_PERFCOUNTER1_SELECT, 0x1);
+	adreno_regwrite(device, REG_CP_PERFMON_CNTL,
+		REG_PERF_MODE_CNT | REG_PERF_STATE_ENABLE);
+
+	return val;
+}
+
+static void a2xx_gmeminit(struct adreno_device *adreno_dev)
+{
+	struct kgsl_device *device = &adreno_dev->dev;
+	union reg_rb_edram_info rb_edram_info;
+	unsigned int gmem_size;
+	unsigned int edram_value = 0;
+
+	/* get edram_size value equivalent */
+	gmem_size = (adreno_dev->gmem_size >> 14);
+	while (gmem_size >>= 1)
+		edram_value++;
+
+	rb_edram_info.val = 0;
+
+	rb_edram_info.f.edram_size = edram_value;
+	rb_edram_info.f.edram_mapping_mode = 0; /* EDRAM_MAP_UPPER */
+
+	/* must be aligned to size */
+	rb_edram_info.f.edram_range = (adreno_dev->gmem_base >> 14);
+
+	adreno_regwrite(device, REG_RB_EDRAM_INFO, rb_edram_info.val);
+}
+
+static void a2xx_start(struct adreno_device *adreno_dev)
+{
+	struct kgsl_device *device = &adreno_dev->dev;
+
+	/*
+	 * We need to make sure all blocks are powered up and clocked
+	 * before issuing a soft reset.  The overrides will then be
+	 * turned off (set to 0)
+	 */
+	adreno_regwrite(device, REG_RBBM_PM_OVERRIDE1, 0xfffffffe);
+	adreno_regwrite(device, REG_RBBM_PM_OVERRIDE2, 0xffffffff);
+
+	/*
+	 * Only reset CP block if all blocks have previously been
+	 * reset
+	 */
+	if (!(device->flags & KGSL_FLAGS_SOFT_RESET) ||
+		!adreno_is_a22x(adreno_dev)) {
+		adreno_regwrite(device, REG_RBBM_SOFT_RESET,
+			0xFFFFFFFF);
+		device->flags |= KGSL_FLAGS_SOFT_RESET;
+	} else {
+		adreno_regwrite(device, REG_RBBM_SOFT_RESET,
+			0x00000001);
+	}
+	/*
+	 * The core is in an indeterminate state until the reset
+	 * completes after 30ms.
+	 */
+	msleep(30);
+
+	adreno_regwrite(device, REG_RBBM_SOFT_RESET, 0x00000000);
+
+	if (adreno_is_a225(adreno_dev)) {
+		/* Enable large instruction store for A225 */
+		adreno_regwrite(device, REG_SQ_FLOW_CONTROL,
+			0x18000000);
+	}
+
+	if (adreno_is_a203(adreno_dev))
+		/* For A203 increase number of clocks that RBBM
+		 * will wait before de-asserting Register Clock
+		 * Active signal */
+		adreno_regwrite(device, REG_RBBM_CNTL, 0x0000FFFF);
+	else
+		adreno_regwrite(device, REG_RBBM_CNTL, 0x00004442);
+
+	adreno_regwrite(device, REG_SQ_VS_PROGRAM, 0x00000000);
+	adreno_regwrite(device, REG_SQ_PS_PROGRAM, 0x00000000);
+
+	if (cpu_is_msm8960())
+		adreno_regwrite(device, REG_RBBM_PM_OVERRIDE1, 0x200);
+	else
+		adreno_regwrite(device, REG_RBBM_PM_OVERRIDE1, 0);
+
+	if (!adreno_is_a22x(adreno_dev))
+		adreno_regwrite(device, REG_RBBM_PM_OVERRIDE2, 0);
+	else
+		adreno_regwrite(device, REG_RBBM_PM_OVERRIDE2, 0x80);
+
+	adreno_regwrite(device, REG_RBBM_DEBUG, 0x00080000);
+
+	/* Make sure interrupts are disabled */
+	adreno_regwrite(device, REG_RBBM_INT_CNTL, 0);
+	adreno_regwrite(device, REG_CP_INT_CNTL, 0);
+	adreno_regwrite(device, REG_SQ_INT_CNTL, 0);
+
+	a2xx_gmeminit(adreno_dev);
+}
+
+>>>>>>> cm-10.0
 /* Defined in adreno_a2xx_snapshot.c */
 void *a2xx_snapshot(struct adreno_device *adreno_dev, void *snapshot,
 	int *remain, int hang);
 
 struct adreno_gpudev adreno_a2xx_gpudev = {
+<<<<<<< HEAD
 	.ctxt_create = a2xx_drawctxt_create,
 	.ctxt_save = a2xx_drawctxt_save,
 	.ctxt_restore = a2xx_drawctxt_restore,
@@ -1789,4 +2167,20 @@ struct adreno_gpudev adreno_a2xx_gpudev = {
 	.irq_handler = a2xx_irq_handler,
 	.irq_control = a2xx_irq_control,
 	.snapshot = a2xx_snapshot,
+=======
+	.reg_rbbm_status = REG_RBBM_STATUS,
+	.reg_cp_pfp_ucode_addr = REG_CP_PFP_UCODE_ADDR,
+	.reg_cp_pfp_ucode_data = REG_CP_PFP_UCODE_DATA,
+
+	.ctxt_create = a2xx_drawctxt_create,
+	.ctxt_save = a2xx_drawctxt_save,
+	.ctxt_restore = a2xx_drawctxt_restore,
+	.ctxt_draw_workaround = a2xx_drawctxt_draw_workaround,
+	.irq_handler = a2xx_irq_handler,
+	.irq_control = a2xx_irq_control,
+	.snapshot = a2xx_snapshot,
+	.rb_init = a2xx_rb_init,
+	.busy_cycles = a2xx_busy_cycles,
+	.start = a2xx_start,
+>>>>>>> cm-10.0
 };

@@ -13,6 +13,10 @@
  */
 #include <linux/clk.h>
 #include <linux/err.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/device.h>
 #include <linux/string.h>
 #include <linux/list.h>

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -60,7 +64,12 @@
 #define VPE_SCALE_COEFF_LSP_0_OFFSET          0x50400
 #define VPE_SCALE_COEFF_MSP_0_OFFSET          0x50404
 
+<<<<<<< HEAD
 #define VPE_AXI_ARB_2_OFFSET                  0x004C
+=======
+#define VPE_AXI_ARB_1_OFFSET                  0x00408
+#define VPE_AXI_ARB_2_OFFSET                  0x0040C
+>>>>>>> cm-10.0
 
 #define VPE_SCALE_COEFF_LSBn(n)	(0x50400 + 8 * (n))
 #define VPE_SCALE_COEFF_MSBn(n)	(0x50404 + 8 * (n))
@@ -177,6 +186,17 @@ struct phase_val_t {
 	int32_t phase_step_y;
 };
 
+<<<<<<< HEAD
+=======
+#define VIDIOC_MSM_VPE_INIT \
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 15, struct msm_cam_media_controller *)
+
+#define VIDIOC_MSM_VPE_RELEASE \
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 16, struct msm_cam_media_controller *)
+
+#define VIDIOC_MSM_VPE_CFG \
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 17, struct msm_mctl_pp_params *)
+>>>>>>> cm-10.0
 
 #endif /*_MSM_VPE_H_*/
 

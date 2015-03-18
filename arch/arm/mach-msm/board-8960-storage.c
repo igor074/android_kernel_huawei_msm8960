@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,21 +19,31 @@
 #include <linux/ioport.h>
 #include <linux/platform_device.h>
 #include <linux/bootmem.h>
+<<<<<<< HEAD
 #include <asm/mach-types.h>
 #include <asm/mach/mmc.h>
 #include <mach/board.h>
 #include <mach/gpio.h>
+=======
+#include <linux/gpio.h>
+#include <asm/mach-types.h>
+#include <asm/mach/mmc.h>
+#include <mach/board.h>
+>>>>>>> cm-10.0
 #include <mach/gpiomux.h>
 #include "devices.h"
 #include "board-8960.h"
 #include "board-storage-common-a.h"
 
+<<<<<<< HEAD
 
 
 #ifdef CONFIG_HUAWEI_KERNEL
 #include <hsad/config_interface.h>
 #endif
 
+=======
+>>>>>>> cm-10.0
 /* MSM8960 has 5 SDCC controllers */
 enum sdcc_controllers {
 	SDCC1,
@@ -68,6 +82,7 @@ static struct msm_mmc_reg_data mmc_vdd_reg_data[MAX_SDCC_CONTROLLER] = {
 		.high_vol_level = 2950000,
 		.low_vol_level = 2950000,
 		.hpm_uA = 600000, /* 600mA */
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 	},
 	/* SDCC4 : External card slot connected */
@@ -85,10 +100,21 @@ static struct msm_mmc_reg_data mmc_vccq_reg_data[1] = {
 	/* SDCC1 : eMMC card connected */
 	[SDCC1] = {
 		.name = "sdc_vccq",
+=======
+	}
+};
+
+/* SDCC controllers may require voting for IO operating voltage */
+static struct msm_mmc_reg_data mmc_vdd_io_reg_data[MAX_SDCC_CONTROLLER] = {
+	/* SDCC1 : eMMC card connected */
+	[SDCC1] = {
+		.name = "sdc_vdd_io",
+>>>>>>> cm-10.0
 		.always_on = 1,
 		.high_vol_level = 1800000,
 		.low_vol_level = 1800000,
 		.hpm_uA = 200000, /* 200mA */
+<<<<<<< HEAD
 	}
 };
 
@@ -97,6 +123,12 @@ static struct msm_mmc_reg_data mmc_vddp_reg_data[MAX_SDCC_CONTROLLER] = {
 	/* SDCC3 : External card slot connected */
 	[SDCC3] = {
 		.name = "sdc_vddp",
+=======
+	},
+	/* SDCC3 : External card slot connected */
+	[SDCC3] = {
+		.name = "sdc_vdd_io",
+>>>>>>> cm-10.0
 		.high_vol_level = 2950000,
 		.low_vol_level = 1850000,
 		.always_on = 1,
@@ -112,7 +144,11 @@ static struct msm_mmc_reg_data mmc_vddp_reg_data[MAX_SDCC_CONTROLLER] = {
 	},
 	/* SDCC4 : SDIO slot connected */
 	[SDCC4] = {
+<<<<<<< HEAD
 		.name = "sdc_vddp",
+=======
+		.name = "sdc_vdd_io",
+>>>>>>> cm-10.0
 		.high_vol_level = 1800000,
 		.low_vol_level = 1800000,
 		.always_on = 1,
@@ -126,7 +162,11 @@ static struct msm_mmc_slot_reg_data mmc_slot_vreg_data[MAX_SDCC_CONTROLLER] = {
 	/* SDCC1 : eMMC card connected */
 	[SDCC1] = {
 		.vdd_data = &mmc_vdd_reg_data[SDCC1],
+<<<<<<< HEAD
 		.vccq_data = &mmc_vccq_reg_data[SDCC1],
+=======
+		.vdd_io_data = &mmc_vdd_io_reg_data[SDCC1],
+>>>>>>> cm-10.0
 	},
 	/* SDCC2 : SDIO card slot connected */
 	[SDCC2] = {
@@ -135,11 +175,19 @@ static struct msm_mmc_slot_reg_data mmc_slot_vreg_data[MAX_SDCC_CONTROLLER] = {
 	/* SDCC3 : External card slot connected */
 	[SDCC3] = {
 		.vdd_data = &mmc_vdd_reg_data[SDCC3],
+<<<<<<< HEAD
 		.vddp_data = &mmc_vddp_reg_data[SDCC3],
 	},
 	/* SDCC4 : SDIO card slot connected */
 	[SDCC4] = {
 		.vddp_data = &mmc_vddp_reg_data[SDCC4],
+=======
+		.vdd_io_data = &mmc_vdd_io_reg_data[SDCC3],
+	},
+	/* SDCC4 : SDIO card slot connected */
+	[SDCC4] = {
+		.vdd_io_data = &mmc_vdd_io_reg_data[SDCC4],
+>>>>>>> cm-10.0
 	},
 };
 
@@ -161,11 +209,21 @@ static struct msm_mmc_pad_pull sdc1_pad_pull_on_cfg[] = {
 	{TLMM_PULL_SDC1_CMD, GPIO_CFG_PULL_UP},
 	{TLMM_PULL_SDC1_DATA, GPIO_CFG_PULL_UP}
 };
+<<<<<<< HEAD
 static struct msm_mmc_pad_pull sdc1_pad_pull_off_cfg[] = {
 	{TLMM_PULL_SDC1_CLK, GPIO_CFG_NO_PULL},
 	{TLMM_PULL_SDC1_CMD, GPIO_CFG_NO_PULL},
 	{TLMM_PULL_SDC1_DATA, GPIO_CFG_NO_PULL}
 };
+=======
+
+static struct msm_mmc_pad_pull sdc1_pad_pull_off_cfg[] = {
+	{TLMM_PULL_SDC1_CLK, GPIO_CFG_NO_PULL},
+	{TLMM_PULL_SDC1_CMD, GPIO_CFG_PULL_UP},
+	{TLMM_PULL_SDC1_DATA, GPIO_CFG_PULL_UP}
+};
+
+>>>>>>> cm-10.0
 /* SDC3 pad data */
 static struct msm_mmc_pad_drv sdc3_pad_drv_on_cfg[] = {
 	{TLMM_HDRV_SDC3_CLK, GPIO_CFG_8MA},
@@ -184,6 +242,10 @@ static struct msm_mmc_pad_pull sdc3_pad_pull_on_cfg[] = {
 	{TLMM_PULL_SDC3_CMD, GPIO_CFG_PULL_UP},
 	{TLMM_PULL_SDC3_DATA, GPIO_CFG_PULL_UP}
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 static struct msm_mmc_pad_pull sdc3_pad_pull_off_cfg[] = {
 	{TLMM_PULL_SDC3_CLK, GPIO_CFG_NO_PULL},
 	/*
@@ -191,12 +253,17 @@ static struct msm_mmc_pad_pull sdc3_pad_pull_off_cfg[] = {
 	 * see transitions (1 -> 0 and 0 -> 1) on card detection line,
 	 * which would result in false card detection interrupts.
 	 */
+<<<<<<< HEAD
 	{TLMM_PULL_SDC3_CMD, GPIO_CFG_NO_PULL},
+=======
+	{TLMM_PULL_SDC3_CMD, GPIO_CFG_PULL_UP},
+>>>>>>> cm-10.0
 	/*
 	 * Keeping DATA lines status to PULL UP will make sure that
 	 * there is no current leak during sleep if external pull up
 	 * is connected to DATA lines.
 	 */
+<<<<<<< HEAD
 	{TLMM_PULL_SDC3_DATA, GPIO_CFG_NO_PULL}
 };
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
@@ -224,6 +291,10 @@ static struct msm_mmc_pad_pull sdc4_pad_pull_off_cfg[] = {
 	{TLMM_PULL_SDC4_DATA, GPIO_CFG_NO_PULL}
 };
 #endif
+=======
+	{TLMM_PULL_SDC3_DATA, GPIO_CFG_PULL_UP}
+};
+>>>>>>> cm-10.0
 
 static struct msm_mmc_pad_pull_data mmc_pad_pull_data[MAX_SDCC_CONTROLLER] = {
 	[SDCC1] = {
@@ -236,6 +307,7 @@ static struct msm_mmc_pad_pull_data mmc_pad_pull_data[MAX_SDCC_CONTROLLER] = {
 		.off = sdc3_pad_pull_off_cfg,
 		.size = ARRAY_SIZE(sdc3_pad_pull_on_cfg)
 	},
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 	[SDCC4] = {
 		.on = sdc4_pad_pull_on_cfg,
@@ -243,6 +315,8 @@ static struct msm_mmc_pad_pull_data mmc_pad_pull_data[MAX_SDCC_CONTROLLER] = {
 		.size = ARRAY_SIZE(sdc4_pad_pull_on_cfg)
 	},
 #endif
+=======
+>>>>>>> cm-10.0
 };
 
 static struct msm_mmc_pad_drv_data mmc_pad_drv_data[MAX_SDCC_CONTROLLER] = {
@@ -256,6 +330,7 @@ static struct msm_mmc_pad_drv_data mmc_pad_drv_data[MAX_SDCC_CONTROLLER] = {
 		.off = sdc3_pad_drv_off_cfg,
 		.size = ARRAY_SIZE(sdc3_pad_drv_on_cfg)
 	},
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 	[SDCC4] = {
 		.on = sdc4_pad_drv_on_cfg,
@@ -263,6 +338,8 @@ static struct msm_mmc_pad_drv_data mmc_pad_drv_data[MAX_SDCC_CONTROLLER] = {
 		.size = ARRAY_SIZE(sdc4_pad_drv_on_cfg)
 	},
 #endif
+=======
+>>>>>>> cm-10.0
 };
 
 struct msm_mmc_gpio sdc2_gpio[] = {
@@ -303,12 +380,15 @@ static struct msm_mmc_pad_data mmc_pad_data[MAX_SDCC_CONTROLLER] = {
 		.pull = &mmc_pad_pull_data[SDCC3],
 		.drv = &mmc_pad_drv_data[SDCC3]
 	},
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 	[SDCC4] = {
 		.pull = &mmc_pad_pull_data[SDCC4],
 		.drv = &mmc_pad_drv_data[SDCC4]
 	},
 #endif
+=======
+>>>>>>> cm-10.0
 };
 
 static struct msm_mmc_pin_data mmc_slot_pin_data[MAX_SDCC_CONTROLLER] = {
@@ -322,23 +402,41 @@ static struct msm_mmc_pin_data mmc_slot_pin_data[MAX_SDCC_CONTROLLER] = {
 	[SDCC3] = {
 		.pad_data = &mmc_pad_data[SDCC3],
 	},
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
     [SDCC4] = {
 		.pad_data = &mmc_pad_data[SDCC4],
 	},
 #endif
+=======
+	[SDCC4] = {
+		.is_gpio = 1,
+		.gpio_data = &mmc_gpio_data[SDCC4],
+	},
+>>>>>>> cm-10.0
 };
 
 #define MSM_MPM_PIN_SDC1_DAT1	17
 #define MSM_MPM_PIN_SDC3_DAT1	21
 
 static unsigned int sdc1_sup_clk_rates[] = {
+<<<<<<< HEAD
 	400000, 24000000, 48000000
 };
 
 static unsigned int sdc3_sup_clk_rates[] = {
 	400000, 24000000, 48000000, 96000000, 192000000
 };
+=======
+	400000, 24000000, 48000000, 96000000
+};
+
+#ifdef CONFIG_MMC_MSM_SDC3_SUPPORT
+static unsigned int sdc3_sup_clk_rates[] = {
+	400000, 24000000, 48000000, 96000000, 192000000
+};
+#endif
+>>>>>>> cm-10.0
 
 #ifdef CONFIG_MMC_MSM_SDC1_SUPPORT
 static struct mmc_platform_data msm8960_sdc1_data = {
@@ -350,12 +448,19 @@ static struct mmc_platform_data msm8960_sdc1_data = {
 #endif
 	.sup_clk_table	= sdc1_sup_clk_rates,
 	.sup_clk_cnt	= ARRAY_SIZE(sdc1_sup_clk_rates),
+<<<<<<< HEAD
 	.pclk_src_dfab	= 1,
+=======
+>>>>>>> cm-10.0
 	.nonremovable	= 1,
 	.vreg_data	= &mmc_slot_vreg_data[SDCC1],
 	.pin_data	= &mmc_slot_pin_data[SDCC1],
 	.mpm_sdiowakeup_int = MSM_MPM_PIN_SDC1_DAT1,
 	.msm_bus_voting_data = &sps_to_ddr_bus_voting_data,
+<<<<<<< HEAD
+=======
+	.uhs_caps2	= MMC_CAP2_HS200_1_8V_SDR,
+>>>>>>> cm-10.0
 };
 #endif
 
@@ -369,7 +474,10 @@ static struct mmc_platform_data msm8960_sdc2_data = {
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 	.sup_clk_table  = sdc2_sup_clk_rates,
 	.sup_clk_cnt    = ARRAY_SIZE(sdc2_sup_clk_rates),
+<<<<<<< HEAD
 	.pclk_src_dfab  = 1,
+=======
+>>>>>>> cm-10.0
 	.vreg_data      = &mmc_slot_vreg_data[SDCC2],
 	.pin_data       = &mmc_slot_pin_data[SDCC2],
 	.sdiowakeup_irq = MSM_GPIO_TO_INT(90),
@@ -383,20 +491,33 @@ static struct mmc_platform_data msm8960_sdc3_data = {
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 	.sup_clk_table	= sdc3_sup_clk_rates,
 	.sup_clk_cnt	= ARRAY_SIZE(sdc3_sup_clk_rates),
+<<<<<<< HEAD
 	.pclk_src_dfab	= 1,
+=======
+>>>>>>> cm-10.0
 #ifdef CONFIG_MMC_MSM_SDC3_WP_SUPPORT
 	.wpswitch_gpio	= PM8921_GPIO_PM_TO_SYS(16),
 #endif
 	.vreg_data	= &mmc_slot_vreg_data[SDCC3],
 	.pin_data	= &mmc_slot_pin_data[SDCC3],
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_MSM_CARD_HW_DETECTION
+=======
+>>>>>>> cm-10.0
 	.status_gpio	= PM8921_GPIO_PM_TO_SYS(26),
 	.status_irq	= PM8921_GPIO_IRQ(PM8921_IRQ_BASE, 26),
 	.irq_flags	= IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
 	.is_status_gpio_active_low = true,
+<<<<<<< HEAD
 #endif
 	.xpc_cap	= 1,
 	.uhs_caps	= 0,
+=======
+	.xpc_cap	= 1,
+	.uhs_caps	= (MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 |
+			MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_DDR50 |
+			MMC_CAP_UHS_SDR104 | MMC_CAP_MAX_CURRENT_600),
+>>>>>>> cm-10.0
 	.mpm_sdiowakeup_int = MSM_MPM_PIN_SDC3_DAT1,
 	.msm_bus_voting_data = &sps_to_ddr_bus_voting_data,
 };
@@ -404,6 +525,7 @@ static struct mmc_platform_data msm8960_sdc3_data = {
 
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 static unsigned int sdc4_sup_clk_rates[] = {
+<<<<<<< HEAD
 	48000000
 };
 
@@ -421,13 +543,40 @@ static struct mmc_platform_data msm8960_sdc4_data = {
 	.uhs_caps	= (MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 |
 			MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_DDR50 |
 			MMC_CAP_MAX_CURRENT_600)
+=======
+	400000, 24000000, 48000000
+};
+
+static struct mmc_platform_data msm8960_sdc4_data = {
+	.ocr_mask       = MMC_VDD_165_195,
+	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
+	.sup_clk_table  = sdc4_sup_clk_rates,
+	.sup_clk_cnt    = ARRAY_SIZE(sdc4_sup_clk_rates),
+	.vreg_data      = &mmc_slot_vreg_data[SDCC4],
+	.pin_data       = &mmc_slot_pin_data[SDCC4],
+	.sdiowakeup_irq = MSM_GPIO_TO_INT(85),
+	.msm_bus_voting_data = &sps_to_ddr_bus_voting_data,
+>>>>>>> cm-10.0
 };
 #endif
 
 void __init msm8960_init_mmc(void)
 {
 #ifdef CONFIG_MMC_MSM_SDC1_SUPPORT
+<<<<<<< HEAD
 	msm8960_sdc1_data.swfi_latency = msm_rpm_get_swfi_latency();
+=======
+	/*
+	 * When eMMC runs in DDR mode on CDP platform, we have
+	 * seen instability due to DATA CRC errors. These errors are
+	 * attributed to long physical path between MSM and eMMC on CDP.
+	 * So let's not enable the DDR mode on CDP platform but let other
+	 * platforms take advantage of eMMC DDR mode.
+	 */
+	if (!machine_is_msm8960_cdp())
+		msm8960_sdc1_data.uhs_caps |= (MMC_CAP_1_8V_DDR |
+					       MMC_CAP_UHS_DDR50);
+>>>>>>> cm-10.0
 	/* SDC1 : eMMC card connected */
 	msm_add_sdcc(1, &msm8960_sdc1_data);
 #endif
@@ -436,6 +585,7 @@ void __init msm8960_init_mmc(void)
 	msm_add_sdcc(2, &msm8960_sdc2_data);
 #endif
 #ifdef CONFIG_MMC_MSM_SDC3_SUPPORT
+<<<<<<< HEAD
 	msm8960_sdc3_data.swfi_latency = msm_rpm_get_swfi_latency();
 	/* SDC3: External card slot */
 #ifdef CONFIG_HUAWEI_KERNEL
@@ -445,6 +595,9 @@ void __init msm8960_init_mmc(void)
     }
     printk(KERN_WARNING "sdc3_clk drive current is %d", sdc3_pad_drv_on_cfg[0].val);
 #endif
+=======
+	/* SDC3: External card slot */
+>>>>>>> cm-10.0
 	msm_add_sdcc(3, &msm8960_sdc3_data);
 #endif
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT

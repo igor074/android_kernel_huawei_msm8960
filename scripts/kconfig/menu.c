@@ -3,6 +3,7 @@
  * Released under the terms of the GNU GPL v2.0.
  */
 
+<<<<<<< HEAD
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,6 +12,16 @@
 
 static const char nohelp_text[] = N_(
 	"There is no help available for this option.\n");
+=======
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "lkc.h"
+
+static const char nohelp_text[] = "There is no help available for this option.";
+>>>>>>> cm-10.0
 
 struct menu rootmenu;
 static struct menu **last_entry_ptr;
@@ -350,7 +361,11 @@ void menu_finalize(struct menu *parent)
 			last_menu->next = NULL;
 		}
 
+<<<<<<< HEAD
 		sym->dir_dep.expr = parent->dep;
+=======
+		sym->dir_dep.expr = expr_alloc_or(sym->dir_dep.expr, parent->dep);
+>>>>>>> cm-10.0
 	}
 	for (menu = parent->list; menu; menu = menu->next) {
 		if (sym && sym_is_choice(sym) &&
@@ -594,6 +609,7 @@ struct gstr get_relations_str(struct symbol **sym_arr)
 void menu_get_ext_help(struct menu *menu, struct gstr *help)
 {
 	struct symbol *sym = menu->sym;
+<<<<<<< HEAD
 
 	if (menu_has_help(menu)) {
 		if (sym->name) {
@@ -604,6 +620,16 @@ void menu_get_ext_help(struct menu *menu, struct gstr *help)
 	} else {
 		str_append(help, nohelp_text);
 	}
+=======
+	const char *help_text = nohelp_text;
+
+	if (menu_has_help(menu)) {
+		if (sym->name)
+			str_printf(help, "%s%s:\n\n", CONFIG_, sym->name);
+		help_text = menu_get_help(menu);
+	}
+	str_printf(help, "%s\n", _(help_text));
+>>>>>>> cm-10.0
 	if (sym)
 		get_symbol_str(help, sym);
 }

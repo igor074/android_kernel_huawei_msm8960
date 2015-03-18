@@ -36,7 +36,11 @@
  */
 static int r600_audio_chipset_supported(struct radeon_device *rdev)
 {
+<<<<<<< HEAD
 	return (rdev->family >= CHIP_R600 && rdev->family < CHIP_CEDAR)
+=======
+	return (rdev->family >= CHIP_R600 && !ASIC_IS_DCE5(rdev))
+>>>>>>> cm-10.0
 		|| rdev->family == CHIP_RS600
 		|| rdev->family == CHIP_RS690
 		|| rdev->family == CHIP_RS740;
@@ -161,8 +165,23 @@ static void r600_audio_update_hdmi(unsigned long param)
  */
 static void r600_audio_engine_enable(struct radeon_device *rdev, bool enable)
 {
+<<<<<<< HEAD
 	DRM_INFO("%s audio support\n", enable ? "Enabling" : "Disabling");
 	WREG32_P(R600_AUDIO_ENABLE, enable ? 0x81000000 : 0x0, ~0x81000000);
+=======
+	u32 value = 0;
+	DRM_INFO("%s audio support\n", enable ? "Enabling" : "Disabling");
+	if (ASIC_IS_DCE4(rdev)) {
+		if (enable) {
+			value |= 0x81000000; /* Required to enable audio */
+			value |= 0x0e1000f0; /* fglrx sets that too */
+		}
+		WREG32(EVERGREEN_AUDIO_ENABLE, value);
+	} else {
+		WREG32_P(R600_AUDIO_ENABLE,
+			 enable ? 0x81000000 : 0x0, ~0x81000000);
+	}
+>>>>>>> cm-10.0
 	rdev->audio_enabled = enable;
 }
 
@@ -248,6 +267,7 @@ void r600_audio_set_clock(struct drm_encoder *encoder, int clock)
 		return;
 	}
 
+<<<<<<< HEAD
 	switch (dig->dig_encoder) {
 	case 0:
 		WREG32(R600_AUDIO_PLL1_MUL, base_rate * 50);
@@ -264,6 +284,35 @@ void r600_audio_set_clock(struct drm_encoder *encoder, int clock)
 		dev_err(rdev->dev, "Unsupported DIG on encoder 0x%02X\n",
 			  radeon_encoder->encoder_id);
 		return;
+=======
+	if (ASIC_IS_DCE4(rdev)) {
+		/* TODO: other PLLs? */
+		WREG32(EVERGREEN_AUDIO_PLL1_MUL, base_rate * 10);
+		WREG32(EVERGREEN_AUDIO_PLL1_DIV, clock * 10);
+		WREG32(EVERGREEN_AUDIO_PLL1_UNK, 0x00000071);
+
+		/* Some magic trigger or src sel? */
+		WREG32_P(0x5ac, 0x01, ~0x77);
+	} else {
+		switch (dig->dig_encoder) {
+		case 0:
+			WREG32(R600_AUDIO_PLL1_MUL, base_rate * 50);
+			WREG32(R600_AUDIO_PLL1_DIV, clock * 100);
+			WREG32(R600_AUDIO_CLK_SRCSEL, 0);
+			break;
+
+		case 1:
+			WREG32(R600_AUDIO_PLL2_MUL, base_rate * 50);
+			WREG32(R600_AUDIO_PLL2_DIV, clock * 100);
+			WREG32(R600_AUDIO_CLK_SRCSEL, 1);
+			break;
+		default:
+			dev_err(rdev->dev,
+				"Unsupported DIG on encoder 0x%02X\n",
+				radeon_encoder->encoder_id);
+			return;
+		}
+>>>>>>> cm-10.0
 	}
 }
 

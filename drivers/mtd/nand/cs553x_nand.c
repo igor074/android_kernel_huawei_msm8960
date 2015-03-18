@@ -239,7 +239,12 @@ static int __init cs553x_init_one(int cs, int mmio, unsigned long adr)
 	this->ecc.correct  = nand_correct_data;
 
 	/* Enable the following for a flash based bad block table */
+<<<<<<< HEAD
 	this->options = NAND_USE_FLASH_BBT | NAND_NO_AUTOINCR;
+=======
+	this->bbt_options = NAND_BBT_USE_FLASH;
+	this->options = NAND_NO_AUTOINCR;
+>>>>>>> cm-10.0
 
 	/* Scan to find existence of the device */
 	if (nand_scan(new_mtd, 1)) {
@@ -247,6 +252,11 @@ static int __init cs553x_init_one(int cs, int mmio, unsigned long adr)
 		goto out_ior;
 	}
 
+<<<<<<< HEAD
+=======
+	this->ecc.strength = 1;
+
+>>>>>>> cm-10.0
 	new_mtd->name = kasprintf(GFP_KERNEL, "cs553x_nand_cs%d", cs);
 
 	cs553x_mtd[cs] = new_mtd;
@@ -277,15 +287,21 @@ static int is_geode(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const char *part_probes[] = { "cmdlinepart", NULL };
 
+=======
+>>>>>>> cm-10.0
 static int __init cs553x_init(void)
 {
 	int err = -ENXIO;
 	int i;
 	uint64_t val;
+<<<<<<< HEAD
 	int mtd_parts_nb = 0;
 	struct mtd_partition *mtd_parts = NULL;
+=======
+>>>>>>> cm-10.0
 
 	/* If the CPU isn't a Geode GX or LX, abort */
 	if (!is_geode())
@@ -315,6 +331,7 @@ static int __init cs553x_init(void)
 	   do mtdconcat etc. if we want to. */
 	for (i = 0; i < NR_CS553X_CONTROLLERS; i++) {
 		if (cs553x_mtd[i]) {
+<<<<<<< HEAD
 
 			/* If any devices registered, return success. Else the last error. */
 			mtd_parts_nb = parse_mtd_partitions(cs553x_mtd[i], part_probes, &mtd_parts, 0);
@@ -322,6 +339,11 @@ static int __init cs553x_init(void)
 				printk(KERN_NOTICE "Using command line partition definition\n");
 			mtd_device_register(cs553x_mtd[i], mtd_parts,
 					    mtd_parts_nb);
+=======
+			/* If any devices registered, return success. Else the last error. */
+			mtd_device_parse_register(cs553x_mtd[i], NULL, NULL,
+						  NULL, 0);
+>>>>>>> cm-10.0
 			err = 0;
 		}
 	}

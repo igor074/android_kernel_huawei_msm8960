@@ -15,6 +15,10 @@
 #include <linux/platform_device.h>
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <crypto/internal/hash.h>
 #include <crypto/sha.h>
 
@@ -342,11 +346,21 @@ static void mv_process_hash_current(int first_block)
 		else
 			op.config |= CFG_MID_FRAG;
 
+<<<<<<< HEAD
 		writel(req_ctx->state[0], cpg->reg + DIGEST_INITIAL_VAL_A);
 		writel(req_ctx->state[1], cpg->reg + DIGEST_INITIAL_VAL_B);
 		writel(req_ctx->state[2], cpg->reg + DIGEST_INITIAL_VAL_C);
 		writel(req_ctx->state[3], cpg->reg + DIGEST_INITIAL_VAL_D);
 		writel(req_ctx->state[4], cpg->reg + DIGEST_INITIAL_VAL_E);
+=======
+		if (first_block) {
+			writel(req_ctx->state[0], cpg->reg + DIGEST_INITIAL_VAL_A);
+			writel(req_ctx->state[1], cpg->reg + DIGEST_INITIAL_VAL_B);
+			writel(req_ctx->state[2], cpg->reg + DIGEST_INITIAL_VAL_C);
+			writel(req_ctx->state[3], cpg->reg + DIGEST_INITIAL_VAL_D);
+			writel(req_ctx->state[4], cpg->reg + DIGEST_INITIAL_VAL_E);
+		}
+>>>>>>> cm-10.0
 	}
 
 	memcpy(cpg->sram + SRAM_CONFIG, &op, sizeof(struct sec_accel_config));
@@ -711,6 +725,10 @@ static int mv_hash_final(struct ahash_request *req)
 {
 	struct mv_req_hash_ctx *ctx = ahash_request_ctx(req);
 
+<<<<<<< HEAD
+=======
+	ahash_request_set_crypt(req, NULL, req->result, 0);
+>>>>>>> cm-10.0
 	mv_update_hash_req_ctx(ctx, 1, 0);
 	return mv_handle_req(&req->base);
 }
@@ -895,7 +913,12 @@ struct crypto_alg mv_aes_alg_ecb = {
 	.cra_name		= "ecb(aes)",
 	.cra_driver_name	= "mv-ecb-aes",
 	.cra_priority	= 300,
+<<<<<<< HEAD
 	.cra_flags	= CRYPTO_ALG_TYPE_ABLKCIPHER | CRYPTO_ALG_ASYNC,
+=======
+	.cra_flags	= CRYPTO_ALG_TYPE_ABLKCIPHER |
+			  CRYPTO_ALG_KERN_DRIVER_ONLY | CRYPTO_ALG_ASYNC,
+>>>>>>> cm-10.0
 	.cra_blocksize	= 16,
 	.cra_ctxsize	= sizeof(struct mv_ctx),
 	.cra_alignmask	= 0,
@@ -917,7 +940,12 @@ struct crypto_alg mv_aes_alg_cbc = {
 	.cra_name		= "cbc(aes)",
 	.cra_driver_name	= "mv-cbc-aes",
 	.cra_priority	= 300,
+<<<<<<< HEAD
 	.cra_flags	= CRYPTO_ALG_TYPE_ABLKCIPHER | CRYPTO_ALG_ASYNC,
+=======
+	.cra_flags	= CRYPTO_ALG_TYPE_ABLKCIPHER |
+			  CRYPTO_ALG_KERN_DRIVER_ONLY | CRYPTO_ALG_ASYNC,
+>>>>>>> cm-10.0
 	.cra_blocksize	= AES_BLOCK_SIZE,
 	.cra_ctxsize	= sizeof(struct mv_ctx),
 	.cra_alignmask	= 0,
@@ -949,7 +977,12 @@ struct ahash_alg mv_sha1_alg = {
 			  .cra_driver_name = "mv-sha1",
 			  .cra_priority = 300,
 			  .cra_flags =
+<<<<<<< HEAD
 			  CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
+=======
+			  CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY |
+			  CRYPTO_ALG_NEED_FALLBACK,
+>>>>>>> cm-10.0
 			  .cra_blocksize = SHA1_BLOCK_SIZE,
 			  .cra_ctxsize = sizeof(struct mv_tfm_hash_ctx),
 			  .cra_init = mv_cra_hash_sha1_init,
@@ -973,7 +1006,12 @@ struct ahash_alg mv_hmac_sha1_alg = {
 			  .cra_driver_name = "mv-hmac-sha1",
 			  .cra_priority = 300,
 			  .cra_flags =
+<<<<<<< HEAD
 			  CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
+=======
+			  CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY |
+			  CRYPTO_ALG_NEED_FALLBACK,
+>>>>>>> cm-10.0
 			  .cra_blocksize = SHA1_BLOCK_SIZE,
 			  .cra_ctxsize = sizeof(struct mv_tfm_hash_ctx),
 			  .cra_init = mv_cra_hash_hmac_sha1_init,
@@ -1125,6 +1163,7 @@ static struct platform_driver marvell_crypto = {
 };
 MODULE_ALIAS("platform:mv_crypto");
 
+<<<<<<< HEAD
 static int __init mv_crypto_init(void)
 {
 	return platform_driver_register(&marvell_crypto);
@@ -1136,6 +1175,9 @@ static void __exit mv_crypto_exit(void)
 	platform_driver_unregister(&marvell_crypto);
 }
 module_exit(mv_crypto_exit);
+=======
+module_platform_driver(marvell_crypto);
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR("Sebastian Andrzej Siewior <sebastian@breakpoint.cc>");
 MODULE_DESCRIPTION("Support for Marvell's cryptographic engine");

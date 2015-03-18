@@ -27,7 +27,10 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/string.h>

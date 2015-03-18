@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,7 +21,10 @@
 #include <linux/slab.h>		/* kzalloc() */
 #include <linux/interrupt.h>	/* request_irq() */
 #include <linux/memory.h>	/* memset */
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 #include <linux/vmalloc.h>
 
 #include "sps_bam.h"
@@ -37,7 +44,13 @@
 
 /* Mask for valid hardware descriptor flags */
 #define BAM_IOVEC_FLAG_MASK   \
+<<<<<<< HEAD
 	(SPS_IOVEC_FLAG_INT | SPS_IOVEC_FLAG_EOT | SPS_IOVEC_FLAG_EOB)
+=======
+	(SPS_IOVEC_FLAG_INT | SPS_IOVEC_FLAG_EOT | SPS_IOVEC_FLAG_EOB |   \
+	SPS_IOVEC_FLAG_NWD | SPS_IOVEC_FLAG_CMD | SPS_IOVEC_FLAG_LOCK |   \
+	SPS_IOVEC_FLAG_UNLOCK | SPS_IOVEC_FLAG_IMME)
+>>>>>>> cm-10.0
 
 /* Mask for invalid BAM-to-BAM pipe options */
 #define BAM2BAM_O_INVALID   \
@@ -220,7 +233,11 @@ int sps_bam_enable(struct sps_bam *dev)
 				    IRQF_TRIGGER_HIGH, "sps", dev);
 
 		if (result) {
+<<<<<<< HEAD
 			SPS_ERR("sps:Failed to register BAM 0x%x IRQ %d",
+=======
+			SPS_ERR("sps:Failed to enable BAM 0x%x IRQ %d",
+>>>>>>> cm-10.0
 				BAM_ID(dev), dev->props.irq);
 			return SPS_ERROR;
 		}
@@ -720,6 +737,10 @@ int sps_bam_pipe_connect(struct sps_pipe *bam_pipe,
 	}
 	hw_params.event_threshold = (u16) map_pipe->event_threshold;
 	hw_params.ee = dev->props.ee;
+<<<<<<< HEAD
+=======
+	hw_params.lock_group = map_pipe->lock_group;
+>>>>>>> cm-10.0
 
 	/* Verify that control of this pipe is allowed */
 	if ((dev->props.manage & SPS_BAM_MGR_PIPE_NO_CTRL) ||
@@ -759,6 +780,17 @@ int sps_bam_pipe_connect(struct sps_pipe *bam_pipe,
 		/* Clear the data FIFO for debug */
 		if (map->data.base != NULL && bam_pipe->mode == SPS_MODE_SRC)
 			memset(map->data.base, 0, hw_params.data_size);
+<<<<<<< HEAD
+=======
+
+		/* set NWD bit for BAM2BAM producer pipe */
+		if (bam_pipe->mode == SPS_MODE_SRC) {
+			if ((params->options & SPS_O_WRITE_NWD) == 0)
+				hw_params.write_nwd = BAM_WRITE_NWD_DISABLE;
+			else
+				hw_params.write_nwd = BAM_WRITE_NWD_ENABLE;
+		}
+>>>>>>> cm-10.0
 	} else {
 		/* System mode */
 		hw_params.mode = BAM_PIPE_MODE_SYSTEM;
@@ -810,13 +842,21 @@ int sps_bam_pipe_connect(struct sps_pipe *bam_pipe,
 	if (dev->pipes[pipe_index] != BAM_PIPE_UNASSIGNED) {
 		SPS_ERR("sps:Invalid pipe %d on BAM 0x%x for connect",
 			pipe_index, BAM_ID(dev));
+<<<<<<< HEAD
 		goto exit_err;
+=======
+		return SPS_ERROR;
+>>>>>>> cm-10.0
 	}
 
 	if (bam_pipe_is_enabled(dev->base, pipe_index)) {
 		SPS_ERR("sps:BAM 0x%x pipe %d sharing violation",
 			BAM_ID(dev), pipe_index);
+<<<<<<< HEAD
 		goto exit_err;
+=======
+		return SPS_ERROR;
+>>>>>>> cm-10.0
 	}
 
 	if (bam_pipe_init(dev->base, pipe_index, &hw_params, dev->props.ee)) {
@@ -905,6 +945,7 @@ int sps_bam_pipe_disconnect(struct sps_bam *dev, u32 pipe_index)
 		dev->pipe_remote_mask &= ~(1UL << pipe_index);
 		bam_pipe_exit(dev->base, pipe_index, dev->props.ee);
 		if (pipe->sys.desc_cache != NULL) {
+<<<<<<< HEAD
             //PATCH for bam error begin 
 			u32 size = pipe->num_descs * sizeof(void *);
 			if (pipe->desc_size + size <= PAGE_SIZE)
@@ -916,6 +957,13 @@ int sps_bam_pipe_disconnect(struct sps_bam *dev, u32 pipe_index)
 				vfree(pipe->sys.desc_cache);
             //PATCH for bam error end 
 
+=======
+			u32 size = pipe->num_descs * sizeof(void *);
+			if (pipe->desc_size + size <= PAGE_SIZE)
+				kfree(pipe->sys.desc_cache);
+			else
+				vfree(pipe->sys.desc_cache);
+>>>>>>> cm-10.0
 			pipe->sys.desc_cache = NULL;
 		}
 		dev->pipes[pipe_index] = BAM_PIPE_UNASSIGNED;
@@ -1035,19 +1083,30 @@ int sps_bam_pipe_set_params(struct sps_bam *dev, u32 pipe_index, u32 options)
 	    && (pipe->state & BAM_STATE_BAM2BAM) == 0) {
 		/* Allocate both descriptor cache and user pointer array */
 		size = pipe->num_descs * sizeof(void *);
+<<<<<<< HEAD
         //PATCH for bam error begin
 		if (pipe->desc_size + size <= PAGE_SIZE)
         //PATCH for bam error end
 		pipe->sys.desc_cache =
 		kzalloc(pipe->desc_size + size, GFP_KERNEL);
         //PATCH for bam error begin
+=======
+
+		if (pipe->desc_size + size <= PAGE_SIZE)
+			pipe->sys.desc_cache =
+				kzalloc(pipe->desc_size + size, GFP_KERNEL);
+>>>>>>> cm-10.0
 		else {
 			pipe->sys.desc_cache =
 				vmalloc(pipe->desc_size + size);
 			memset(pipe->sys.desc_cache, 0, pipe->desc_size + size);
 		}
+<<<<<<< HEAD
         //PATCH for bam error end
 		
+=======
+
+>>>>>>> cm-10.0
 		if (pipe->sys.desc_cache == NULL) {
 			/*** MUST BE LAST POINT OF FAILURE (see below) *****/
 			SPS_ERR("sps:Desc cache error: BAM 0x%x pipe %d: %d",
@@ -1978,3 +2037,32 @@ int sps_bam_pipe_timer_ctrl(struct sps_bam *dev,
 	return result;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * Get the number of unused descriptors in the descriptor FIFO
+ * of a pipe
+ */
+int sps_bam_pipe_get_unused_desc_num(struct sps_bam *dev, u32 pipe_index,
+					u32 *desc_num)
+{
+	u32 sw_offset, peer_offset, fifo_size;
+	u32 desc_size = sizeof(struct sps_iovec);
+	struct sps_pipe *pipe = dev->pipes[pipe_index];
+
+	if (pipe == NULL)
+		return SPS_ERROR;
+
+	fifo_size = pipe->desc_size;
+
+	sw_offset = bam_pipe_get_desc_read_offset(dev->base, pipe_index);
+	peer_offset = bam_pipe_get_desc_write_offset(dev->base, pipe_index);
+
+	if (sw_offset <= peer_offset)
+		*desc_num = (peer_offset - sw_offset) / desc_size;
+	else
+		*desc_num = (peer_offset + fifo_size - sw_offset) / desc_size;
+
+	return 0;
+}
+>>>>>>> cm-10.0

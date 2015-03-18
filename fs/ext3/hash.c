@@ -9,9 +9,13 @@
  * License.
  */
 
+<<<<<<< HEAD
 #include <linux/fs.h>
 #include <linux/jbd.h>
 #include <linux/ext3_fs.h>
+=======
+#include "ext3.h"
+>>>>>>> cm-10.0
 #include <linux/cryptohash.h>
 
 #define DELTA 0x9E3779B9

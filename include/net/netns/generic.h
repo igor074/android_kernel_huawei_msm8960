@@ -5,6 +5,10 @@
 #ifndef __NET_GENERIC_H__
 #define __NET_GENERIC_H__
 
+<<<<<<< HEAD
+=======
+#include <linux/bug.h>
+>>>>>>> cm-10.0
 #include <linux/rcupdate.h>
 
 /*
@@ -41,6 +45,10 @@ static inline void *net_generic(const struct net *net, int id)
 	ptr = ng->ptr[id - 1];
 	rcu_read_unlock();
 
+<<<<<<< HEAD
+=======
+	BUG_ON(!ptr);
+>>>>>>> cm-10.0
 	return ptr;
 }
 #endif

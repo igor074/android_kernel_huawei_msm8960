@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -29,6 +33,11 @@ struct kgsl_process_private;
 
 /** Set if the memdesc describes cached memory */
 #define KGSL_MEMFLAGS_CACHED    0x00000001
+<<<<<<< HEAD
+=======
+/** Set if the memdesc is mapped into all pagetables */
+#define KGSL_MEMFLAGS_GLOBAL    0x00000002
+>>>>>>> cm-10.0
 
 extern struct kgsl_memdesc_ops kgsl_page_alloc_ops;
 
@@ -98,8 +107,18 @@ static inline void *kgsl_sg_alloc(unsigned int sglen)
 {
 	if ((sglen * sizeof(struct scatterlist)) <  PAGE_SIZE)
 		return kzalloc(sglen * sizeof(struct scatterlist), GFP_KERNEL);
+<<<<<<< HEAD
 	else
 		return vmalloc(sglen * sizeof(struct scatterlist));
+=======
+	else {
+		void *ptr = vmalloc(sglen * sizeof(struct scatterlist));
+		if (ptr)
+			memset(ptr, 0, sglen * sizeof(struct scatterlist));
+
+		return ptr;
+	}
+>>>>>>> cm-10.0
 }
 
 static inline void kgsl_sg_free(void *ptr, unsigned int sglen)
@@ -155,4 +174,18 @@ kgsl_allocate_contiguous(struct kgsl_memdesc *memdesc, size_t size)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static inline int kgsl_sg_size(struct scatterlist *sg, int sglen)
+{
+	int i, size = 0;
+	struct scatterlist *s;
+
+	for_each_sg(sg, s, sglen, i) {
+		size += s->length;
+	}
+
+	return size;
+}
+>>>>>>> cm-10.0
 #endif /* __KGSL_SHAREDMEM_H */

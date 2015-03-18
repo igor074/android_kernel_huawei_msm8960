@@ -15,10 +15,16 @@ int ceph_crypto_key_clone(struct ceph_crypto_key *dst,
 			  const struct ceph_crypto_key *src)
 {
 	memcpy(dst, src, sizeof(struct ceph_crypto_key));
+<<<<<<< HEAD
 	dst->key = kmalloc(src->len, GFP_NOFS);
 	if (!dst->key)
 		return -ENOMEM;
 	memcpy(dst->key, src->key, src->len);
+=======
+	dst->key = kmemdup(src->key, src->len, GFP_NOFS);
+	if (!dst->key)
+		return -ENOMEM;
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -444,7 +450,11 @@ int ceph_key_instantiate(struct key *key, const void *data, size_t datalen)
 		goto err;
 
 	/* TODO ceph_crypto_key_decode should really take const input */
+<<<<<<< HEAD
 	p = (void*)data;
+=======
+	p = (void *)data;
+>>>>>>> cm-10.0
 	ret = ceph_crypto_key_decode(ckey, &p, (char*)data+datalen);
 	if (ret < 0)
 		goto err_ckey;

@@ -12,11 +12,18 @@
  * This file handles the architecture-dependent parts of process handling..
  */
 
+<<<<<<< HEAD
 #include <asm/atomic.h>
 #include <asm/pgtable.h>
 #include <asm/uaccess.h>
 #include <asm/irq.h>
 #include <asm/system.h>
+=======
+#include <linux/atomic.h>
+#include <asm/pgtable.h>
+#include <asm/uaccess.h>
+#include <asm/irq.h>
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/spinlock.h>
 #include <linux/init_task.h>
@@ -115,9 +122,13 @@ void cpu_idle (void)
 				idle = default_idle;
 			idle();
 		}
+<<<<<<< HEAD
 		preempt_enable_no_resched();
 		schedule();
 		preempt_disable();
+=======
+		schedule_preempt_disabled();
+>>>>>>> cm-10.0
 	}
 }
 

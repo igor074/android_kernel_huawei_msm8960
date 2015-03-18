@@ -52,7 +52,11 @@ MODULE_SUPPORTED_DEVICE("{{Edirol,UA-101},{Edirol,UA-1000}}");
 
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
 static char *id[SNDRV_CARDS] = SNDRV_DEFAULT_STR;
+<<<<<<< HEAD
 static int enable[SNDRV_CARDS] = SNDRV_DEFAULT_ENABLE_PNP;
+=======
+static bool enable[SNDRV_CARDS] = SNDRV_DEFAULT_ENABLE_PNP;
+>>>>>>> cm-10.0
 static unsigned int queue_length = 21;
 
 module_param_array(index, int, NULL, 0444);
@@ -459,7 +463,12 @@ static void kill_stream_urbs(struct ua101_stream *stream)
 	unsigned int i;
 
 	for (i = 0; i < stream->queue_length; ++i)
+<<<<<<< HEAD
 		usb_kill_urb(&stream->urbs[i]->urb);
+=======
+		if (stream->urbs[i])
+			usb_kill_urb(&stream->urbs[i]->urb);
+>>>>>>> cm-10.0
 }
 
 static int enable_iso_interface(struct ua101 *ua, unsigned int intf_index)
@@ -484,6 +493,12 @@ static void disable_iso_interface(struct ua101 *ua, unsigned int intf_index)
 {
 	struct usb_host_interface *alts;
 
+<<<<<<< HEAD
+=======
+	if (!ua->intf[intf_index])
+		return;
+
+>>>>>>> cm-10.0
 	alts = ua->intf[intf_index]->cur_altsetting;
 	if (alts->desc.bAlternateSetting != 0) {
 		int err = usb_set_interface(ua->dev,
@@ -645,7 +660,11 @@ static int set_stream_hw(struct ua101 *ua, struct snd_pcm_substream *substream,
 	err = snd_pcm_hw_constraint_minmax(substream->runtime,
 					   SNDRV_PCM_HW_PARAM_PERIOD_TIME,
 					   1500000 / ua->packets_per_second,
+<<<<<<< HEAD
 					   8192000);
+=======
+					   UINT_MAX);
+>>>>>>> cm-10.0
 	if (err < 0)
 		return err;
 	err = snd_pcm_hw_constraint_msbits(substream->runtime, 0, 32, 24);
@@ -1144,14 +1163,22 @@ static void free_stream_urbs(struct ua101_stream *stream)
 {
 	unsigned int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < stream->queue_length; ++i)
 		kfree(stream->urbs[i]);
+=======
+	for (i = 0; i < stream->queue_length; ++i) {
+		kfree(stream->urbs[i]);
+		stream->urbs[i] = NULL;
+	}
+>>>>>>> cm-10.0
 }
 
 static void free_usb_related_resources(struct ua101 *ua,
 				       struct usb_interface *interface)
 {
 	unsigned int i;
+<<<<<<< HEAD
 
 	free_stream_urbs(&ua->capture);
 	free_stream_urbs(&ua->playback);
@@ -1165,6 +1192,29 @@ static void free_usb_related_resources(struct ua101 *ua,
 				usb_driver_release_interface(&ua101_driver,
 							     ua->intf[i]);
 		}
+=======
+	struct usb_interface *intf;
+
+	mutex_lock(&ua->mutex);
+	free_stream_urbs(&ua->capture);
+	free_stream_urbs(&ua->playback);
+	mutex_unlock(&ua->mutex);
+	free_stream_buffers(ua, &ua->capture);
+	free_stream_buffers(ua, &ua->playback);
+
+	for (i = 0; i < ARRAY_SIZE(ua->intf); ++i) {
+		mutex_lock(&ua->mutex);
+		intf = ua->intf[i];
+		ua->intf[i] = NULL;
+		mutex_unlock(&ua->mutex);
+		if (intf) {
+			usb_set_intfdata(intf, NULL);
+			if (intf != interface)
+				usb_driver_release_interface(&ua101_driver,
+							     intf);
+		}
+	}
+>>>>>>> cm-10.0
 }
 
 static void ua101_card_free(struct snd_card *card)
@@ -1373,6 +1423,7 @@ static struct usb_driver ua101_driver = {
 #endif
 };
 
+<<<<<<< HEAD
 static int __init alsa_card_ua101_init(void)
 {
 	return usb_register(&ua101_driver);
@@ -1386,3 +1437,6 @@ static void __exit alsa_card_ua101_exit(void)
 
 module_init(alsa_card_ua101_init);
 module_exit(alsa_card_ua101_exit);
+=======
+module_usb_driver(ua101_driver);
+>>>>>>> cm-10.0

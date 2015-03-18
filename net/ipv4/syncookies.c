@@ -15,6 +15,10 @@
 #include <linux/random.h>
 #include <linux/cryptohash.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <net/tcp.h>
 #include <net/route.h>
 
@@ -244,7 +248,11 @@ bool cookie_check_timestamp(struct tcp_options_received *tcp_opt, bool *ecn_ok)
 	if (!sysctl_tcp_timestamps)
 		return false;
 
+<<<<<<< HEAD
 	tcp_opt->sack_ok = (options >> 4) & 0x1;
+=======
+	tcp_opt->sack_ok = (options & (1 << 4)) ? TCP_SACK_SEEN : 0;
+>>>>>>> cm-10.0
 	*ecn_ok = (options >> 5) & 1;
 	if (*ecn_ok && !sysctl_tcp_ecn)
 		return false;
@@ -265,7 +273,11 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb,
 			     struct ip_options *opt)
 {
 	struct tcp_options_received tcp_opt;
+<<<<<<< HEAD
 	u8 *hash_location;
+=======
+	const u8 *hash_location;
+>>>>>>> cm-10.0
 	struct inet_request_sock *ireq;
 	struct tcp_request_sock *treq;
 	struct tcp_sock *tp = tcp_sk(sk);
@@ -277,6 +289,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb,
 	struct rtable *rt;
 	__u8 rcv_wscale;
 	bool ecn_ok = false;
+<<<<<<< HEAD
+=======
+	struct flowi4 fl4;
+>>>>>>> cm-10.0
 
 	if (!sysctl_tcp_syncookies || !th->ack || th->rst)
 		goto out;
@@ -316,6 +332,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb,
 	ireq->wscale_ok		= tcp_opt.wscale_ok;
 	ireq->tstamp_ok		= tcp_opt.saw_tstamp;
 	req->ts_recent		= tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
+<<<<<<< HEAD
+=======
+	treq->snt_synack	= tcp_opt.saw_tstamp ? tcp_opt.rcv_tsecr : 0;
+>>>>>>> cm-10.0
 
 	/* We throwed the options of the initial SYN away, so we hope
 	 * the ACK carries the same options again (see RFC1122 4.2.3.8)
@@ -344,6 +364,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb,
 	 * hasn't changed since we received the original syn, but I see
 	 * no easy way to do this.
 	 */
+<<<<<<< HEAD
 	{
 		struct flowi4 fl4;
 
@@ -358,6 +379,18 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb,
 			reqsk_free(req);
 			goto out;
 		}
+=======
+	flowi4_init_output(&fl4, 0, sk->sk_mark, RT_CONN_FLAGS(sk),
+			   RT_SCOPE_UNIVERSE, IPPROTO_TCP,
+			   inet_sk_flowi_flags(sk),
+			   (opt && opt->srr) ? opt->faddr : ireq->rmt_addr,
+			   ireq->loc_addr, th->source, th->dest);
+	security_req_classify_flow(req, flowi4_to_flowi(&fl4));
+	rt = ip_route_output_key(sock_net(sk), &fl4);
+	if (IS_ERR(rt)) {
+		reqsk_free(req);
+		goto out;
+>>>>>>> cm-10.0
 	}
 
 	/* Try to redo what tcp_v4_send_synack did. */
@@ -371,5 +404,13 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb,
 	ireq->rcv_wscale  = rcv_wscale;
 
 	ret = get_cookie_sock(sk, skb, req, &rt->dst);
+<<<<<<< HEAD
+=======
+	/* ip_queue_xmit() depends on our flow being setup
+	 * Normal sockets get it right from inet_csk_route_child_sock()
+	 */
+	if (ret)
+		inet_sk(ret)->cork.fl.u.ip4 = fl4;
+>>>>>>> cm-10.0
 out:	return ret;
 }

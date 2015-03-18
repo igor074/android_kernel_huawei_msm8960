@@ -13,9 +13,17 @@
 
 #include <linux/fs.h>
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/kernel.h>
 #include <linux/miscdevice.h>
 #include <linux/slab.h>
+=======
+#include <linux/compat.h>
+#include <linux/kernel.h>
+#include <linux/miscdevice.h>
+#include <linux/slab.h>
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <asm/compat.h>
 #include <asm/cpcmd.h>
 #include <asm/debug.h>

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,7 +15,11 @@
  *
  */
 #include <linux/firmware.h>
+<<<<<<< HEAD
 #include <linux/pm_qos_params.h>
+=======
+#include <linux/pm_qos.h>
+>>>>>>> cm-10.0
 #include <linux/clk.h>
 #include <linux/delay.h>
 #include <linux/regulator/consumer.h>
@@ -25,7 +33,10 @@
 #include "vidc.h"
 #include "vcd_res_tracker.h"
 
+<<<<<<< HEAD
 #define PIL_FW_BASE_ADDR 0xafe00000
+=======
+>>>>>>> cm-10.0
 #define PIL_FW_SIZE 0x200000
 
 static unsigned int vidc_clk_table[4] = {
@@ -86,9 +97,16 @@ static void *res_trk_pmem_map
 				&iova,
 				&buffer_size,
 				UNCACHED, 0);
+<<<<<<< HEAD
 		if (ret) {
 			DDL_MSG_ERROR("%s():DDL ION client iommu map failed\n",
 						 __func__);
+=======
+		if (ret || !iova) {
+			DDL_MSG_ERROR(
+			"%s():DDL ION client iommu map failed, ret = %d iova = 0x%lx\n",
+			__func__, ret, iova);
+>>>>>>> cm-10.0
 			goto ion_unmap_bail_out;
 		}
 		addr->mapped_buffer = NULL;
@@ -105,18 +123,31 @@ static void *res_trk_pmem_map
 				pr_err(" %s() alloced addres NULL", __func__);
 				goto bail_out;
 			}
+<<<<<<< HEAD
 			flags = MSM_SUBSYSTEM_MAP_IOVA|MSM_SUBSYSTEM_MAP_KADDR;
+=======
+			flags = MSM_SUBSYSTEM_MAP_IOVA |
+				MSM_SUBSYSTEM_MAP_KADDR;
+>>>>>>> cm-10.0
 			if (alignment == DDL_KILO_BYTE(128))
 					index = 1;
 			else if (alignment > SZ_4K)
 				flags |= MSM_SUBSYSTEM_ALIGN_IOVA_8K;
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 			addr->mapped_buffer =
 			msm_subsystem_map_buffer(
 			(unsigned long)addr->alloced_phys_addr,
 			sz, flags, &restrk_mmu_subsystem[index],
+<<<<<<< HEAD
 			sizeof(restrk_mmu_subsystem[index])
 			/sizeof(unsigned int));
+=======
+			sizeof(restrk_mmu_subsystem[index])/
+				sizeof(unsigned int));
+>>>>>>> cm-10.0
 			if (IS_ERR(addr->mapped_buffer)) {
 				pr_err(" %s() buffer map failed", __func__);
 				goto bail_out;
@@ -126,6 +157,7 @@ static void *res_trk_pmem_map
 				pr_err("%s() map buffers failed\n", __func__);
 				goto bail_out;
 			}
+<<<<<<< HEAD
 			addr->physical_base_addr = (u8 *)mapped_buffer->iova[0];
 			addr->virtual_base_addr = mapped_buffer->vaddr;
 		} else {
@@ -133,6 +165,17 @@ static void *res_trk_pmem_map
 					 addr->alloced_phys_addr;
 			addr->virtual_base_addr = (u8 *)
 					addr->alloced_phys_addr;
+=======
+			addr->physical_base_addr =
+				 (u8 *)mapped_buffer->iova[0];
+			addr->virtual_base_addr =
+					mapped_buffer->vaddr;
+		} else {
+			addr->physical_base_addr =
+				(u8 *) addr->alloced_phys_addr;
+			addr->virtual_base_addr =
+				(u8 *)addr->alloced_phys_addr;
+>>>>>>> cm-10.0
 		}
 		addr->align_physical_addr = (u8 *) DDL_ALIGN((u32)
 		addr->physical_base_addr, alignment);
@@ -143,7 +186,11 @@ static void *res_trk_pmem_map
 	}
 	return addr->virtual_base_addr;
 bail_out:
+<<<<<<< HEAD
 	if (addr->mapped_buffer)
+=======
+	if (IS_ERR(addr->mapped_buffer))
+>>>>>>> cm-10.0
 		msm_subsystem_unmap_buffer(addr->mapped_buffer);
 	return NULL;
 ion_unmap_bail_out:
@@ -157,21 +204,43 @@ ion_bail_out:
 
 static void res_trk_pmem_free(struct ddl_buf_addr *addr)
 {
+<<<<<<< HEAD
 	/*TODO: Enhance for pmem*/
+=======
+>>>>>>> cm-10.0
 	struct ddl_context *ddl_context;
 	ddl_context = ddl_get_context();
 	if (ddl_context->video_ion_client) {
 		if (addr && addr->alloc_handle) {
+<<<<<<< HEAD
 			ion_free(ddl_context->video_ion_client, addr->alloc_handle);
 			addr->alloc_handle = NULL;
 		}
 	}
+=======
+			ion_free(ddl_context->video_ion_client,
+			 addr->alloc_handle);
+			addr->alloc_handle = NULL;
+		}
+	} else {
+		if (addr->mapped_buffer)
+			msm_subsystem_unmap_buffer(addr->mapped_buffer);
+		if (addr->alloced_phys_addr)
+			free_contiguous_memory_by_paddr(
+			(unsigned long)addr->alloced_phys_addr);
+	}
+	memset(addr, 0 , sizeof(struct ddl_buf_addr));
+>>>>>>> cm-10.0
 }
 static int res_trk_pmem_alloc
 	(struct ddl_buf_addr *addr, size_t sz, u32 alignment)
 {
 	u32 alloc_size;
 	struct ddl_context *ddl_context;
+<<<<<<< HEAD
+=======
+	unsigned long fw_addr;
+>>>>>>> cm-10.0
 	int rc = 0;
 	DBG_PMEM("\n%s() IN: Requested alloc size(%u)", __func__, (u32)sz);
 	if (!addr) {
@@ -183,18 +252,30 @@ static int res_trk_pmem_alloc
 	res_trk_set_mem_type(addr->mem_type);
 	alloc_size = (sz + alignment);
 	if (res_trk_get_enable_ion()) {
+<<<<<<< HEAD
 		if (!res_trk_is_cp_enabled() || !res_trk_check_for_sec_session()) {
+=======
+		if (!res_trk_is_cp_enabled() ||
+			 !res_trk_check_for_sec_session()) {
+>>>>>>> cm-10.0
 			if (!ddl_context->video_ion_client)
 				ddl_context->video_ion_client =
 					res_trk_get_ion_client();
 			if (!ddl_context->video_ion_client) {
+<<<<<<< HEAD
 				DDL_MSG_ERROR("%s() :DDL ION Client Invalid handle\n",
 							 __func__);
+=======
+				DDL_MSG_ERROR(
+				"%s() :DDL ION Client Invalid handle\n",
+						__func__);
+>>>>>>> cm-10.0
 				rc = -ENOMEM;
 				goto bail_out;
 			}
 			alloc_size = (alloc_size+4095) & ~4095;
 			addr->alloc_handle = ion_alloc(
+<<<<<<< HEAD
 			ddl_context->video_ion_client, alloc_size, SZ_4K,
 				res_trk_get_mem_type());
 			if (IS_ERR_OR_NULL(addr->alloc_handle)) {
@@ -207,6 +288,21 @@ static int res_trk_pmem_alloc
 		else {
 			addr->alloc_handle = NULL;
 			addr->alloced_phys_addr = PIL_FW_BASE_ADDR;
+=======
+					ddl_context->video_ion_client,
+					 alloc_size, SZ_4K,
+					res_trk_get_mem_type());
+			if (IS_ERR_OR_NULL(addr->alloc_handle)) {
+				DDL_MSG_ERROR("%s() :DDL ION alloc failed\n",
+						__func__);
+				rc = -ENOMEM;
+				goto bail_out;
+			}
+		} else {
+			fw_addr = resource_context.vidc_platform_data->fw_addr;
+			addr->alloc_handle = NULL;
+			addr->alloced_phys_addr = fw_addr;
+>>>>>>> cm-10.0
 			addr->buffer_size = sz;
 		}
 	} else {
@@ -216,6 +312,10 @@ static int res_trk_pmem_alloc
 		if (!addr->alloced_phys_addr) {
 			DDL_MSG_ERROR("%s() : acm alloc failed (%d)\n",
 					__func__, alloc_size);
+<<<<<<< HEAD
+=======
+			rc = -ENOMEM;
+>>>>>>> cm-10.0
 			goto bail_out;
 		}
 		addr->buffer_size = sz;
@@ -330,11 +430,19 @@ u32 res_trk_enable_clocks(void)
 		VCDRES_MSG_LOW("%s(): Enabling the clocks\n", __func__);
 		if (resource_context.vcodec_clk &&
 			resource_context.vcodec_pclk) {
+<<<<<<< HEAD
 			if (clk_enable(resource_context.vcodec_pclk)) {
 				VCDRES_MSG_ERROR("vidc pclk Enable fail\n");
 				goto bail_out;
 			}
 			if (clk_enable(resource_context.vcodec_clk)) {
+=======
+			if (clk_prepare_enable(resource_context.vcodec_pclk)) {
+				VCDRES_MSG_ERROR("vidc pclk Enable fail\n");
+				goto bail_out;
+			}
+			if (clk_prepare_enable(resource_context.vcodec_clk)) {
+>>>>>>> cm-10.0
 				VCDRES_MSG_ERROR("vidc core clk Enable fail\n");
 				goto vidc_disable_pclk;
 			}
@@ -350,7 +458,11 @@ u32 res_trk_enable_clocks(void)
 	mutex_unlock(&resource_context.lock);
 	return true;
 vidc_disable_pclk:
+<<<<<<< HEAD
 	clk_disable(resource_context.vcodec_pclk);
+=======
+	clk_disable_unprepare(resource_context.vcodec_pclk);
+>>>>>>> cm-10.0
 bail_out:
 	mutex_unlock(&resource_context.lock);
 	return false;
@@ -397,9 +509,15 @@ u32 res_trk_disable_clocks(void)
 		VCDRES_MSG_LOW("%s(): Disabling the clocks ...\n", __func__);
 		resource_context.clock_enabled = 0;
 		if (resource_context.vcodec_clk)
+<<<<<<< HEAD
 			clk_disable(resource_context.vcodec_clk);
 		if (resource_context.vcodec_pclk)
 			clk_disable(resource_context.vcodec_pclk);
+=======
+			clk_disable_unprepare(resource_context.vcodec_clk);
+		if (resource_context.vcodec_pclk)
+			clk_disable_unprepare(resource_context.vcodec_pclk);
+>>>>>>> cm-10.0
 		status = true;
 	}
 	mutex_unlock(&resource_context.lock);
@@ -414,7 +532,13 @@ static u32 res_trk_vidc_pwr_up(void)
 		VCDRES_MSG_ERROR("Error : pm_runtime_get failed\n");
 		goto bail_out;
 	}
+<<<<<<< HEAD
 	resource_context.footswitch = regulator_get(NULL, "fs_ved");
+=======
+	if (!resource_context.footswitch)
+		resource_context.footswitch =
+			regulator_get(resource_context.device, "vdd");
+>>>>>>> cm-10.0
 	if (IS_ERR(resource_context.footswitch)) {
 		VCDRES_MSG_ERROR("foot switch get failed\n");
 		resource_context.footswitch = NULL;
@@ -443,7 +567,12 @@ int res_trk_enable_footswitch(void)
 {
 	int rc = 0;
 	mutex_lock(&resource_context.lock);
+<<<<<<< HEAD
 	resource_context.footswitch = regulator_get(NULL, "fs_ved");
+=======
+	if (!resource_context.footswitch)
+		resource_context.footswitch = regulator_get(NULL, "fs_ved");
+>>>>>>> cm-10.0
 	if (IS_ERR(resource_context.footswitch)) {
 		VCDRES_MSG_ERROR("foot switch get failed\n");
 		resource_context.footswitch = NULL;
@@ -520,6 +649,11 @@ int res_trk_update_bus_perf_level(struct vcd_dev_ctxt *dev_ctxt, u32 perf_level)
 	u32 enc_perf_level = 0, dec_perf_level = 0;
 	u32 bus_clk_index, client_type = 0;
 	int rc = 0;
+<<<<<<< HEAD
+=======
+	bool turbo_supported =
+		!resource_context.vidc_platform_data->disable_turbo;
+>>>>>>> cm-10.0
 
 	cctxt_itr = dev_ctxt->cctxt_list_head;
 	while (cctxt_itr) {
@@ -543,6 +677,7 @@ int res_trk_update_bus_perf_level(struct vcd_dev_ctxt *dev_ctxt, u32 perf_level)
 
 	if (dev_ctxt->reqd_perf_lvl + dev_ctxt->curr_perf_lvl == 0)
 		bus_clk_index = 2;
+<<<<<<< HEAD
 	else if (resource_context.vidc_platform_data->disable_turbo
 						&& bus_clk_index == 3) {
 		VCDRES_MSG_ERROR("Warning: Turbo mode not supported "
@@ -550,6 +685,10 @@ int res_trk_update_bus_perf_level(struct vcd_dev_ctxt *dev_ctxt, u32 perf_level)
 		bus_clk_index = 2;
 	}
 
+=======
+	else if (!turbo_supported && bus_clk_index == 3)
+		bus_clk_index = 2;
+>>>>>>> cm-10.0
 	bus_clk_index = (bus_clk_index << 1) + (client_type + 1);
 	VCDRES_MSG_LOW("%s(), bus_clk_index = %d", __func__, bus_clk_index);
 	VCDRES_MSG_LOW("%s(),context.pcl = %x", __func__, resource_context.pcl);
@@ -564,15 +703,28 @@ u32 res_trk_set_perf_level(u32 req_perf_lvl, u32 *pn_set_perf_lvl,
 	struct vcd_dev_ctxt *dev_ctxt)
 {
 	u32 vidc_freq = 0;
+<<<<<<< HEAD
+=======
+	bool turbo_supported =
+		!resource_context.vidc_platform_data->disable_turbo;
+
+>>>>>>> cm-10.0
 	if (!pn_set_perf_lvl || !dev_ctxt) {
 		VCDRES_MSG_ERROR("%s(): NULL pointer! dev_ctxt(%p)\n",
 			__func__, dev_ctxt);
 		return false;
 	}
+<<<<<<< HEAD
 	VCDRES_MSG_LOW("%s(), req_perf_lvl = %d", __func__, req_perf_lvl);
 
 	if (resource_context.vidc_platform_data->disable_turbo
 			&& req_perf_lvl > RESTRK_1080P_MAX_PERF_LEVEL) {
+=======
+
+	VCDRES_MSG_LOW("%s(), req_perf_lvl = %d", __func__, req_perf_lvl);
+
+	if (!turbo_supported && req_perf_lvl > RESTRK_1080P_MAX_PERF_LEVEL) {
+>>>>>>> cm-10.0
 		VCDRES_MSG_ERROR("%s(): Turbo not supported! dev_ctxt(%p)\n",
 			__func__, dev_ctxt);
 	}
@@ -602,10 +754,15 @@ u32 res_trk_set_perf_level(u32 req_perf_lvl, u32 *pn_set_perf_lvl,
 		*pn_set_perf_lvl = RESTRK_1080P_TURBO_PERF_LEVEL;
 	}
 
+<<<<<<< HEAD
 	if (resource_context.vidc_platform_data->disable_turbo &&
 		*pn_set_perf_lvl == RESTRK_1080P_TURBO_PERF_LEVEL) {
 		VCDRES_MSG_ERROR("Warning: Turbo mode not supported "
 				" falling back to 1080p clocks\n");
+=======
+	if (!turbo_supported &&
+		 *pn_set_perf_lvl == RESTRK_1080P_TURBO_PERF_LEVEL) {
+>>>>>>> cm-10.0
 		vidc_freq = vidc_clk_table[2];
 		*pn_set_perf_lvl = RESTRK_1080P_MAX_PERF_LEVEL;
 	}
@@ -734,7 +891,11 @@ u32 res_trk_get_core_type(void){
 u32 res_trk_get_firmware_addr(struct ddl_buf_addr *firm_addr)
 {
 	int rc = 0;
+<<<<<<< HEAD
 	size_t size= 0;
+=======
+	size_t size = 0;
+>>>>>>> cm-10.0
 	if (!firm_addr || resource_context.firmware_addr.mapped_buffer) {
 		pr_err("%s() invalid params", __func__);
 		return -EINVAL;
@@ -762,7 +923,11 @@ u32 res_trk_get_firmware_addr(struct ddl_buf_addr *firm_addr)
 		goto fail_map;
 	}
 	memcpy(firm_addr, &resource_context.firmware_addr,
+<<<<<<< HEAD
 			sizeof(struct ddl_buf_addr));
+=======
+		sizeof(struct ddl_buf_addr));
+>>>>>>> cm-10.0
 	return 0;
 fail_map:
 	res_trk_pmem_free(&resource_context.firmware_addr);
@@ -806,6 +971,7 @@ int res_trk_get_mem_type(void)
 	}
 	if (resource_context.vidc_platform_data->enable_ion) {
 		if (res_trk_check_for_sec_session()) {
+<<<<<<< HEAD
          mem_type = ION_HEAP(mem_type);
          if(resource_context.res_mem_type != DDL_FW_MEM)
             mem_type |= ION_SECURE;
@@ -815,6 +981,16 @@ int res_trk_get_mem_type(void)
 		else
 			mem_type = (ION_HEAP(mem_type) |
 					ION_HEAP(ION_IOMMU_HEAP_ID));
+=======
+			mem_type = ION_HEAP(mem_type);
+	if (resource_context.res_mem_type != DDL_FW_MEM)
+		mem_type |= ION_SECURE;
+	else if (res_trk_is_cp_enabled())
+		mem_type |= ION_SECURE;
+	} else
+		mem_type = (ION_HEAP(mem_type) |
+			ION_HEAP(ION_IOMMU_HEAP_ID));
+>>>>>>> cm-10.0
 	}
 	return mem_type;
 }
@@ -876,7 +1052,11 @@ int res_trk_enable_iommu_clocks(void)
 			ret = PTR_ERR(vidc_mmu_clks[i].mmu_clk);
 		}
 		if (!ret) {
+<<<<<<< HEAD
 			ret = clk_enable(vidc_mmu_clks[i].mmu_clk);
+=======
+			ret = clk_prepare_enable(vidc_mmu_clks[i].mmu_clk);
+>>>>>>> cm-10.0
 			if (ret) {
 				clk_put(vidc_mmu_clks[i].mmu_clk);
 				vidc_mmu_clks[i].mmu_clk = NULL;
@@ -884,7 +1064,11 @@ int res_trk_enable_iommu_clocks(void)
 		}
 		if (ret) {
 			for (i--; i >= 0; i--) {
+<<<<<<< HEAD
 				clk_disable(vidc_mmu_clks[i].mmu_clk);
+=======
+				clk_disable_unprepare(vidc_mmu_clks[i].mmu_clk);
+>>>>>>> cm-10.0
 				clk_put(vidc_mmu_clks[i].mmu_clk);
 				vidc_mmu_clks[i].mmu_clk = NULL;
 			}
@@ -905,7 +1089,11 @@ int res_trk_disable_iommu_clocks(void)
 	}
 	resource_context.mmu_clks_on = 0;
 	for (i = 0; i < ARRAY_SIZE(vidc_mmu_clks); i++) {
+<<<<<<< HEAD
 		clk_disable(vidc_mmu_clks[i].mmu_clk);
+=======
+		clk_disable_unprepare(vidc_mmu_clks[i].mmu_clk);
+>>>>>>> cm-10.0
 		clk_put(vidc_mmu_clks[i].mmu_clk);
 		vidc_mmu_clks[i].mmu_clk = NULL;
 	}
@@ -928,16 +1116,27 @@ void res_trk_secure_set(void)
 
 int res_trk_open_secure_session()
 {
+<<<<<<< HEAD
 	int rc;
 
 	if (res_trk_check_for_sec_session() == 1) {
 		mutex_lock(&resource_context.secure_lock);
+=======
+	int rc, memtype;
+	if (!res_trk_check_for_sec_session()) {
+		pr_err("Secure sessions are not active\n");
+		return -EINVAL;
+	}
+	mutex_lock(&resource_context.secure_lock);
+	if (!resource_context.sec_clk_heap) {
+>>>>>>> cm-10.0
 		pr_err("Securing...\n");
 		rc = res_trk_enable_iommu_clocks();
 		if (rc) {
 			pr_err("IOMMU clock enabled failed while open");
 			goto error_open;
 		}
+<<<<<<< HEAD
 		msm_ion_secure_heap(ION_HEAP(resource_context.memtype));
 		msm_ion_secure_heap(ION_HEAP(resource_context.cmd_mem_type));
 		res_trk_disable_iommu_clocks();
@@ -945,6 +1144,43 @@ int res_trk_open_secure_session()
 	}
 	return 0;
 error_open:
+=======
+		memtype = ION_HEAP(resource_context.memtype);
+		rc = msm_ion_secure_heap(memtype);
+		if (rc) {
+			pr_err("ION heap secure failed heap id %d rc %d\n",
+				   resource_context.memtype, rc);
+			goto disable_iommu_clks;
+		}
+		memtype = ION_HEAP(resource_context.cmd_mem_type);
+		rc = msm_ion_secure_heap(memtype);
+		if (rc) {
+			pr_err("ION heap secure failed heap id %d rc %d\n",
+				   resource_context.cmd_mem_type, rc);
+			goto unsecure_memtype_heap;
+		}
+		if (resource_context.vidc_platform_data->secure_wb_heap) {
+			memtype = ION_HEAP(ION_CP_WB_HEAP_ID);
+			rc = msm_ion_secure_heap(memtype);
+			if (rc) {
+				pr_err("WB_HEAP_ID secure failed rc %d\n", rc);
+				goto unsecure_cmd_heap;
+			}
+		}
+		resource_context.sec_clk_heap = 1;
+		res_trk_disable_iommu_clocks();
+	}
+	mutex_unlock(&resource_context.secure_lock);
+	return 0;
+unsecure_cmd_heap:
+	msm_ion_unsecure_heap(ION_HEAP(resource_context.memtype));
+unsecure_memtype_heap:
+	msm_ion_unsecure_heap(ION_HEAP(resource_context.cmd_mem_type));
+disable_iommu_clks:
+	res_trk_disable_iommu_clocks();
+error_open:
+	resource_context.sec_clk_heap = 0;
+>>>>>>> cm-10.0
 	mutex_unlock(&resource_context.secure_lock);
 	return rc;
 }
@@ -952,17 +1188,35 @@ error_open:
 int res_trk_close_secure_session()
 {
 	int rc;
+<<<<<<< HEAD
 	if (res_trk_check_for_sec_session() == 1) {
+=======
+	if (res_trk_check_for_sec_session() == 1 &&
+		resource_context.sec_clk_heap) {
+>>>>>>> cm-10.0
 		pr_err("Unsecuring....\n");
 		mutex_lock(&resource_context.secure_lock);
 		rc = res_trk_enable_iommu_clocks();
 		if (rc) {
+<<<<<<< HEAD
 			pr_err("IOMMU clock enabled failed while close");
+=======
+			pr_err("IOMMU clock enabled failed while close\n");
+>>>>>>> cm-10.0
 			goto error_close;
 		}
 		msm_ion_unsecure_heap(ION_HEAP(resource_context.cmd_mem_type));
 		msm_ion_unsecure_heap(ION_HEAP(resource_context.memtype));
+<<<<<<< HEAD
 		res_trk_disable_iommu_clocks();
+=======
+
+		if (resource_context.vidc_platform_data->secure_wb_heap)
+			msm_ion_unsecure_heap(ION_HEAP(ION_CP_WB_HEAP_ID));
+
+		res_trk_disable_iommu_clocks();
+		resource_context.sec_clk_heap = 0;
+>>>>>>> cm-10.0
 		mutex_unlock(&resource_context.secure_lock);
 	}
 	return 0;

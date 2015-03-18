@@ -47,7 +47,11 @@ struct nsm_res {
 	u32			state;
 };
 
+<<<<<<< HEAD
 static struct rpc_program	nsm_program;
+=======
+static const struct rpc_program	nsm_program;
+>>>>>>> cm-10.0
 static				LIST_HEAD(nsm_handles);
 static				DEFINE_SPINLOCK(nsm_lock);
 
@@ -55,21 +59,33 @@ static				DEFINE_SPINLOCK(nsm_lock);
  * Local NSM state
  */
 u32	__read_mostly		nsm_local_state;
+<<<<<<< HEAD
 int	__read_mostly		nsm_use_hostnames;
+=======
+bool	__read_mostly		nsm_use_hostnames;
+>>>>>>> cm-10.0
 
 static inline struct sockaddr *nsm_addr(const struct nsm_handle *nsm)
 {
 	return (struct sockaddr *)&nsm->sm_addr;
 }
 
+<<<<<<< HEAD
 static struct rpc_clnt *nsm_create(void)
+=======
+static struct rpc_clnt *nsm_create(struct net *net)
+>>>>>>> cm-10.0
 {
 	struct sockaddr_in sin = {
 		.sin_family		= AF_INET,
 		.sin_addr.s_addr	= htonl(INADDR_LOOPBACK),
 	};
 	struct rpc_create_args args = {
+<<<<<<< HEAD
 		.net			= &init_net,
+=======
+		.net			= net,
+>>>>>>> cm-10.0
 		.protocol		= XPRT_TRANSPORT_UDP,
 		.address		= (struct sockaddr *)&sin,
 		.addrsize		= sizeof(sin),
@@ -83,7 +99,12 @@ static struct rpc_clnt *nsm_create(void)
 	return rpc_create(&args);
 }
 
+<<<<<<< HEAD
 static int nsm_mon_unmon(struct nsm_handle *nsm, u32 proc, struct nsm_res *res)
+=======
+static int nsm_mon_unmon(struct nsm_handle *nsm, u32 proc, struct nsm_res *res,
+			 struct net *net)
+>>>>>>> cm-10.0
 {
 	struct rpc_clnt	*clnt;
 	int		status;
@@ -99,7 +120,11 @@ static int nsm_mon_unmon(struct nsm_handle *nsm, u32 proc, struct nsm_res *res)
 		.rpc_resp	= res,
 	};
 
+<<<<<<< HEAD
 	clnt = nsm_create();
+=======
+	clnt = nsm_create(net);
+>>>>>>> cm-10.0
 	if (IS_ERR(clnt)) {
 		status = PTR_ERR(clnt);
 		dprintk("lockd: failed to create NSM upcall transport, "
@@ -149,7 +174,11 @@ int nsm_monitor(const struct nlm_host *host)
 	 */
 	nsm->sm_mon_name = nsm_use_hostnames ? nsm->sm_name : nsm->sm_addrbuf;
 
+<<<<<<< HEAD
 	status = nsm_mon_unmon(nsm, NSMPROC_MON, &res);
+=======
+	status = nsm_mon_unmon(nsm, NSMPROC_MON, &res, host->net);
+>>>>>>> cm-10.0
 	if (unlikely(res.status != 0))
 		status = -EIO;
 	if (unlikely(status < 0)) {
@@ -183,7 +212,11 @@ void nsm_unmonitor(const struct nlm_host *host)
 	 && nsm->sm_monitored && !nsm->sm_sticky) {
 		dprintk("lockd: nsm_unmonitor(%s)\n", nsm->sm_name);
 
+<<<<<<< HEAD
 		status = nsm_mon_unmon(nsm, NSMPROC_UNMON, &res);
+=======
+		status = nsm_mon_unmon(nsm, NSMPROC_UNMON, &res, host->net);
+>>>>>>> cm-10.0
 		if (res.status != 0)
 			status = -EIO;
 		if (status < 0)
@@ -534,19 +567,31 @@ static struct rpc_procinfo	nsm_procedures[] = {
 	},
 };
 
+<<<<<<< HEAD
 static struct rpc_version	nsm_version1 = {
+=======
+static const struct rpc_version nsm_version1 = {
+>>>>>>> cm-10.0
 		.number		= 1,
 		.nrprocs	= ARRAY_SIZE(nsm_procedures),
 		.procs		= nsm_procedures
 };
 
+<<<<<<< HEAD
 static struct rpc_version *	nsm_version[] = {
+=======
+static const struct rpc_version *nsm_version[] = {
+>>>>>>> cm-10.0
 	[1] = &nsm_version1,
 };
 
 static struct rpc_stat		nsm_stats;
 
+<<<<<<< HEAD
 static struct rpc_program	nsm_program = {
+=======
+static const struct rpc_program nsm_program = {
+>>>>>>> cm-10.0
 		.name		= "statd",
 		.number		= NSM_PROGRAM,
 		.nrvers		= ARRAY_SIZE(nsm_version),

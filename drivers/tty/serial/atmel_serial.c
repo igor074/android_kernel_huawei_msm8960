@@ -33,6 +33,11 @@
 #include <linux/sysrq.h>
 #include <linux/tty_flip.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/of.h>
+#include <linux/of_device.h>
+>>>>>>> cm-10.0
 #include <linux/dma-mapping.h>
 #include <linux/atmel_pdc.h>
 #include <linux/atmel_serial.h>
@@ -46,7 +51,11 @@
 
 #ifdef CONFIG_ARM
 #include <mach/cpu.h>
+<<<<<<< HEAD
 #include <mach/gpio.h>
+=======
+#include <asm/gpio.h>
+>>>>>>> cm-10.0
 #endif
 
 #define PDC_BUFFER_SIZE		512
@@ -157,11 +166,28 @@ struct atmel_uart_port {
 };
 
 static struct atmel_uart_port atmel_ports[ATMEL_MAX_UART];
+<<<<<<< HEAD
+=======
+static unsigned long atmel_ports_in_use;
+>>>>>>> cm-10.0
 
 #ifdef SUPPORT_SYSRQ
 static struct console atmel_console;
 #endif
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_OF)
+static const struct of_device_id atmel_serial_dt_ids[] = {
+	{ .compatible = "atmel,at91rm9200-usart" },
+	{ .compatible = "atmel,at91sam9260-usart" },
+	{ /* sentinel */ }
+};
+
+MODULE_DEVICE_TABLE(of, atmel_serial_dt_ids);
+#endif
+
+>>>>>>> cm-10.0
 static inline struct atmel_uart_port *
 to_atmel_uart_port(struct uart_port *uart)
 {
@@ -199,8 +225,14 @@ void atmel_config_rs485(struct uart_port *port, struct serial_rs485 *rs485conf)
 {
 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
 	unsigned int mode;
+<<<<<<< HEAD
 
 	spin_lock(&port->lock);
+=======
+	unsigned long flags;
+
+	spin_lock_irqsave(&port->lock, flags);
+>>>>>>> cm-10.0
 
 	/* Disable interrupts */
 	UART_PUT_IDR(port, atmel_port->tx_done_mask);
@@ -215,7 +247,11 @@ void atmel_config_rs485(struct uart_port *port, struct serial_rs485 *rs485conf)
 	if (rs485conf->flags & SER_RS485_ENABLED) {
 		dev_dbg(port->dev, "Setting UART to RS485\n");
 		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
+<<<<<<< HEAD
 		if (rs485conf->flags & SER_RS485_RTS_AFTER_SEND)
+=======
+		if ((rs485conf->delay_rts_after_send) > 0)
+>>>>>>> cm-10.0
 			UART_PUT_TTGR(port, rs485conf->delay_rts_after_send);
 		mode |= ATMEL_US_USMODE_RS485;
 	} else {
@@ -231,7 +267,11 @@ void atmel_config_rs485(struct uart_port *port, struct serial_rs485 *rs485conf)
 	/* Enable interrupts */
 	UART_PUT_IER(port, atmel_port->tx_done_mask);
 
+<<<<<<< HEAD
 	spin_unlock(&port->lock);
+=======
+	spin_unlock_irqrestore(&port->lock, flags);
+>>>>>>> cm-10.0
 
 }
 
@@ -291,7 +331,11 @@ static void atmel_set_mctrl(struct uart_port *port, u_int mctrl)
 
 	if (atmel_port->rs485.flags & SER_RS485_ENABLED) {
 		dev_dbg(port->dev, "Setting UART to RS485\n");
+<<<<<<< HEAD
 		if (atmel_port->rs485.flags & SER_RS485_RTS_AFTER_SEND)
+=======
+		if ((atmel_port->rs485.delay_rts_after_send) > 0)
+>>>>>>> cm-10.0
 			UART_PUT_TTGR(port,
 					atmel_port->rs485.delay_rts_after_send);
 		mode |= ATMEL_US_USMODE_RS485;
@@ -339,7 +383,12 @@ static void atmel_stop_tx(struct uart_port *port)
 	/* Disable interrupts */
 	UART_PUT_IDR(port, atmel_port->tx_done_mask);
 
+<<<<<<< HEAD
 	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
+=======
+	if ((atmel_port->rs485.flags & SER_RS485_ENABLED) &&
+	    !(atmel_port->rs485.flags & SER_RS485_RX_DURING_TX))
+>>>>>>> cm-10.0
 		atmel_start_rx(port);
 }
 
@@ -356,7 +405,12 @@ static void atmel_start_tx(struct uart_port *port)
 			   really need this.*/
 			return;
 
+<<<<<<< HEAD
 		if (atmel_port->rs485.flags & SER_RS485_ENABLED)
+=======
+		if ((atmel_port->rs485.flags & SER_RS485_ENABLED) &&
+		    !(atmel_port->rs485.flags & SER_RS485_RX_DURING_TX))
+>>>>>>> cm-10.0
 			atmel_stop_rx(port);
 
 		/* re-enable PDC transmit */
@@ -373,6 +427,11 @@ static void atmel_start_rx(struct uart_port *port)
 {
 	UART_PUT_CR(port, ATMEL_US_RSTSTA);  /* reset status and receiver */
 
+<<<<<<< HEAD
+=======
+	UART_PUT_CR(port, ATMEL_US_RXEN);
+
+>>>>>>> cm-10.0
 	if (atmel_use_dma_rx(port)) {
 		/* enable PDC controller */
 		UART_PUT_IER(port, ATMEL_US_ENDRX | ATMEL_US_TIMEOUT |
@@ -388,6 +447,11 @@ static void atmel_start_rx(struct uart_port *port)
  */
 static void atmel_stop_rx(struct uart_port *port)
 {
+<<<<<<< HEAD
+=======
+	UART_PUT_CR(port, ATMEL_US_RXDIS);
+
+>>>>>>> cm-10.0
 	if (atmel_use_dma_rx(port)) {
 		/* disable PDC receive */
 		UART_PUT_PTCR(port, ATMEL_PDC_RXTDIS);
@@ -680,7 +744,12 @@ static void atmel_tx_dma(struct uart_port *port)
 		/* Enable interrupts */
 		UART_PUT_IER(port, atmel_port->tx_done_mask);
 	} else {
+<<<<<<< HEAD
 		if (atmel_port->rs485.flags & SER_RS485_ENABLED) {
+=======
+		if ((atmel_port->rs485.flags & SER_RS485_ENABLED) &&
+		    !(atmel_port->rs485.flags & SER_RS485_RX_DURING_TX)) {
+>>>>>>> cm-10.0
 			/* DMA done, stop TX, start RX for RS485 */
 			atmel_start_rx(port);
 		}
@@ -1212,7 +1281,11 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
 
 	if (atmel_port->rs485.flags & SER_RS485_ENABLED) {
 		dev_dbg(port->dev, "Setting UART to RS485\n");
+<<<<<<< HEAD
 		if (atmel_port->rs485.flags & SER_RS485_RTS_AFTER_SEND)
+=======
+		if ((atmel_port->rs485.delay_rts_after_send) > 0)
+>>>>>>> cm-10.0
 			UART_PUT_TTGR(port,
 					atmel_port->rs485.delay_rts_after_send);
 		mode |= ATMEL_US_USMODE_RS485;
@@ -1240,12 +1313,16 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
 
 static void atmel_set_ldisc(struct uart_port *port, int new)
 {
+<<<<<<< HEAD
 	int line = port->line;
 
 	if (line >= port->state->port.tty->driver->num)
 		return;
 
 	if (port->state->port.tty->ldisc->ops->num == N_PPS) {
+=======
+	if (new == N_PPS) {
+>>>>>>> cm-10.0
 		port->flags |= UPF_HARDPPS_CD;
 		atmel_enable_ms(port);
 	} else {
@@ -1407,6 +1484,41 @@ static struct uart_ops atmel_pops = {
 #endif
 };
 
+<<<<<<< HEAD
+=======
+static void __devinit atmel_of_init_port(struct atmel_uart_port *atmel_port,
+					 struct device_node *np)
+{
+	u32 rs485_delay[2];
+
+	/* DMA/PDC usage specification */
+	if (of_get_property(np, "atmel,use-dma-rx", NULL))
+		atmel_port->use_dma_rx	= 1;
+	else
+		atmel_port->use_dma_rx	= 0;
+	if (of_get_property(np, "atmel,use-dma-tx", NULL))
+		atmel_port->use_dma_tx	= 1;
+	else
+		atmel_port->use_dma_tx	= 0;
+
+	/* rs485 properties */
+	if (of_property_read_u32_array(np, "rs485-rts-delay",
+					    rs485_delay, 2) == 0) {
+		struct serial_rs485 *rs485conf = &atmel_port->rs485;
+
+		rs485conf->delay_rts_before_send = rs485_delay[0];
+		rs485conf->delay_rts_after_send = rs485_delay[1];
+		rs485conf->flags = 0;
+
+		if (of_get_property(np, "rs485-rx-during-tx", NULL))
+			rs485conf->flags |= SER_RS485_RX_DURING_TX;
+
+		if (of_get_property(np, "linux,rs485-enabled-at-boot-time", NULL))
+			rs485conf->flags |= SER_RS485_ENABLED;
+	}
+}
+
+>>>>>>> cm-10.0
 /*
  * Configure the port from the platform device resource info.
  */
@@ -1414,13 +1526,28 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
 				      struct platform_device *pdev)
 {
 	struct uart_port *port = &atmel_port->uart;
+<<<<<<< HEAD
 	struct atmel_uart_data *data = pdev->dev.platform_data;
+=======
+	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+
+	if (pdev->dev.of_node) {
+		atmel_of_init_port(atmel_port, pdev->dev.of_node);
+	} else {
+		atmel_port->use_dma_rx	= pdata->use_dma_rx;
+		atmel_port->use_dma_tx	= pdata->use_dma_tx;
+		atmel_port->rs485	= pdata->rs485;
+	}
+>>>>>>> cm-10.0
 
 	port->iotype		= UPIO_MEM;
 	port->flags		= UPF_BOOT_AUTOCONF;
 	port->ops		= &atmel_pops;
 	port->fifosize		= 1;
+<<<<<<< HEAD
 	port->line		= data->num;
+=======
+>>>>>>> cm-10.0
 	port->dev		= &pdev->dev;
 	port->mapbase	= pdev->resource[0].start;
 	port->irq	= pdev->resource[1].start;
@@ -1430,10 +1557,17 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
 
 	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
 
+<<<<<<< HEAD
 	if (data->regs)
 		/* Already mapped by setup code */
 		port->membase = data->regs;
 	else {
+=======
+	if (pdata && pdata->regs) {
+		/* Already mapped by setup code */
+		port->membase = pdata->regs;
+	} else {
+>>>>>>> cm-10.0
 		port->flags	|= UPF_IOREMAP;
 		port->membase	= NULL;
 	}
@@ -1447,9 +1581,12 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
 		/* only enable clock when USART is in use */
 	}
 
+<<<<<<< HEAD
 	atmel_port->use_dma_rx = data->use_dma_rx;
 	atmel_port->use_dma_tx = data->use_dma_tx;
 	atmel_port->rs485	= data->rs485;
+=======
+>>>>>>> cm-10.0
 	/* Use TXEMPTY for interrupt when rs485 else TXRDY or ENDTX|TXBUFE */
 	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
 		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
@@ -1478,6 +1615,11 @@ void __init atmel_register_uart_fns(struct atmel_port_fns *fns)
 	atmel_pops.set_wake	= fns->set_wake;
 }
 
+<<<<<<< HEAD
+=======
+struct platform_device *atmel_default_console_device;	/* the serial console device */
+
+>>>>>>> cm-10.0
 #ifdef CONFIG_SERIAL_ATMEL_CONSOLE
 static void atmel_console_putchar(struct uart_port *port, int ch)
 {
@@ -1609,10 +1751,23 @@ static struct console atmel_console = {
 static int __init atmel_console_init(void)
 {
 	if (atmel_default_console_device) {
+<<<<<<< HEAD
 		add_preferred_console(ATMEL_DEVICENAME,
 				      atmel_default_console_device->id, NULL);
 		atmel_init_port(&atmel_ports[atmel_default_console_device->id],
 				atmel_default_console_device);
+=======
+		struct atmel_uart_data *pdata =
+			atmel_default_console_device->dev.platform_data;
+		int id = pdata->num;
+		struct atmel_uart_port *port = &atmel_ports[id];
+
+		port->backup_imr = 0;
+		port->uart.line = id;
+
+		add_preferred_console(ATMEL_DEVICENAME, id, NULL);
+		atmel_init_port(port, atmel_default_console_device);
+>>>>>>> cm-10.0
 		register_console(&atmel_console);
 	}
 
@@ -1709,6 +1864,7 @@ static int atmel_serial_resume(struct platform_device *pdev)
 static int __devinit atmel_serial_probe(struct platform_device *pdev)
 {
 	struct atmel_uart_port *port;
+<<<<<<< HEAD
 	struct atmel_uart_data *pdata = pdev->dev.platform_data;
 	void *data;
 	int ret;
@@ -1717,6 +1873,41 @@ static int __devinit atmel_serial_probe(struct platform_device *pdev)
 
 	port = &atmel_ports[pdata->num];
 	port->backup_imr = 0;
+=======
+	struct device_node *np = pdev->dev.of_node;
+	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+	void *data;
+	int ret = -ENODEV;
+
+	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+
+	if (np)
+		ret = of_alias_get_id(np, "serial");
+	else
+		if (pdata)
+			ret = pdata->num;
+
+	if (ret < 0)
+		/* port id not found in platform data nor device-tree aliases:
+		 * auto-enumerate it */
+		ret = find_first_zero_bit(&atmel_ports_in_use,
+				sizeof(atmel_ports_in_use));
+
+	if (ret > ATMEL_MAX_UART) {
+		ret = -ENODEV;
+		goto err;
+	}
+
+	if (test_and_set_bit(ret, &atmel_ports_in_use)) {
+		/* port already in use */
+		ret = -EBUSY;
+		goto err;
+	}
+
+	port = &atmel_ports[ret];
+	port->backup_imr = 0;
+	port->uart.line = ret;
+>>>>>>> cm-10.0
 
 	atmel_init_port(port, pdev);
 
@@ -1762,7 +1953,11 @@ err_alloc_ring:
 		clk_put(port->clk);
 		port->clk = NULL;
 	}
+<<<<<<< HEAD
 
+=======
+err:
+>>>>>>> cm-10.0
 	return ret;
 }
 
@@ -1782,6 +1977,11 @@ static int __devexit atmel_serial_remove(struct platform_device *pdev)
 
 	/* "port" is allocated statically, so we shouldn't free it */
 
+<<<<<<< HEAD
+=======
+	clear_bit(port->line, &atmel_ports_in_use);
+
+>>>>>>> cm-10.0
 	clk_put(atmel_port->clk);
 
 	return ret;
@@ -1795,6 +1995,10 @@ static struct platform_driver atmel_serial_driver = {
 	.driver		= {
 		.name	= "atmel_usart",
 		.owner	= THIS_MODULE,
+<<<<<<< HEAD
+=======
+		.of_match_table	= of_match_ptr(atmel_serial_dt_ids),
+>>>>>>> cm-10.0
 	},
 };
 

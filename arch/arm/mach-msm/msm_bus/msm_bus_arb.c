@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -9,6 +13,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+<<<<<<< HEAD
+=======
+
+#define pr_fmt(fmt) "AXI: %s(): " fmt, __func__
+
+>>>>>>> cm-10.0
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
@@ -584,6 +594,18 @@ int msm_bus_scale_client_update_request(uint32_t cl, unsigned index)
 			MSM_BUS_DBG("ab: %lu ib: %lu\n", curr_bw, curr_clk);
 		}
 
+<<<<<<< HEAD
+=======
+		if (index == 0) {
+			/* This check protects the bus driver from clients
+			 * that can leave non-zero requests after
+			 * unregistering.
+			 * */
+			req_clk = 0;
+			req_bw = 0;
+		}
+
+>>>>>>> cm-10.0
 		if (!pdata->active_only) {
 			ret = update_path(src, pnode, req_clk, req_bw,
 				curr_clk, curr_bw, 0, pdata->active_only);

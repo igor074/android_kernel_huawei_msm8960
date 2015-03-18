@@ -15,13 +15,20 @@
 #include <linux/kernel.h>
 #include <linux/suspend.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <mach/system.h>
+=======
+>>>>>>> cm-10.0
 
 static int mxs_suspend_enter(suspend_state_t state)
 {
 	switch (state) {
 	case PM_SUSPEND_MEM:
+<<<<<<< HEAD
 		arch_idle();
+=======
+		cpu_do_idle();
+>>>>>>> cm-10.0
 		break;
 
 	default:

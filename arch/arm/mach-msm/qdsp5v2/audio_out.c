@@ -3,7 +3,11 @@
  *
  * Copyright (C) 2008 Google, Inc.
  * Copyright (C) 2008 HTC Corporation
+<<<<<<< HEAD
  * Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -29,21 +33,34 @@
 #include <linux/delay.h>
 #include <linux/wakelock.h>
 #include <linux/memory_alloc.h>
+<<<<<<< HEAD
 
 #include <linux/msm_audio.h>
 #include <linux/android_pmem.h>
+=======
+#include <linux/msm_audio.h>
+#include <linux/android_pmem.h>
+#include <linux/pm_qos.h>
+>>>>>>> cm-10.0
 
 #include <mach/msm_adsp.h>
 #include <mach/iommu.h>
 #include <mach/iommu_domains.h>
+<<<<<<< HEAD
 #include <mach/msm_subsystem_map.h>
+=======
+>>>>>>> cm-10.0
 #include <mach/qdsp5v2/qdsp5audppcmdi.h>
 #include <mach/qdsp5v2/qdsp5audppmsg.h>
 #include <mach/qdsp5v2/audio_dev_ctl.h>
 #include <mach/qdsp5v2/audpp.h>
 #include <mach/qdsp5v2/audio_dev_ctl.h>
 #include <mach/msm_memtypes.h>
+<<<<<<< HEAD
 
+=======
+#include <mach/cpuidle.h>
+>>>>>>> cm-10.0
 
 #include <mach/htc_pwrsink.h>
 #include <mach/debug_mm.h>
@@ -86,7 +103,11 @@ struct audio {
 	/* data allocated for various buffers */
 	char *data;
 	dma_addr_t phys;
+<<<<<<< HEAD
 	struct msm_mapped_buffer *map_v_write;
+=======
+	void *map_v_write;
+>>>>>>> cm-10.0
 	int teos; /* valid only if tunnel mode & no data left for decoder */
 	int opened;
 	int enabled;
@@ -96,7 +117,11 @@ struct audio {
 	int voice_state;
 
 	struct wake_lock wakelock;
+<<<<<<< HEAD
 	struct wake_lock idlelock;
+=======
+	struct pm_qos_request pm_qos_req;
+>>>>>>> cm-10.0
 
 	struct audpp_cmd_cfg_object_params_volume vol_pan;
 };
@@ -149,13 +174,23 @@ static void audio_prevent_sleep(struct audio *audio)
 {
 	MM_DBG("\n"); /* Macro prints the file name and function */
 	wake_lock(&audio->wakelock);
+<<<<<<< HEAD
 	wake_lock(&audio->idlelock);
+=======
+	pm_qos_update_request(&audio->pm_qos_req,
+			      msm_cpuidle_get_deep_idle_latency());
+>>>>>>> cm-10.0
 }
 
 static void audio_allow_sleep(struct audio *audio)
 {
+<<<<<<< HEAD
 	wake_unlock(&audio->wakelock);
 	wake_unlock(&audio->idlelock);
+=======
+	pm_qos_update_request(&audio->pm_qos_req, PM_QOS_DEFAULT_VALUE);
+	wake_unlock(&audio->wakelock);
+>>>>>>> cm-10.0
 	MM_DBG("\n"); /* Macro prints the file name and function */
 }
 
@@ -464,7 +499,11 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 }
 
 /* Only useful in tunnel-mode */
+<<<<<<< HEAD
 static int audio_fsync(struct file *file,	int datasync)
+=======
+static int audio_fsync(struct file *file, loff_t ppos1, loff_t ppos2, int datasync)
+>>>>>>> cm-10.0
 {
 	struct audio *audio = file->private_data;
 	int rc = 0;
@@ -704,16 +743,24 @@ static int __init audio_init(void)
 {
 	the_audio.phys = allocate_contiguous_ebi_nomap(DMASZ, SZ_4K);
 	if (the_audio.phys) {
+<<<<<<< HEAD
 		the_audio.map_v_write = msm_subsystem_map_buffer(
 						the_audio.phys, DMASZ,
 						MSM_SUBSYSTEM_MAP_KADDR,
 						NULL, 0);
+=======
+		the_audio.map_v_write = ioremap(the_audio.phys, DMASZ);
+>>>>>>> cm-10.0
 		if (IS_ERR(the_audio.map_v_write)) {
 			MM_ERR("could not map physical buffers\n");
 			free_contiguous_memory_by_paddr(the_audio.phys);
 			return -ENOMEM;
 		}
+<<<<<<< HEAD
 		the_audio.data = the_audio.map_v_write->vaddr;
+=======
+		the_audio.data = the_audio.map_v_write;
+>>>>>>> cm-10.0
 	} else {
 			MM_ERR("could not allocate physical buffers\n");
 			return -ENOMEM;
@@ -725,7 +772,12 @@ static int __init audio_init(void)
 	spin_lock_init(&the_audio.dsp_lock);
 	init_waitqueue_head(&the_audio.wait);
 	wake_lock_init(&the_audio.wakelock, WAKE_LOCK_SUSPEND, "audio_pcm");
+<<<<<<< HEAD
 	wake_lock_init(&the_audio.idlelock, WAKE_LOCK_IDLE, "audio_pcm_idle");
+=======
+	pm_qos_add_request(&the_audio.pm_qos_req, PM_QOS_CPU_DMA_LATENCY,
+				PM_QOS_DEFAULT_VALUE);
+>>>>>>> cm-10.0
 	return misc_register(&audio_misc);
 }
 

@@ -22,8 +22,22 @@ LDFLAGS := -m elf_$(UTS_MACHINE)
 LDFLAGS_vmlinux := -T
 
 hostprogs-y	:= mkpiggy
+<<<<<<< HEAD
 
 $(obj)/vmlinux: $(obj)/vmlinux.lds $(obj)/head_$(BITS).o $(obj)/misc.o $(obj)/string.o $(obj)/cmdline.o $(obj)/early_serial_console.o $(obj)/piggy.o FORCE
+=======
+HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+
+VMLINUX_OBJS = $(obj)/vmlinux.lds $(obj)/head_$(BITS).o $(obj)/misc.o \
+	$(obj)/string.o $(obj)/cmdline.o $(obj)/early_serial_console.o \
+	$(obj)/piggy.o
+
+ifeq ($(CONFIG_EFI_STUB), y)
+	VMLINUX_OBJS += $(obj)/eboot.o $(obj)/efi_stub_$(BITS).o
+endif
+
+$(obj)/vmlinux: $(VMLINUX_OBJS) FORCE
+>>>>>>> cm-10.0
 	$(call if_changed,ld)
 	@:
 
@@ -31,6 +45,7 @@ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
 $(obj)/vmlinux.bin: vmlinux FORCE
 	$(call if_changed,objcopy)
 
+<<<<<<< HEAD
 
 targets += vmlinux.bin.all vmlinux.relocs relocs
 hostprogs-$(CONFIG_X86_NEED_RELOCS) += relocs
@@ -38,6 +53,14 @@ hostprogs-$(CONFIG_X86_NEED_RELOCS) += relocs
 quiet_cmd_relocs = RELOCS  $@
       cmd_relocs = $(obj)/relocs $< > $@;$(obj)/relocs --abs-relocs $<
 $(obj)/vmlinux.relocs: vmlinux $(obj)/relocs FORCE
+=======
+targets += vmlinux.bin.all vmlinux.relocs
+
+CMD_RELOCS = arch/x86/tools/relocs
+quiet_cmd_relocs = RELOCS  $@
+      cmd_relocs = $(CMD_RELOCS) $< > $@;$(CMD_RELOCS) --abs-relocs $<
+$(obj)/vmlinux.relocs: vmlinux FORCE
+>>>>>>> cm-10.0
 	$(call if_changed,relocs)
 
 vmlinux.bin.all-y := $(obj)/vmlinux.bin

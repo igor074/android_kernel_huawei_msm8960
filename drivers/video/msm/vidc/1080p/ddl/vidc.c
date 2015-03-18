@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -77,6 +81,13 @@
 #define VIDC_1080P_ENC_TYPE_FRAME_DATA       0x00020000
 #define VIDC_1080P_ENC_TYPE_LAST_FRAME_DATA  0x00030000
 
+<<<<<<< HEAD
+=======
+#define VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_BMSK   0x00004000
+#define VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_SHFT   14
+#define VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_BMSK      0x80000000
+#define VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_SHFT      31
+>>>>>>> cm-10.0
 #define VIDC_1080P_MAX_INTRA_PERIOD 0xffff
 
 u8 *VIDC_BASE_PTR;
@@ -516,8 +527,17 @@ void vidc_1080p_get_decode_frame(
 	u32 frame = 0;
 
 	VIDC_HWIO_IN(REG_760102, &frame);
+<<<<<<< HEAD
 	*pe_frame = (enum vidc_1080p_decode_frame)
 		(frame & VIDC_1080P_SI_RG8_DECODE_FRAMETYPE_MASK);
+=======
+	if (frame & 0x10)
+		*pe_frame = (enum vidc_1080p_decode_frame)
+			VIDC_1080P_DECODE_FRAMETYPE_IDR;
+	else
+		*pe_frame = (enum vidc_1080p_decode_frame)
+			(frame & VIDC_1080P_SI_RG8_DECODE_FRAMETYPE_MASK);
+>>>>>>> cm-10.0
 }
 
 void vidc_1080p_get_decode_frame_result(
@@ -779,6 +799,10 @@ void vidc_1080p_encode_seq_start_ch1(
 void vidc_1080p_encode_frame_start_ch0(
 	struct vidc_1080p_enc_frame_start_param *param)
 {
+<<<<<<< HEAD
+=======
+	u32 input_flush;
+>>>>>>> cm-10.0
 	VIDC_HWIO_OUT(REG_695082, VIDC_1080P_RISC2HOST_CMD_EMPTY);
 	VIDC_HWIO_OUT(REG_666957, VIDC_1080P_INIT_CH_INST_ID);
 	VIDC_HWIO_OUT(REG_117192,
@@ -791,8 +815,20 @@ void vidc_1080p_encode_frame_start_ch0(
 		VIDC_1080P_BASE_OFFSET_SHIFT);
 	VIDC_HWIO_OUT(REG_190381, param->intra_frame);
 	VIDC_HWIO_OUT(REG_889944, param->shared_mem_addr_offset);
+<<<<<<< HEAD
 	VIDC_HWIO_OUT(REG_404623, param->input_flush);
 	VIDC_HWIO_OUT(REG_397087, param->cmd_seq_num);
+=======
+	input_flush = VIDC_SETFIELD(param->input_flush,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_BMSK);
+	input_flush |= VIDC_SETFIELD(param->slice_enable,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_BMSK);
+	VIDC_HWIO_OUT(REG_404623, input_flush);
+	VIDC_HWIO_OUT(REG_397087, param->cmd_seq_num);
+
+>>>>>>> cm-10.0
 	VIDC_HWIO_OUT(REG_666957, (u32)param->encode |
 		param->inst_id);
 }
@@ -800,7 +836,11 @@ void vidc_1080p_encode_frame_start_ch0(
 void vidc_1080p_encode_frame_start_ch1(
 	struct vidc_1080p_enc_frame_start_param *param)
 {
+<<<<<<< HEAD
 
+=======
+	u32 input_flush;
+>>>>>>> cm-10.0
 	VIDC_HWIO_OUT(REG_695082, VIDC_1080P_RISC2HOST_CMD_EMPTY);
 	VIDC_HWIO_OUT(REG_313350, VIDC_1080P_INIT_CH_INST_ID);
 	VIDC_HWIO_OUT(REG_980194,
@@ -813,10 +853,76 @@ void vidc_1080p_encode_frame_start_ch1(
 		VIDC_1080P_BASE_OFFSET_SHIFT);
 	VIDC_HWIO_OUT(REG_887095, param->intra_frame);
 	VIDC_HWIO_OUT(REG_652528, param->shared_mem_addr_offset);
+<<<<<<< HEAD
 	VIDC_HWIO_OUT(REG_404623, param->input_flush);
 	VIDC_HWIO_OUT(REG_254093, param->cmd_seq_num);
 	VIDC_HWIO_OUT(REG_313350, (u32)param->encode |
 		param->inst_id);
+=======
+	input_flush = VIDC_SETFIELD(param->input_flush,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_BMSK);
+	input_flush |= VIDC_SETFIELD(param->slice_enable,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_BMSK);
+
+	VIDC_HWIO_OUT(REG_404623, input_flush);
+	VIDC_HWIO_OUT(REG_254093, param->cmd_seq_num);
+	VIDC_HWIO_OUT(REG_313350, (u32)param->encode |
+		param->inst_id);
+}
+
+void vidc_1080p_encode_slice_batch_start_ch0(
+	struct vidc_1080p_enc_frame_start_param *param)
+{
+	u32 input_flush;
+	VIDC_HWIO_OUT(REG_695082, VIDC_1080P_RISC2HOST_CMD_EMPTY);
+	VIDC_HWIO_OUT(REG_666957, VIDC_1080P_INIT_CH_INST_ID);
+	VIDC_HWIO_OUT(REG_612810, param->current_y_addr_offset >>
+		VIDC_1080P_BASE_OFFSET_SHIFT);
+	VIDC_HWIO_OUT(REG_175608, param->current_c_addr_offset >>
+		VIDC_1080P_BASE_OFFSET_SHIFT);
+	VIDC_HWIO_OUT(REG_190381, param->intra_frame);
+	VIDC_HWIO_OUT(REG_889944, param->shared_mem_addr_offset);
+	input_flush = VIDC_SETFIELD(param->input_flush,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_BMSK);
+	input_flush |= VIDC_SETFIELD(param->slice_enable,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_BMSK);
+	VIDC_HWIO_OUT(REG_404623, input_flush);
+	VIDC_HWIO_OUT(REG_397087, param->cmd_seq_num);
+
+	VIDC_HWIO_OUT(REG_666957, (u32)param->encode |
+		param->inst_id);
+
+}
+
+void vidc_1080p_encode_slice_batch_start_ch1(
+	struct vidc_1080p_enc_frame_start_param *param)
+{
+	u32 input_flush;
+	VIDC_HWIO_OUT(REG_695082, VIDC_1080P_RISC2HOST_CMD_EMPTY);
+	VIDC_HWIO_OUT(REG_313350, VIDC_1080P_INIT_CH_INST_ID);
+	VIDC_HWIO_OUT(REG_655721, param->current_y_addr_offset >>
+		VIDC_1080P_BASE_OFFSET_SHIFT);
+	VIDC_HWIO_OUT(REG_548308,  param->current_c_addr_offset >>
+		VIDC_1080P_BASE_OFFSET_SHIFT);
+	VIDC_HWIO_OUT(REG_887095, param->intra_frame);
+	VIDC_HWIO_OUT(REG_652528, param->shared_mem_addr_offset);
+	input_flush = VIDC_SETFIELD(param->input_flush,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_INPUT_BUFFER_FLUSH_BMSK);
+	input_flush |= VIDC_SETFIELD(param->slice_enable,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_SHFT,
+			VIDC_1080P_SI_RG10_ENCODE_SLICE_IF_ENABLE_BMSK);
+
+	VIDC_HWIO_OUT(REG_404623, input_flush);
+	VIDC_HWIO_OUT(REG_254093, param->cmd_seq_num);
+	VIDC_HWIO_OUT(REG_313350, (u32)param->encode |
+		param->inst_id);
+
+>>>>>>> cm-10.0
 }
 
 void vidc_1080p_set_encode_picture(u32 number_p, u32 number_b)

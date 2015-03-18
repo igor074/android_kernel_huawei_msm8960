@@ -477,7 +477,10 @@ int crush_do_rule(struct crush_map *map,
 	int i, j;
 	int numrep;
 	int firstn;
+<<<<<<< HEAD
 	int rc = -1;
+=======
+>>>>>>> cm-10.0
 
 	BUG_ON(ruleno >= map->max_rules);
 
@@ -491,6 +494,7 @@ int crush_do_rule(struct crush_map *map,
 	 * that this may or may not correspond to the specific types
 	 * referenced by the crush rule.
 	 */
+<<<<<<< HEAD
 	if (force >= 0) {
 		if (force >= map->max_devices ||
 		    map->device_parents[force] == 0) {
@@ -508,6 +512,20 @@ int crush_do_rule(struct crush_map *map,
 				if (force == 0)
 					break;
 			}
+=======
+	if (force >= 0 &&
+	    force < map->max_devices &&
+	    map->device_parents[force] != 0 &&
+	    !is_out(map, weight, force, x)) {
+		while (1) {
+			force_context[++force_pos] = force;
+			if (force >= 0)
+				force = map->device_parents[force];
+			else
+				force = map->bucket_parents[-1-force];
+			if (force == 0)
+				break;
+>>>>>>> cm-10.0
 		}
 	}
 
@@ -516,10 +534,22 @@ int crush_do_rule(struct crush_map *map,
 		switch (rule->steps[step].op) {
 		case CRUSH_RULE_TAKE:
 			w[0] = rule->steps[step].arg1;
+<<<<<<< HEAD
 			if (force_pos >= 0) {
 				BUG_ON(force_context[force_pos] != w[0]);
 				force_pos--;
 			}
+=======
+
+			/* find position in force_context/hierarchy */
+			while (force_pos >= 0 &&
+			       force_context[force_pos] != w[0])
+				force_pos--;
+			/* and move past it */
+			if (force_pos >= 0)
+				force_pos--;
+
+>>>>>>> cm-10.0
 			wsize = 1;
 			break;
 
@@ -600,10 +630,14 @@ int crush_do_rule(struct crush_map *map,
 			BUG_ON(1);
 		}
 	}
+<<<<<<< HEAD
 	rc = result_len;
 
 out:
 	return rc;
+=======
+	return result_len;
+>>>>>>> cm-10.0
 }
 
 

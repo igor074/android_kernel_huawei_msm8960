@@ -130,13 +130,26 @@ int ecryptfs_write(struct inode *ecryptfs_inode, char *data, loff_t offset,
 		pgoff_t ecryptfs_page_idx = (pos >> PAGE_CACHE_SHIFT);
 		size_t start_offset_in_page = (pos & ~PAGE_CACHE_MASK);
 		size_t num_bytes = (PAGE_CACHE_SIZE - start_offset_in_page);
+<<<<<<< HEAD
 		size_t total_remaining_bytes = ((offset + size) - pos);
+=======
+		loff_t total_remaining_bytes = ((offset + size) - pos);
+
+		if (fatal_signal_pending(current)) {
+			rc = -EINTR;
+			break;
+		}
+>>>>>>> cm-10.0
 
 		if (num_bytes > total_remaining_bytes)
 			num_bytes = total_remaining_bytes;
 		if (pos < offset) {
 			/* remaining zeros to write, up to destination offset */
+<<<<<<< HEAD
 			size_t total_remaining_zeros = (offset - pos);
+=======
+			loff_t total_remaining_zeros = (offset - pos);
+>>>>>>> cm-10.0
 
 			if (num_bytes > total_remaining_zeros)
 				num_bytes = total_remaining_zeros;
@@ -151,7 +164,11 @@ int ecryptfs_write(struct inode *ecryptfs_inode, char *data, loff_t offset,
 			       ecryptfs_page_idx, rc);
 			goto out;
 		}
+<<<<<<< HEAD
 		ecryptfs_page_virt = kmap_atomic(ecryptfs_page, KM_USER0);
+=======
+		ecryptfs_page_virt = kmap_atomic(ecryptfs_page);
+>>>>>>> cm-10.0
 
 		/*
 		 * pos: where we're now writing, offset: where the request was
@@ -174,7 +191,11 @@ int ecryptfs_write(struct inode *ecryptfs_inode, char *data, loff_t offset,
 			       (data + data_offset), num_bytes);
 			data_offset += num_bytes;
 		}
+<<<<<<< HEAD
 		kunmap_atomic(ecryptfs_page_virt, KM_USER0);
+=======
+		kunmap_atomic(ecryptfs_page_virt);
+>>>>>>> cm-10.0
 		flush_dcache_page(ecryptfs_page);
 		SetPageUptodate(ecryptfs_page);
 		unlock_page(ecryptfs_page);
@@ -193,6 +214,7 @@ int ecryptfs_write(struct inode *ecryptfs_inode, char *data, loff_t offset,
 		}
 		pos += num_bytes;
 	}
+<<<<<<< HEAD
 	if ((offset + size) > ecryptfs_file_size) {
 		i_size_write(ecryptfs_inode, (offset + size));
 		if (crypt_stat->flags & ECRYPTFS_ENCRYPTED) {
@@ -202,6 +224,21 @@ int ecryptfs_write(struct inode *ecryptfs_inode, char *data, loff_t offset,
 				printk(KERN_ERR	"Problem with "
 				       "ecryptfs_write_inode_size_to_metadata; "
 				       "rc = [%d]\n", rc);
+=======
+	if (pos > ecryptfs_file_size) {
+		i_size_write(ecryptfs_inode, pos);
+		if (crypt_stat->flags & ECRYPTFS_ENCRYPTED) {
+			int rc2;
+
+			rc2 = ecryptfs_write_inode_size_to_metadata(
+								ecryptfs_inode);
+			if (rc2) {
+				printk(KERN_ERR	"Problem with "
+				       "ecryptfs_write_inode_size_to_metadata; "
+				       "rc = [%d]\n", rc2);
+				if (!rc)
+					rc = rc2;
+>>>>>>> cm-10.0
 				goto out;
 			}
 		}
@@ -273,6 +310,7 @@ int ecryptfs_read_lower_page_segment(struct page *page_for_ecryptfs,
 	flush_dcache_page(page_for_ecryptfs);
 	return rc;
 }
+<<<<<<< HEAD
 
 #if 0
 /**
@@ -346,3 +384,5 @@ out:
 	return rc;
 }
 #endif  /*  0  */
+=======
+>>>>>>> cm-10.0

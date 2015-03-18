@@ -23,6 +23,11 @@
 #include <asm/ptrace.h>
 #include <asm/domain.h>
 
+<<<<<<< HEAD
+=======
+#define IOMEM(x)	(x)
+
+>>>>>>> cm-10.0
 /*
  * Endian independent macros for shifting bytes within registers.
  */
@@ -137,6 +142,14 @@
 	disable_irq
 	.endm
 
+<<<<<<< HEAD
+=======
+	.macro	save_and_disable_irqs_notrace, oldcpsr
+	mrs	\oldcpsr, cpsr
+	disable_irq_notrace
+	.endm
+
+>>>>>>> cm-10.0
 /*
  * Restore interrupt state previously stored in a register.  We don't
  * guarantee that this will preserve the flags.
@@ -187,6 +200,20 @@
 #endif
 
 /*
+<<<<<<< HEAD
+=======
+ * Instruction barrier
+ */
+	.macro	instr_sync
+#if __LINUX_ARM_ARCH__ >= 7
+	isb
+#elif __LINUX_ARM_ARCH__ == 6
+	mcr	p15, 0, r0, c7, c5, 4
+#endif
+	.endm
+
+/*
+>>>>>>> cm-10.0
  * SMP data memory barrier
  */
 	.macro	smp_dmb mode
@@ -226,7 +253,11 @@
  */
 #ifdef CONFIG_THUMB2_KERNEL
 
+<<<<<<< HEAD
 	.macro	usraccoff, instr, reg, ptr, inc, off, cond, abort, t=T()
+=======
+	.macro	usraccoff, instr, reg, ptr, inc, off, cond, abort, t=TUSER()
+>>>>>>> cm-10.0
 9999:
 	.if	\inc == 1
 	\instr\cond\()b\()\t\().w \reg, [\ptr, #\off]
@@ -266,7 +297,11 @@
 
 #else	/* !CONFIG_THUMB2_KERNEL */
 
+<<<<<<< HEAD
 	.macro	usracc, instr, reg, ptr, inc, cond, rept, abort, t=T()
+=======
+	.macro	usracc, instr, reg, ptr, inc, cond, rept, abort, t=TUSER()
+>>>>>>> cm-10.0
 	.rept	\rept
 9999:
 	.if	\inc == 1
@@ -293,4 +328,16 @@
 	.macro	ldrusr, reg, ptr, inc, cond=al, rept=1, abort=9001f
 	usracc	ldr, \reg, \ptr, \inc, \cond, \rept, \abort
 	.endm
+<<<<<<< HEAD
+=======
+
+/* Utility macro for declaring string literals */
+	.macro	string name:req, string
+	.type \name , #object
+\name:
+	.asciz "\string"
+	.size \name , . - \name
+	.endm
+
+>>>>>>> cm-10.0
 #endif /* __ASM_ASSEMBLER_H__ */

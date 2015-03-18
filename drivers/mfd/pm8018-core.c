@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -14,6 +18,10 @@
 #define pr_fmt(fmt) "%s: " fmt, __func__
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/string.h>
@@ -44,7 +52,10 @@
 #define PM8018_REVISION_MASK	0x000F
 
 #define REG_PM8018_PON_CNTRL_3	0x01D
+<<<<<<< HEAD
 #define PM8018_RESTART_REASON_MASK	0x07
+=======
+>>>>>>> cm-10.0
 
 #define SINGLE_IRQ_RESOURCE(_name, _irq) \
 { \
@@ -60,6 +71,10 @@ struct pm8018 {
 	struct mfd_cell					*mfd_regulators;
 	struct pm8xxx_regulator_core_platform_data	*regulator_cdata;
 	u32						rev_registers;
+<<<<<<< HEAD
+=======
+	u8						restart_reason;
+>>>>>>> cm-10.0
 };
 
 static int pm8018_readb(const struct device *dev, u16 addr, u8 *val)
@@ -124,6 +139,17 @@ static int pm8018_get_revision(const struct device *dev)
 	return pmic->rev_registers & PM8018_REVISION_MASK;
 }
 
+<<<<<<< HEAD
+=======
+static u8 pm8018_restart_reason(const struct device *dev)
+{
+	const struct pm8xxx_drvdata *pm8018_drvdata = dev_get_drvdata(dev);
+	const struct pm8018 *pmic = pm8018_drvdata->pm_chip_data;
+
+	return pmic->restart_reason;
+}
+
+>>>>>>> cm-10.0
 static struct pm8xxx_drvdata pm8018_drvdata = {
 	.pmic_readb		= pm8018_readb,
 	.pmic_writeb		= pm8018_writeb,
@@ -132,6 +158,10 @@ static struct pm8xxx_drvdata pm8018_drvdata = {
 	.pmic_read_irq_stat	= pm8018_read_irq_stat,
 	.pmic_get_version	= pm8018_get_version,
 	.pmic_get_revision	= pm8018_get_revision,
+<<<<<<< HEAD
+=======
+	.pmic_restart_reason	= pm8018_restart_reason,
+>>>>>>> cm-10.0
 };
 
 static const struct resource gpio_cell_resources[] __devinitconst = {
@@ -230,6 +260,33 @@ static struct mfd_cell leds_cell __devinitdata = {
 	.id		= -1,
 };
 
+<<<<<<< HEAD
+=======
+static const struct resource thermal_alarm_cell_resources[] __devinitconst = {
+	SINGLE_IRQ_RESOURCE("pm8018_tempstat_irq", PM8018_TEMPSTAT_IRQ),
+	SINGLE_IRQ_RESOURCE("pm8018_overtemp_irq", PM8018_OVERTEMP_IRQ),
+};
+
+static struct pm8xxx_tm_core_data thermal_alarm_cdata = {
+	.adc_channel =			CHANNEL_DIE_TEMP,
+	.adc_type =			PM8XXX_TM_ADC_PM8XXX_ADC,
+	.reg_addr_temp_alarm_ctrl =	REG_TEMP_ALARM_CTRL,
+	.reg_addr_temp_alarm_pwm =	REG_TEMP_ALARM_PWM,
+	.tm_name =			"pm8018_tz",
+	.irq_name_temp_stat =		"pm8018_tempstat_irq",
+	.irq_name_over_temp =		"pm8018_overtemp_irq",
+};
+
+static struct mfd_cell thermal_alarm_cell __devinitdata = {
+	.name		= PM8XXX_TM_DEV_NAME,
+	.id		= -1,
+	.resources	= thermal_alarm_cell_resources,
+	.num_resources	= ARRAY_SIZE(thermal_alarm_cell_resources),
+	.platform_data	= &thermal_alarm_cdata,
+	.pdata_size	= sizeof(struct pm8xxx_tm_core_data),
+};
+
+>>>>>>> cm-10.0
 static struct pm8xxx_vreg regulator_data[] = {
 	/*   name	     pc_name	    ctrl   test   hpm_min */
 	PLDO("8018_l2",      "8018_l2_pc",  0x0B0, 0x0B1, LDO_50),
@@ -260,7 +317,11 @@ static struct pm8xxx_vreg regulator_data[] = {
 #define MAX_NAME_COMPARISON_LEN 32
 
 static int __devinit match_regulator(
+<<<<<<< HEAD
 	struct pm8xxx_regulator_core_platform_data *core_data, char *name)
+=======
+	struct pm8xxx_regulator_core_platform_data *core_data, const char *name)
+>>>>>>> cm-10.0
 {
 	int found = 0;
 	int i;
@@ -475,6 +536,15 @@ pm8018_add_subdevices(const struct pm8018_platform_data *pdata,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	ret = mfd_add_devices(pmic->dev, 0, &thermal_alarm_cell, 1, NULL,
+				irq_base);
+	if (ret) {
+		pr_err("Failed to add thermal alarm subdevice, ret=%d\n", ret);
+		goto bail;
+	}
+>>>>>>> cm-10.0
 
 	return 0;
 bail:
@@ -485,6 +555,7 @@ bail:
 	return ret;
 }
 
+<<<<<<< HEAD
 static const char * const pm8018_restart_reason[] = {
 	[0] = "Unknown",
 	[1] = "Triggered from CBL (external charger)",
@@ -501,6 +572,13 @@ static const char * const pm8018_rev_names[] = {
 	[PM8XXX_REVISION_8018_1p0]	= "1.0",
 	[PM8XXX_REVISION_8018_1p1]	= "1.1",
 	[PM8XXX_REVISION_8018_2p0]	= "2.0",
+=======
+static const char * const pm8018_rev_names[] = {
+	[PM8XXX_REVISION_8018_TEST]	= "test",
+	[PM8XXX_REVISION_8018_1p0]	= "1.0",
+	[PM8XXX_REVISION_8018_2p0]	= "2.0",
+	[PM8XXX_REVISION_8018_2p1]	= "2.1",
+>>>>>>> cm-10.0
 };
 
 static int __devinit pm8018_probe(struct platform_device *pdev)
@@ -563,8 +641,14 @@ static int __devinit pm8018_probe(struct platform_device *pdev)
 		pr_err("Cannot read restart reason rc=%d\n", rc);
 		goto err_read_rev;
 	}
+<<<<<<< HEAD
 	val &= PM8018_RESTART_REASON_MASK;
 	pr_info("PMIC Restart Reason: %s\n", pm8018_restart_reason[val]);
+=======
+	val &= PM8XXX_RESTART_REASON_MASK;
+	pr_info("PMIC Restart Reason: %s\n", pm8xxx_restart_reason_str[val]);
+	pmic->restart_reason = val;
+>>>>>>> cm-10.0
 
 	rc = pm8018_add_subdevices(pdata, pmic);
 	if (rc) {

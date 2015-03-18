@@ -25,10 +25,17 @@
 #include <linux/debugfs.h>
 #include <linux/spinlock.h>
 #include <asm/smp.h>
+<<<<<<< HEAD
 #include <asm/system.h>
 #include <asm/uaccess.h>
 #include <asm/firmware.h>
 #include <asm/lppaca.h>
+=======
+#include <asm/uaccess.h>
+#include <asm/firmware.h>
+#include <asm/lppaca.h>
+#include <asm/debug.h>
+>>>>>>> cm-10.0
 
 #include "plpar_wrappers.h"
 

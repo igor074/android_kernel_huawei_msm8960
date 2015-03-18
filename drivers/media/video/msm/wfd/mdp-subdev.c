@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License version 2 and
@@ -45,6 +49,16 @@ int mdp_open(struct v4l2_subdev *sd, void *arg)
 		goto exit;
 	}
 
+<<<<<<< HEAD
+=======
+	/*Tell HDMI daemon to open fb2*/
+	rc = kobject_uevent(&fbi->dev->kobj, KOBJ_ADD);
+	if (rc) {
+		WFD_MSG_ERR("Failed add to kobj");
+		goto exit;
+	}
+
+>>>>>>> cm-10.0
 	msm_fb_writeback_init(fbi);
 	inst->mdp = fbi;
 	*cookie = inst;
@@ -71,6 +85,12 @@ int mdp_start(struct v4l2_subdev *sd, void *arg)
 			rc = -ENODEV;
 			goto exit;
 		}
+<<<<<<< HEAD
+=======
+		rc = kobject_uevent(&fbi->dev->kobj, KOBJ_ONLINE);
+		if (rc)
+			WFD_MSG_ERR("Failed to send ONLINE event\n");
+>>>>>>> cm-10.0
 	}
 exit:
 	return rc;
@@ -79,12 +99,25 @@ int mdp_stop(struct v4l2_subdev *sd, void *arg)
 {
 	struct mdp_instance *inst = arg;
 	int rc = 0;
+<<<<<<< HEAD
+=======
+	struct fb_info *fbi = NULL;
+>>>>>>> cm-10.0
 	if (inst) {
 		rc = msm_fb_writeback_stop(inst->mdp);
 		if (rc) {
 			WFD_MSG_ERR("Failed to stop writeback mode\n");
 			return rc;
 		}
+<<<<<<< HEAD
+=======
+		fbi = (struct fb_info *)inst->mdp;
+		rc = kobject_uevent(&fbi->dev->kobj, KOBJ_OFFLINE);
+		if (rc) {
+			WFD_MSG_ERR("Failed to send offline event\n");
+			return -EIO;
+		}
+>>>>>>> cm-10.0
 	}
 	return 0;
 }

@@ -8,8 +8,13 @@
 
 #include <linux/ceph/mon_client.h>
 #include <linux/ceph/libceph.h>
+<<<<<<< HEAD
 #include <linux/ceph/decode.h>
 
+=======
+#include <linux/ceph/debugfs.h>
+#include <linux/ceph/decode.h>
+>>>>>>> cm-10.0
 #include <linux/ceph/auth.h>
 
 /*
@@ -116,6 +121,7 @@ static void __send_prepared_auth_request(struct ceph_mon_client *monc, int len)
  */
 static void __close_session(struct ceph_mon_client *monc)
 {
+<<<<<<< HEAD
 	if (monc->con) {
 		dout("__close_session closing mon%d\n", monc->cur_mon);
 		ceph_con_revoke(monc->con, monc->m_auth);
@@ -124,6 +130,14 @@ static void __close_session(struct ceph_mon_client *monc)
 		monc->pending_auth = 0;
 		ceph_auth_reset(monc->auth);
 	}
+=======
+	dout("__close_session closing mon%d\n", monc->cur_mon);
+	ceph_con_revoke(monc->con, monc->m_auth);
+	ceph_con_close(monc->con);
+	monc->cur_mon = -1;
+	monc->pending_auth = 0;
+	ceph_auth_reset(monc->auth);
+>>>>>>> cm-10.0
 }
 
 /*
@@ -302,6 +316,7 @@ void ceph_monc_request_next_osdmap(struct ceph_mon_client *monc)
  */
 int ceph_monc_open_session(struct ceph_mon_client *monc)
 {
+<<<<<<< HEAD
 	if (!monc->con) {
 		monc->con = kmalloc(sizeof(*monc->con), GFP_KERNEL);
 		if (!monc->con)
@@ -311,6 +326,8 @@ int ceph_monc_open_session(struct ceph_mon_client *monc)
 		monc->con->ops = &mon_con_ops;
 	}
 
+=======
+>>>>>>> cm-10.0
 	mutex_lock(&monc->mutex);
 	__open_session(monc);
 	__schedule_delayed(monc);
@@ -351,8 +368,24 @@ static void ceph_monc_handle_map(struct ceph_mon_client *monc,
 	client->monc.monmap = monmap;
 	kfree(old);
 
+<<<<<<< HEAD
 out:
 	mutex_unlock(&monc->mutex);
+=======
+	if (!client->have_fsid) {
+		client->have_fsid = true;
+		mutex_unlock(&monc->mutex);
+		/*
+		 * do debugfs initialization without mutex to avoid
+		 * creating a locking dependency
+		 */
+		ceph_debugfs_client_init(client);
+		goto out_unlocked;
+	}
+out:
+	mutex_unlock(&monc->mutex);
+out_unlocked:
+>>>>>>> cm-10.0
 	wake_up_all(&client->auth_wq);
 }
 
@@ -528,10 +561,19 @@ int ceph_monc_do_statfs(struct ceph_mon_client *monc, struct ceph_statfs *buf)
 	init_completion(&req->completion);
 
 	err = -ENOMEM;
+<<<<<<< HEAD
 	req->request = ceph_msg_new(CEPH_MSG_STATFS, sizeof(*h), GFP_NOFS);
 	if (!req->request)
 		goto out;
 	req->reply = ceph_msg_new(CEPH_MSG_STATFS_REPLY, 1024, GFP_NOFS);
+=======
+	req->request = ceph_msg_new(CEPH_MSG_STATFS, sizeof(*h), GFP_NOFS,
+				    true);
+	if (!req->request)
+		goto out;
+	req->reply = ceph_msg_new(CEPH_MSG_STATFS_REPLY, 1024, GFP_NOFS,
+				  true);
+>>>>>>> cm-10.0
 	if (!req->reply)
 		goto out;
 
@@ -626,10 +668,19 @@ int ceph_monc_do_poolop(struct ceph_mon_client *monc, u32 op,
 	init_completion(&req->completion);
 
 	err = -ENOMEM;
+<<<<<<< HEAD
 	req->request = ceph_msg_new(CEPH_MSG_POOLOP, sizeof(*h), GFP_NOFS);
 	if (!req->request)
 		goto out;
 	req->reply = ceph_msg_new(CEPH_MSG_POOLOP_REPLY, 1024, GFP_NOFS);
+=======
+	req->request = ceph_msg_new(CEPH_MSG_POOLOP, sizeof(*h), GFP_NOFS,
+				    true);
+	if (!req->request)
+		goto out;
+	req->reply = ceph_msg_new(CEPH_MSG_POOLOP_REPLY, 1024, GFP_NOFS,
+				  true);
+>>>>>>> cm-10.0
 	if (!req->reply)
 		goto out;
 
@@ -755,13 +806,30 @@ int ceph_monc_init(struct ceph_mon_client *monc, struct ceph_client *cl)
 	if (err)
 		goto out;
 
+<<<<<<< HEAD
 	monc->con = NULL;
+=======
+	/* connection */
+	monc->con = kmalloc(sizeof(*monc->con), GFP_KERNEL);
+	if (!monc->con)
+		goto out_monmap;
+	ceph_con_init(monc->client->msgr, monc->con);
+	monc->con->private = monc;
+	monc->con->ops = &mon_con_ops;
+>>>>>>> cm-10.0
 
 	/* authentication */
 	monc->auth = ceph_auth_init(cl->options->name,
 				    cl->options->key);
+<<<<<<< HEAD
 	if (IS_ERR(monc->auth))
 		return PTR_ERR(monc->auth);
+=======
+	if (IS_ERR(monc->auth)) {
+		err = PTR_ERR(monc->auth);
+		goto out_con;
+	}
+>>>>>>> cm-10.0
 	monc->auth->want_keys =
 		CEPH_ENTITY_TYPE_AUTH | CEPH_ENTITY_TYPE_MON |
 		CEPH_ENTITY_TYPE_OSD | CEPH_ENTITY_TYPE_MDS;
@@ -770,6 +838,7 @@ int ceph_monc_init(struct ceph_mon_client *monc, struct ceph_client *cl)
 	err = -ENOMEM;
 	monc->m_subscribe_ack = ceph_msg_new(CEPH_MSG_MON_SUBSCRIBE_ACK,
 				     sizeof(struct ceph_mon_subscribe_ack),
+<<<<<<< HEAD
 				     GFP_NOFS);
 	if (!monc->m_subscribe_ack)
 		goto out_monmap;
@@ -783,6 +852,23 @@ int ceph_monc_init(struct ceph_mon_client *monc, struct ceph_client *cl)
 		goto out_subscribe;
 
 	monc->m_auth = ceph_msg_new(CEPH_MSG_AUTH, 4096, GFP_NOFS);
+=======
+				     GFP_NOFS, true);
+	if (!monc->m_subscribe_ack)
+		goto out_auth;
+
+	monc->m_subscribe = ceph_msg_new(CEPH_MSG_MON_SUBSCRIBE, 96, GFP_NOFS,
+					 true);
+	if (!monc->m_subscribe)
+		goto out_subscribe_ack;
+
+	monc->m_auth_reply = ceph_msg_new(CEPH_MSG_AUTH_REPLY, 4096, GFP_NOFS,
+					  true);
+	if (!monc->m_auth_reply)
+		goto out_subscribe;
+
+	monc->m_auth = ceph_msg_new(CEPH_MSG_AUTH, 4096, GFP_NOFS, true);
+>>>>>>> cm-10.0
 	monc->pending_auth = 0;
 	if (!monc->m_auth)
 		goto out_auth_reply;
@@ -808,6 +894,13 @@ out_subscribe:
 	ceph_msg_put(monc->m_subscribe);
 out_subscribe_ack:
 	ceph_msg_put(monc->m_subscribe_ack);
+<<<<<<< HEAD
+=======
+out_auth:
+	ceph_auth_destroy(monc->auth);
+out_con:
+	monc->con->ops->put(monc->con);
+>>>>>>> cm-10.0
 out_monmap:
 	kfree(monc->monmap);
 out:
@@ -822,11 +915,19 @@ void ceph_monc_stop(struct ceph_mon_client *monc)
 
 	mutex_lock(&monc->mutex);
 	__close_session(monc);
+<<<<<<< HEAD
 	if (monc->con) {
 		monc->con->private = NULL;
 		monc->con->ops->put(monc->con);
 		monc->con = NULL;
 	}
+=======
+
+	monc->con->private = NULL;
+	monc->con->ops->put(monc->con);
+	monc->con = NULL;
+
+>>>>>>> cm-10.0
 	mutex_unlock(&monc->mutex);
 
 	ceph_auth_destroy(monc->auth);
@@ -973,7 +1074,11 @@ static struct ceph_msg *mon_alloc_msg(struct ceph_connection *con,
 	case CEPH_MSG_MON_MAP:
 	case CEPH_MSG_MDS_MAP:
 	case CEPH_MSG_OSD_MAP:
+<<<<<<< HEAD
 		m = ceph_msg_new(type, front_len, GFP_NOFS);
+=======
+		m = ceph_msg_new(type, front_len, GFP_NOFS, false);
+>>>>>>> cm-10.0
 		break;
 	}
 
@@ -1000,7 +1105,11 @@ static void mon_fault(struct ceph_connection *con)
 	if (!con->private)
 		goto out;
 
+<<<<<<< HEAD
 	if (monc->con && !monc->hunting)
+=======
+	if (!monc->hunting)
+>>>>>>> cm-10.0
 		pr_info("mon%d %s session lost, "
 			"hunting for new mon\n", monc->cur_mon,
 			ceph_pr_addr(&monc->con->peer_addr.in_addr));

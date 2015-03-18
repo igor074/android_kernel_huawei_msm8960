@@ -52,7 +52,12 @@
 #define DRV_VERSION	"3.0"
 
 enum {
+<<<<<<< HEAD
 	AHCI_PCI_BAR		= 5,
+=======
+	AHCI_PCI_BAR_STA2X11	= 0,
+	AHCI_PCI_BAR_STANDARD	= 5,
+>>>>>>> cm-10.0
 };
 
 enum board_ids {
@@ -79,8 +84,11 @@ enum board_ids {
 };
 
 static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
+<<<<<<< HEAD
 static int ahci_sb600_softreset(struct ata_link *link, unsigned int *class,
 			  unsigned long deadline);
+=======
+>>>>>>> cm-10.0
 static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
 				 unsigned long deadline);
 static int ahci_p5wdh_hardreset(struct ata_link *link, unsigned int *class,
@@ -104,6 +112,7 @@ static struct ata_port_operations ahci_p5wdh_ops = {
 	.hardreset		= ahci_p5wdh_hardreset,
 };
 
+<<<<<<< HEAD
 static struct ata_port_operations ahci_sb600_ops = {
 	.inherits		= &ahci_ops,
 	.softreset		= ahci_sb600_softreset,
@@ -112,6 +121,8 @@ static struct ata_port_operations ahci_sb600_ops = {
 
 #define AHCI_HFLAGS(flags)	.private_data	= (void *)(flags)
 
+=======
+>>>>>>> cm-10.0
 static const struct ata_port_info ahci_port_info[] = {
 	/* by features */
 	[board_ahci] =
@@ -188,7 +199,11 @@ static const struct ata_port_info ahci_port_info[] = {
 		.flags		= AHCI_FLAG_COMMON,
 		.pio_mask	= ATA_PIO4,
 		.udma_mask	= ATA_UDMA6,
+<<<<<<< HEAD
 		.port_ops	= &ahci_sb600_ops,
+=======
+		.port_ops	= &ahci_pmp_retry_srst_ops,
+>>>>>>> cm-10.0
 	},
 	[board_ahci_sb700] =	/* for SB700 and SB800 */
 	{
@@ -196,7 +211,11 @@ static const struct ata_port_info ahci_port_info[] = {
 		.flags		= AHCI_FLAG_COMMON,
 		.pio_mask	= ATA_PIO4,
 		.udma_mask	= ATA_UDMA6,
+<<<<<<< HEAD
 		.port_ops	= &ahci_sb600_ops,
+=======
+		.port_ops	= &ahci_pmp_retry_srst_ops,
+>>>>>>> cm-10.0
 	},
 	[board_ahci_vt8251] =
 	{
@@ -268,6 +287,17 @@ static const struct pci_device_id ahci_pci_tbl[] = {
 	{ PCI_VDEVICE(INTEL, 0x1e06), board_ahci }, /* Panther Point RAID */
 	{ PCI_VDEVICE(INTEL, 0x1e07), board_ahci }, /* Panther Point RAID */
 	{ PCI_VDEVICE(INTEL, 0x1e0e), board_ahci }, /* Panther Point RAID */
+<<<<<<< HEAD
+=======
+	{ PCI_VDEVICE(INTEL, 0x8c02), board_ahci }, /* Lynx Point AHCI */
+	{ PCI_VDEVICE(INTEL, 0x8c03), board_ahci }, /* Lynx Point AHCI */
+	{ PCI_VDEVICE(INTEL, 0x8c04), board_ahci }, /* Lynx Point RAID */
+	{ PCI_VDEVICE(INTEL, 0x8c05), board_ahci }, /* Lynx Point RAID */
+	{ PCI_VDEVICE(INTEL, 0x8c06), board_ahci }, /* Lynx Point RAID */
+	{ PCI_VDEVICE(INTEL, 0x8c07), board_ahci }, /* Lynx Point RAID */
+	{ PCI_VDEVICE(INTEL, 0x8c0e), board_ahci }, /* Lynx Point RAID */
+	{ PCI_VDEVICE(INTEL, 0x8c0f), board_ahci }, /* Lynx Point RAID */
+>>>>>>> cm-10.0
 
 	/* JMicron 360/1/3/5/6, match class to avoid IDE function */
 	{ PCI_VENDOR_ID_JMICRON, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
@@ -383,6 +413,12 @@ static const struct pci_device_id ahci_pci_tbl[] = {
 	{ PCI_VDEVICE(SI, 0x1185), board_ahci },		/* SiS 968 */
 	{ PCI_VDEVICE(SI, 0x0186), board_ahci },		/* SiS 968 */
 
+<<<<<<< HEAD
+=======
+	/* ST Microelectronics */
+	{ PCI_VDEVICE(STMICRO, 0xCC06), board_ahci },		/* ST ConneXt */
+
+>>>>>>> cm-10.0
 	/* Marvell */
 	{ PCI_VDEVICE(MARVELL, 0x6145), board_ahci_mv },	/* 6145 */
 	{ PCI_VDEVICE(MARVELL, 0x6121), board_ahci_mv },	/* 6121 */
@@ -392,12 +428,23 @@ static const struct pci_device_id ahci_pci_tbl[] = {
 	  .driver_data = board_ahci_yes_fbs },			/* 88se9128 */
 	{ PCI_DEVICE(0x1b4b, 0x9125),
 	  .driver_data = board_ahci_yes_fbs },			/* 88se9125 */
+<<<<<<< HEAD
+=======
+	{ PCI_DEVICE(0x1b4b, 0x917a),
+	  .driver_data = board_ahci_yes_fbs },			/* 88se9172 */
+>>>>>>> cm-10.0
 	{ PCI_DEVICE(0x1b4b, 0x91a3),
 	  .driver_data = board_ahci_yes_fbs },
 
 	/* Promise */
 	{ PCI_VDEVICE(PROMISE, 0x3f20), board_ahci },	/* PDC42819 */
 
+<<<<<<< HEAD
+=======
+	/* Asmedia */
+	{ PCI_VDEVICE(ASMEDIA, 0x0612), board_ahci },	/* ASM1061 */
+
+>>>>>>> cm-10.0
 	/* Generic, PCI class code for AHCI */
 	{ PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
 	  PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff, board_ahci },
@@ -503,6 +550,7 @@ static void ahci_pci_init_controller(struct ata_host *host)
 	ahci_init_controller(host);
 }
 
+<<<<<<< HEAD
 static int ahci_sb600_check_ready(struct ata_link *link)
 {
 	void __iomem *port_mmio = ahci_port_base(link->ap);
@@ -552,6 +600,8 @@ static int ahci_sb600_softreset(struct ata_link *link, unsigned int *class,
 	return rc;
 }
 
+=======
+>>>>>>> cm-10.0
 static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
 				 unsigned long deadline)
 {
@@ -630,8 +680,13 @@ static int ahci_pci_device_suspend(struct pci_dev *pdev, pm_message_t mesg)
 
 	if (mesg.event & PM_EVENT_SUSPEND &&
 	    hpriv->flags & AHCI_HFLAG_NO_SUSPEND) {
+<<<<<<< HEAD
 		dev_printk(KERN_ERR, &pdev->dev,
 			   "BIOS update required for suspend/resume\n");
+=======
+		dev_err(&pdev->dev,
+			"BIOS update required for suspend/resume\n");
+>>>>>>> cm-10.0
 		return -EIO;
 	}
 
@@ -676,28 +731,52 @@ static int ahci_configure_dma_masks(struct pci_dev *pdev, int using_dac)
 {
 	int rc;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If the device fixup already set the dma_mask to some non-standard
+	 * value, don't extend it here. This happens on STA2X11, for example.
+	 */
+	if (pdev->dma_mask && pdev->dma_mask < DMA_BIT_MASK(32))
+		return 0;
+
+>>>>>>> cm-10.0
 	if (using_dac &&
 	    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
 		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
 		if (rc) {
 			rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
 			if (rc) {
+<<<<<<< HEAD
 				dev_printk(KERN_ERR, &pdev->dev,
 					   "64-bit DMA enable failed\n");
+=======
+				dev_err(&pdev->dev,
+					"64-bit DMA enable failed\n");
+>>>>>>> cm-10.0
 				return rc;
 			}
 		}
 	} else {
 		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
 		if (rc) {
+<<<<<<< HEAD
 			dev_printk(KERN_ERR, &pdev->dev,
 				   "32-bit DMA enable failed\n");
+=======
+			dev_err(&pdev->dev, "32-bit DMA enable failed\n");
+>>>>>>> cm-10.0
 			return rc;
 		}
 		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
 		if (rc) {
+<<<<<<< HEAD
 			dev_printk(KERN_ERR, &pdev->dev,
 				   "32-bit consistent DMA enable failed\n");
+=======
+			dev_err(&pdev->dev,
+				"32-bit consistent DMA enable failed\n");
+>>>>>>> cm-10.0
 			return rc;
 		}
 	}
@@ -760,8 +839,13 @@ static void ahci_p5wdh_workaround(struct ata_host *host)
 	    dmi_check_system(sysids)) {
 		struct ata_port *ap = host->ports[1];
 
+<<<<<<< HEAD
 		dev_printk(KERN_INFO, &pdev->dev, "enabling ASUS P5W DH "
 			   "Deluxe on-board SIMG4726 workaround\n");
+=======
+		dev_info(&pdev->dev,
+			 "enabling ASUS P5W DH Deluxe on-board SIMG4726 workaround\n");
+>>>>>>> cm-10.0
 
 		ap->ops = &ahci_p5wdh_ops;
 		ap->link.flags |= ATA_LFLAG_NO_SRST | ATA_LFLAG_ASSUME_ATA;
@@ -844,14 +928,24 @@ static bool ahci_sb600_enable_64bit(struct pci_dev *pdev)
 	if (strcmp(buf, match->driver_data) >= 0)
 		goto enable_64bit;
 	else {
+<<<<<<< HEAD
 		dev_printk(KERN_WARNING, &pdev->dev, "%s: BIOS too old, "
 			   "forcing 32bit DMA, update BIOS\n", match->ident);
+=======
+		dev_warn(&pdev->dev,
+			 "%s: BIOS too old, forcing 32bit DMA, update BIOS\n",
+			 match->ident);
+>>>>>>> cm-10.0
 		return false;
 	}
 
 enable_64bit:
+<<<<<<< HEAD
 	dev_printk(KERN_WARNING, &pdev->dev, "%s: enabling 64bit DMA\n",
 		   match->ident);
+=======
+	dev_warn(&pdev->dev, "%s: enabling 64bit DMA\n", match->ident);
+>>>>>>> cm-10.0
 	return true;
 }
 
@@ -1054,9 +1148,14 @@ static void ahci_gtf_filter_workaround(struct ata_host *host)
 		return;
 
 	filter = (unsigned long)dmi->driver_data;
+<<<<<<< HEAD
 	dev_printk(KERN_INFO, host->dev,
 		   "applying extra ACPI _GTF filter 0x%x for %s\n",
 		   filter, dmi->ident);
+=======
+	dev_info(host->dev, "applying extra ACPI _GTF filter 0x%x for %s\n",
+		 filter, dmi->ident);
+>>>>>>> cm-10.0
 
 	for (i = 0; i < host->n_ports; i++) {
 		struct ata_port *ap = host->ports[i];
@@ -1075,7 +1174,10 @@ static inline void ahci_gtf_filter_workaround(struct ata_host *host)
 
 static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 {
+<<<<<<< HEAD
 	static int printed_version;
+=======
+>>>>>>> cm-10.0
 	unsigned int board_id = ent->driver_data;
 	struct ata_port_info pi = ahci_port_info[board_id];
 	const struct ata_port_info *ppi[] = { &pi, NULL };
@@ -1083,13 +1185,21 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	struct ahci_host_priv *hpriv;
 	struct ata_host *host;
 	int n_ports, i, rc;
+<<<<<<< HEAD
+=======
+	int ahci_pci_bar = AHCI_PCI_BAR_STANDARD;
+>>>>>>> cm-10.0
 
 	VPRINTK("ENTER\n");
 
 	WARN_ON((int)ATA_MAX_QUEUE > AHCI_MAX_CMDS);
 
+<<<<<<< HEAD
 	if (!printed_version++)
 		dev_printk(KERN_DEBUG, &pdev->dev, "version " DRV_VERSION "\n");
+=======
+	ata_print_version_once(&pdev->dev, DRV_VERSION);
+>>>>>>> cm-10.0
 
 	/* The AHCI driver can only drive the SATA ports, the PATA driver
 	   can drive them all so if both drivers are selected make sure
@@ -1112,8 +1222,17 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	 * that for SAS drives they're out of luck.
 	 */
 	if (pdev->vendor == PCI_VENDOR_ID_PROMISE)
+<<<<<<< HEAD
 		dev_printk(KERN_INFO, &pdev->dev, "PDC42819 "
 			   "can only drive SATA devices with this driver\n");
+=======
+		dev_info(&pdev->dev,
+			 "PDC42819 can only drive SATA devices with this driver\n");
+
+	/* The Connext uses non-standard BAR */
+	if (pdev->vendor == PCI_VENDOR_ID_STMICRO && pdev->device == 0xCC06)
+		ahci_pci_bar = AHCI_PCI_BAR_STA2X11;
+>>>>>>> cm-10.0
 
 	/* acquire resources */
 	rc = pcim_enable_device(pdev);
@@ -1123,7 +1242,11 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	/* AHCI controllers often implement SFF compatible interface.
 	 * Grab all PCI BARs just in case.
 	 */
+<<<<<<< HEAD
 	rc = pcim_iomap_regions_request_all(pdev, 1 << AHCI_PCI_BAR, DRV_NAME);
+=======
+	rc = pcim_iomap_regions_request_all(pdev, 1 << ahci_pci_bar, DRV_NAME);
+>>>>>>> cm-10.0
 	if (rc == -EBUSY)
 		pcim_pin_device(pdev);
 	if (rc)
@@ -1139,8 +1262,13 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 		 */
 		pci_read_config_byte(pdev, ICH_MAP, &map);
 		if (map & 0x3) {
+<<<<<<< HEAD
 			dev_printk(KERN_INFO, &pdev->dev, "controller is in "
 				   "combined mode, can't enable AHCI mode\n");
+=======
+			dev_info(&pdev->dev,
+				 "controller is in combined mode, can't enable AHCI mode\n");
+>>>>>>> cm-10.0
 			return -ENODEV;
 		}
 	}
@@ -1166,7 +1294,11 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if ((hpriv->flags & AHCI_HFLAG_NO_MSI) || pci_enable_msi(pdev))
 		pci_intx(pdev, 1);
 
+<<<<<<< HEAD
 	hpriv->mmio = pcim_iomap_table(pdev)[AHCI_PCI_BAR];
+=======
+	hpriv->mmio = pcim_iomap_table(pdev)[ahci_pci_bar];
+>>>>>>> cm-10.0
 
 	/* save initial config */
 	ahci_pci_save_initial_config(pdev, hpriv);
@@ -1197,8 +1329,13 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	if (ahci_broken_suspend(pdev)) {
 		hpriv->flags |= AHCI_HFLAG_NO_SUSPEND;
+<<<<<<< HEAD
 		dev_printk(KERN_WARNING, &pdev->dev,
 			   "BIOS update required for suspend/resume\n");
+=======
+		dev_warn(&pdev->dev,
+			 "BIOS update required for suspend/resume\n");
+>>>>>>> cm-10.0
 	}
 
 	if (ahci_broken_online(pdev)) {
@@ -1230,8 +1367,13 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	for (i = 0; i < host->n_ports; i++) {
 		struct ata_port *ap = host->ports[i];
 
+<<<<<<< HEAD
 		ata_port_pbar_desc(ap, AHCI_PCI_BAR, -1, "abar");
 		ata_port_pbar_desc(ap, AHCI_PCI_BAR,
+=======
+		ata_port_pbar_desc(ap, ahci_pci_bar, -1, "abar");
+		ata_port_pbar_desc(ap, ahci_pci_bar,
+>>>>>>> cm-10.0
 				   0x100 + ap->port_no * 0x80, "port");
 
 		/* set enclosure management message type */

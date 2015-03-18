@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -16,6 +20,10 @@
 #include <linux/workqueue.h>
 #include <linux/io.h>
 #include <linux/jiffies.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched.h>
+>>>>>>> cm-10.0
 #include <linux/stringify.h>
 #include <linux/delay.h>
 #include <linux/module.h>

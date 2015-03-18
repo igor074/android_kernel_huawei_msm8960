@@ -967,6 +967,23 @@ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
 	    memcmp(&info->var, var, sizeof(struct fb_var_screeninfo))) {
 		u32 activate = var->activate;
 
+<<<<<<< HEAD
+=======
+		/* When using FOURCC mode, make sure the red, green, blue and
+		 * transp fields are set to 0.
+		 */
+		if ((info->fix.capabilities & FB_CAP_FOURCC) &&
+		    var->grayscale > 1) {
+			if (var->red.offset     || var->green.offset    ||
+			    var->blue.offset    || var->transp.offset   ||
+			    var->red.length     || var->green.length    ||
+			    var->blue.length    || var->transp.length   ||
+			    var->red.msb_right  || var->green.msb_right ||
+			    var->blue.msb_right || var->transp.msb_right)
+				return -EINVAL;
+		}
+
+>>>>>>> cm-10.0
 		if (!info->fbops->fb_check_var) {
 			*var = info->var;
 			goto done;
@@ -1648,6 +1665,10 @@ static int do_unregister_framebuffer(struct fb_info *fb_info)
 	if (ret)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	unlink_framebuffer(fb_info);
+>>>>>>> cm-10.0
 	if (fb_info->pixmap.addr &&
 	    (fb_info->pixmap.flags & FB_PIXMAP_DEFAULT))
 		kfree(fb_info->pixmap.addr);
@@ -1655,7 +1676,10 @@ static int do_unregister_framebuffer(struct fb_info *fb_info)
 	registered_fb[i] = NULL;
 	num_registered_fb--;
 	fb_cleanup_device(fb_info);
+<<<<<<< HEAD
 	device_destroy(fb_class, MKDEV(FB_MAJOR, i));
+=======
+>>>>>>> cm-10.0
 	event.info = fb_info;
 	fb_notifier_call_chain(FB_EVENT_FB_UNREGISTERED, &event);
 
@@ -1664,6 +1688,25 @@ static int do_unregister_framebuffer(struct fb_info *fb_info)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+int unlink_framebuffer(struct fb_info *fb_info)
+{
+	int i;
+
+	i = fb_info->node;
+	if (i < 0 || i >= FB_MAX || registered_fb[i] != fb_info)
+		return -EINVAL;
+
+	if (fb_info->dev) {
+		device_destroy(fb_class, MKDEV(FB_MAJOR, i));
+		fb_info->dev = NULL;
+	}
+	return 0;
+}
+EXPORT_SYMBOL(unlink_framebuffer);
+
+>>>>>>> cm-10.0
 void remove_conflicting_framebuffers(struct apertures_struct *a,
 				     const char *name, bool primary)
 {
@@ -1735,8 +1778,11 @@ void fb_set_suspend(struct fb_info *info, int state)
 {
 	struct fb_event event;
 
+<<<<<<< HEAD
 	if (!lock_fb_info(info))
 		return;
+=======
+>>>>>>> cm-10.0
 	event.info = info;
 	if (state) {
 		fb_notifier_call_chain(FB_EVENT_SUSPEND, &event);
@@ -1745,7 +1791,10 @@ void fb_set_suspend(struct fb_info *info, int state)
 		info->state = FBINFO_STATE_RUNNING;
 		fb_notifier_call_chain(FB_EVENT_RESUME, &event);
 	}
+<<<<<<< HEAD
 	unlock_fb_info(info);
+=======
+>>>>>>> cm-10.0
 }
 
 /**

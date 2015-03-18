@@ -15,6 +15,10 @@
 
 #include <linux/rtnetlink.h>
 #include <linux/notifier.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <net/netevent.h>
 
 static ATOMIC_NOTIFIER_HEAD(netevent_notif_chain);

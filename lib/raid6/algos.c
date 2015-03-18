@@ -17,6 +17,10 @@
  */
 
 #include <linux/raid/pq.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #ifndef __KERNEL__
 #include <sys/mman.h>
 #include <stdio.h>

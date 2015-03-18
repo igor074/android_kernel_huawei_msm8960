@@ -68,8 +68,15 @@ static int hash_sendmsg(struct kiocb *unused, struct socket *sock,
 			int newlen;
 
 			newlen = af_alg_make_sg(&ctx->sgl, from, len, 0);
+<<<<<<< HEAD
 			if (newlen < 0)
 				goto unlock;
+=======
+			if (newlen < 0) {
+				err = copied ? 0 : newlen;
+				goto unlock;
+			}
+>>>>>>> cm-10.0
 
 			ahash_request_set_crypt(&ctx->req, ctx->sgl.sg, NULL,
 						newlen);

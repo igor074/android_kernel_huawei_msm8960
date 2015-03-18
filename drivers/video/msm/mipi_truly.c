@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -116,7 +120,11 @@ static int mipi_truly_lcd_on(struct platform_device *pdev)
 		return -EINVAL;
 
 	msleep(20);
+<<<<<<< HEAD
 	mipi_dsi_cmds_tx(mfd, &truly_tx_buf, truly_display_on_cmds,
+=======
+	mipi_dsi_cmds_tx(&truly_tx_buf, truly_display_on_cmds,
+>>>>>>> cm-10.0
 			ARRAY_SIZE(truly_display_on_cmds));
 
 	return 0;
@@ -133,7 +141,11 @@ static int mipi_truly_lcd_off(struct platform_device *pdev)
 	if (mfd->key != MFD_KEY)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mipi_dsi_cmds_tx(mfd, &truly_tx_buf, truly_display_off_cmds,
+=======
+	mipi_dsi_cmds_tx(&truly_tx_buf, truly_display_off_cmds,
+>>>>>>> cm-10.0
 			ARRAY_SIZE(truly_display_off_cmds));
 
 	return 0;

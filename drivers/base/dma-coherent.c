@@ -4,6 +4,10 @@
  */
 #include <linux/slab.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/dma-mapping.h>
 
 struct dma_coherent_mem {

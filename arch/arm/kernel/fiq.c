@@ -42,9 +42,15 @@
 #include <linux/seq_file.h>
 
 #include <asm/cacheflush.h>
+<<<<<<< HEAD
 #include <asm/fiq.h>
 #include <asm/irq.h>
 #include <asm/system.h>
+=======
+#include <asm/cp15.h>
+#include <asm/fiq.h>
+#include <asm/irq.h>
+>>>>>>> cm-10.0
 #include <asm/traps.h>
 
 static unsigned long no_fiq_insn;

@@ -38,9 +38,14 @@
 #include <linux/string.h>
 #include <linux/workqueue.h>
 
+<<<<<<< HEAD
 #include <asm/atomic.h>
 #include <asm/byteorder.h>
 #include <asm/system.h>
+=======
+#include <linux/atomic.h>
+#include <asm/byteorder.h>
+>>>>>>> cm-10.0
 
 #include "core.h"
 
@@ -455,15 +460,31 @@ static struct device_attribute fw_device_attributes[] = {
 static int read_rom(struct fw_device *device,
 		    int generation, int index, u32 *data)
 {
+<<<<<<< HEAD
 	int rcode;
+=======
+	u64 offset = (CSR_REGISTER_BASE | CSR_CONFIG_ROM) + index * 4;
+	int i, rcode;
+>>>>>>> cm-10.0
 
 	/* device->node_id, accessed below, must not be older than generation */
 	smp_rmb();
 
+<<<<<<< HEAD
 	rcode = fw_run_transaction(device->card, TCODE_READ_QUADLET_REQUEST,
 			device->node_id, generation, device->max_speed,
 			(CSR_REGISTER_BASE | CSR_CONFIG_ROM) + index * 4,
 			data, 4);
+=======
+	for (i = 10; i < 100; i += 10) {
+		rcode = fw_run_transaction(device->card,
+				TCODE_READ_QUADLET_REQUEST, device->node_id,
+				generation, device->max_speed, offset, data, 4);
+		if (rcode != RCODE_BUSY)
+			break;
+		msleep(i);
+	}
+>>>>>>> cm-10.0
 	be32_to_cpus(data);
 
 	return rcode;
@@ -480,6 +501,10 @@ static int read_rom(struct fw_device *device,
  */
 static int read_config_rom(struct fw_device *device, int generation)
 {
+<<<<<<< HEAD
+=======
+	struct fw_card *card = device->card;
+>>>>>>> cm-10.0
 	const u32 *old_rom, *new_rom;
 	u32 *rom, *stack;
 	u32 sp, key;
@@ -524,12 +549,20 @@ static int read_config_rom(struct fw_device *device, int generation)
 	 */
 	if ((rom[2] & 0x7) < device->max_speed ||
 	    device->max_speed == SCODE_BETA ||
+<<<<<<< HEAD
 	    device->card->beta_repeaters_present) {
+=======
+	    card->beta_repeaters_present) {
+>>>>>>> cm-10.0
 		u32 dummy;
 
 		/* for S1600 and S3200 */
 		if (device->max_speed == SCODE_BETA)
+<<<<<<< HEAD
 			device->max_speed = device->card->link_speed;
+=======
+			device->max_speed = card->link_speed;
+>>>>>>> cm-10.0
 
 		while (device->max_speed > SCODE_100) {
 			if (read_rom(device, generation, 0, &dummy) ==
@@ -571,9 +604,15 @@ static int read_config_rom(struct fw_device *device, int generation)
 			 * a firmware bug.  Ignore this whole block, i.e.
 			 * simply set a fake block length of 0.
 			 */
+<<<<<<< HEAD
 			fw_error("skipped invalid ROM block %x at %llx\n",
 				 rom[i],
 				 i * 4 | CSR_REGISTER_BASE | CSR_CONFIG_ROM);
+=======
+			fw_err(card, "skipped invalid ROM block %x at %llx\n",
+			       rom[i],
+			       i * 4 | CSR_REGISTER_BASE | CSR_CONFIG_ROM);
+>>>>>>> cm-10.0
 			rom[i] = 0;
 			end = i;
 		}
@@ -599,9 +638,16 @@ static int read_config_rom(struct fw_device *device, int generation)
 			 * the ROM don't have to check offsets all the time.
 			 */
 			if (i + (rom[i] & 0xffffff) >= MAX_CONFIG_ROM_SIZE) {
+<<<<<<< HEAD
 				fw_error("skipped unsupported ROM entry %x at %llx\n",
 					 rom[i],
 					 i * 4 | CSR_REGISTER_BASE | CSR_CONFIG_ROM);
+=======
+				fw_err(card,
+				       "skipped unsupported ROM entry %x at %llx\n",
+				       rom[i],
+				       i * 4 | CSR_REGISTER_BASE | CSR_CONFIG_ROM);
+>>>>>>> cm-10.0
 				rom[i] = 0;
 				continue;
 			}
@@ -636,6 +682,10 @@ static void fw_unit_release(struct device *dev)
 {
 	struct fw_unit *unit = fw_unit(dev);
 
+<<<<<<< HEAD
+=======
+	fw_device_put(fw_parent_device(unit));
+>>>>>>> cm-10.0
 	kfree(unit);
 }
 
@@ -667,7 +717,11 @@ static void create_units(struct fw_device *device)
 		 */
 		unit = kzalloc(sizeof(*unit), GFP_KERNEL);
 		if (unit == NULL) {
+<<<<<<< HEAD
 			fw_error("failed to allocate memory for unit\n");
+=======
+			fw_err(device->card, "out of memory for unit\n");
+>>>>>>> cm-10.0
 			continue;
 		}
 
@@ -687,6 +741,10 @@ static void create_units(struct fw_device *device)
 		if (device_register(&unit->device) < 0)
 			goto skip_unit;
 
+<<<<<<< HEAD
+=======
+		fw_device_get(device);
+>>>>>>> cm-10.0
 		continue;
 
 	skip_unit:
@@ -868,7 +926,11 @@ static int lookup_existing_device(struct device *dev, void *data)
 		smp_wmb();  /* update node_id before generation */
 		old->generation = card->generation;
 		old->config_rom_retries = 0;
+<<<<<<< HEAD
 		fw_notify("rediscovered device %s\n", dev_name(dev));
+=======
+		fw_notice(card, "rediscovered device %s\n", dev_name(dev));
+>>>>>>> cm-10.0
 
 		PREPARE_DELAYED_WORK(&old->work, fw_device_update);
 		fw_schedule_device_work(old, 0);
@@ -949,6 +1011,10 @@ static void fw_device_init(struct work_struct *work)
 {
 	struct fw_device *device =
 		container_of(work, struct fw_device, work.work);
+<<<<<<< HEAD
+=======
+	struct fw_card *card = device->card;
+>>>>>>> cm-10.0
 	struct device *revived_dev;
 	int minor, ret;
 
@@ -965,16 +1031,27 @@ static void fw_device_init(struct work_struct *work)
 			fw_schedule_device_work(device, RETRY_DELAY);
 		} else {
 			if (device->node->link_on)
+<<<<<<< HEAD
 				fw_notify("giving up on config rom for node id %x\n",
 					  device->node_id);
 			if (device->node == device->card->root_node)
 				fw_schedule_bm_work(device->card, 0);
+=======
+				fw_notice(card, "giving up on Config ROM for node id %x\n",
+					  device->node_id);
+			if (device->node == card->root_node)
+				fw_schedule_bm_work(card, 0);
+>>>>>>> cm-10.0
 			fw_device_release(&device->device);
 		}
 		return;
 	}
 
+<<<<<<< HEAD
 	revived_dev = device_find_child(device->card->device,
+=======
+	revived_dev = device_find_child(card->device,
+>>>>>>> cm-10.0
 					device, lookup_existing_device);
 	if (revived_dev) {
 		put_device(revived_dev);
@@ -997,7 +1074,11 @@ static void fw_device_init(struct work_struct *work)
 
 	device->device.bus = &fw_bus_type;
 	device->device.type = &fw_device_type;
+<<<<<<< HEAD
 	device->device.parent = device->card->device;
+=======
+	device->device.parent = card->device;
+>>>>>>> cm-10.0
 	device->device.devt = MKDEV(fw_cdev_major, minor);
 	dev_set_name(&device->device, "fw%d", minor);
 
@@ -1009,7 +1090,11 @@ static void fw_device_init(struct work_struct *work)
 				&device->attribute_group);
 
 	if (device_add(&device->device)) {
+<<<<<<< HEAD
 		fw_error("Failed to add device.\n");
+=======
+		fw_err(card, "failed to add device\n");
+>>>>>>> cm-10.0
 		goto error_with_cdev;
 	}
 
@@ -1030,6 +1115,7 @@ static void fw_device_init(struct work_struct *work)
 		PREPARE_DELAYED_WORK(&device->work, fw_device_shutdown);
 		fw_schedule_device_work(device, SHUTDOWN_DELAY);
 	} else {
+<<<<<<< HEAD
 		if (device->config_rom_retries)
 			fw_notify("created device %s: GUID %08x%08x, S%d00, "
 				  "%d config ROM retries\n",
@@ -1042,6 +1128,12 @@ static void fw_device_init(struct work_struct *work)
 				  dev_name(&device->device),
 				  device->config_rom[3], device->config_rom[4],
 				  1 << device->max_speed);
+=======
+		fw_notice(card, "created device %s: GUID %08x%08x, S%d00\n",
+			  dev_name(&device->device),
+			  device->config_rom[3], device->config_rom[4],
+			  1 << device->max_speed);
+>>>>>>> cm-10.0
 		device->config_rom_retries = 0;
 
 		set_broadcast_channel(device, device->generation);
@@ -1053,8 +1145,13 @@ static void fw_device_init(struct work_struct *work)
 	 * just end up running the IRM work a couple of extra times -
 	 * pretty harmless.
 	 */
+<<<<<<< HEAD
 	if (device->node == device->card->root_node)
 		fw_schedule_bm_work(device->card, 0);
+=======
+	if (device->node == card->root_node)
+		fw_schedule_bm_work(card, 0);
+>>>>>>> cm-10.0
 
 	return;
 
@@ -1158,12 +1255,21 @@ static void fw_device_refresh(struct work_struct *work)
 			   FW_DEVICE_RUNNING) == FW_DEVICE_GONE)
 		goto gone;
 
+<<<<<<< HEAD
 	fw_notify("refreshed device %s\n", dev_name(&device->device));
+=======
+	fw_notice(card, "refreshed device %s\n", dev_name(&device->device));
+>>>>>>> cm-10.0
 	device->config_rom_retries = 0;
 	goto out;
 
  give_up:
+<<<<<<< HEAD
 	fw_notify("giving up on refresh of device %s\n", dev_name(&device->device));
+=======
+	fw_notice(card, "giving up on refresh of device %s\n",
+		  dev_name(&device->device));
+>>>>>>> cm-10.0
  gone:
 	atomic_set(&device->state, FW_DEVICE_GONE);
 	PREPARE_DELAYED_WORK(&device->work, fw_device_shutdown);

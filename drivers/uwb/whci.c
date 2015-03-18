@@ -7,6 +7,10 @@
  */
 #include <linux/delay.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/pci.h>
 #include <linux/dma-mapping.h>
 #include <linux/slab.h>

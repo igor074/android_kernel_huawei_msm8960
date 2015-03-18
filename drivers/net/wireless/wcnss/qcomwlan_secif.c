@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,6 +14,10 @@
  * GNU General Public License for more details.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/qcomwlan_secif.h>
 
 /*
@@ -60,6 +68,7 @@ void wcnss_wlan_crypto_free_ablkcipher(struct crypto_ablkcipher *tfm)
 }
 EXPORT_SYMBOL(wcnss_wlan_crypto_free_ablkcipher);
 
+<<<<<<< HEAD
 int wcnss_wlan_kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
 		       char *envp_ext[])
 {
@@ -103,3 +112,5 @@ int wcnss_wlan_add_uevent_var(struct kobj_uevent_env *env, const char *format, .
 }
 EXPORT_SYMBOL(wcnss_wlan_add_uevent_var);
 
+=======
+>>>>>>> cm-10.0

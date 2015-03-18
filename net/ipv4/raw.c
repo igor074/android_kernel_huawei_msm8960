@@ -38,7 +38,11 @@
  */
 
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <asm/byteorder.h>
 #include <asm/current.h>
 #include <asm/uaccess.h>
@@ -48,6 +52,10 @@
 #include <linux/errno.h>
 #include <linux/aio.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/spinlock.h>
 #include <linux/sockios.h>
 #include <linux/socket.h>
@@ -291,7 +299,12 @@ static int raw_rcv_skb(struct sock * sk, struct sk_buff * skb)
 {
 	/* Charge it to the socket. */
 
+<<<<<<< HEAD
 	if (ip_queue_rcv_skb(sk, skb) < 0) {
+=======
+	ipv4_pktinfo_prepare(skb);
+	if (sock_queue_rcv_skb(sk, skb) < 0) {
+>>>>>>> cm-10.0
 		kfree_skb(skb);
 		return NET_RX_DROP;
 	}
@@ -326,6 +339,10 @@ static int raw_send_hdrinc(struct sock *sk, struct flowi4 *fl4,
 	unsigned int iphlen;
 	int err;
 	struct rtable *rt = *rtp;
+<<<<<<< HEAD
+=======
+	int hlen, tlen;
+>>>>>>> cm-10.0
 
 	if (length > rt->dst.dev->mtu) {
 		ip_local_error(sk, EMSGSIZE, fl4->daddr, inet->inet_dport,
@@ -335,12 +352,23 @@ static int raw_send_hdrinc(struct sock *sk, struct flowi4 *fl4,
 	if (flags&MSG_PROBE)
 		goto out;
 
+<<<<<<< HEAD
 	skb = sock_alloc_send_skb(sk,
 				  length + LL_ALLOCATED_SPACE(rt->dst.dev) + 15,
 				  flags & MSG_DONTWAIT, &err);
 	if (skb == NULL)
 		goto error;
 	skb_reserve(skb, LL_RESERVED_SPACE(rt->dst.dev));
+=======
+	hlen = LL_RESERVED_SPACE(rt->dst.dev);
+	tlen = rt->dst.dev->needed_tailroom;
+	skb = sock_alloc_send_skb(sk,
+				  length + hlen + tlen + 15,
+				  flags & MSG_DONTWAIT, &err);
+	if (skb == NULL)
+		goto error;
+	skb_reserve(skb, hlen);
+>>>>>>> cm-10.0
 
 	skb->priority = sk->sk_priority;
 	skb->mark = sk->sk_mark;
@@ -486,11 +514,16 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 		if (msg->msg_namelen < sizeof(*usin))
 			goto out;
 		if (usin->sin_family != AF_INET) {
+<<<<<<< HEAD
 			static int complained;
 			if (!complained++)
 				printk(KERN_INFO "%s forgot to set AF_INET in "
 						 "raw sendmsg. Fix it!\n",
 						 current->comm);
+=======
+			pr_info_once("%s: %s forgot to set AF_INET. Fix it!\n",
+				     __func__, current->comm);
+>>>>>>> cm-10.0
 			err = -EAFNOSUPPORT;
 			if (usin->sin_family)
 				goto out;
@@ -558,12 +591,22 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 			ipc.oif = inet->mc_index;
 		if (!saddr)
 			saddr = inet->mc_addr;
+<<<<<<< HEAD
 	}
+=======
+	} else if (!ipc.oif)
+		ipc.oif = inet->uc_index;
+>>>>>>> cm-10.0
 
 	flowi4_init_output(&fl4, ipc.oif, sk->sk_mark, tos,
 			   RT_SCOPE_UNIVERSE,
 			   inet->hdrincl ? IPPROTO_RAW : sk->sk_protocol,
+<<<<<<< HEAD
 			   FLOWI_FLAG_CAN_SLEEP, daddr, saddr, 0, 0);
+=======
+			   inet_sk_flowi_flags(sk) | FLOWI_FLAG_CAN_SLEEP,
+			   daddr, saddr, 0, 0);
+>>>>>>> cm-10.0
 
 	if (!inet->hdrincl) {
 		err = raw_probe_proto_opt(&fl4, msg);
@@ -693,10 +736,13 @@ static int raw_recvmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 	skb = skb_recv_datagram(sk, flags, noblock, &err);
 	if (!skb)
 		goto out;
+<<<<<<< HEAD
 	if (ccs_socket_post_recvmsg_permission(sk, skb, flags)) {
 		err = -EAGAIN; /* Hope less harmful than -EPERM. */
 		goto out;
 	}
+=======
+>>>>>>> cm-10.0
 
 	copied = skb->len;
 	if (len < copied) {
@@ -829,6 +875,7 @@ static int compat_raw_getsockopt(struct sock *sk, int level, int optname,
 static int raw_ioctl(struct sock *sk, int cmd, unsigned long arg)
 {
 	switch (cmd) {
+<<<<<<< HEAD
 		case SIOCOUTQ: {
 			int amount = sk_wmem_alloc_get(sk);
 
@@ -851,6 +898,30 @@ static int raw_ioctl(struct sock *sk, int cmd, unsigned long arg)
 			return ipmr_ioctl(sk, cmd, (void __user *)arg);
 #else
 			return -ENOIOCTLCMD;
+=======
+	case SIOCOUTQ: {
+		int amount = sk_wmem_alloc_get(sk);
+
+		return put_user(amount, (int __user *)arg);
+	}
+	case SIOCINQ: {
+		struct sk_buff *skb;
+		int amount = 0;
+
+		spin_lock_bh(&sk->sk_receive_queue.lock);
+		skb = skb_peek(&sk->sk_receive_queue);
+		if (skb != NULL)
+			amount = skb->len;
+		spin_unlock_bh(&sk->sk_receive_queue.lock);
+		return put_user(amount, (int __user *)arg);
+	}
+
+	default:
+#ifdef CONFIG_IP_MROUTE
+		return ipmr_ioctl(sk, cmd, (void __user *)arg);
+#else
+		return -ENOIOCTLCMD;
+>>>>>>> cm-10.0
 #endif
 	}
 }

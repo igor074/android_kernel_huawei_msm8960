@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,7 +25,11 @@
 #include <linux/io.h>
 #include <linux/uaccess.h>
 #include <linux/wakelock.h>
+<<<<<<< HEAD
 #include <linux/pm_qos_params.h>
+=======
+#include <linux/pm_qos.h>
+>>>>>>> cm-10.0
 
 #include <asm/atomic.h>
 
@@ -73,7 +81,11 @@ static int trace_enabled;
 static int cpu_to_dump;
 static int next_cpu_to_dump;
 static struct wake_lock etm_wake_lock;
+<<<<<<< HEAD
 static struct pm_qos_request_list etm_qos_req;
+=======
+static struct pm_qos_request etm_qos_req;
+>>>>>>> cm-10.0
 static int trace_on_boot;
 module_param_named(
 	trace_on_boot, trace_on_boot, int, S_IRUGO

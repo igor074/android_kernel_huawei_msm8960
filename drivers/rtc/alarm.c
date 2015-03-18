@@ -13,7 +13,11 @@
  *
  */
 
+<<<<<<< HEAD
 #include <asm/mach/time.h>
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/android_alarm.h>
 #include <linux/device.h>
 #include <linux/miscdevice.h>
@@ -21,9 +25,16 @@
 #include <linux/rtc.h>
 #include <linux/sched.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #include <linux/sysdev.h>
 #include <linux/wakelock.h>
 
+=======
+#include <linux/wakelock.h>
+
+#include <asm/mach/time.h>
+
+>>>>>>> cm-10.0
 #define ANDROID_ALARM_PRINT_ERROR (1U << 0)
 #define ANDROID_ALARM_PRINT_INIT_STATUS (1U << 1)
 #define ANDROID_ALARM_PRINT_TSET (1U << 2)
@@ -51,9 +62,12 @@ module_param_named(debug_mask, debug_mask, int, S_IRUGO | S_IWUSR | S_IWGRP);
 #define ANDROID_ALARM_SET_OLD               _IOW('a', 2, time_t) /* set alarm */
 #define ANDROID_ALARM_SET_AND_WAIT_OLD      _IOW('a', 3, time_t)
 
+<<<<<<< HEAD
 #define ALARM_AHEAD_TIME    (60)
 struct rtc_wkalrm poweroff_rtc_alarm;
 
+=======
+>>>>>>> cm-10.0
 struct alarm_queue {
 	struct rb_root alarms;
 	struct rb_node *first;
@@ -326,6 +340,7 @@ alarm_update_timedelta(struct timespec tmp_time, struct timespec new_time)
 	spin_unlock_irqrestore(&alarm_slock, flags);
 }
 
+<<<<<<< HEAD
 int alarm_set_rtc_alarm(long time_sec, bool enable_irq)
 {
 	int err = 0;
@@ -370,6 +385,8 @@ int alarm_set_rtc_alarm(long time_sec, bool enable_irq)
 	return err;
 }
 
+=======
+>>>>>>> cm-10.0
 /**
  * alarm_get_elapsed_realtime - get the elapsed real time in ktime_t format
  *
@@ -513,15 +530,20 @@ static int alarm_suspend(struct platform_device *pdev, pm_message_t state)
 
 static int alarm_resume(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct rtc_wkalrm   alarm;
 	struct rtc_time     rtc_current_rtc_time;
 	int                 ret;
 	unsigned long       rtc_current_time;
 	unsigned long       poweroff_alarm_time;
+=======
+	struct rtc_wkalrm alarm;
+>>>>>>> cm-10.0
 	unsigned long       flags;
 
 	pr_alarm(SUSPEND, "alarm_resume(%p)\n", pdev);
 
+<<<<<<< HEAD
 	rtc_tm_to_time(&poweroff_rtc_alarm.time, &poweroff_alarm_time);
 	rtc_read_time(alarm_rtc_dev, &rtc_current_rtc_time);
 	rtc_tm_to_time(&rtc_current_rtc_time, &rtc_current_time);
@@ -533,11 +555,16 @@ static int alarm_resume(struct platform_device *pdev)
 			goto update_timer;
 	}
 
+=======
+>>>>>>> cm-10.0
 	memset(&alarm, 0, sizeof(alarm));
 	alarm.enabled = 0;
 	rtc_set_alarm(alarm_rtc_dev, &alarm);
 
+<<<<<<< HEAD
 update_timer:
+=======
+>>>>>>> cm-10.0
 	spin_lock_irqsave(&alarm_slock, flags);
 	suspended = false;
 	update_timer_locked(&alarms[ANDROID_ALARM_RTC_WAKEUP], false);
@@ -638,7 +665,10 @@ static int __init alarm_driver_init(void)
 	int err;
 	int i;
 
+<<<<<<< HEAD
 	memset(&poweroff_rtc_alarm, 0, sizeof(poweroff_rtc_alarm));
+=======
+>>>>>>> cm-10.0
 	for (i = 0; i < ANDROID_ALARM_SYSTEMTIME; i++) {
 		hrtimer_init(&alarms[i].timer,
 				CLOCK_REALTIME, HRTIMER_MODE_ABS);

@@ -20,7 +20,12 @@
  */
 
 #include <linux/init.h>
+<<<<<<< HEAD
 #include <linux/moduleparam.h>
+=======
+#include <linux/module.h>
+#include <linux/device.h>
+>>>>>>> cm-10.0
 #include <sound/core.h>
 #include <sound/initval.h>
 

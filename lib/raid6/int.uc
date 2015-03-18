@@ -11,7 +11,11 @@
  * ----------------------------------------------------------------------- */
 
 /*
+<<<<<<< HEAD
  * raid6int$#.c
+=======
+ * int$#.c
+>>>>>>> cm-10.0
  *
  * $#-way unrolled portable integer math RAID-6 instruction set
  *

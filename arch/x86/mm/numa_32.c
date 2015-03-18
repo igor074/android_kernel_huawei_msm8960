@@ -41,7 +41,11 @@
  *     physnode_map[16-31] = 1;
  *     physnode_map[32- ] = -1;
  */
+<<<<<<< HEAD
 s8 physnode_map[MAX_ELEMENTS] __read_mostly = { [0 ... (MAX_ELEMENTS - 1)] = -1};
+=======
+s8 physnode_map[MAX_SECTIONS] __read_mostly = { [0 ... (MAX_SECTIONS - 1)] = -1};
+>>>>>>> cm-10.0
 EXPORT_SYMBOL(physnode_map);
 
 void memory_present(int nid, unsigned long start, unsigned long end)
@@ -52,8 +56,13 @@ void memory_present(int nid, unsigned long start, unsigned long end)
 			nid, start, end);
 	printk(KERN_DEBUG "  Setting physnode_map array to node %d for pfns:\n", nid);
 	printk(KERN_DEBUG "  ");
+<<<<<<< HEAD
 	for (pfn = start; pfn < end; pfn += PAGES_PER_ELEMENT) {
 		physnode_map[pfn / PAGES_PER_ELEMENT] = nid;
+=======
+	for (pfn = start; pfn < end; pfn += PAGES_PER_SECTION) {
+		physnode_map[pfn / PAGES_PER_SECTION] = nid;
+>>>>>>> cm-10.0
 		printk(KERN_CONT "%lx ", pfn);
 	}
 	printk(KERN_CONT "\n");
@@ -199,16 +208,25 @@ void __init init_alloc_remap(int nid, u64 start, u64 end)
 
 	/* allocate node memory and the lowmem remap area */
 	node_pa = memblock_find_in_range(start, end, size, LARGE_PAGE_BYTES);
+<<<<<<< HEAD
 	if (node_pa == MEMBLOCK_ERROR) {
+=======
+	if (!node_pa) {
+>>>>>>> cm-10.0
 		pr_warning("remap_alloc: failed to allocate %lu bytes for node %d\n",
 			   size, nid);
 		return;
 	}
+<<<<<<< HEAD
 	memblock_x86_reserve_range(node_pa, node_pa + size, "KVA RAM");
+=======
+	memblock_reserve(node_pa, size);
+>>>>>>> cm-10.0
 
 	remap_pa = memblock_find_in_range(min_low_pfn << PAGE_SHIFT,
 					  max_low_pfn << PAGE_SHIFT,
 					  size, LARGE_PAGE_BYTES);
+<<<<<<< HEAD
 	if (remap_pa == MEMBLOCK_ERROR) {
 		pr_warning("remap_alloc: failed to allocate %lu bytes remap area for node %d\n",
 			   size, nid);
@@ -216,6 +234,15 @@ void __init init_alloc_remap(int nid, u64 start, u64 end)
 		return;
 	}
 	memblock_x86_reserve_range(remap_pa, remap_pa + size, "KVA PG");
+=======
+	if (!remap_pa) {
+		pr_warning("remap_alloc: failed to allocate %lu bytes remap area for node %d\n",
+			   size, nid);
+		memblock_free(node_pa, size);
+		return;
+	}
+	memblock_reserve(remap_pa, size);
+>>>>>>> cm-10.0
 	remap_va = phys_to_virt(remap_pa);
 
 	/* perform actual remap */

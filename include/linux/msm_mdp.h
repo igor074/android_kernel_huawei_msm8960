@@ -1,7 +1,11 @@
 /* include/linux/msm_mdp.h
  *
  * Copyright (C) 2007 Google Incorporated
+<<<<<<< HEAD
  * Copyright (c) 2012 Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -32,8 +36,16 @@
 #define MSMFB_OVERLAY_SET       _IOWR(MSMFB_IOCTL_MAGIC, 135, \
 						struct mdp_overlay)
 #define MSMFB_OVERLAY_UNSET     _IOW(MSMFB_IOCTL_MAGIC, 136, unsigned int)
+<<<<<<< HEAD
 #define MSMFB_OVERLAY_PLAY      _IOW(MSMFB_IOCTL_MAGIC, 137, \
 						struct msmfb_overlay_data)
+=======
+
+#define MSMFB_OVERLAY_PLAY      _IOW(MSMFB_IOCTL_MAGIC, 137, \
+						struct msmfb_overlay_data)
+#define MSMFB_OVERLAY_QUEUE	MSMFB_OVERLAY_PLAY
+
+>>>>>>> cm-10.0
 #define MSMFB_GET_PAGE_PROTECTION _IOR(MSMFB_IOCTL_MAGIC, 138, \
 					struct mdp_page_protection)
 #define MSMFB_SET_PAGE_PROTECTION _IOW(MSMFB_IOCTL_MAGIC, 139, \
@@ -65,6 +77,13 @@
 						struct msmfb_data)
 #define MSMFB_WRITEBACK_TERMINATE _IO(MSMFB_IOCTL_MAGIC, 155)
 #define MSMFB_MDP_PP _IOWR(MSMFB_IOCTL_MAGIC, 156, struct msmfb_mdp_pp)
+<<<<<<< HEAD
+=======
+#define MSMFB_OVERLAY_VSYNC_CTRL _IOW(MSMFB_IOCTL_MAGIC, 160, unsigned int)
+#define MSMFB_VSYNC_CTRL  _IOW(MSMFB_IOCTL_MAGIC, 161, unsigned int)
+#define MSMFB_METADATA_SET  _IOW(MSMFB_IOCTL_MAGIC, 162, struct msmfb_metadata)
+#define MSMFB_OVERLAY_COMMIT      _IOW(MSMFB_IOCTL_MAGIC, 163, unsigned int)
+>>>>>>> cm-10.0
 
 #define FB_TYPE_3D_PANEL 0x10101010
 #define MDP_IMGTYPE2_START 0x10000
@@ -86,6 +105,11 @@ enum {
 	MDP_YCRYCB_H2V1,  /* YCrYCb interleave */
 	MDP_Y_CRCB_H2V1,  /* Y and CrCb, pseduo planer w/ Cr is in MSB */
 	MDP_Y_CBCR_H2V1,   /* Y and CrCb, pseduo planer w/ Cr is in MSB */
+<<<<<<< HEAD
+=======
+	MDP_Y_CRCB_H1V2,
+	MDP_Y_CBCR_H1V2,
+>>>>>>> cm-10.0
 	MDP_RGBA_8888,    /* ARGB 888 */
 	MDP_BGRA_8888,	  /* ABGR 888 */
 	MDP_RGBX_8888,	  /* RGBX 888 */
@@ -96,9 +120,18 @@ enum {
 	MDP_Y_CB_CR_H2V2,  /* Y, Cb and Cr, planar */
 	MDP_Y_CRCB_H1V1,  /* Y and CrCb, pseduo planer w/ Cr is in MSB */
 	MDP_Y_CBCR_H1V1,  /* Y and CbCr, pseduo planer w/ Cb is in MSB */
+<<<<<<< HEAD
 	MDP_IMGTYPE_LIMIT,
 	MDP_BGR_565 = MDP_IMGTYPE2_START,      /* BGR 565 planer */
 	MDP_FB_FORMAT,    /* framebuffer format */
+=======
+	MDP_YCRCB_H1V1,   /* YCrCb interleave */
+	MDP_YCBCR_H1V1,   /* YCbCr interleave */
+	MDP_BGR_565,      /* BGR 565 planer */
+	MDP_IMGTYPE_LIMIT,
+	MDP_RGB_BORDERFILL,	/* border fill pipe */
+	MDP_FB_FORMAT = MDP_IMGTYPE2_START,    /* framebuffer format */
+>>>>>>> cm-10.0
 	MDP_IMGTYPE_LIMIT2 /* Non valid image type after this enum */
 };
 
@@ -115,6 +148,12 @@ enum {
 	NUM_HSIC_PARAM,
 };
 
+<<<<<<< HEAD
+=======
+#define MDSS_MDP_ROT_ONLY		0x80
+#define MDSS_MDP_RIGHT_MIXER		0x100
+
+>>>>>>> cm-10.0
 /* mdp_blit_req flag values */
 #define MDP_ROT_NOP 0
 #define MDP_FLIP_LR 0x1
@@ -242,6 +281,10 @@ struct msmfb_overlay_data {
 	uint32_t version_key;
 	struct msmfb_data plane1_data;
 	struct msmfb_data plane2_data;
+<<<<<<< HEAD
+=======
+	struct msmfb_data dst_data;
+>>>>>>> cm-10.0
 };
 
 struct msmfb_img {
@@ -326,13 +369,23 @@ enum {
 	MDP_BLOCK_DMA_P,
 	MDP_BLOCK_DMA_S,
 	MDP_BLOCK_DMA_E,
+<<<<<<< HEAD
+=======
+	MDP_BLOCK_OVERLAY_2,
+>>>>>>> cm-10.0
 	MDP_BLOCK_MAX,
 };
 
 /*
+<<<<<<< HEAD
 mdp_histogram_start_req is used to provide the parameters for
 histogram start request
 */
+=======
+ * mdp_histogram_start_req is used to provide the parameters for
+ * histogram start request
+ */
+>>>>>>> cm-10.0
 
 struct mdp_histogram_start_req {
 	uint32_t block;
@@ -341,6 +394,7 @@ struct mdp_histogram_start_req {
 	uint8_t num_bins;
 };
 
+<<<<<<< HEAD
 
 /*
 
@@ -350,6 +404,13 @@ struct mdp_histogram_start_req {
  */
 
 
+=======
+/*
+ * mdp_histogram_data is used to return the histogram data, once
+ * the histogram is done/stopped/cance
+ */
+
+>>>>>>> cm-10.0
 struct mdp_histogram_data {
 	uint32_t block;
 	uint8_t bin_cnt;
@@ -428,7 +489,10 @@ struct mdp_hist_lut_data {
 	uint32_t *data;
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 struct mdp_lut_cfg_data {
 	uint32_t lut_type;
 	union {
@@ -446,12 +510,23 @@ struct mdp_qseed_cfg_data {
 	uint32_t *data;
 };
 
+<<<<<<< HEAD
+=======
+struct mdp_bl_scale_data {
+	uint32_t min_lvl;
+	uint32_t scale;
+};
+>>>>>>> cm-10.0
 
 enum {
 	mdp_op_pcc_cfg,
 	mdp_op_csc_cfg,
 	mdp_op_lut_cfg,
 	mdp_op_qseed_cfg,
+<<<<<<< HEAD
+=======
+	mdp_bl_scale_cfg,
+>>>>>>> cm-10.0
 	mdp_op_max,
 };
 
@@ -462,6 +537,10 @@ struct msmfb_mdp_pp {
 		struct mdp_csc_cfg_data csc_cfg_data;
 		struct mdp_lut_cfg_data lut_cfg_data;
 		struct mdp_qseed_cfg_data qseed_cfg_data;
+<<<<<<< HEAD
+=======
+		struct mdp_bl_scale_data bl_scale_data;
+>>>>>>> cm-10.0
 	} data;
 };
 

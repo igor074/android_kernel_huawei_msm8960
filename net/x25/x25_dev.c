@@ -32,6 +32,12 @@ static int x25_receive_data(struct sk_buff *skb, struct x25_neigh *nb)
 	unsigned short frametype;
 	unsigned int lci;
 
+<<<<<<< HEAD
+=======
+	if (!pskb_may_pull(skb, X25_STD_MIN_LEN))
+		return 0;
+
+>>>>>>> cm-10.0
 	frametype = skb->data[2];
 	lci = ((skb->data[0] << 8) & 0xF00) + ((skb->data[1] << 0) & 0x0FF);
 
@@ -115,6 +121,12 @@ int x25_lapb_receive_frame(struct sk_buff *skb, struct net_device *dev,
 		goto drop;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!pskb_may_pull(skb, 1))
+		return 0;
+
+>>>>>>> cm-10.0
 	switch (skb->data[0]) {
 
 	case X25_IFACE_DATA:
@@ -146,6 +158,7 @@ void x25_establish_link(struct x25_neigh *nb)
 	unsigned char *ptr;
 
 	switch (nb->dev->type) {
+<<<<<<< HEAD
 		case ARPHRD_X25:
 			if ((skb = alloc_skb(1, GFP_ATOMIC)) == NULL) {
 				printk(KERN_ERR "x25_dev: out of memory\n");
@@ -161,6 +174,23 @@ void x25_establish_link(struct x25_neigh *nb)
 #endif
 		default:
 			return;
+=======
+	case ARPHRD_X25:
+		if ((skb = alloc_skb(1, GFP_ATOMIC)) == NULL) {
+			printk(KERN_ERR "x25_dev: out of memory\n");
+			return;
+		}
+		ptr  = skb_put(skb, 1);
+		*ptr = X25_IFACE_CONNECT;
+		break;
+
+#if IS_ENABLED(CONFIG_LLC)
+	case ARPHRD_ETHER:
+		return;
+#endif
+	default:
+		return;
+>>>>>>> cm-10.0
 	}
 
 	skb->protocol = htons(ETH_P_X25);
@@ -174,7 +204,11 @@ void x25_terminate_link(struct x25_neigh *nb)
 	struct sk_buff *skb;
 	unsigned char *ptr;
 
+<<<<<<< HEAD
 #if defined(CONFIG_LLC) || defined(CONFIG_LLC_MODULE)
+=======
+#if IS_ENABLED(CONFIG_LLC)
+>>>>>>> cm-10.0
 	if (nb->dev->type == ARPHRD_ETHER)
 		return;
 #endif
@@ -202,6 +236,7 @@ void x25_send_frame(struct sk_buff *skb, struct x25_neigh *nb)
 	skb_reset_network_header(skb);
 
 	switch (nb->dev->type) {
+<<<<<<< HEAD
 		case ARPHRD_X25:
 			dptr  = skb_push(skb, 1);
 			*dptr = X25_IFACE_DATA;
@@ -215,6 +250,21 @@ void x25_send_frame(struct sk_buff *skb, struct x25_neigh *nb)
 		default:
 			kfree_skb(skb);
 			return;
+=======
+	case ARPHRD_X25:
+		dptr  = skb_push(skb, 1);
+		*dptr = X25_IFACE_DATA;
+		break;
+
+#if IS_ENABLED(CONFIG_LLC)
+	case ARPHRD_ETHER:
+		kfree_skb(skb);
+		return;
+#endif
+	default:
+		kfree_skb(skb);
+		return;
+>>>>>>> cm-10.0
 	}
 
 	skb->protocol = htons(ETH_P_X25);

@@ -2,7 +2,11 @@
  * vendor/product IDs (VID/PID) of devices using FTDI USB serial converters.
  * Please keep numerically sorted within individual areas, thanks!
  *
+<<<<<<< HEAD
  * Philipp Gühring - pg@futureware.at - added the Device ID of the USB relais
+=======
+ * Philipp GÃ¼hring - pg@futureware.at - added the Device ID of the USB relais
+>>>>>>> cm-10.0
  * from Rudolf Gugler
  *
  */
@@ -23,12 +27,21 @@
 #define FTDI_8U2232C_PID 0x6010 /* Dual channel device */
 #define FTDI_4232H_PID 0x6011 /* Quad channel hi-speed device */
 #define FTDI_232H_PID  0x6014 /* Single channel hi-speed device */
+<<<<<<< HEAD
+=======
+#define FTDI_FTX_PID   0x6015 /* FT-X series (FT201X, FT230X, FT231X, etc) */
+>>>>>>> cm-10.0
 #define FTDI_SIO_PID	0x8372	/* Product Id SIO application of 8U100AX */
 #define FTDI_232RL_PID  0xFBFA  /* Product ID for FT232RL */
 
 
 /*** third-party PIDs (using FTDI_VID) ***/
 
+<<<<<<< HEAD
+=======
+#define FTDI_LUMEL_PD12_PID	0x6002
+
+>>>>>>> cm-10.0
 /*
  * Marvell OpenRD Base, Client
  * http://www.open-rd.org
@@ -39,6 +52,16 @@
 /* www.candapter.com Ewert Energy Systems CANdapter device */
 #define FTDI_CANDAPTER_PID 0x9F80 /* Product Id */
 
+<<<<<<< HEAD
+=======
+/*
+ * Texas Instruments XDS100v2 JTAG / BeagleBone A3
+ * http://processors.wiki.ti.com/index.php/XDS100
+ * http://beagleboard.org/bone
+ */
+#define TI_XDS100V2_PID		0xa6d0
+
+>>>>>>> cm-10.0
 #define FTDI_NXTCAM_PID		0xABB8 /* NXTCam for Mindstorms NXT */
 
 /* US Interface Navigator (http://www.usinterface.com/) */
@@ -54,6 +77,10 @@
 /* FTDI 2332C Dual channel device, side A=245 FIFO (JTAG), Side B=RS232 UART */
 #define LMI_LM3S_DEVEL_BOARD_PID	0xbcd8
 #define LMI_LM3S_EVAL_BOARD_PID		0xbcd9
+<<<<<<< HEAD
+=======
+#define LMI_LM3S_ICDI_BOARD_PID		0xbcda
+>>>>>>> cm-10.0
 
 #define FTDI_TURTELIZER_PID	0xBDC8 /* JTAG/RS-232 adapter by egnite GmbH */
 
@@ -77,7 +104,11 @@
  */
 #define FTDI_ASK_RDR400_PID	0xC991	/* ASK RDR 400 series card reader */
 
+<<<<<<< HEAD
 /* www.starting-point-systems.com µChameleon device */
+=======
+/* www.starting-point-systems.com ÂµChameleon device */
+>>>>>>> cm-10.0
 #define FTDI_MICRO_CHAMELEON_PID	0xCAA0	/* Product Id */
 
 /*
@@ -89,6 +120,11 @@
 #define FTDI_TACTRIX_OPENPORT_13S_PID	0xCC49	/* OpenPort 1.3 Subaru */
 #define FTDI_TACTRIX_OPENPORT_13U_PID	0xCC4A	/* OpenPort 1.3 Universal */
 
+<<<<<<< HEAD
+=======
+#define FTDI_DISTORTEC_JTAG_LOCK_PICK_PID	0xCFF8
+
+>>>>>>> cm-10.0
 /* SCS HF Radio Modems PID's (http://www.scs-ptc.com) */
 /* the VID is the standard ftdi vid (FTDI_VID) */
 #define FTDI_SCS_DEVICE_0_PID 0xD010    /* SCS PTC-IIusb */
@@ -111,6 +147,10 @@
 
 /* Propox devices */
 #define FTDI_PROPOX_JTAGCABLEII_PID	0xD738
+<<<<<<< HEAD
+=======
+#define FTDI_PROPOX_ISPCABLEIII_PID	0xD739
+>>>>>>> cm-10.0
 
 /* Lenz LI-USB Computer Interface. */
 #define FTDI_LENZ_LIUSB_PID	0xD780
@@ -289,7 +329,11 @@
 
 /*
  * Teratronik product ids.
+<<<<<<< HEAD
  * Submitted by O. Wölfelschneider.
+=======
+ * Submitted by O. WÃ¶lfelschneider.
+>>>>>>> cm-10.0
  */
 #define FTDI_TERATRONIK_VCP_PID	 0xEC88	/* Teratronik device (preferring VCP driver on windows) */
 #define FTDI_TERATRONIK_D2XX_PID 0xEC89	/* Teratronik device (preferring D2XX driver on windows) */
@@ -420,9 +464,17 @@
 #define PROTEGO_SPECIAL_4	0xFC73	/* special/unknown device */
 
 /*
+<<<<<<< HEAD
  * DSS-20 Sync Station for Sony Ericsson P800
  */
 #define FTDI_DSS20_PID          0xFC82
+=======
+ * Sony Ericsson product ids
+ */
+#define FTDI_DSS20_PID		0xFC82	/* DSS-20 Sync Station for Sony Ericsson P800 */
+#define FTDI_URBAN_0_PID	0xFC8A	/* Sony Ericsson Urban, uart #0 */
+#define FTDI_URBAN_1_PID	0xFC8B	/* Sony Ericsson Urban, uart #1 */
+>>>>>>> cm-10.0
 
 /* www.irtrans.de device */
 #define FTDI_IRTRANS_PID 0xFC60 /* Product Id */
@@ -521,6 +573,19 @@
 #define ADI_GNICEPLUS_PID	0xF001
 
 /*
+<<<<<<< HEAD
+=======
+ * Microchip Technology, Inc.
+ *
+ * MICROCHIP_VID (0x04D8) and MICROCHIP_USB_BOARD_PID (0x000A) are also used by:
+ * Hornby Elite - Digital Command Control Console
+ * http://www.hornby.com/hornby-dcc/controllers/
+ */
+#define MICROCHIP_VID		0x04D8
+#define MICROCHIP_USB_BOARD_PID	0x000A /* CDC RS-232 Emulation Demo */
+
+/*
+>>>>>>> cm-10.0
  * RATOC REX-USB60F
  */
 #define RATOC_VENDOR_ID		0x0584
@@ -663,6 +728,13 @@
 #define SEALEVEL_2803_6_PID	0X2863	/* SeaLINK+8 (2803) Port 6 */
 #define SEALEVEL_2803_7_PID	0X2873	/* SeaLINK+8 (2803) Port 7 */
 #define SEALEVEL_2803_8_PID	0X2883	/* SeaLINK+8 (2803) Port 8 */
+<<<<<<< HEAD
+=======
+#define SEALEVEL_2803R_1_PID	0Xa02a	/* SeaLINK+8 (2803-ROHS) Port 1+2 */
+#define SEALEVEL_2803R_2_PID	0Xa02b	/* SeaLINK+8 (2803-ROHS) Port 3+4 */
+#define SEALEVEL_2803R_3_PID	0Xa02c	/* SeaLINK+8 (2803-ROHS) Port 5+6 */
+#define SEALEVEL_2803R_4_PID	0Xa02d	/* SeaLINK+8 (2803-ROHS) Port 7+8 */
+>>>>>>> cm-10.0
 
 /*
  * JETI SPECTROMETER SPECBOS 1201
@@ -1159,4 +1231,25 @@
 /* USB-Nano-485*/
 #define FTDI_CTI_NANO_PID	0xF60B
 
+<<<<<<< HEAD
 
+=======
+/*
+ * ZeitControl cardsystems GmbH rfid-readers http://zeitconrol.de
+ */
+/* TagTracer MIFARE*/
+#define FTDI_ZEITCONTROL_TAGTRACE_MIFARE_PID	0xF7C0
+
+/*
+ * Rainforest Automation
+ */
+/* ZigBee controller */
+#define FTDI_RF_R106		0x8A28
+
+/*
+ * Product: HCP HIT GPRS modem
+ * Manufacturer: HCP d.o.o.
+ * ATI command output: Cinterion MC55i
+ */
+#define FTDI_CINTERION_MC55I_PID	0xA951
+>>>>>>> cm-10.0

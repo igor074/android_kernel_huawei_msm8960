@@ -32,6 +32,7 @@ static int __init proc_version_init(void)
 	return 0;
 }
 module_init(proc_version_init);
+<<<<<<< HEAD
 
 static int __init ccs_show_version(void)
 {
@@ -39,3 +40,5 @@ static int __init ccs_show_version(void)
 	return 0;
 }
 module_init(ccs_show_version);
+=======
+>>>>>>> cm-10.0

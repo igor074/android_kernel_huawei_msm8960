@@ -43,6 +43,10 @@
 #include <linux/input/sparse-keymap.h>
 
 #include <acpi/acpi_drivers.h>
+<<<<<<< HEAD
+=======
+#include <acpi/video.h>
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR("Carlos Corbacho");
 MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
@@ -99,11 +103,16 @@ enum acer_wmi_event_ids {
 static const struct key_entry acer_wmi_keymap[] = {
 	{KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
 	{KE_KEY, 0x03, {KEY_WLAN} },     /* WiFi */
+<<<<<<< HEAD
+=======
+	{KE_KEY, 0x04, {KEY_WLAN} },     /* WiFi */
+>>>>>>> cm-10.0
 	{KE_KEY, 0x12, {KEY_BLUETOOTH} },	/* BT */
 	{KE_KEY, 0x21, {KEY_PROG1} },    /* Backup */
 	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
 	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
+<<<<<<< HEAD
 	{KE_IGNORE, 0x41, {KEY_MUTE} },
 	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
 	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
@@ -111,6 +120,21 @@ static const struct key_entry acer_wmi_keymap[] = {
 	{KE_IGNORE, 0x45, {KEY_STOP} },
 	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
 	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
+=======
+	{KE_KEY, 0x29, {KEY_PROG3} },    /* P_Key for TM8372 */
+	{KE_IGNORE, 0x41, {KEY_MUTE} },
+	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
+	{KE_IGNORE, 0x4d, {KEY_PREVIOUSSONG} },
+	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
+	{KE_IGNORE, 0x4e, {KEY_NEXTSONG} },
+	{KE_IGNORE, 0x44, {KEY_PLAYPAUSE} },
+	{KE_IGNORE, 0x4f, {KEY_PLAYPAUSE} },
+	{KE_IGNORE, 0x45, {KEY_STOP} },
+	{KE_IGNORE, 0x50, {KEY_STOP} },
+	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
+	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
+	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
+>>>>>>> cm-10.0
 	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
 	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
@@ -152,7 +176,18 @@ struct lm_return_value {
 	u16 reserved;
 } __attribute__((packed));
 
+<<<<<<< HEAD
 struct wmid3_gds_input_param {	/* Get Device Status input parameter */
+=======
+struct wmid3_gds_set_input_param {     /* Set Device Status input parameter */
+	u8 function_num;        /* Function Number */
+	u8 hotkey_number;       /* Hotkey Number */
+	u16 devices;            /* Set Device */
+	u8 volume_value;        /* Volume Value */
+} __attribute__((packed));
+
+struct wmid3_gds_get_input_param {     /* Get Device Status input parameter */
+>>>>>>> cm-10.0
 	u8 function_num;	/* Function Number */
 	u8 hotkey_number;	/* Hotkey Number */
 	u16 devices;		/* Get Device */
@@ -170,6 +205,14 @@ struct hotkey_function_type_aa {
 	u8 length;
 	u16 handle;
 	u16 commun_func_bitmap;
+<<<<<<< HEAD
+=======
+	u16 application_func_bitmap;
+	u16 media_func_bitmap;
+	u16 display_func_bitmap;
+	u16 others_func_bitmap;
+	u8 commun_fn_key_number;
+>>>>>>> cm-10.0
 } __attribute__((packed));
 
 /*
@@ -189,6 +232,10 @@ enum interface_flags {
 	ACER_AMW0,
 	ACER_AMW0_V2,
 	ACER_WMID,
+<<<<<<< HEAD
+=======
+	ACER_WMID_v2,
+>>>>>>> cm-10.0
 };
 
 #define ACER_DEFAULT_WIRELESS  0
@@ -204,6 +251,11 @@ static int threeg = -1;
 static int force_series;
 static bool ec_raw_mode;
 static bool has_type_aa;
+<<<<<<< HEAD
+=======
+static u16 commun_func_bitmap;
+static u8 commun_fn_key_number;
+>>>>>>> cm-10.0
 
 module_param(mailled, int, 0444);
 module_param(brightness, int, 0444);
@@ -304,6 +356,13 @@ static struct quirk_entry quirk_fujitsu_amilo_li_1718 = {
 	.wireless = 2,
 };
 
+<<<<<<< HEAD
+=======
+static struct quirk_entry quirk_lenovo_ideapad_s205 = {
+	.wireless = 3,
+};
+
+>>>>>>> cm-10.0
 /* The Aspire One has a dummy ACPI-WMI interface - disable it */
 static struct dmi_system_id __devinitdata acer_blacklist[] = {
 	{
@@ -450,6 +509,55 @@ static struct dmi_system_id acer_quirks[] = {
 		},
 		.driver_data = &quirk_medion_md_98300,
 	},
+<<<<<<< HEAD
+=======
+	{
+		.callback = dmi_matched,
+		.ident = "Lenovo Ideapad S205",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
+		},
+		.driver_data = &quirk_lenovo_ideapad_s205,
+	},
+	{
+		.callback = dmi_matched,
+		.ident = "Lenovo Ideapad S205 (Brazos)",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Brazos"),
+		},
+		.driver_data = &quirk_lenovo_ideapad_s205,
+	},
+	{
+		.callback = dmi_matched,
+		.ident = "Lenovo 3000 N200",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "0687A31"),
+		},
+		.driver_data = &quirk_fujitsu_amilo_li_1718,
+	},
+	{}
+};
+
+static int video_set_backlight_video_vendor(const struct dmi_system_id *d)
+{
+	interface->capability &= ~ACER_CAP_BRIGHTNESS;
+	pr_info("Brightness must be controlled by generic video driver\n");
+	return 0;
+}
+
+static const struct dmi_system_id video_vendor_dmi_table[] = {
+	{
+		.callback = video_set_backlight_video_vendor,
+		.ident = "Acer TravelMate 4750",
+		.matches = {
+			DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 4750"),
+		},
+	},
+>>>>>>> cm-10.0
 	{}
 };
 
@@ -511,8 +619,12 @@ struct acpi_buffer *result)
 	return status;
 }
 
+<<<<<<< HEAD
 static acpi_status AMW0_get_u32(u32 *value, u32 cap,
 struct wmi_interface *iface)
+=======
+static acpi_status AMW0_get_u32(u32 *value, u32 cap)
+>>>>>>> cm-10.0
 {
 	int err;
 	u8 result;
@@ -542,6 +654,15 @@ struct wmi_interface *iface)
 				return AE_ERROR;
 			*value = result & 0x1;
 			return AE_OK;
+<<<<<<< HEAD
+=======
+		case 3:
+			err = ec_read(0x78, &result);
+			if (err)
+				return AE_ERROR;
+			*value = result & 0x1;
+			return AE_OK;
+>>>>>>> cm-10.0
 		default:
 			err = ec_read(0xA, &result);
 			if (err)
@@ -576,7 +697,11 @@ struct wmi_interface *iface)
 	return AE_OK;
 }
 
+<<<<<<< HEAD
 static acpi_status AMW0_set_u32(u32 value, u32 cap, struct wmi_interface *iface)
+=======
+static acpi_status AMW0_set_u32(u32 value, u32 cap)
+>>>>>>> cm-10.0
 {
 	struct wmab_args args;
 
@@ -648,6 +773,36 @@ static acpi_status AMW0_find_mailled(void)
 	return AE_OK;
 }
 
+<<<<<<< HEAD
+=======
+static int AMW0_set_cap_acpi_check_device_found;
+
+static acpi_status AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
+	u32 level, void *context, void **retval)
+{
+	AMW0_set_cap_acpi_check_device_found = 1;
+	return AE_OK;
+}
+
+static const struct acpi_device_id norfkill_ids[] = {
+	{ "VPC2004", 0},
+	{ "IBM0068", 0},
+	{ "LEN0068", 0},
+	{ "SNY5001", 0},	/* sony-laptop in charge */
+	{ "", 0},
+};
+
+static int AMW0_set_cap_acpi_check_device(void)
+{
+	const struct acpi_device_id *id;
+
+	for (id = norfkill_ids; id->id[0]; id++)
+		acpi_get_devices(id->id, AMW0_set_cap_acpi_check_device_cb,
+				NULL, NULL);
+	return AMW0_set_cap_acpi_check_device_found;
+}
+
+>>>>>>> cm-10.0
 static acpi_status AMW0_set_capabilities(void)
 {
 	struct wmab_args args;
@@ -661,7 +816,13 @@ static acpi_status AMW0_set_capabilities(void)
 	 * work.
 	 */
 	if (wmi_has_guid(AMW0_GUID2)) {
+<<<<<<< HEAD
 		interface->capability |= ACER_CAP_WIRELESS;
+=======
+		if ((quirks != &quirk_unknown) ||
+		    !AMW0_set_cap_acpi_check_device())
+			interface->capability |= ACER_CAP_WIRELESS;
+>>>>>>> cm-10.0
 		return AE_OK;
 	}
 
@@ -768,8 +929,12 @@ WMI_execute_u32(u32 method_id, u32 in, u32 *out)
 	return status;
 }
 
+<<<<<<< HEAD
 static acpi_status WMID_get_u32(u32 *value, u32 cap,
 struct wmi_interface *iface)
+=======
+static acpi_status WMID_get_u32(u32 *value, u32 cap)
+>>>>>>> cm-10.0
 {
 	acpi_status status;
 	u8 tmp;
@@ -805,7 +970,11 @@ struct wmi_interface *iface)
 	return status;
 }
 
+<<<<<<< HEAD
 static acpi_status WMID_set_u32(u32 value, u32 cap, struct wmi_interface *iface)
+=======
+static acpi_status WMID_set_u32(u32 value, u32 cap)
+>>>>>>> cm-10.0
 {
 	u32 method_id = 0;
 	char param;
@@ -848,6 +1017,184 @@ static acpi_status WMID_set_u32(u32 value, u32 cap, struct wmi_interface *iface)
 	return WMI_execute_u32(method_id, (u32)value, NULL);
 }
 
+<<<<<<< HEAD
+=======
+static acpi_status wmid3_get_device_status(u32 *value, u16 device)
+{
+	struct wmid3_gds_return_value return_value;
+	acpi_status status;
+	union acpi_object *obj;
+	struct wmid3_gds_get_input_param params = {
+		.function_num = 0x1,
+		.hotkey_number = commun_fn_key_number,
+		.devices = device,
+	};
+	struct acpi_buffer input = {
+		sizeof(struct wmid3_gds_get_input_param),
+		&params
+	};
+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+
+	status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &input, &output);
+	if (ACPI_FAILURE(status))
+		return status;
+
+	obj = output.pointer;
+
+	if (!obj)
+		return AE_ERROR;
+	else if (obj->type != ACPI_TYPE_BUFFER) {
+		kfree(obj);
+		return AE_ERROR;
+	}
+	if (obj->buffer.length != 8) {
+		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
+		kfree(obj);
+		return AE_ERROR;
+	}
+
+	return_value = *((struct wmid3_gds_return_value *)obj->buffer.pointer);
+	kfree(obj);
+
+	if (return_value.error_code || return_value.ec_return_value)
+		pr_warn("Get 0x%x Device Status failed: 0x%x - 0x%x\n",
+			device,
+			return_value.error_code,
+			return_value.ec_return_value);
+	else
+		*value = !!(return_value.devices & device);
+
+	return status;
+}
+
+static acpi_status wmid_v2_get_u32(u32 *value, u32 cap)
+{
+	u16 device;
+
+	switch (cap) {
+	case ACER_CAP_WIRELESS:
+		device = ACER_WMID3_GDS_WIRELESS;
+		break;
+	case ACER_CAP_BLUETOOTH:
+		device = ACER_WMID3_GDS_BLUETOOTH;
+		break;
+	case ACER_CAP_THREEG:
+		device = ACER_WMID3_GDS_THREEG;
+		break;
+	default:
+		return AE_ERROR;
+	}
+	return wmid3_get_device_status(value, device);
+}
+
+static acpi_status wmid3_set_device_status(u32 value, u16 device)
+{
+	struct wmid3_gds_return_value return_value;
+	acpi_status status;
+	union acpi_object *obj;
+	u16 devices;
+	struct wmid3_gds_get_input_param get_params = {
+		.function_num = 0x1,
+		.hotkey_number = commun_fn_key_number,
+		.devices = commun_func_bitmap,
+	};
+	struct acpi_buffer get_input = {
+		sizeof(struct wmid3_gds_get_input_param),
+		&get_params
+	};
+	struct wmid3_gds_set_input_param set_params = {
+		.function_num = 0x2,
+		.hotkey_number = commun_fn_key_number,
+		.devices = commun_func_bitmap,
+	};
+	struct acpi_buffer set_input = {
+		sizeof(struct wmid3_gds_set_input_param),
+		&set_params
+	};
+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+	struct acpi_buffer output2 = { ACPI_ALLOCATE_BUFFER, NULL };
+
+	status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &get_input, &output);
+	if (ACPI_FAILURE(status))
+		return status;
+
+	obj = output.pointer;
+
+	if (!obj)
+		return AE_ERROR;
+	else if (obj->type != ACPI_TYPE_BUFFER) {
+		kfree(obj);
+		return AE_ERROR;
+	}
+	if (obj->buffer.length != 8) {
+		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
+		kfree(obj);
+		return AE_ERROR;
+	}
+
+	return_value = *((struct wmid3_gds_return_value *)obj->buffer.pointer);
+	kfree(obj);
+
+	if (return_value.error_code || return_value.ec_return_value) {
+		pr_warn("Get Current Device Status failed: 0x%x - 0x%x\n",
+			return_value.error_code,
+			return_value.ec_return_value);
+		return status;
+	}
+
+	devices = return_value.devices;
+	set_params.devices = (value) ? (devices | device) : (devices & ~device);
+
+	status = wmi_evaluate_method(WMID_GUID3, 0, 0x1, &set_input, &output2);
+	if (ACPI_FAILURE(status))
+		return status;
+
+	obj = output2.pointer;
+
+	if (!obj)
+		return AE_ERROR;
+	else if (obj->type != ACPI_TYPE_BUFFER) {
+		kfree(obj);
+		return AE_ERROR;
+	}
+	if (obj->buffer.length != 4) {
+		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
+		kfree(obj);
+		return AE_ERROR;
+	}
+
+	return_value = *((struct wmid3_gds_return_value *)obj->buffer.pointer);
+	kfree(obj);
+
+	if (return_value.error_code || return_value.ec_return_value)
+		pr_warn("Set Device Status failed: 0x%x - 0x%x\n",
+			return_value.error_code,
+			return_value.ec_return_value);
+
+	return status;
+}
+
+static acpi_status wmid_v2_set_u32(u32 value, u32 cap)
+{
+	u16 device;
+
+	switch (cap) {
+	case ACER_CAP_WIRELESS:
+		device = ACER_WMID3_GDS_WIRELESS;
+		break;
+	case ACER_CAP_BLUETOOTH:
+		device = ACER_WMID3_GDS_BLUETOOTH;
+		break;
+	case ACER_CAP_THREEG:
+		device = ACER_WMID3_GDS_THREEG;
+		break;
+	default:
+		return AE_ERROR;
+	}
+	return wmid3_set_device_status(value, device);
+}
+
+>>>>>>> cm-10.0
 static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
 {
 	struct hotkey_function_type_aa *type_aa;
@@ -861,6 +1208,10 @@ static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
 
 	pr_info("Function bitmap for Communication Button: 0x%x\n",
 		type_aa->commun_func_bitmap);
+<<<<<<< HEAD
+=======
+	commun_func_bitmap = type_aa->commun_func_bitmap;
+>>>>>>> cm-10.0
 
 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
 		interface->capability |= ACER_CAP_WIRELESS;
@@ -868,6 +1219,11 @@ static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
 		interface->capability |= ACER_CAP_THREEG;
 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
 		interface->capability |= ACER_CAP_BLUETOOTH;
+<<<<<<< HEAD
+=======
+
+	commun_fn_key_number = type_aa->commun_fn_key_number;
+>>>>>>> cm-10.0
 }
 
 static acpi_status WMID_set_capabilities(void)
@@ -893,6 +1249,7 @@ static acpi_status WMID_set_capabilities(void)
 		return AE_ERROR;
 	}
 
+<<<<<<< HEAD
 	dmi_walk(type_aa_dmi_decode, NULL);
 	if (!has_type_aa) {
 		interface->capability |= ACER_CAP_WIRELESS;
@@ -904,6 +1261,15 @@ static acpi_status WMID_set_capabilities(void)
 
 	/* WMID always provides brightness methods */
 	interface->capability |= ACER_CAP_BRIGHTNESS;
+=======
+	pr_info("Function bitmap for Communication Device: 0x%x\n", devices);
+	if (devices & 0x07)
+		interface->capability |= ACER_CAP_WIRELESS;
+	if (devices & 0x40)
+		interface->capability |= ACER_CAP_THREEG;
+	if (devices & 0x10)
+		interface->capability |= ACER_CAP_BLUETOOTH;
+>>>>>>> cm-10.0
 
 	if (!(devices & 0x20))
 		max_brightness = 0x9;
@@ -916,6 +1282,13 @@ static struct wmi_interface wmid_interface = {
 	.type = ACER_WMID,
 };
 
+<<<<<<< HEAD
+=======
+static struct wmi_interface wmid_v2_interface = {
+	.type = ACER_WMID_v2,
+};
+
+>>>>>>> cm-10.0
 /*
  * Generic Device (interface-independent)
  */
@@ -926,6 +1299,7 @@ static acpi_status get_u32(u32 *value, u32 cap)
 
 	switch (interface->type) {
 	case ACER_AMW0:
+<<<<<<< HEAD
 		status = AMW0_get_u32(value, cap, interface);
 		break;
 	case ACER_AMW0_V2:
@@ -935,6 +1309,25 @@ static acpi_status get_u32(u32 *value, u32 cap)
 		}
 	case ACER_WMID:
 		status = WMID_get_u32(value, cap, interface);
+=======
+		status = AMW0_get_u32(value, cap);
+		break;
+	case ACER_AMW0_V2:
+		if (cap == ACER_CAP_MAILLED) {
+			status = AMW0_get_u32(value, cap);
+			break;
+		}
+	case ACER_WMID:
+		status = WMID_get_u32(value, cap);
+		break;
+	case ACER_WMID_v2:
+		if (cap & (ACER_CAP_WIRELESS |
+			   ACER_CAP_BLUETOOTH |
+			   ACER_CAP_THREEG))
+			status = wmid_v2_get_u32(value, cap);
+		else if (wmi_has_guid(WMID_GUID2))
+			status = WMID_get_u32(value, cap);
+>>>>>>> cm-10.0
 		break;
 	}
 
@@ -948,10 +1341,17 @@ static acpi_status set_u32(u32 value, u32 cap)
 	if (interface->capability & cap) {
 		switch (interface->type) {
 		case ACER_AMW0:
+<<<<<<< HEAD
 			return AMW0_set_u32(value, cap, interface);
 		case ACER_AMW0_V2:
 			if (cap == ACER_CAP_MAILLED)
 				return AMW0_set_u32(value, cap, interface);
+=======
+			return AMW0_set_u32(value, cap);
+		case ACER_AMW0_V2:
+			if (cap == ACER_CAP_MAILLED)
+				return AMW0_set_u32(value, cap);
+>>>>>>> cm-10.0
 
 			/*
 			 * On some models, some WMID methods don't toggle
@@ -961,6 +1361,7 @@ static acpi_status set_u32(u32 value, u32 cap)
 			 */
 			if (cap == ACER_CAP_WIRELESS ||
 				cap == ACER_CAP_BLUETOOTH) {
+<<<<<<< HEAD
 				status = WMID_set_u32(value, cap, interface);
 				if (ACPI_FAILURE(status))
 					return status;
@@ -969,6 +1370,23 @@ static acpi_status set_u32(u32 value, u32 cap)
 			}
 		case ACER_WMID:
 			return WMID_set_u32(value, cap, interface);
+=======
+				status = WMID_set_u32(value, cap);
+				if (ACPI_FAILURE(status))
+					return status;
+
+				return AMW0_set_u32(value, cap);
+			}
+		case ACER_WMID:
+			return WMID_set_u32(value, cap);
+		case ACER_WMID_v2:
+			if (cap & (ACER_CAP_WIRELESS |
+				   ACER_CAP_BLUETOOTH |
+				   ACER_CAP_THREEG))
+				return wmid_v2_set_u32(value, cap);
+			else if (wmi_has_guid(WMID_GUID2))
+				return WMID_set_u32(value, cap);
+>>>>>>> cm-10.0
 		default:
 			return AE_BAD_PARAMETER;
 		}
@@ -1075,6 +1493,7 @@ static void acer_backlight_exit(void)
 	backlight_device_unregister(acer_backlight_device);
 }
 
+<<<<<<< HEAD
 static acpi_status wmid3_get_device_status(u32 *value, u16 device)
 {
 	struct wmid3_gds_return_value return_value;
@@ -1255,6 +1674,8 @@ static acpi_status set_device_status(u32 value, u32 cap)
 	}
 }
 
+=======
+>>>>>>> cm-10.0
 /*
  * Rfkill devices
  */
@@ -1265,9 +1686,21 @@ static void acer_rfkill_update(struct work_struct *ignored)
 	u32 state;
 	acpi_status status;
 
+<<<<<<< HEAD
 	status = get_u32(&state, ACER_CAP_WIRELESS);
 	if (ACPI_SUCCESS(status))
 		rfkill_set_sw_state(wireless_rfkill, !state);
+=======
+	if (has_cap(ACER_CAP_WIRELESS)) {
+		status = get_u32(&state, ACER_CAP_WIRELESS);
+		if (ACPI_SUCCESS(status)) {
+			if (quirks->wireless == 3)
+				rfkill_set_hw_state(wireless_rfkill, !state);
+			else
+				rfkill_set_sw_state(wireless_rfkill, !state);
+		}
+	}
+>>>>>>> cm-10.0
 
 	if (has_cap(ACER_CAP_BLUETOOTH)) {
 		status = get_u32(&state, ACER_CAP_BLUETOOTH);
@@ -1276,8 +1709,12 @@ static void acer_rfkill_update(struct work_struct *ignored)
 	}
 
 	if (has_cap(ACER_CAP_THREEG) && wmi_has_guid(WMID_GUID3)) {
+<<<<<<< HEAD
 		status = wmid3_get_device_status(&state,
 				ACER_WMID3_GDS_THREEG);
+=======
+		status = get_u32(&state, ACER_WMID3_GDS_THREEG);
+>>>>>>> cm-10.0
 		if (ACPI_SUCCESS(status))
 			rfkill_set_sw_state(threeg_rfkill, !state);
 	}
@@ -1291,7 +1728,11 @@ static int acer_rfkill_set(void *data, bool blocked)
 	u32 cap = (unsigned long)data;
 
 	if (rfkill_inited) {
+<<<<<<< HEAD
 		status = set_device_status(!blocked, cap);
+=======
+		status = set_u32(!blocked, cap);
+>>>>>>> cm-10.0
 		if (ACPI_FAILURE(status))
 			return -ENODEV;
 	}
@@ -1318,7 +1759,11 @@ static struct rfkill *acer_rfkill_register(struct device *dev,
 	if (!rfkill_dev)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	status = get_device_status(&state, cap);
+=======
+	status = get_u32(&state, cap);
+>>>>>>> cm-10.0
 
 	err = rfkill_register(rfkill_dev);
 	if (err) {
@@ -1334,19 +1779,37 @@ static struct rfkill *acer_rfkill_register(struct device *dev,
 
 static int acer_rfkill_init(struct device *dev)
 {
+<<<<<<< HEAD
 	wireless_rfkill = acer_rfkill_register(dev, RFKILL_TYPE_WLAN,
 		"acer-wireless", ACER_CAP_WIRELESS);
 	if (IS_ERR(wireless_rfkill))
 		return PTR_ERR(wireless_rfkill);
+=======
+	int err;
+
+	if (has_cap(ACER_CAP_WIRELESS)) {
+		wireless_rfkill = acer_rfkill_register(dev, RFKILL_TYPE_WLAN,
+			"acer-wireless", ACER_CAP_WIRELESS);
+		if (IS_ERR(wireless_rfkill)) {
+			err = PTR_ERR(wireless_rfkill);
+			goto error_wireless;
+		}
+	}
+>>>>>>> cm-10.0
 
 	if (has_cap(ACER_CAP_BLUETOOTH)) {
 		bluetooth_rfkill = acer_rfkill_register(dev,
 			RFKILL_TYPE_BLUETOOTH, "acer-bluetooth",
 			ACER_CAP_BLUETOOTH);
 		if (IS_ERR(bluetooth_rfkill)) {
+<<<<<<< HEAD
 			rfkill_unregister(wireless_rfkill);
 			rfkill_destroy(wireless_rfkill);
 			return PTR_ERR(bluetooth_rfkill);
+=======
+			err = PTR_ERR(bluetooth_rfkill);
+			goto error_bluetooth;
+>>>>>>> cm-10.0
 		}
 	}
 
@@ -1355,30 +1818,67 @@ static int acer_rfkill_init(struct device *dev)
 			RFKILL_TYPE_WWAN, "acer-threeg",
 			ACER_CAP_THREEG);
 		if (IS_ERR(threeg_rfkill)) {
+<<<<<<< HEAD
 			rfkill_unregister(wireless_rfkill);
 			rfkill_destroy(wireless_rfkill);
 			rfkill_unregister(bluetooth_rfkill);
 			rfkill_destroy(bluetooth_rfkill);
 			return PTR_ERR(threeg_rfkill);
+=======
+			err = PTR_ERR(threeg_rfkill);
+			goto error_threeg;
+>>>>>>> cm-10.0
 		}
 	}
 
 	rfkill_inited = true;
 
+<<<<<<< HEAD
 	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
+=======
+	if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
+	    has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+>>>>>>> cm-10.0
 		schedule_delayed_work(&acer_rfkill_work,
 			round_jiffies_relative(HZ));
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+error_threeg:
+	if (has_cap(ACER_CAP_BLUETOOTH)) {
+		rfkill_unregister(bluetooth_rfkill);
+		rfkill_destroy(bluetooth_rfkill);
+	}
+error_bluetooth:
+	if (has_cap(ACER_CAP_WIRELESS)) {
+		rfkill_unregister(wireless_rfkill);
+		rfkill_destroy(wireless_rfkill);
+	}
+error_wireless:
+	return err;
+>>>>>>> cm-10.0
 }
 
 static void acer_rfkill_exit(void)
 {
+<<<<<<< HEAD
 	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
 		cancel_delayed_work_sync(&acer_rfkill_work);
 
 	rfkill_unregister(wireless_rfkill);
 	rfkill_destroy(wireless_rfkill);
+=======
+	if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
+	    has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+		cancel_delayed_work_sync(&acer_rfkill_work);
+
+	if (has_cap(ACER_CAP_WIRELESS)) {
+		rfkill_unregister(wireless_rfkill);
+		rfkill_destroy(wireless_rfkill);
+	}
+>>>>>>> cm-10.0
 
 	if (has_cap(ACER_CAP_BLUETOOTH)) {
 		rfkill_unregister(bluetooth_rfkill);
@@ -1400,11 +1900,18 @@ static ssize_t show_bool_threeg(struct device *dev,
 {
 	u32 result; \
 	acpi_status status;
+<<<<<<< HEAD
 	if (wmi_has_guid(WMID_GUID3))
 		status = wmid3_get_device_status(&result,
 				ACER_WMID3_GDS_THREEG);
 	else
 		status = get_u32(&result, ACER_CAP_THREEG);
+=======
+
+	pr_info("This threeg sysfs will be removed in 2012 - used by: %s\n",
+		current->comm);
+	status = get_u32(&result, ACER_CAP_THREEG);
+>>>>>>> cm-10.0
 	if (ACPI_SUCCESS(status))
 		return sprintf(buf, "%u\n", result);
 	return sprintf(buf, "Read error\n");
@@ -1415,8 +1922,15 @@ static ssize_t set_bool_threeg(struct device *dev,
 {
 	u32 tmp = simple_strtoul(buf, NULL, 10);
 	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
+<<<<<<< HEAD
 		if (ACPI_FAILURE(status))
 			return -EINVAL;
+=======
+	pr_info("This threeg sysfs will be removed in 2012 - used by: %s\n",
+		current->comm);
+	if (ACPI_FAILURE(status))
+		return -EINVAL;
+>>>>>>> cm-10.0
 	return count;
 }
 static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
@@ -1425,6 +1939,11 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
 static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
 	char *buf)
 {
+<<<<<<< HEAD
+=======
+	pr_info("This interface sysfs will be removed in 2012 - used by: %s\n",
+		current->comm);
+>>>>>>> cm-10.0
 	switch (interface->type) {
 	case ACER_AMW0:
 		return sprintf(buf, "AMW0\n");
@@ -1432,6 +1951,11 @@ static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
 		return sprintf(buf, "AMW0 v2\n");
 	case ACER_WMID:
 		return sprintf(buf, "WMID\n");
+<<<<<<< HEAD
+=======
+	case ACER_WMID_v2:
+		return sprintf(buf, "WMID v2\n");
+>>>>>>> cm-10.0
 	default:
 		return sprintf(buf, "Error!\n");
 	}
@@ -1851,12 +2375,29 @@ static int __init acer_wmi_init(void)
 	if (!wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
 		interface = &wmid_interface;
 
+<<<<<<< HEAD
 	if (wmi_has_guid(WMID_GUID2) && interface) {
 		if (ACPI_FAILURE(WMID_set_capabilities())) {
 			pr_err("Unable to detect available WMID devices\n");
 			return -ENODEV;
 		}
 	} else if (!wmi_has_guid(WMID_GUID2) && interface) {
+=======
+	if (wmi_has_guid(WMID_GUID3))
+		interface = &wmid_v2_interface;
+
+	if (interface)
+		dmi_walk(type_aa_dmi_decode, NULL);
+
+	if (wmi_has_guid(WMID_GUID2) && interface) {
+		if (!has_type_aa && ACPI_FAILURE(WMID_set_capabilities())) {
+			pr_err("Unable to detect available WMID devices\n");
+			return -ENODEV;
+		}
+		/* WMID always provides brightness methods */
+		interface->capability |= ACER_CAP_BRIGHTNESS;
+	} else if (!wmi_has_guid(WMID_GUID2) && interface && !has_type_aa) {
+>>>>>>> cm-10.0
 		pr_err("No WMID device detection method found\n");
 		return -ENODEV;
 	}
@@ -1880,10 +2421,21 @@ static int __init acer_wmi_init(void)
 
 	set_quirks();
 
+<<<<<<< HEAD
 	if (acpi_video_backlight_support() && has_cap(ACER_CAP_BRIGHTNESS)) {
 		interface->capability &= ~ACER_CAP_BRIGHTNESS;
 		pr_info("Brightness must be controlled by "
 		       "generic video driver\n");
+=======
+	if (acpi_video_backlight_support()) {
+		if (dmi_check_system(video_vendor_dmi_table)) {
+			acpi_video_unregister();
+		} else {
+			interface->capability &= ~ACER_CAP_BRIGHTNESS;
+			pr_info("Brightness must be controlled by "
+				"acpi video driver\n");
+		}
+>>>>>>> cm-10.0
 	}
 
 	if (wmi_has_guid(WMID_GUID3)) {
@@ -1908,7 +2460,11 @@ static int __init acer_wmi_init(void)
 
 	err = platform_driver_register(&acer_platform_driver);
 	if (err) {
+<<<<<<< HEAD
 		pr_err("Unable to register platform driver.\n");
+=======
+		pr_err("Unable to register platform driver\n");
+>>>>>>> cm-10.0
 		goto error_platform_register;
 	}
 

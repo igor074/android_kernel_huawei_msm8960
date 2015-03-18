@@ -4,7 +4,11 @@
  *
  *  Copyright (C) 2002-2003  Maxim Krasnyansky <maxk@qualcomm.com>
  *  Copyright (C) 2004-2005  Marcel Holtmann <marcel@holtmann.org>
+<<<<<<< HEAD
  *  Copyright (c) 2000-2001, 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+ *  Copyright (c) 2000-2001, 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -48,9 +52,16 @@
 
 #define VERSION "2.2"
 
+<<<<<<< HEAD
 static int reset = 0;
 
 static struct hci_uart_proto *hup[HCI_UART_MAX_PROTO];
+=======
+static bool reset = 0;
+
+static struct hci_uart_proto *hup[HCI_UART_MAX_PROTO];
+static void hci_uart_tty_wakeup_action(unsigned long data);
+>>>>>>> cm-10.0
 
 int hci_uart_register_proto(struct hci_uart_proto *p)
 {
@@ -276,6 +287,11 @@ static int hci_uart_tty_open(struct tty_struct *tty)
 	tty->receive_room = 65536;
 
 	spin_lock_init(&hu->rx_lock);
+<<<<<<< HEAD
+=======
+	tasklet_init(&hu->tty_wakeup_task, hci_uart_tty_wakeup_action,
+			 (unsigned long)hu);
+>>>>>>> cm-10.0
 
 	/* Flush any pending characters in the driver and line discipline. */
 
@@ -309,6 +325,11 @@ static void hci_uart_tty_close(struct tty_struct *tty)
 		if (hdev)
 			hci_uart_close(hdev);
 
+<<<<<<< HEAD
+=======
+		tasklet_kill(&hu->tty_wakeup_task);
+
+>>>>>>> cm-10.0
 		if (test_and_clear_bit(HCI_UART_PROTO_SET, &hu->flags)) {
 			hu->proto->close(hu);
 			if (hdev) {
@@ -323,6 +344,11 @@ static void hci_uart_tty_close(struct tty_struct *tty)
  *
  *    Callback for transmit wakeup. Called when low level
  *    device driver can accept more send data.
+<<<<<<< HEAD
+=======
+ *    This callback gets called from the isr context so
+ *    schedule the send data operation to tasklet.
+>>>>>>> cm-10.0
  *
  * Arguments:        tty    pointer to associated tty instance data
  * Return Value:    None
@@ -330,12 +356,32 @@ static void hci_uart_tty_close(struct tty_struct *tty)
 static void hci_uart_tty_wakeup(struct tty_struct *tty)
 {
 	struct hci_uart *hu = (void *)tty->disc_data;
+<<<<<<< HEAD
+=======
+	tasklet_schedule(&hu->tty_wakeup_task);
+}
+
+/* hci_uart_tty_wakeup_action()
+ *
+ * Scheduled action to transmit data when low level device
+ * driver can accept more data.
+ */
+static void hci_uart_tty_wakeup_action(unsigned long data)
+{
+	struct hci_uart *hu = (struct hci_uart *)data;
+	struct tty_struct *tty;
+>>>>>>> cm-10.0
 
 	BT_DBG("");
 
 	if (!hu)
 		return;
 
+<<<<<<< HEAD
+=======
+	tty = hu->tty;
+
+>>>>>>> cm-10.0
 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
 
 	if (tty != hu->tty)

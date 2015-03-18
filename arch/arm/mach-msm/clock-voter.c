@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -29,7 +33,11 @@ static unsigned long voter_clk_aggregate_rate(const struct clk *parent)
 	list_for_each_entry(clk, &parent->children, siblings) {
 		struct clk_voter *v = to_clk_voter(clk);
 		if (v->enabled)
+<<<<<<< HEAD
 			rate = max(v->rate, rate);
+=======
+			rate = max(clk->rate, rate);
+>>>>>>> cm-10.0
 	}
 	return rate;
 }
@@ -54,10 +62,17 @@ static int voter_clk_set_rate(struct clk *clk, unsigned long rate)
 		list_for_each_entry(clkp, &parent->children, siblings) {
 			clkh = to_clk_voter(clkp);
 			if (clkh->enabled && clkh != v)
+<<<<<<< HEAD
 				other_rate = max(clkh->rate, other_rate);
 		}
 
 		cur_rate = max(other_rate, v->rate);
+=======
+				other_rate = max(clkp->rate, other_rate);
+		}
+
+		cur_rate = max(other_rate, clk->rate);
+>>>>>>> cm-10.0
 		new_rate = max(other_rate, rate);
 
 		if (new_rate != cur_rate) {
@@ -66,7 +81,11 @@ static int voter_clk_set_rate(struct clk *clk, unsigned long rate)
 				goto unlock;
 		}
 	}
+<<<<<<< HEAD
 	v->rate = rate;
+=======
+	clk->rate = rate;
+>>>>>>> cm-10.0
 unlock:
 	spin_unlock_irqrestore(&voter_clk_lock, flags);
 
@@ -89,8 +108,13 @@ static int voter_clk_enable(struct clk *clk)
 	 * than the current rate.
 	 */
 	cur_rate = voter_clk_aggregate_rate(parent);
+<<<<<<< HEAD
 	if (v->rate > cur_rate) {
 		ret = clk_set_rate(parent, v->rate);
+=======
+	if (clk->rate > cur_rate) {
+		ret = clk_set_rate(parent, clk->rate);
+>>>>>>> cm-10.0
 		if (ret)
 			goto out;
 	}
@@ -116,7 +140,11 @@ static void voter_clk_disable(struct clk *clk)
 	 */
 	v->enabled = false;
 	new_rate = voter_clk_aggregate_rate(parent);
+<<<<<<< HEAD
 	cur_rate = max(new_rate, v->rate);
+=======
+	cur_rate = max(new_rate, clk->rate);
+>>>>>>> cm-10.0
 
 	if (new_rate < cur_rate)
 		clk_set_rate(parent, new_rate);
@@ -124,6 +152,7 @@ static void voter_clk_disable(struct clk *clk)
 	spin_unlock_irqrestore(&voter_clk_lock, flags);
 }
 
+<<<<<<< HEAD
 static unsigned long voter_clk_get_rate(struct clk *clk)
 {
 	unsigned long rate, flags;
@@ -136,6 +165,8 @@ static unsigned long voter_clk_get_rate(struct clk *clk)
 	return rate;
 }
 
+=======
+>>>>>>> cm-10.0
 static int voter_clk_is_enabled(struct clk *clk)
 {
 	struct clk_voter *v = to_clk_voter(clk);
@@ -148,6 +179,7 @@ static long voter_clk_round_rate(struct clk *clk, unsigned long rate)
 	return clk_round_rate(v->parent, rate);
 }
 
+<<<<<<< HEAD
 static int voter_clk_set_parent(struct clk *clk, struct clk *parent)
 {
 	unsigned long flags;
@@ -160,6 +192,8 @@ static int voter_clk_set_parent(struct clk *clk, struct clk *parent)
 	return 0;
 }
 
+=======
+>>>>>>> cm-10.0
 static struct clk *voter_clk_get_parent(struct clk *clk)
 {
 	struct clk_voter *v = to_clk_voter(clk);
@@ -171,14 +205,34 @@ static bool voter_clk_is_local(struct clk *clk)
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+static enum handoff voter_clk_handoff(struct clk *clk)
+{
+	/* Apply default rate vote */
+	if (clk->rate)
+		return HANDOFF_ENABLED_CLK;
+
+	return HANDOFF_DISABLED_CLK;
+}
+
+>>>>>>> cm-10.0
 struct clk_ops clk_ops_voter = {
 	.enable = voter_clk_enable,
 	.disable = voter_clk_disable,
 	.set_rate = voter_clk_set_rate,
+<<<<<<< HEAD
 	.get_rate = voter_clk_get_rate,
 	.is_enabled = voter_clk_is_enabled,
 	.round_rate = voter_clk_round_rate,
 	.set_parent = voter_clk_set_parent,
 	.get_parent = voter_clk_get_parent,
 	.is_local = voter_clk_is_local,
+=======
+	.is_enabled = voter_clk_is_enabled,
+	.round_rate = voter_clk_round_rate,
+	.get_parent = voter_clk_get_parent,
+	.is_local = voter_clk_is_local,
+	.handoff = voter_clk_handoff,
+>>>>>>> cm-10.0
 };

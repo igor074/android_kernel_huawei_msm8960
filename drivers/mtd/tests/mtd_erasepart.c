@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2010, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Copyright (C) 2006-2008 Nokia Corporation
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -49,7 +53,11 @@ static int erase_eraseblock(int ebnum)
 	ei.addr = addr;
 	ei.len  = mtd->erasesize;
 
+<<<<<<< HEAD
 	err = mtd->erase(mtd, &ei);
+=======
+	err = mtd_erase(mtd, &ei);
+>>>>>>> cm-10.0
 	if (err) {
 		printk(PRINT_PREF "error %d while erasing EB %d\n", err, ebnum);
 		return err;
@@ -87,7 +95,11 @@ static int is_block_bad(int ebnum)
 	int ret;
 	loff_t addr = ebnum * mtd->erasesize;
 
+<<<<<<< HEAD
 	ret = mtd->block_isbad(mtd, addr);
+=======
+	ret = mtd_block_isbad(mtd, addr);
+>>>>>>> cm-10.0
 	if (ret)
 		printk(PRINT_PREF "block %d is bad\n", ebnum);
 	return ret;

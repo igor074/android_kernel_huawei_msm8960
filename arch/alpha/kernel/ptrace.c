@@ -16,7 +16,10 @@
 
 #include <asm/uaccess.h>
 #include <asm/pgtable.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 #include <asm/fpu.h>
 
 #include "proto.h"

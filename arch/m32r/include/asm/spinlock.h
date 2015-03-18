@@ -10,7 +10,12 @@
  */
 
 #include <linux/compiler.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+#include <asm/dcache_clear.h>
+>>>>>>> cm-10.0
 #include <asm/page.h>
 
 /*

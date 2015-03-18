@@ -12,7 +12,10 @@
  */
 #include <linux/linkage.h>
 #include <asm/assembler.h>
+<<<<<<< HEAD
 #include <mach/hardware.h>
+=======
+>>>>>>> cm-10.0
 
 #define CPSR2SPSR(rt) \
 		mrs	rt, cpsr; \

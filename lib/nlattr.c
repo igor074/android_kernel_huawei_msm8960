@@ -5,7 +5,11 @@
  * 				Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
  */
 
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/jiffies.h>
@@ -20,6 +24,10 @@ static const u16 nla_attr_minlen[NLA_TYPE_MAX+1] = {
 	[NLA_U16]	= sizeof(u16),
 	[NLA_U32]	= sizeof(u32),
 	[NLA_U64]	= sizeof(u64),
+<<<<<<< HEAD
+=======
+	[NLA_MSECS]	= sizeof(u64),
+>>>>>>> cm-10.0
 	[NLA_NESTED]	= NLA_HDRLEN,
 };
 

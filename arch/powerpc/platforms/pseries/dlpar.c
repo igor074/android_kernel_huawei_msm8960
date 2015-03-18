@@ -112,6 +112,10 @@ void dlpar_free_cc_nodes(struct device_node *dn)
 	dlpar_free_one_cc_node(dn);
 }
 
+<<<<<<< HEAD
+=======
+#define COMPLETE	0
+>>>>>>> cm-10.0
 #define NEXT_SIBLING    1
 #define NEXT_CHILD      2
 #define NEXT_PROPERTY   3
@@ -158,6 +162,12 @@ struct device_node *dlpar_configure_connector(u32 drc_index)
 		spin_unlock(&rtas_data_buf_lock);
 
 		switch (rc) {
+<<<<<<< HEAD
+=======
+		case COMPLETE:
+			break;
+
+>>>>>>> cm-10.0
 		case NEXT_SIBLING:
 			dn = dlpar_parse_cc_node(ccwa);
 			if (!dn)
@@ -262,12 +272,20 @@ int dlpar_attach_node(struct device_node *dn)
 	if (!dn->parent)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	rc = blocking_notifier_call_chain(&pSeries_reconfig_chain,
 					  PSERIES_RECONFIG_ADD, dn);
 	if (rc == NOTIFY_BAD) {
 		printk(KERN_ERR "Failed to add device node %s\n",
 		       dn->full_name);
 		return -ENOMEM; /* For now, safe to assume kmalloc failure */
+=======
+	rc = pSeries_reconfig_notify(PSERIES_RECONFIG_ADD, dn);
+	if (rc) {
+		printk(KERN_ERR "Failed to add device node %s\n",
+		       dn->full_name);
+		return rc;
+>>>>>>> cm-10.0
 	}
 
 	of_attach_node(dn);
@@ -297,8 +315,12 @@ int dlpar_detach_node(struct device_node *dn)
 		remove_proc_entry(dn->pde->name, parent->pde);
 #endif
 
+<<<<<<< HEAD
 	blocking_notifier_call_chain(&pSeries_reconfig_chain,
 			    PSERIES_RECONFIG_REMOVE, dn);
+=======
+	pSeries_reconfig_notify(PSERIES_RECONFIG_REMOVE, dn);
+>>>>>>> cm-10.0
 	of_detach_node(dn);
 	of_node_put(dn); /* Must decrement the refcount */
 

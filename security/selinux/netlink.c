@@ -14,11 +14,20 @@
 #include <linux/slab.h>
 #include <linux/stddef.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/skbuff.h>
 #include <linux/netlink.h>
 #include <linux/selinux_netlink.h>
 #include <net/net_namespace.h>
 
+<<<<<<< HEAD
+=======
+#include "security.h"
+
+>>>>>>> cm-10.0
 static struct sock *selnl;
 
 static int selnl_msglen(int msgtype)

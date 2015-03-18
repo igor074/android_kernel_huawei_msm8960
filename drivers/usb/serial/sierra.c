@@ -46,8 +46,13 @@
    allocations > PAGE_SIZE and the number of packets in a page
    is an integer 512 is the largest possible packet on EHCI */
 
+<<<<<<< HEAD
 static int debug;
 static int nmea;
+=======
+static bool debug;
+static bool nmea;
+>>>>>>> cm-10.0
 
 /* Used in interface blacklisting */
 struct sierra_iface_info {
@@ -221,7 +226,11 @@ static const struct sierra_iface_info typeB_interface_list = {
 };
 
 /* 'blacklist' of interfaces not served by this driver */
+<<<<<<< HEAD
 static const u8 direct_ip_non_serial_ifaces[] = { 7, 8, 9, 10, 11 };
+=======
+static const u8 direct_ip_non_serial_ifaces[] = { 7, 8, 9, 10, 11, 19, 20 };
+>>>>>>> cm-10.0
 static const struct sierra_iface_info direct_ip_interface_blacklist = {
 	.infolen = ARRAY_SIZE(direct_ip_non_serial_ifaces),
 	.ifaceinfo = direct_ip_non_serial_ifaces,
@@ -298,6 +307,12 @@ static const struct usb_device_id id_table[] = {
 	/* Sierra Wireless HSPA Non-Composite Device */
 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1199, 0x6892, 0xFF, 0xFF, 0xFF)},
 	{ USB_DEVICE(0x1199, 0x6893) },	/* Sierra Wireless Device */
+<<<<<<< HEAD
+=======
+	{ USB_DEVICE(0x1199, 0x68A2),   /* Sierra Wireless MC77xx in QMI mode */
+	  .driver_info = (kernel_ulong_t)&direct_ip_interface_blacklist
+	},
+>>>>>>> cm-10.0
 	{ USB_DEVICE(0x1199, 0x68A3), 	/* Sierra Wireless Direct IP modems */
 	  .driver_info = (kernel_ulong_t)&direct_ip_interface_blacklist
 	},
@@ -681,7 +696,10 @@ static void sierra_instat_callback(struct urb *urb)
 	/* Resubmit urb so we continue receiving IRQ data */
 	if (status != -ESHUTDOWN && status != -ENOENT) {
 		usb_mark_last_busy(serial->dev);
+<<<<<<< HEAD
 		urb->dev = serial->dev;
+=======
+>>>>>>> cm-10.0
 		err = usb_submit_urb(urb, GFP_ATOMIC);
 		if (err && err != -EPERM)
 			dev_err(&port->dev, "%s: resubmit intr urb "
@@ -1009,7 +1027,11 @@ static int sierra_suspend(struct usb_serial *serial, pm_message_t message)
 	struct sierra_intf_private *intfdata;
 	int b;
 
+<<<<<<< HEAD
 	if (message.event & PM_EVENT_AUTO) {
+=======
+	if (PMSG_IS_AUTO(message)) {
+>>>>>>> cm-10.0
 		intfdata = serial->private;
 		spin_lock_irq(&intfdata->susp_lock);
 		b = intfdata->in_flight;
@@ -1085,7 +1107,10 @@ static struct usb_driver sierra_driver = {
 	.resume     = usb_serial_resume,
 	.reset_resume = sierra_reset_resume,
 	.id_table   = id_table,
+<<<<<<< HEAD
 	.no_dynamic_id = 	1,
+=======
+>>>>>>> cm-10.0
 	.supports_autosuspend =	1,
 };
 
@@ -1096,7 +1121,10 @@ static struct usb_serial_driver sierra_device = {
 	},
 	.description       = "Sierra USB modem",
 	.id_table          = id_table,
+<<<<<<< HEAD
 	.usb_driver        = &sierra_driver,
+=======
+>>>>>>> cm-10.0
 	.calc_num_ports	   = sierra_calc_num_ports,
 	.probe		   = sierra_probe,
 	.open              = sierra_open,
@@ -1114,6 +1142,7 @@ static struct usb_serial_driver sierra_device = {
 	.read_int_callback = sierra_instat_callback,
 };
 
+<<<<<<< HEAD
 /* Functions used by new usb-serial code. */
 static int __init sierra_init(void)
 {
@@ -1146,6 +1175,13 @@ static void __exit sierra_exit(void)
 
 module_init(sierra_init);
 module_exit(sierra_exit);
+=======
+static struct usb_serial_driver * const serial_drivers[] = {
+	&sierra_device, NULL
+};
+
+module_usb_serial_driver(sierra_driver, serial_drivers);
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);

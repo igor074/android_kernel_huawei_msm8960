@@ -13,6 +13,10 @@
 
 #include <linux/rtc.h>
 #include <linux/sched.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <linux/log2.h>
 #include <linux/workqueue.h>
 
@@ -72,6 +76,11 @@ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
 		err = -EINVAL;
 
 	mutex_unlock(&rtc->ops_lock);
+<<<<<<< HEAD
+=======
+	/* A timer might have just expired */
+	schedule_work(&rtc->irqwork);
+>>>>>>> cm-10.0
 	return err;
 }
 EXPORT_SYMBOL_GPL(rtc_set_time);
@@ -111,6 +120,11 @@ int rtc_set_mmss(struct rtc_device *rtc, unsigned long secs)
 		err = -EINVAL;
 
 	mutex_unlock(&rtc->ops_lock);
+<<<<<<< HEAD
+=======
+	/* A timer might have just expired */
+	schedule_work(&rtc->irqwork);
+>>>>>>> cm-10.0
 
 	return err;
 }
@@ -227,11 +241,19 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 		alarm->time.tm_hour = now.tm_hour;
 
 	/* For simplicity, only support date rollover for now */
+<<<<<<< HEAD
 	if (alarm->time.tm_mday == -1) {
 		alarm->time.tm_mday = now.tm_mday;
 		missing = day;
 	}
 	if (alarm->time.tm_mon == -1) {
+=======
+	if (alarm->time.tm_mday < 1 || alarm->time.tm_mday > 31) {
+		alarm->time.tm_mday = now.tm_mday;
+		missing = day;
+	}
+	if ((unsigned)alarm->time.tm_mon >= 12) {
+>>>>>>> cm-10.0
 		alarm->time.tm_mon = now.tm_mon;
 		if (missing == none)
 			missing = month;
@@ -350,6 +372,10 @@ static int __rtc_set_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 
 	return err;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 int rtc_set_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 {
 	int err;
@@ -361,11 +387,22 @@ int rtc_set_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 	err = mutex_lock_interruptible(&rtc->ops_lock);
 	if (err)
 		return err;
+<<<<<<< HEAD
 	rtc_timer_remove(rtc, &rtc->aie_timer);
 	rtc->aie_timer.node.expires = rtc_tm_to_ktime(alarm->time);
 	rtc->aie_timer.period = ktime_set(0, 0);
 	rtc->aie_timer.enabled = alarm->enabled;
 	err = rtc_timer_enqueue(rtc, &rtc->aie_timer);
+=======
+	if (rtc->aie_timer.enabled) {
+		rtc_timer_remove(rtc, &rtc->aie_timer);
+	}
+	rtc->aie_timer.node.expires = rtc_tm_to_ktime(alarm->time);
+	rtc->aie_timer.period = ktime_set(0, 0);
+	if (alarm->enabled) {
+		err = rtc_timer_enqueue(rtc, &rtc->aie_timer);
+	}
+>>>>>>> cm-10.0
 	mutex_unlock(&rtc->ops_lock);
 	return err;
 }
@@ -375,18 +412,37 @@ EXPORT_SYMBOL_GPL(rtc_set_alarm);
 int rtc_initialize_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 {
 	int err;
+<<<<<<< HEAD
+=======
+	struct rtc_time now;
+>>>>>>> cm-10.0
 
 	err = rtc_valid_tm(&alarm->time);
 	if (err != 0)
 		return err;
 
+<<<<<<< HEAD
+=======
+	err = rtc_read_time(rtc, &now);
+	if (err)
+		return err;
+
+>>>>>>> cm-10.0
 	err = mutex_lock_interruptible(&rtc->ops_lock);
 	if (err)
 		return err;
 
 	rtc->aie_timer.node.expires = rtc_tm_to_ktime(alarm->time);
 	rtc->aie_timer.period = ktime_set(0, 0);
+<<<<<<< HEAD
 	if (alarm->enabled) {
+=======
+
+	/* Alarm has to be enabled & in the futrure for us to enqueue it */
+	if (alarm->enabled && (rtc_tm_to_ktime(now).tv64 <
+			 rtc->aie_timer.node.expires.tv64)) {
+
+>>>>>>> cm-10.0
 		rtc->aie_timer.enabled = 1;
 		timerqueue_add(&rtc->timerqueue, &rtc->aie_timer.node);
 	}
@@ -440,6 +496,14 @@ int rtc_update_irq_enable(struct rtc_device *rtc, unsigned int enabled)
 	if (rtc->uie_rtctimer.enabled == enabled)
 		goto out;
 
+<<<<<<< HEAD
+=======
+	if (rtc->uie_unsupported) {
+		err = -EINVAL;
+		goto out;
+	}
+
+>>>>>>> cm-10.0
 	if (enabled) {
 		struct rtc_time tm;
 		ktime_t now, onesec;
@@ -635,7 +699,11 @@ EXPORT_SYMBOL_GPL(rtc_irq_unregister);
 static int rtc_update_hrtimer(struct rtc_device *rtc, int enabled)
 {
 	/*
+<<<<<<< HEAD
 	 * We unconditionally cancel the timer here, because otherwise
+=======
+	 * We always cancel the timer here first, because otherwise
+>>>>>>> cm-10.0
 	 * we could run into BUG_ON(timer->state != HRTIMER_STATE_CALLBACK);
 	 * when we manage to start the timer before the callback
 	 * returns HRTIMER_RESTART.
@@ -739,14 +807,22 @@ EXPORT_SYMBOL_GPL(rtc_irq_set_freq);
  */
 static int rtc_timer_enqueue(struct rtc_device *rtc, struct rtc_timer *timer)
 {
+<<<<<<< HEAD
 	// timer->enabled = 1;
+=======
+	timer->enabled = 1;
+>>>>>>> cm-10.0
 	timerqueue_add(&rtc->timerqueue, &timer->node);
 	if (&timer->node == timerqueue_getnext(&rtc->timerqueue)) {
 		struct rtc_wkalrm alarm;
 		int err;
 		alarm.time = rtc_ktime_to_tm(timer->node.expires);
+<<<<<<< HEAD
 		// alarm.enabled = 1;
 		alarm.enabled = (unsigned char)timer->enabled;
+=======
+		alarm.enabled = 1;
+>>>>>>> cm-10.0
 		err = __rtc_set_alarm(rtc, &alarm);
 		if (err == -ETIME)
 			schedule_work(&rtc->irqwork);
@@ -758,6 +834,18 @@ static int rtc_timer_enqueue(struct rtc_device *rtc, struct rtc_timer *timer)
 	}
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+static void rtc_alarm_disable(struct rtc_device *rtc)
+{
+	if (!rtc->ops || !rtc->ops->alarm_irq_enable)
+		return;
+
+	rtc->ops->alarm_irq_enable(rtc->dev.parent, false);
+}
+
+>>>>>>> cm-10.0
 /**
  * rtc_timer_remove - Removes a rtc_timer from the rtc_device timerqueue
  * @rtc rtc device
@@ -773,6 +861,7 @@ static int rtc_timer_enqueue(struct rtc_device *rtc, struct rtc_timer *timer)
 static void rtc_timer_remove(struct rtc_device *rtc, struct rtc_timer *timer)
 {
 	struct timerqueue_node *next = timerqueue_getnext(&rtc->timerqueue);
+<<<<<<< HEAD
 
 	if (!RB_EMPTY_NODE(&timer->node.node)) {
 		timerqueue_del(&rtc->timerqueue, &timer->node);
@@ -780,13 +869,23 @@ static void rtc_timer_remove(struct rtc_device *rtc, struct rtc_timer *timer)
 		printk(KERN_DEBUG "%s: delete an empty node\n", __FUNCTION__);
 	}
 
+=======
+	timerqueue_del(&rtc->timerqueue, &timer->node);
+>>>>>>> cm-10.0
 	timer->enabled = 0;
 	if (next == &timer->node) {
 		struct rtc_wkalrm alarm;
 		int err;
 		next = timerqueue_getnext(&rtc->timerqueue);
+<<<<<<< HEAD
 		if (!next)
 			return;
+=======
+		if (!next) {
+			rtc_alarm_disable(rtc);
+			return;
+		}
+>>>>>>> cm-10.0
 		alarm.time = rtc_ktime_to_tm(next->expires);
 		alarm.enabled = 1;
 		err = __rtc_set_alarm(rtc, &alarm);
@@ -848,7 +947,12 @@ again:
 		err = __rtc_set_alarm(rtc, &alarm);
 		if (err == -ETIME)
 			goto again;
+<<<<<<< HEAD
 	}
+=======
+	} else
+		rtc_alarm_disable(rtc);
+>>>>>>> cm-10.0
 
 	mutex_unlock(&rtc->ops_lock);
 }

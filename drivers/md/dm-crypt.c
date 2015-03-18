@@ -18,7 +18,11 @@
 #include <linux/crypto.h>
 #include <linux/workqueue.h>
 #include <linux/backing-dev.h>
+<<<<<<< HEAD
 #include <asm/atomic.h>
+=======
+#include <linux/atomic.h>
+>>>>>>> cm-10.0
 #include <linux/scatterlist.h>
 #include <asm/page.h>
 #include <asm/unaligned.h>
@@ -29,7 +33,10 @@
 #include <linux/device-mapper.h>
 
 #define DM_MSG_PREFIX "crypt"
+<<<<<<< HEAD
 #define MESG_STR(x) x, sizeof(x)
+=======
+>>>>>>> cm-10.0
 
 /*
  * context holding the current state of a multi-part conversion
@@ -164,7 +171,10 @@ struct crypt_config {
 
 #define MIN_IOS        16
 #define MIN_POOL_PAGES 32
+<<<<<<< HEAD
 #define MIN_BIO_PAGES  8
+=======
+>>>>>>> cm-10.0
 
 static struct kmem_cache *_crypt_io_pool;
 
@@ -221,7 +231,11 @@ static int crypt_iv_plain_gen(struct crypt_config *cc, u8 *iv,
 			      struct dm_crypt_request *dmreq)
 {
 	memset(iv, 0, cc->iv_size);
+<<<<<<< HEAD
 	*(u32 *)iv = cpu_to_le32(dmreq->iv_sector & 0xffffffff);
+=======
+	*(__le32 *)iv = cpu_to_le32(dmreq->iv_sector & 0xffffffff);
+>>>>>>> cm-10.0
 
 	return 0;
 }
@@ -230,7 +244,11 @@ static int crypt_iv_plain64_gen(struct crypt_config *cc, u8 *iv,
 				struct dm_crypt_request *dmreq)
 {
 	memset(iv, 0, cc->iv_size);
+<<<<<<< HEAD
 	*(u64 *)iv = cpu_to_le64(dmreq->iv_sector);
+=======
+	*(__le64 *)iv = cpu_to_le64(dmreq->iv_sector);
+>>>>>>> cm-10.0
 
 	return 0;
 }
@@ -388,7 +406,11 @@ static int crypt_iv_essiv_gen(struct crypt_config *cc, u8 *iv,
 	struct crypto_cipher *essiv_tfm = cc->iv_private;
 
 	memset(iv, 0, cc->iv_size);
+<<<<<<< HEAD
 	*(u64 *)iv = cpu_to_le64(dmreq->iv_sector);
+=======
+	*(__le64 *)iv = cpu_to_le64(dmreq->iv_sector);
+>>>>>>> cm-10.0
 	crypto_cipher_encrypt_one(essiv_tfm, iv, iv);
 
 	return 0;
@@ -564,9 +586,15 @@ static int crypt_iv_lmk_gen(struct crypt_config *cc, u8 *iv,
 	int r = 0;
 
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE) {
+<<<<<<< HEAD
 		src = kmap_atomic(sg_page(&dmreq->sg_in), KM_USER0);
 		r = crypt_iv_lmk_one(cc, iv, dmreq, src + dmreq->sg_in.offset);
 		kunmap_atomic(src, KM_USER0);
+=======
+		src = kmap_atomic(sg_page(&dmreq->sg_in));
+		r = crypt_iv_lmk_one(cc, iv, dmreq, src + dmreq->sg_in.offset);
+		kunmap_atomic(src);
+>>>>>>> cm-10.0
 	} else
 		memset(iv, 0, cc->iv_size);
 
@@ -582,14 +610,22 @@ static int crypt_iv_lmk_post(struct crypt_config *cc, u8 *iv,
 	if (bio_data_dir(dmreq->ctx->bio_in) == WRITE)
 		return 0;
 
+<<<<<<< HEAD
 	dst = kmap_atomic(sg_page(&dmreq->sg_out), KM_USER0);
+=======
+	dst = kmap_atomic(sg_page(&dmreq->sg_out));
+>>>>>>> cm-10.0
 	r = crypt_iv_lmk_one(cc, iv, dmreq, dst + dmreq->sg_out.offset);
 
 	/* Tweak the first block of plaintext sector */
 	if (!r)
 		crypto_xor(dst + dmreq->sg_out.offset, iv, cc->iv_size);
 
+<<<<<<< HEAD
 	kunmap_atomic(dst, KM_USER0);
+=======
+	kunmap_atomic(dst);
+>>>>>>> cm-10.0
 	return r;
 }
 
@@ -820,9 +856,15 @@ static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned size,
 		}
 
 		/*
+<<<<<<< HEAD
 		 * if additional pages cannot be allocated without waiting,
 		 * return a partially allocated bio, the caller will then try
 		 * to allocate additional bios while submitting this partial bio
+=======
+		 * If additional pages cannot be allocated without waiting,
+		 * return a partially-allocated bio.  The caller will then try
+		 * to allocate more bios while submitting this partial bio.
+>>>>>>> cm-10.0
 		 */
 		gfp_mask = (gfp_mask | __GFP_NOWARN) & ~__GFP_WAIT;
 
@@ -1078,6 +1120,10 @@ static void kcryptd_crypt_write_convert(struct dm_crypt_io *io)
 		sector += bio_sectors(clone);
 
 		crypt_inc_pending(io);
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 		r = crypt_convert(cc, &io->ctx);
 		if (r < 0)
 			io->error = -EIO;
@@ -1384,6 +1430,10 @@ static int crypt_ctr_cipher(struct dm_target *ti,
 	char *tmp, *cipher, *chainmode, *ivmode, *ivopts, *keycount;
 	char *cipher_api = NULL;
 	int ret = -EINVAL;
+<<<<<<< HEAD
+=======
+	char dummy;
+>>>>>>> cm-10.0
 
 	/* Convert to crypto api definition? */
 	if (strchr(cipher_in, '(')) {
@@ -1405,7 +1455,11 @@ static int crypt_ctr_cipher(struct dm_target *ti,
 
 	if (!keycount)
 		cc->tfms_count = 1;
+<<<<<<< HEAD
 	else if (sscanf(keycount, "%u", &cc->tfms_count) != 1 ||
+=======
+	else if (sscanf(keycount, "%u%c", &cc->tfms_count, &dummy) != 1 ||
+>>>>>>> cm-10.0
 		 !is_power_of_2(cc->tfms_count)) {
 		ti->error = "Bad cipher key count specification";
 		return -EINVAL;
@@ -1535,11 +1589,26 @@ bad_mem:
 static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 {
 	struct crypt_config *cc;
+<<<<<<< HEAD
 	unsigned int key_size;
 	unsigned long long tmpll;
 	int ret;
 
 	if (argc != 5) {
+=======
+	unsigned int key_size, opt_params;
+	unsigned long long tmpll;
+	int ret;
+	struct dm_arg_set as;
+	const char *opt_string;
+	char dummy;
+
+	static struct dm_arg _args[] = {
+		{0, 1, "Invalid number of feature args"},
+	};
+
+	if (argc < 5) {
+>>>>>>> cm-10.0
 		ti->error = "Not enough arguments";
 		return -EINVAL;
 	}
@@ -1591,7 +1660,11 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	}
 
 	ret = -EINVAL;
+<<<<<<< HEAD
 	if (sscanf(argv[2], "%llu", &tmpll) != 1) {
+=======
+	if (sscanf(argv[2], "%llu%c", &tmpll, &dummy) != 1) {
+>>>>>>> cm-10.0
 		ti->error = "Invalid iv_offset sector";
 		goto bad;
 	}
@@ -1602,12 +1675,43 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 		goto bad;
 	}
 
+<<<<<<< HEAD
 	if (sscanf(argv[4], "%llu", &tmpll) != 1) {
+=======
+	if (sscanf(argv[4], "%llu%c", &tmpll, &dummy) != 1) {
+>>>>>>> cm-10.0
 		ti->error = "Invalid device sector";
 		goto bad;
 	}
 	cc->start = tmpll;
 
+<<<<<<< HEAD
+=======
+	argv += 5;
+	argc -= 5;
+
+	/* Optional parameters */
+	if (argc) {
+		as.argc = argc;
+		as.argv = argv;
+
+		ret = dm_read_arg_group(_args, &as, &opt_params, &ti->error);
+		if (ret)
+			goto bad;
+
+		opt_string = dm_shift_arg(&as);
+
+		if (opt_params == 1 && opt_string &&
+		    !strcasecmp(opt_string, "allow_discards"))
+			ti->num_discard_requests = 1;
+		else if (opt_params) {
+			ret = -EINVAL;
+			ti->error = "Invalid feature arguments";
+			goto bad;
+		}
+	}
+
+>>>>>>> cm-10.0
 	ret = -ENOMEM;
 	cc->io_queue = alloc_workqueue("kcryptd_io",
 				       WQ_NON_REENTRANT|
@@ -1629,6 +1733,11 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	}
 
 	ti->num_flush_requests = 1;
+<<<<<<< HEAD
+=======
+	ti->discard_zeroes_data_unsupported = 1;
+
+>>>>>>> cm-10.0
 	return 0;
 
 bad:
@@ -1642,9 +1751,22 @@ static int crypt_map(struct dm_target *ti, struct bio *bio,
 	struct dm_crypt_io *io;
 	struct crypt_config *cc;
 
+<<<<<<< HEAD
 	if (bio->bi_rw & REQ_FLUSH) {
 		cc = ti->private;
 		bio->bi_bdev = cc->dev->bdev;
+=======
+	/*
+	 * If bio is REQ_FLUSH or REQ_DISCARD, just bypass crypt queues.
+	 * - for REQ_FLUSH device-mapper core ensures that no IO is in-flight
+	 * - for REQ_DISCARD caller must use flush if IO ordering matters
+	 */
+	if (unlikely(bio->bi_rw & (REQ_FLUSH | REQ_DISCARD))) {
+		cc = ti->private;
+		bio->bi_bdev = cc->dev->bdev;
+		if (bio_sectors(bio))
+			bio->bi_sector = cc->start + dm_target_offset(ti, bio->bi_sector);
+>>>>>>> cm-10.0
 		return DM_MAPIO_REMAPPED;
 	}
 
@@ -1687,6 +1809,13 @@ static int crypt_status(struct dm_target *ti, status_type_t type,
 
 		DMEMIT(" %llu %s %llu", (unsigned long long)cc->iv_offset,
 				cc->dev->name, (unsigned long long)cc->start);
+<<<<<<< HEAD
+=======
+
+		if (ti->num_discard_requests)
+			DMEMIT(" 1 allow_discards");
+
+>>>>>>> cm-10.0
 		break;
 	}
 	return 0;
@@ -1730,12 +1859,20 @@ static int crypt_message(struct dm_target *ti, unsigned argc, char **argv)
 	if (argc < 2)
 		goto error;
 
+<<<<<<< HEAD
 	if (!strnicmp(argv[0], MESG_STR("key"))) {
+=======
+	if (!strcasecmp(argv[0], "key")) {
+>>>>>>> cm-10.0
 		if (!test_bit(DM_CRYPT_SUSPENDED, &cc->flags)) {
 			DMWARN("not suspended during key manipulation.");
 			return -EINVAL;
 		}
+<<<<<<< HEAD
 		if (argc == 3 && !strnicmp(argv[1], MESG_STR("set"))) {
+=======
+		if (argc == 3 && !strcasecmp(argv[1], "set")) {
+>>>>>>> cm-10.0
 			ret = crypt_set_key(cc, argv[2]);
 			if (ret)
 				return ret;
@@ -1743,7 +1880,11 @@ static int crypt_message(struct dm_target *ti, unsigned argc, char **argv)
 				ret = cc->iv_gen_ops->init(cc);
 			return ret;
 		}
+<<<<<<< HEAD
 		if (argc == 2 && !strnicmp(argv[1], MESG_STR("wipe"))) {
+=======
+		if (argc == 2 && !strcasecmp(argv[1], "wipe")) {
+>>>>>>> cm-10.0
 			if (cc->iv_gen_ops && cc->iv_gen_ops->wipe) {
 				ret = cc->iv_gen_ops->wipe(cc);
 				if (ret)
@@ -1783,7 +1924,11 @@ static int crypt_iterate_devices(struct dm_target *ti,
 
 static struct target_type crypt_target = {
 	.name   = "crypt",
+<<<<<<< HEAD
 	.version = {1, 10, 0},
+=======
+	.version = {1, 11, 0},
+>>>>>>> cm-10.0
 	.module = THIS_MODULE,
 	.ctr    = crypt_ctr,
 	.dtr    = crypt_dtr,

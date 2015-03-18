@@ -1,6 +1,10 @@
 /*
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2009, 2011 Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2009, 2011 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -25,6 +29,10 @@
 #include <asm/cacheflush.h>
 #include <asm/io.h>
 #include <asm/exception.h>
+<<<<<<< HEAD
+=======
+#include <asm/cp15.h>
+>>>>>>> cm-10.0
 
 #include <mach/hardware.h>
 

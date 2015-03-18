@@ -13,7 +13,10 @@
  *
  */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/rtc.h>
@@ -142,11 +145,14 @@ static int wakelock_stats_show(struct seq_file *m, void *unused)
 		list_for_each_entry(lock, &active_wake_locks[type], link)
 			ret = print_lock_stat(m, lock);
 	}
+<<<<<<< HEAD
     seq_puts(m,"\n<====The below msg is for the active WAKE_LOCKS_SUSPEND wakelocks=====>\n");
     list_for_each_entry(lock,&active_wake_locks[WAKE_LOCK_SUSPEND],link)
     ret = print_lock_stat(m,lock);
     seq_puts(m," \n \n \n");
     
+=======
+>>>>>>> cm-10.0
 	spin_unlock_irqrestore(&list_lock, irqflags);
 	return 0;
 }

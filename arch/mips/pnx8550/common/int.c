@@ -167,13 +167,21 @@ static struct irq_chip level_irq_type = {
 
 static struct irqaction gic_action = {
 	.handler =	no_action,
+<<<<<<< HEAD
 	.flags =	IRQF_DISABLED,
+=======
+	.flags =	IRQF_NO_THREAD,
+>>>>>>> cm-10.0
 	.name =		"GIC",
 };
 
 static struct irqaction timer_action = {
 	.handler =	no_action,
+<<<<<<< HEAD
 	.flags =	IRQF_DISABLED | IRQF_TIMER,
+=======
+	.flags =	IRQF_TIMER,
+>>>>>>> cm-10.0
 	.name =		"Timer",
 };
 

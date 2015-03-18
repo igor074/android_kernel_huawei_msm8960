@@ -9,5 +9,8 @@
 #include <linux/virtio.h>
 #include <linux/virtio_config.h>
 #include <linux/bug.h>
+<<<<<<< HEAD
 #include <asm/system.h>
+=======
+>>>>>>> cm-10.0
 

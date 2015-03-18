@@ -17,6 +17,10 @@
 #include <linux/fs.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 
 #define DRIVER_NAME "memstick"
 

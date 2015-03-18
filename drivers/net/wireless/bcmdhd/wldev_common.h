@@ -1,9 +1,15 @@
 /*
  * Common function shared by Linux WEXT, cfg80211 and p2p drivers
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -21,33 +27,53 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
+<<<<<<< HEAD
  * $Id: wldev_common.h,v 1.1.4.1.2.14 2011-02-09 01:40:07 Exp $
+=======
+ * $Id: wldev_common.h,v 1.1.4.1.2.14 2011-02-09 01:40:07 $
+>>>>>>> cm-10.0
  */
 #ifndef __WLDEV_COMMON_H__
 #define __WLDEV_COMMON_H__
 
 #include <wlioctl.h>
 
+<<<<<<< HEAD
 /** wl_dev_ioctl - get/set IOCTLs, will call net_device's do_ioctl (or 
+=======
+/* wl_dev_ioctl - get/set IOCTLs, will call net_device's do_ioctl (or
+>>>>>>> cm-10.0
  *  netdev_ops->ndo_do_ioctl in new kernels)
  *  @dev: the net_device handle
  */
 s32 wldev_ioctl(
 	struct net_device *dev, u32 cmd, void *arg, u32 len, u32 set);
 
+<<<<<<< HEAD
 /** Retrieve named IOVARs, this function calls wl_dev_ioctl with 
+=======
+/** Retrieve named IOVARs, this function calls wl_dev_ioctl with
+>>>>>>> cm-10.0
  *  WLC_GET_VAR IOCTL code
  */
 s32 wldev_iovar_getbuf(
 	struct net_device *dev, s8 *iovar_name,
+<<<<<<< HEAD
 	void *param, s32 paramlen, void *buf, s32 buflen);
+=======
+	void *param, s32 paramlen, void *buf, s32 buflen, struct mutex* buf_sync);
+>>>>>>> cm-10.0
 
 /** Set named IOVARs, this function calls wl_dev_ioctl with
  *  WLC_SET_VAR IOCTL code
  */
 s32 wldev_iovar_setbuf(
 	struct net_device *dev, s8 *iovar_name,
+<<<<<<< HEAD
 	void *param, s32 paramlen, void *buf, s32 buflen);
+=======
+	void *param, s32 paramlen, void *buf, s32 buflen, struct mutex* buf_sync);
+>>>>>>> cm-10.0
 
 s32 wldev_iovar_setint(
 	struct net_device *dev, s8 *iovar, s32 val);
@@ -67,15 +93,25 @@ s32 wldev_mkiovar_bsscfg(
  *  WLC_GET_VAR IOCTL code
  */
 s32 wldev_iovar_getbuf_bsscfg(
+<<<<<<< HEAD
 	struct net_device *dev, s8 *iovar_name,
 	void *param, s32 paramlen, void *buf, s32 buflen, s32 bsscfg_idx);
+=======
+	struct net_device *dev, s8 *iovar_name, void *param, s32 paramlen,
+	void *buf, s32 buflen, s32 bsscfg_idx, struct mutex* buf_sync);
+>>>>>>> cm-10.0
 
 /** Set named and bsscfg indexed IOVARs, this function calls wl_dev_ioctl with
  *  WLC_SET_VAR IOCTL code
  */
 s32 wldev_iovar_setbuf_bsscfg(
+<<<<<<< HEAD
 	struct net_device *dev, s8 *iovar_name,
 	void *param, s32 paramlen, void *buf, s32 buflen, s32 bsscfg_idx);
+=======
+	struct net_device *dev, s8 *iovar_name, void *param, s32 paramlen,
+	void *buf, s32 buflen, s32 bsscfg_idx, struct mutex* buf_sync);
+>>>>>>> cm-10.0
 
 s32 wldev_iovar_getint_bsscfg(
 	struct net_device *dev, s8 *iovar, s32 *pval, s32 bssidx);
@@ -94,7 +130,11 @@ extern int net_os_set_dtim_skip(struct net_device *dev, int val);
 extern int net_os_set_suspend_disable(struct net_device *dev, int val);
 extern int net_os_set_suspend(struct net_device *dev, int val);
 extern int wl_iw_parse_ssid_list_tlv(char** list_str, wlc_ssid_t* ssid,
+<<<<<<< HEAD
 					int max, int *bytes_left);
+=======
+	int max, int *bytes_left);
+>>>>>>> cm-10.0
 
 /* Get the link speed from dongle, speed is in kpbs */
 int wldev_get_link_speed(struct net_device *dev, int *plink_speed);

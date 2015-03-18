@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -39,21 +43,35 @@ struct pm_irq_chip;
 
 #ifdef CONFIG_MFD_PM8XXX_IRQ
 int pm8xxx_get_irq_stat(struct pm_irq_chip *chip, int irq);
+<<<<<<< HEAD
 struct pm_irq_chip * __devinit pm8xxx_irq_init(struct device *dev,
 				const struct pm8xxx_irq_platform_data *pdata);
 int __devexit pm8xxx_irq_exit(struct pm_irq_chip *chip);
+=======
+struct pm_irq_chip *pm8xxx_irq_init(struct device *dev,
+				const struct pm8xxx_irq_platform_data *pdata);
+int pm8xxx_irq_exit(struct pm_irq_chip *chip);
+>>>>>>> cm-10.0
 #else
 static inline int pm8xxx_get_irq_stat(struct pm_irq_chip *chip, int irq)
 {
 	return -ENXIO;
 }
+<<<<<<< HEAD
 static inline struct pm_irq_chip * __devinit pm8xxx_irq_init(
 				const struct device *dev,
+=======
+static inline struct pm_irq_chip *pm8xxx_irq_init(const struct device *dev,
+>>>>>>> cm-10.0
 				const struct pm8xxx_irq_platform_data *pdata)
 {
 	return ERR_PTR(-ENXIO);
 }
+<<<<<<< HEAD
 static inline int __devexit pm8xxx_irq_exit(struct pm_irq_chip *chip)
+=======
+static inline int pm8xxx_irq_exit(struct pm_irq_chip *chip)
+>>>>>>> cm-10.0
 {
 	return -ENXIO;
 }

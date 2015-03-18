@@ -34,7 +34,11 @@
 #include <acpi/acpi_drivers.h>
 #include <linux/dmi.h>
 
+<<<<<<< HEAD
 static int debug;
+=======
+static bool debug;
+>>>>>>> cm-10.0
 static int check_sta_before_sun;
 
 #define DRIVER_VERSION 	"0.1"

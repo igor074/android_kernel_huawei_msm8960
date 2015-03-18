@@ -271,7 +271,11 @@ static int tosa_lcd_resume(struct spi_device *spi)
 }
 #else
 #define tosa_lcd_suspend	NULL
+<<<<<<< HEAD
 #define tosa_lcd_reume NULL
+=======
+#define tosa_lcd_resume NULL
+>>>>>>> cm-10.0
 #endif
 
 static struct spi_driver tosa_lcd_driver = {
@@ -285,6 +289,7 @@ static struct spi_driver tosa_lcd_driver = {
 	.resume		= tosa_lcd_resume,
 };
 
+<<<<<<< HEAD
 static int __init tosa_lcd_init(void)
 {
 	return spi_register_driver(&tosa_lcd_driver);
@@ -297,6 +302,9 @@ static void __exit tosa_lcd_exit(void)
 
 module_init(tosa_lcd_init);
 module_exit(tosa_lcd_exit);
+=======
+module_spi_driver(tosa_lcd_driver);
+>>>>>>> cm-10.0
 
 MODULE_AUTHOR("Dmitry Baryshkov");
 MODULE_LICENSE("GPL v2");

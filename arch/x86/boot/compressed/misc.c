@@ -321,6 +321,11 @@ static void parse_elf(void *output)
 		default: /* Ignore other PT_* */ break;
 		}
 	}
+<<<<<<< HEAD
+=======
+
+	free(phdrs);
+>>>>>>> cm-10.0
 }
 
 asmlinkage void decompress_kernel(void *rmode, memptr heap,

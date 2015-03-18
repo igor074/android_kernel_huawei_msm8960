@@ -326,7 +326,11 @@ static void sp_cleanup(void)
 		i = j * __NFDBITS;
 		if (i >= fdt->max_fds)
 			break;
+<<<<<<< HEAD
 		set = fdt->open_fds->fds_bits[j++];
+=======
+		set = fdt->open_fds[j++];
+>>>>>>> cm-10.0
 		while (set) {
 			if (set & 1) {
 				struct file * file = xchg(&fdt->fd[i], NULL);

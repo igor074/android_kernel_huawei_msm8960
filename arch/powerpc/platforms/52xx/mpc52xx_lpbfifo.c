@@ -14,6 +14,10 @@
 #include <linux/of.h>
 #include <linux/of_platform.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+>>>>>>> cm-10.0
 #include <asm/io.h>
 #include <asm/prom.h>
 #include <asm/mpc52xx.h>

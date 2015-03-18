@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,6 +19,10 @@
 #define MT9T013_H
 
 #include <linux/types.h>
+<<<<<<< HEAD
+=======
+#include <mach/board.h>
+>>>>>>> cm-10.0
 
 extern struct mt9t013_reg mt9t013_regs; /* from mt9t013_reg.c */
 

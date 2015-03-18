@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,8 +14,11 @@
  * GNU General Public License for more details.
  */
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cm-10.0
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
@@ -272,7 +279,11 @@ static int __devinit pm8xxx_vib_probe(struct platform_device *pdev)
 	if (rc < 0)
 		goto err_read_vib;
 
+<<<<<<< HEAD
 	//pm8xxx_vib_enable(&vib->timed_dev, pdata->initial_vibrate_ms);
+=======
+	pm8xxx_vib_enable(&vib->timed_dev, pdata->initial_vibrate_ms);
+>>>>>>> cm-10.0
 
 	platform_set_drvdata(pdev, vib);
 

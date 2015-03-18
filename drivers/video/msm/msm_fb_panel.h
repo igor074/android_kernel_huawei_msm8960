@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -38,6 +42,10 @@ typedef struct panel_id_s {
 #define MIPI_VIDEO_PANEL	8	/* MIPI */
 #define MIPI_CMD_PANEL		9	/* MIPI */
 #define WRITEBACK_PANEL		10	/* Wifi display */
+<<<<<<< HEAD
+=======
+#define LVDS_PANEL		11	/* LVDS */
+>>>>>>> cm-10.0
 
 /* panel class */
 typedef enum {
@@ -55,6 +63,14 @@ typedef enum {
 	MAX_PHYS_TARGET_NUM,
 } DISP_TARGET_PHYS;
 
+<<<<<<< HEAD
+=======
+enum {
+	BLT_SWITCH_TG_OFF,
+	BLT_SWITCH_TG_ON
+};
+
+>>>>>>> cm-10.0
 /* panel info type */
 struct lcd_panel_info {
 	__u32 vsync_enable;
@@ -64,6 +80,11 @@ struct lcd_panel_info {
 	__u32 v_pulse_width;
 	__u32 hw_vsync_mode;
 	__u32 vsync_notifier_period;
+<<<<<<< HEAD
+=======
+	__u32 blt_ctrl;
+	__u32 blt_mode;
+>>>>>>> cm-10.0
 	__u32 rev;
 };
 
@@ -77,6 +98,14 @@ struct lcdc_panel_info {
 	__u32 border_clr;
 	__u32 underflow_clr;
 	__u32 hsync_skew;
+<<<<<<< HEAD
+=======
+	/* Pad width */
+	uint32 xres_pad;
+	/* Pad height */
+	uint32 yres_pad;
+	boolean is_sync_active_high;
+>>>>>>> cm-10.0
 };
 
 struct mddi_panel_info {
@@ -124,21 +153,43 @@ struct mipi_panel_info {
 	char mdp_trigger;
 	char dma_trigger;
 	uint32 dsi_pclk_rate;
+<<<<<<< HEAD
+=======
+	/* byte to esc clk ratio */
+	uint32 esc_byte_ratio;
+>>>>>>> cm-10.0
 	/* The packet-size should not bet changed */
 	char no_max_pkt_size;
 	/* Clock required during LP commands */
 	char force_clk_lane_hs;
+<<<<<<< HEAD
 	/* Pad width */
 	uint32 xres_pad;
 	/* Pad height */
 	uint32 yres_pad;
+=======
+};
+
+enum lvds_mode {
+	LVDS_SINGLE_CHANNEL_MODE,
+	LVDS_DUAL_CHANNEL_MODE,
+};
+
+struct lvds_panel_info {
+	enum lvds_mode channel_mode;
+	/* Channel swap in dual mode */
+	char channel_swap;
+>>>>>>> cm-10.0
 };
 
 struct msm_panel_info {
 	__u32 xres;
 	__u32 yres;
+<<<<<<< HEAD
 	__u32 width;
 	__u32 height;
+=======
+>>>>>>> cm-10.0
 	__u32 bpp;
 	__u32 mode2_xres;
 	__u32 mode2_yres;
@@ -160,8 +211,13 @@ struct msm_panel_info {
 	struct mddi_panel_info mddi;
 	struct lcd_panel_info lcd;
 	struct lcdc_panel_info lcdc;
+<<<<<<< HEAD
 
 	struct mipi_panel_info mipi;
+=======
+	struct mipi_panel_info mipi;
+	struct lvds_panel_info lvds;
+>>>>>>> cm-10.0
 };
 
 #define MSM_FB_SINGLE_MODE_PANEL(pinfo)		\
@@ -185,6 +241,21 @@ struct msm_fb_panel_data {
 	int (*clk_func) (int enable);
 };
 
+<<<<<<< HEAD
+=======
+enum {
+	MDP4_OVERLAY_BLT_SWITCH_TG_OFF,
+	MDP4_OVERLAY_BLT_SWITCH_TG_ON,
+	MDP4_OVERLAY_BLT_SWITCH_POLL
+};
+
+enum {
+	MDP4_OVERLAY_MODE_BLT_CTRL,
+	MDP4_OVERLAY_MODE_BLT_ALWAYS_ON,
+	MDP4_OVERLAY_MODE_BLT_ALWAYS_OFF
+};
+
+>>>>>>> cm-10.0
 /*===========================================================================
   FUNCTIONS PROTOTYPES
 ============================================================================*/

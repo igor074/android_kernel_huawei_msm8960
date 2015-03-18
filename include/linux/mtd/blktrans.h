@@ -47,6 +47,10 @@ struct mtd_blktrans_dev {
 	struct request_queue *rq;
 	spinlock_t queue_lock;
 	void *priv;
+<<<<<<< HEAD
+=======
+	fmode_t file_mode;
+>>>>>>> cm-10.0
 };
 
 struct mtd_blktrans_ops {

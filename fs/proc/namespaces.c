@@ -9,7 +9,10 @@
 #include <linux/file.h>
 #include <linux/utsname.h>
 #include <net/net_namespace.h>
+<<<<<<< HEAD
 #include <linux/mnt_namespace.h>
+=======
+>>>>>>> cm-10.0
 #include <linux/ipc_namespace.h>
 #include <linux/pid_namespace.h>
 #include "internal.h"
@@ -54,7 +57,11 @@ static struct dentry *proc_ns_instantiate(struct inode *dir,
 	ei->ns_ops    = ns_ops;
 	ei->ns	      = ns;
 
+<<<<<<< HEAD
 	dentry->d_op = &pid_dentry_operations;
+=======
+	d_set_d_op(dentry, &pid_dentry_operations);
+>>>>>>> cm-10.0
 	d_add(dentry, inode);
 	/* Close the race of the process dying before we return the dentry */
 	if (pid_revalidate(dentry, NULL))
@@ -157,15 +164,24 @@ static struct dentry *proc_ns_dir_lookup(struct inode *dir,
 	if (!ptrace_may_access(task, PTRACE_MODE_READ))
 		goto out;
 
+<<<<<<< HEAD
 	last = &ns_entries[ARRAY_SIZE(ns_entries) - 1];
 	for (entry = ns_entries; entry <= last; entry++) {
+=======
+	last = &ns_entries[ARRAY_SIZE(ns_entries)];
+	for (entry = ns_entries; entry < last; entry++) {
+>>>>>>> cm-10.0
 		if (strlen((*entry)->name) != len)
 			continue;
 		if (!memcmp(dentry->d_name.name, (*entry)->name, len))
 			break;
 	}
 	error = ERR_PTR(-ENOENT);
+<<<<<<< HEAD
 	if (entry > last)
+=======
+	if (entry == last)
+>>>>>>> cm-10.0
 		goto out;
 
 	error = proc_ns_instantiate(dir, dentry, task, *entry);

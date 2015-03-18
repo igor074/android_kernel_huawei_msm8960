@@ -109,7 +109,11 @@ struct afs_call {
 	unsigned		reply_size;	/* current size of reply */
 	unsigned		first_offset;	/* offset into mapping[first] */
 	unsigned		last_to;	/* amount of mapping[last] */
+<<<<<<< HEAD
 	unsigned short		offset;		/* offset into received data store */
+=======
+	unsigned		offset;		/* offset into received data store */
+>>>>>>> cm-10.0
 	unsigned char		unmarshall;	/* unmarshalling phase */
 	bool			incoming;	/* T if incoming call */
 	bool			send_pages;	/* T if data from mapping should be sent */
@@ -627,7 +631,11 @@ extern void afs_clear_permits(struct afs_vnode *);
 extern void afs_cache_permit(struct afs_vnode *, struct key *, long);
 extern void afs_zap_permits(struct rcu_head *);
 extern struct key *afs_request_key(struct afs_cell *);
+<<<<<<< HEAD
 extern int afs_permission(struct inode *, int, unsigned int);
+=======
+extern int afs_permission(struct inode *, int);
+>>>>>>> cm-10.0
 
 /*
  * server.c
@@ -750,7 +758,11 @@ extern void afs_pages_written_back(struct afs_vnode *, struct afs_call *);
 extern ssize_t afs_file_write(struct kiocb *, const struct iovec *,
 			      unsigned long, loff_t);
 extern int afs_writeback_all(struct afs_vnode *);
+<<<<<<< HEAD
 extern int afs_fsync(struct file *, int);
+=======
+extern int afs_fsync(struct file *, loff_t, loff_t, int);
+>>>>>>> cm-10.0
 
 
 /*****************************************************************************/

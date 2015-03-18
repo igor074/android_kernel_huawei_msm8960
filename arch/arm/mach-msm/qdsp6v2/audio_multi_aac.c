@@ -2,7 +2,11 @@
  *
  * Copyright (C) 2008 Google, Inc.
  * Copyright (C) 2008 HTC Corporation
+<<<<<<< HEAD
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -16,6 +20,10 @@
  */
 
 #include <linux/msm_audio_aac.h>
+<<<<<<< HEAD
+=======
+#include <mach/socinfo.h>
+>>>>>>> cm-10.0
 #include "audio_utils_aio.h"
 
 #define AUDIO_AAC_DUAL_MONO_INVALID -1
@@ -24,6 +32,7 @@
 /* Default number of pre-allocated event packets */
 #define PCM_BUFSZ_MIN_AACM	((8*1024) + sizeof(struct dec_meta_out))
 
+<<<<<<< HEAD
 static void q6_audio_aac_cb(uint32_t opcode, uint32_t token,
 		uint32_t *payload, void *priv)
 {
@@ -46,6 +55,8 @@ static void q6_audio_aac_cb(uint32_t opcode, uint32_t token,
 	}
 }
 
+=======
+>>>>>>> cm-10.0
 #ifdef CONFIG_DEBUG_FS
 static const struct file_operations audio_aac_debug_fops = {
 	.read = audio_aio_debug_read,
@@ -63,13 +74,25 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		struct asm_aac_cfg aac_cfg;
 		struct msm_audio_aac_config *aac_config;
 		uint32_t sbr_ps = 0x00;
+<<<<<<< HEAD
+=======
+		aac_config = (struct msm_audio_aac_config *)audio->codec_cfg;
+		aac_cfg.ch_cfg = aac_config->channel_configuration;
+		aac_cfg.sample_rate =  audio->pcm_cfg.sample_rate;
+>>>>>>> cm-10.0
 		pr_debug("%s: AUDIO_START session_id[%d]\n", __func__,
 						audio->ac->session);
 		if (audio->feedback == NON_TUNNEL_MODE) {
 			/* Configure PCM output block */
+<<<<<<< HEAD
 			rc = q6asm_enc_cfg_blk_pcm(audio->ac,
 				0, /*native sampling rate*/
 				0 /*native channel count*/);
+=======
+			rc = q6asm_enc_cfg_blk_pcm_native(audio->ac,
+				aac_cfg.sample_rate,
+				aac_cfg.ch_cfg);
+>>>>>>> cm-10.0
 			if (rc < 0) {
 				pr_err("pcm output block config failed\n");
 				break;
@@ -79,7 +102,10 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		rc = q6asm_enable_sbrps(audio->ac, sbr_ps);
 		if (rc < 0)
 			pr_err("sbr-ps enable failed\n");
+<<<<<<< HEAD
 		aac_config = (struct msm_audio_aac_config *)audio->codec_cfg;
+=======
+>>>>>>> cm-10.0
 		if (aac_config->sbr_ps_on_flag)
 			aac_cfg.aot = AAC_ENC_MODE_EAAC_P;
 		else if (aac_config->sbr_on_flag)
@@ -108,8 +134,11 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			aac_config->aac_scalefactor_data_resilience_flag;
 		aac_cfg.spectral_data_resilience =
 			aac_config->aac_spectral_data_resilience_flag;
+<<<<<<< HEAD
 		aac_cfg.ch_cfg = aac_config->channel_configuration;
 		aac_cfg.sample_rate =  audio->pcm_cfg.sample_rate;
+=======
+>>>>>>> cm-10.0
 
 		pr_debug("%s:format=%x aot=%d  ch=%d sr=%d\n",
 			__func__, aac_cfg.format,
@@ -122,6 +151,17 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			pr_err("cmd media format block failed\n");
 			break;
 		}
+<<<<<<< HEAD
+=======
+		if (!cpu_is_msm8x60()) {
+			rc = q6asm_set_encdec_chan_map(audio->ac, 2);
+			if (rc < 0) {
+				pr_err("%s: cmd set encdec_chan_map failed\n",
+					__func__);
+				break;
+			}
+		}
+>>>>>>> cm-10.0
 		rc = audio_aio_enable(audio);
 		audio->eos_rsp = 0;
 		audio->eos_flag = 0;
@@ -159,16 +199,26 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 				AUDIO_AAC_DUAL_MONO_PL_PR) ||
 				(aac_config->dual_mono_mode >
 				AUDIO_AAC_DUAL_MONO_PL_SR)) {
+<<<<<<< HEAD
 				pr_err("%s:AUDIO_SET_AAC_CONFIG: Invalid"
 					"dual_mono mode =%d\n", __func__,
 					aac_config->dual_mono_mode);
+=======
+				pr_err("%s:AUDIO_SET_AAC_CONFIG: Invalid dual_mono mode =%d\n",
+					 __func__, aac_config->dual_mono_mode);
+>>>>>>> cm-10.0
 			} else {
 				/* convert the data from user into sce_left
 				 * and sce_right based on the definitions
 				 */
+<<<<<<< HEAD
 				pr_debug("%s: AUDIO_SET_AAC_CONFIG: modify"
 					 "dual_mono mode =%d\n", __func__,
 					 aac_config->dual_mono_mode);
+=======
+				pr_debug("%s: AUDIO_SET_AAC_CONFIG: modify dual_mono mode =%d\n",
+					 __func__, aac_config->dual_mono_mode);
+>>>>>>> cm-10.0
 				switch (aac_config->dual_mono_mode) {
 				case AUDIO_AAC_DUAL_MONO_PL_PR:
 					sce_left = 1;
@@ -191,8 +241,13 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 				rc = q6asm_cfg_dual_mono_aac(audio->ac,
 							sce_left, sce_right);
 				if (rc < 0)
+<<<<<<< HEAD
 					pr_err("%s: asm cmd dualmono failed"
 						" rc=%d\n", __func__, rc);
+=======
+					pr_err("%s: asm cmd dualmono failed rc=%d\n",
+								 __func__, rc);
+>>>>>>> cm-10.0
 			}			break;
 		}
 		break;
@@ -225,8 +280,13 @@ static int audio_open(struct inode *inode, struct file *file)
 	audio->codec_cfg = kzalloc(sizeof(struct msm_audio_aac_config),
 					GFP_KERNEL);
 	if (audio->codec_cfg == NULL) {
+<<<<<<< HEAD
 		pr_err("%s: Could not allocate memory for aac\
 			config\n", __func__);
+=======
+		pr_err("%s: Could not allocate memory for aac config\n",
+							 __func__);
+>>>>>>> cm-10.0
 		kfree(audio);
 		return -ENOMEM;
 	}
@@ -236,7 +296,11 @@ static int audio_open(struct inode *inode, struct file *file)
 	audio->pcm_cfg.buffer_size = PCM_BUFSZ_MIN_AACM;
 	aac_config->dual_mono_mode = AUDIO_AAC_DUAL_MONO_INVALID;
 
+<<<<<<< HEAD
 	audio->ac = q6asm_audio_client_alloc((app_cb) q6_audio_aac_cb,
+=======
+	audio->ac = q6asm_audio_client_alloc((app_cb) q6_audio_cb,
+>>>>>>> cm-10.0
 					     (void *)audio);
 
 	if (!audio->ac) {
@@ -275,11 +339,14 @@ static int audio_open(struct inode *inode, struct file *file)
 		goto fail;
 	}
 	rc = audio_aio_open(audio, file);
+<<<<<<< HEAD
 	if (IS_ERR_OR_NULL(audio)) {
 		pr_err("%s: audio_aio_open failed\n", __func__);
 		rc = -EACCES;
 		goto fail;
 	}
+=======
+>>>>>>> cm-10.0
 
 #ifdef CONFIG_DEBUG_FS
 	snprintf(name, sizeof name, "msm_multi_aac_%04x", audio->ac->session);

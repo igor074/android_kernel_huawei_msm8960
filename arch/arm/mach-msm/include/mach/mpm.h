@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -31,9 +35,20 @@ struct msm_mpm_device_data {
 	unsigned int mpm_ipc_irq;
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_MSM_MPM
 extern struct msm_mpm_device_data msm_mpm_dev_data;
 
+=======
+extern struct msm_mpm_device_data msm8660_mpm_dev_data;
+extern struct msm_mpm_device_data msm8960_mpm_dev_data;
+extern struct msm_mpm_device_data msm9615_mpm_dev_data;
+extern struct msm_mpm_device_data apq8064_mpm_dev_data;
+
+void msm_mpm_irq_extn_init(struct msm_mpm_device_data *mpm_data);
+
+#ifdef CONFIG_MSM_MPM
+>>>>>>> cm-10.0
 int msm_mpm_enable_pin(unsigned int pin, unsigned int enable);
 int msm_mpm_set_pin_wake(unsigned int pin, unsigned int on);
 int msm_mpm_set_pin_type(unsigned int pin, unsigned int flow_type);
@@ -41,7 +56,10 @@ bool msm_mpm_irqs_detectable(bool from_idle);
 bool msm_mpm_gpio_irqs_detectable(bool from_idle);
 void msm_mpm_enter_sleep(bool from_idle);
 void msm_mpm_exit_sleep(bool from_idle);
+<<<<<<< HEAD
 void msm_mpm_irq_extn_init(void);
+=======
+>>>>>>> cm-10.0
 #else
 static inline int msm_mpm_enable_irq(unsigned int irq, unsigned int enable)
 { return -ENODEV; }
@@ -62,7 +80,10 @@ static inline bool msm_mpm_gpio_irqs_detectable(bool from_idle)
 { return false; }
 static inline void msm_mpm_enter_sleep(bool from_idle) {}
 static inline void msm_mpm_exit_sleep(bool from_idle) {}
+<<<<<<< HEAD
 static inline void msm_mpm_irq_extn_init(void) {}
+=======
+>>>>>>> cm-10.0
 #endif
 
 

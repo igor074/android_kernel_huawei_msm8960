@@ -67,6 +67,10 @@
 #include <linux/buffer_head.h>		/* for sync_blockdev() */
 #include <linux/bio.h>
 #include <linux/freezer.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/delay.h>
 #include <linux/mutex.h>
 #include <linux/seq_file.h>
@@ -2348,7 +2352,11 @@ int jfsIOWait(void *arg)
 
 		if (freezing(current)) {
 			spin_unlock_irq(&log_redrive_lock);
+<<<<<<< HEAD
 			refrigerator();
+=======
+			try_to_freeze();
+>>>>>>> cm-10.0
 		} else {
 			set_current_state(TASK_INTERRUPTIBLE);
 			spin_unlock_irq(&log_redrive_lock);

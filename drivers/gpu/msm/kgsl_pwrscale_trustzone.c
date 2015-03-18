@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -11,6 +15,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/io.h>
@@ -113,10 +121,16 @@ static void tz_wake(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
 {
 	struct tz_priv *priv = pwrscale->priv;
 	if (device->state != KGSL_STATE_NAP &&
+<<<<<<< HEAD
 		priv->governor == TZ_GOVERNOR_ONDEMAND &&
 		device->pwrctrl.restore_slumber == 0)
 		kgsl_pwrctrl_pwrlevel_change(device,
 					     device->pwrctrl.default_pwrlevel);
+=======
+		priv->governor == TZ_GOVERNOR_ONDEMAND)
+		kgsl_pwrctrl_pwrlevel_change(device,
+					device->pwrctrl.default_pwrlevel);
+>>>>>>> cm-10.0
 }
 
 static void tz_idle(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
@@ -180,7 +194,12 @@ static int tz_init(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
 	struct tz_priv *priv;
 
 	/* Trustzone is only valid for some SOCs */
+<<<<<<< HEAD
 	if (!(cpu_is_msm8x60() || cpu_is_msm8960() || cpu_is_msm8930()))
+=======
+	if (!(cpu_is_msm8x60() || cpu_is_msm8960() || cpu_is_apq8064() ||
+		cpu_is_msm8930() || cpu_is_msm8930aa() || cpu_is_msm8627()))
+>>>>>>> cm-10.0
 		return -EINVAL;
 
 	priv = pwrscale->priv = kzalloc(sizeof(struct tz_priv), GFP_KERNEL);

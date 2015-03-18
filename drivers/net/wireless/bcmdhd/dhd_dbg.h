@@ -1,9 +1,15 @@
 /*
  * Debug/trace/assert driver definitions for Dongle Host Driver.
  *
+<<<<<<< HEAD
  * Copyright (C) 1999-2011, Broadcom Corporation
  * 
  *         Unless you and Broadcom execute a separate written software license
+=======
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ * 
+ *      Unless you and Broadcom execute a separate written software license
+>>>>>>> cm-10.0
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
@@ -21,7 +27,11 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
+<<<<<<< HEAD
  * $Id: dhd_dbg.h 285933 2011-09-23 21:45:31Z $
+=======
+ * $Id: dhd_dbg.h 308299 2012-01-14 01:36:58Z $
+>>>>>>> cm-10.0
  */
 
 #ifndef _dhd_dbg_
@@ -44,6 +54,10 @@
 #define DHD_BTA(args)		do {if (dhd_msg_level & DHD_BTA_VAL) printf args;} while (0)
 #define DHD_ISCAN(args)		do {if (dhd_msg_level & DHD_ISCAN_VAL) printf args;} while (0)
 #define DHD_ARPOE(args)		do {if (dhd_msg_level & DHD_ARPOE_VAL) printf args;} while (0)
+<<<<<<< HEAD
+=======
+#define DHD_REORDER(args)	do {if (dhd_msg_level & DHD_REORDER_VAL) printf args;} while (0)
+>>>>>>> cm-10.0
 
 #define DHD_ERROR_ON()		(dhd_msg_level & DHD_ERROR_VAL)
 #define DHD_TRACE_ON()		(dhd_msg_level & DHD_TRACE_VAL)
@@ -59,6 +73,10 @@
 #define DHD_BTA_ON()		(dhd_msg_level & DHD_BTA_VAL)
 #define DHD_ISCAN_ON()		(dhd_msg_level & DHD_ISCAN_VAL)
 #define DHD_ARPOE_ON()		(dhd_msg_level & DHD_ARPOE_VAL)
+<<<<<<< HEAD
+=======
+#define DHD_REORDER_ON()	(dhd_msg_level & DHD_REORDER_VAL)
+>>>>>>> cm-10.0
 
 #else /* defined(BCMDBG) || defined(DHD_DEBUG) */
 
@@ -76,6 +94,10 @@
 #define DHD_BTA(args)
 #define DHD_ISCAN(args)
 #define DHD_ARPOE(args)
+<<<<<<< HEAD
+=======
+#define DHD_REORDER(args)
+>>>>>>> cm-10.0
 
 #define DHD_ERROR_ON()		0
 #define DHD_TRACE_ON()		0
@@ -91,11 +113,19 @@
 #define DHD_BTA_ON()		0
 #define DHD_ISCAN_ON()		0
 #define DHD_ARPOE_ON()		0
+<<<<<<< HEAD
+=======
+#define DHD_REORDER_ON()	0
+>>>>>>> cm-10.0
 #endif 
 
 #define DHD_LOG(args)
 
 #define DHD_BLOG(cp, size)
+<<<<<<< HEAD
+=======
+
+>>>>>>> cm-10.0
 #define DHD_NONE(args)
 extern int dhd_msg_level;
 

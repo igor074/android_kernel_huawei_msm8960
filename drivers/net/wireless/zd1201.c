@@ -1722,7 +1722,11 @@ static const struct net_device_ops zd1201_netdev_ops = {
 	.ndo_stop		= zd1201_net_stop,
 	.ndo_start_xmit		= zd1201_hard_start_xmit,
 	.ndo_tx_timeout		= zd1201_tx_timeout,
+<<<<<<< HEAD
 	.ndo_set_multicast_list = zd1201_set_multicast,
+=======
+	.ndo_set_rx_mode	= zd1201_set_multicast,
+>>>>>>> cm-10.0
 	.ndo_set_mac_address	= zd1201_set_mac_address,
 	.ndo_change_mtu		= eth_change_mtu,
 	.ndo_validate_addr	= eth_validate_addr,
@@ -1907,6 +1911,7 @@ static struct usb_driver zd1201_usb = {
 	.resume = zd1201_resume,
 };
 
+<<<<<<< HEAD
 static int __init zd1201_init(void)
 {
 	return usb_register(&zd1201_usb);
@@ -1919,3 +1924,6 @@ static void __exit zd1201_cleanup(void)
 
 module_init(zd1201_init);
 module_exit(zd1201_cleanup);
+=======
+module_usb_driver(zd1201_usb);
+>>>>>>> cm-10.0

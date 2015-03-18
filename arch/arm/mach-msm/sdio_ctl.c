@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,6 +29,10 @@
 #include <linux/mutex.h>
 #include <linux/uaccess.h>
 #include <linux/workqueue.h>
+<<<<<<< HEAD
+=======
+#include <linux/poll.h>
+>>>>>>> cm-10.0
 #include <asm/ioctls.h>
 #include <linux/platform_device.h>
 #include <mach/msm_smd.h>
@@ -206,6 +214,37 @@ static long sdio_ctl_ioctl(struct file *file, unsigned int cmd,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static unsigned int sdio_ctl_poll(struct file *file, poll_table *wait)
+{
+	struct sdio_ctl_dev *sdio_ctl_devp;
+	unsigned int mask = 0;
+
+	sdio_ctl_devp = file->private_data;
+	if (!sdio_ctl_devp) {
+		pr_err("%s: on a NULL device\n", __func__);
+		return POLLERR;
+	}
+
+	poll_wait(file, &sdio_ctl_devp->read_wait_queue, wait);
+	mutex_lock(&sdio_ctl_devp->rx_lock);
+	if (sdio_cmux_is_channel_reset(sdio_ctl_devp->id)) {
+		mutex_unlock(&sdio_ctl_devp->rx_lock);
+		pr_err("%s notifying reset for sdio_ctl_dev id:%d\n",
+			__func__, sdio_ctl_devp->id);
+		return POLLERR;
+	}
+
+	if (sdio_ctl_devp->read_avail > 0)
+		mask |= POLLIN | POLLRDNORM;
+
+	mutex_unlock(&sdio_ctl_devp->rx_lock);
+
+	return mask;
+}
+
+>>>>>>> cm-10.0
 ssize_t sdio_ctl_read(struct file *file,
 		      char __user *buf,
 		      size_t count,
@@ -417,6 +456,10 @@ static const struct file_operations sdio_ctl_fops = {
 	.release = sdio_ctl_release,
 	.read = sdio_ctl_read,
 	.write = sdio_ctl_write,
+<<<<<<< HEAD
+=======
+	.poll = sdio_ctl_poll,
+>>>>>>> cm-10.0
 	.unlocked_ioctl = sdio_ctl_ioctl,
 };
 

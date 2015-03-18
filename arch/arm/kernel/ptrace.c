@@ -12,6 +12,10 @@
 #include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/mm.h>
+<<<<<<< HEAD
+=======
+#include <linux/elf.h>
+>>>>>>> cm-10.0
 #include <linux/smp.h>
 #include <linux/ptrace.h>
 #include <linux/user.h>
@@ -22,9 +26,15 @@
 #include <linux/perf_event.h>
 #include <linux/hw_breakpoint.h>
 #include <linux/regset.h>
+<<<<<<< HEAD
 
 #include <asm/pgtable.h>
 #include <asm/system.h>
+=======
+#include <linux/audit.h>
+
+#include <asm/pgtable.h>
+>>>>>>> cm-10.0
 #include <asm/traps.h>
 
 #define REG_PC	15
@@ -228,6 +238,7 @@ static struct undef_hook thumb_break_hook = {
 	.fn		= break_trap,
 };
 
+<<<<<<< HEAD
 static int thumb2_break_trap(struct pt_regs *regs, unsigned int instr)
 {
 	unsigned int instr2;
@@ -256,6 +267,14 @@ static struct undef_hook thumb2_break_hook = {
 	.cpsr_mask	= PSR_T_BIT,
 	.cpsr_val	= PSR_T_BIT,
 	.fn		= thumb2_break_trap,
+=======
+static struct undef_hook thumb2_break_hook = {
+	.instr_mask	= 0xffffffff,
+	.instr_val	= 0xf7f0a000,
+	.cpsr_mask	= PSR_T_BIT,
+	.cpsr_val	= PSR_T_BIT,
+	.fn		= break_trap,
+>>>>>>> cm-10.0
 };
 
 static int __init ptrace_break_init(void)
@@ -277,7 +296,11 @@ static int ptrace_read_user(struct task_struct *tsk, unsigned long off,
 {
 	unsigned long tmp;
 
+<<<<<<< HEAD
 	if (off & 3 || off >= sizeof(struct user))
+=======
+	if (off & 3)
+>>>>>>> cm-10.0
 		return -EIO;
 
 	tmp = 0;
@@ -289,6 +312,11 @@ static int ptrace_read_user(struct task_struct *tsk, unsigned long off,
 		tmp = tsk->mm->end_code;
 	else if (off < sizeof(struct pt_regs))
 		tmp = get_user_reg(tsk, off >> 2);
+<<<<<<< HEAD
+=======
+	else if (off >= sizeof(struct user))
+		return -EIO;
+>>>>>>> cm-10.0
 
 	return put_user(tmp, ret);
 }
@@ -396,7 +424,11 @@ static long ptrace_hbp_idx_to_num(int idx)
 /*
  * Handle hitting a HW-breakpoint.
  */
+<<<<<<< HEAD
 static void ptrace_hbptriggered(struct perf_event *bp, int unused,
+=======
+static void ptrace_hbptriggered(struct perf_event *bp,
+>>>>>>> cm-10.0
 				     struct perf_sample_data *data,
 				     struct pt_regs *regs)
 {
@@ -479,7 +511,12 @@ static struct perf_event *ptrace_hbp_create(struct task_struct *tsk, int type)
 	attr.bp_type	= type;
 	attr.disabled	= 1;
 
+<<<<<<< HEAD
 	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, tsk);
+=======
+	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
+					   tsk);
+>>>>>>> cm-10.0
 }
 
 static int ptrace_gethbpregs(struct task_struct *tsk, long num,
@@ -719,10 +756,20 @@ static int vfp_set(struct task_struct *target,
 {
 	int ret;
 	struct thread_info *thread = task_thread_info(target);
+<<<<<<< HEAD
 	struct vfp_hard_struct new_vfp = thread->vfpstate.hard;
 	const size_t user_fpregs_offset = offsetof(struct user_vfp, fpregs);
 	const size_t user_fpscr_offset = offsetof(struct user_vfp, fpscr);
 
+=======
+	struct vfp_hard_struct new_vfp;
+	const size_t user_fpregs_offset = offsetof(struct user_vfp, fpregs);
+	const size_t user_fpscr_offset = offsetof(struct user_vfp, fpscr);
+
+	vfp_sync_hwstate(thread);
+	new_vfp = thread->vfpstate.hard;
+
+>>>>>>> cm-10.0
 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
 				  &new_vfp.fpregs,
 				  user_fpregs_offset,
@@ -743,9 +790,14 @@ static int vfp_set(struct task_struct *target,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	vfp_sync_hwstate(thread);
 	thread->vfpstate.hard = new_vfp;
 	vfp_flush_hwstate(thread);
+=======
+	vfp_flush_hwstate(thread);
+	thread->vfpstate.hard = new_vfp;
+>>>>>>> cm-10.0
 
 	return 0;
 }
@@ -926,20 +978,40 @@ asmlinkage int syscall_trace(int why, struct pt_regs *regs, int scno)
 {
 	unsigned long ip;
 
+<<<<<<< HEAD
+=======
+	if (why)
+		audit_syscall_exit(regs);
+	else
+		audit_syscall_entry(AUDIT_ARCH_ARM, scno, regs->ARM_r0,
+				    regs->ARM_r1, regs->ARM_r2, regs->ARM_r3);
+
+>>>>>>> cm-10.0
 	if (!test_thread_flag(TIF_SYSCALL_TRACE))
 		return scno;
 	if (!(current->ptrace & PT_PTRACED))
 		return scno;
 
+<<<<<<< HEAD
 	/*
 	 * Save IP.  IP is used to denote syscall entry/exit:
 	 *  IP = 0 -> entry, = 1 -> exit
+=======
+	current_thread_info()->syscall = scno;
+
+	/*
+	 * IP is used to denote syscall entry/exit:
+	 * IP = 0 -> entry, =1 -> exit
+>>>>>>> cm-10.0
 	 */
 	ip = regs->ARM_ip;
 	regs->ARM_ip = why;
 
+<<<<<<< HEAD
 	current_thread_info()->syscall = scno;
 
+=======
+>>>>>>> cm-10.0
 	/* the 0x80 provides a way for the tracing parent to distinguish
 	   between a syscall stop and SIGTRAP delivery */
 	ptrace_notify(SIGTRAP | ((current->ptrace & PT_TRACESYSGOOD)

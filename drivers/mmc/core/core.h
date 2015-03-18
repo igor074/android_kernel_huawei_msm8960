@@ -25,6 +25,10 @@ struct mmc_bus_ops {
 	int (*power_save)(struct mmc_host *);
 	int (*power_restore)(struct mmc_host *);
 	int (*alive)(struct mmc_host *);
+<<<<<<< HEAD
+=======
+	int (*poweroff_notify)(struct mmc_host *, int notify);
+>>>>>>> cm-10.0
 };
 
 void mmc_attach_bus(struct mmc_host *host, const struct mmc_bus_ops *ops);
@@ -46,6 +50,10 @@ int mmc_set_signal_voltage(struct mmc_host *host, int signal_voltage,
 			   bool cmd11);
 void mmc_set_timing(struct mmc_host *host, unsigned int timing);
 void mmc_set_driver_type(struct mmc_host *host, unsigned int drv_type);
+<<<<<<< HEAD
+=======
+void mmc_power_off(struct mmc_host *host);
+>>>>>>> cm-10.0
 
 static inline void mmc_delay(unsigned int ms)
 {
@@ -70,7 +78,11 @@ int mmc_attach_sd(struct mmc_host *host);
 int mmc_attach_sdio(struct mmc_host *host);
 
 /* Module parameters */
+<<<<<<< HEAD
 extern int use_spi_crc;
+=======
+extern bool use_spi_crc;
+>>>>>>> cm-10.0
 
 /* Debugfs information for hosts and cards */
 void mmc_add_host_debugfs(struct mmc_host *host);

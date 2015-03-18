@@ -1,6 +1,10 @@
 /*
  * Copyright (C) 2007 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2008-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  * Author: Brian Swetland <swetland@google.com>
  *
  * This software is licensed under the terms of the GNU General Public
@@ -131,4 +135,11 @@
 #define MSM_DEBUG_UART_PHYS	0x19C40000
 #endif
 
+<<<<<<< HEAD
+=======
+#ifndef __ASSEMBLY__
+extern void msm_map_msm8x60_io(void);
+#endif
+
+>>>>>>> cm-10.0
 #endif

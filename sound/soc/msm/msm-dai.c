@@ -2,7 +2,11 @@
  *
  * Copyright (C) 2008 Google, Inc.
  * Copyright (C) 2008 HTC Corporation
+<<<<<<< HEAD
  * Copyright (c) 2008-2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2008-2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * Derived from msm-pcm.c and msm7201.c.
  *

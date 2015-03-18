@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010, 2011, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2010, 2011, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,6 +21,11 @@
 #include <linux/spinlock.h>
 #include <linux/mfd/pm8xxx/core.h>
 #include <linux/leds-pmic8058.h>
+<<<<<<< HEAD
+=======
+#include <linux/module.h>
+#include <linux/string.h>
+>>>>>>> cm-10.0
 
 #define SSBI_REG_ADDR_DRV_KEYPAD	0x48
 #define PM8058_DRV_KEYPAD_BL_MASK	0xf0

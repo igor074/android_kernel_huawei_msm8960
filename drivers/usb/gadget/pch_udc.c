@@ -1,9 +1,14 @@
 /*
+<<<<<<< HEAD
  * Copyright (C) 2010 OKI SEMICONDUCTOR CO., LTD.
+=======
+ * Copyright (C) 2011 LAPIS Semiconductor Co., Ltd.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 2 of the License.
+<<<<<<< HEAD
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+=======
+>>>>>>> cm-10.0
  */
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 #include <linux/kernel.h>
@@ -24,6 +31,17 @@
 #include <linux/interrupt.h>
 #include <linux/usb/ch9.h>
 #include <linux/usb/gadget.h>
+<<<<<<< HEAD
+=======
+#include <linux/gpio.h>
+#include <linux/irq.h>
+
+/* GPIO port for VBUS detecting */
+static int vbus_gpio_port = -1;		/* GPIO port number (-1:Not used) */
+
+#define PCH_VBUS_PERIOD		3000	/* VBUS polling period (msec) */
+#define PCH_VBUS_INTERVAL	10	/* VBUS polling interval (msec) */
+>>>>>>> cm-10.0
 
 /* Address offset of Registers */
 #define UDC_EP_REG_SHIFT	0x20	/* Offset to next EP */
@@ -305,6 +323,24 @@ struct pch_udc_ep {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * struct pch_vbus_gpio_data - Structure holding GPIO informaton
+ *					for detecting VBUS
+ * @port:		gpio port number
+ * @intr:		gpio interrupt number
+ * @irq_work_fall	Structure for WorkQueue
+ * @irq_work_rise	Structure for WorkQueue
+ */
+struct pch_vbus_gpio_data {
+	int			port;
+	int			intr;
+	struct work_struct	irq_work_fall;
+	struct work_struct	irq_work_rise;
+};
+
+/**
+>>>>>>> cm-10.0
  * struct pch_udc_dev - Structure holding complete information
  *			of the PCH USB device
  * @gadget:		gadget driver data
@@ -320,6 +356,10 @@ struct pch_udc_ep {
  * @registered:		driver regsitered with system
  * @suspended:		driver in suspended state
  * @connected:		gadget driver associated
+<<<<<<< HEAD
+=======
+ * @vbus_session:	required vbus_session state
+>>>>>>> cm-10.0
  * @set_cfg_not_acked:	pending acknowledgement 4 setup
  * @waiting_zlp_ack:	pending acknowledgement 4 ZLP
  * @data_requests:	DMA pool for data requests
@@ -331,6 +371,10 @@ struct pch_udc_ep {
  * @base_addr:		for mapped device memory
  * @irq:		IRQ line for the device
  * @cfg_data:		current cfg, intf, and alt in use
+<<<<<<< HEAD
+=======
+ * @vbus_gpio:		GPIO informaton for detecting VBUS
+>>>>>>> cm-10.0
  */
 struct pch_udc_dev {
 	struct usb_gadget		gadget;
@@ -346,6 +390,10 @@ struct pch_udc_dev {
 			registered:1,
 			suspended:1,
 			connected:1,
+<<<<<<< HEAD
+=======
+			vbus_session:1,
+>>>>>>> cm-10.0
 			set_cfg_not_acked:1,
 			waiting_zlp_ack:1;
 	struct pci_pool		*data_requests;
@@ -356,18 +404,31 @@ struct pch_udc_dev {
 	unsigned long			phys_addr;
 	void __iomem			*base_addr;
 	unsigned			irq;
+<<<<<<< HEAD
 	struct pch_udc_cfg_data	cfg_data;
+=======
+	struct pch_udc_cfg_data		cfg_data;
+	struct pch_vbus_gpio_data	vbus_gpio;
+>>>>>>> cm-10.0
 };
 
 #define PCH_UDC_PCI_BAR			1
 #define PCI_DEVICE_ID_INTEL_EG20T_UDC	0x8808
 #define PCI_VENDOR_ID_ROHM		0x10DB
 #define PCI_DEVICE_ID_ML7213_IOH_UDC	0x801D
+<<<<<<< HEAD
+=======
+#define PCI_DEVICE_ID_ML7831_IOH_UDC	0x8808
+>>>>>>> cm-10.0
 
 static const char	ep0_string[] = "ep0in";
 static DEFINE_SPINLOCK(udc_stall_spinlock);	/* stall spin lock */
 struct pch_udc_dev *pch_udc;		/* pointer to device object */
+<<<<<<< HEAD
 static int speed_fs;
+=======
+static bool speed_fs;
+>>>>>>> cm-10.0
 module_param_named(speed_fs, speed_fs, bool, S_IRUGO);
 MODULE_PARM_DESC(speed_fs, "true for Full speed operation");
 
@@ -562,6 +623,32 @@ static void pch_udc_clear_disconnect(struct pch_udc_dev *dev)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * pch_udc_reconnect() - This API initializes usb device controller,
+ *						and clear the disconnect status.
+ * @dev:		Reference to pch_udc_regs structure
+ */
+static void pch_udc_init(struct pch_udc_dev *dev);
+static void pch_udc_reconnect(struct pch_udc_dev *dev)
+{
+	pch_udc_init(dev);
+
+	/* enable device interrupts */
+	/* pch_udc_enable_interrupts() */
+	pch_udc_bit_clr(dev, UDC_DEVIRQMSK_ADDR,
+			UDC_DEVINT_UR | UDC_DEVINT_ENUM);
+
+	/* Clear the disconnect */
+	pch_udc_bit_set(dev, UDC_DEVCTL_ADDR, UDC_DEVCTL_RES);
+	pch_udc_bit_clr(dev, UDC_DEVCTL_ADDR, UDC_DEVCTL_SD);
+	mdelay(1);
+	/* Resume USB signalling */
+	pch_udc_bit_clr(dev, UDC_DEVCTL_ADDR, UDC_DEVCTL_RES);
+}
+
+/**
+>>>>>>> cm-10.0
  * pch_udc_vbus_session() - set or clearr the disconnect status.
  * @dev:	Reference to pch_udc_regs structure
  * @is_active:	Parameter specifying the action
@@ -571,10 +658,25 @@ static void pch_udc_clear_disconnect(struct pch_udc_dev *dev)
 static inline void pch_udc_vbus_session(struct pch_udc_dev *dev,
 					  int is_active)
 {
+<<<<<<< HEAD
 	if (is_active)
 		pch_udc_clear_disconnect(dev);
 	else
 		pch_udc_set_disconnect(dev);
+=======
+	if (is_active) {
+		pch_udc_reconnect(dev);
+		dev->vbus_session = 1;
+	} else {
+		if (dev->driver && dev->driver->disconnect) {
+			spin_unlock(&dev->lock);
+			dev->driver->disconnect(&dev->gadget);
+			spin_lock(&dev->lock);
+		}
+		pch_udc_set_disconnect(dev);
+		dev->vbus_session = 0;
+	}
+>>>>>>> cm-10.0
 }
 
 /**
@@ -947,7 +1049,11 @@ static void pch_udc_ep_enable(struct pch_udc_ep *ep,
 	else
 		buff_size = UDC_EPOUT_BUFF_SIZE;
 	pch_udc_ep_set_bufsz(ep, buff_size, ep->in);
+<<<<<<< HEAD
 	pch_udc_ep_set_maxpkt(ep, le16_to_cpu(desc->wMaxPacketSize));
+=======
+	pch_udc_ep_set_maxpkt(ep, usb_endpoint_maxp(desc));
+>>>>>>> cm-10.0
 	pch_udc_ep_set_nak(ep);
 	pch_udc_ep_fifo_flush(ep, ep->in);
 	/* Configure the endpoint */
@@ -957,7 +1063,11 @@ static void pch_udc_ep_enable(struct pch_udc_ep *ep,
 	      (cfg->cur_cfg << UDC_CSR_NE_CFG_SHIFT) |
 	      (cfg->cur_intf << UDC_CSR_NE_INTF_SHIFT) |
 	      (cfg->cur_alt << UDC_CSR_NE_ALT_SHIFT) |
+<<<<<<< HEAD
 	      le16_to_cpu(desc->wMaxPacketSize) << UDC_CSR_NE_MAX_PKT_SHIFT;
+=======
+	      usb_endpoint_maxp(desc) << UDC_CSR_NE_MAX_PKT_SHIFT;
+>>>>>>> cm-10.0
 
 	if (ep->in)
 		pch_udc_write_csr(ep->dev, val, UDC_EPIN_IDX(ep->num));
@@ -1134,7 +1244,21 @@ static int pch_udc_pcd_pullup(struct usb_gadget *gadget, int is_on)
 	if (!gadget)
 		return -EINVAL;
 	dev = container_of(gadget, struct pch_udc_dev, gadget);
+<<<<<<< HEAD
 	pch_udc_vbus_session(dev, is_on);
+=======
+	if (is_on) {
+		pch_udc_reconnect(dev);
+	} else {
+		if (dev->driver && dev->driver->disconnect) {
+			spin_unlock(&dev->lock);
+			dev->driver->disconnect(&dev->gadget);
+			spin_lock(&dev->lock);
+		}
+		pch_udc_set_disconnect(dev);
+	}
+
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -1176,6 +1300,12 @@ static int pch_udc_pcd_vbus_draw(struct usb_gadget *gadget, unsigned int mA)
 	return -EOPNOTSUPP;
 }
 
+<<<<<<< HEAD
+=======
+static int pch_udc_start(struct usb_gadget_driver *driver,
+	int (*bind)(struct usb_gadget *));
+static int pch_udc_stop(struct usb_gadget_driver *driver);
+>>>>>>> cm-10.0
 static const struct usb_gadget_ops pch_udc_ops = {
 	.get_frame = pch_udc_pcd_get_frame,
 	.wakeup = pch_udc_pcd_wakeup,
@@ -1183,9 +1313,199 @@ static const struct usb_gadget_ops pch_udc_ops = {
 	.pullup = pch_udc_pcd_pullup,
 	.vbus_session = pch_udc_pcd_vbus_session,
 	.vbus_draw = pch_udc_pcd_vbus_draw,
+<<<<<<< HEAD
 };
 
 /**
+=======
+	.start	= pch_udc_start,
+	.stop	= pch_udc_stop,
+};
+
+/**
+ * pch_vbus_gpio_get_value() - This API gets value of GPIO port as VBUS status.
+ * @dev:	Reference to the driver structure
+ *
+ * Return value:
+ *	1: VBUS is high
+ *	0: VBUS is low
+ *     -1: It is not enable to detect VBUS using GPIO
+ */
+static int pch_vbus_gpio_get_value(struct pch_udc_dev *dev)
+{
+	int vbus = 0;
+
+	if (dev->vbus_gpio.port)
+		vbus = gpio_get_value(dev->vbus_gpio.port) ? 1 : 0;
+	else
+		vbus = -1;
+
+	return vbus;
+}
+
+/**
+ * pch_vbus_gpio_work_fall() - This API keeps watch on VBUS becoming Low.
+ *                             If VBUS is Low, disconnect is processed
+ * @irq_work:	Structure for WorkQueue
+ *
+ */
+static void pch_vbus_gpio_work_fall(struct work_struct *irq_work)
+{
+	struct pch_vbus_gpio_data *vbus_gpio = container_of(irq_work,
+		struct pch_vbus_gpio_data, irq_work_fall);
+	struct pch_udc_dev *dev =
+		container_of(vbus_gpio, struct pch_udc_dev, vbus_gpio);
+	int vbus_saved = -1;
+	int vbus;
+	int count;
+
+	if (!dev->vbus_gpio.port)
+		return;
+
+	for (count = 0; count < (PCH_VBUS_PERIOD / PCH_VBUS_INTERVAL);
+		count++) {
+		vbus = pch_vbus_gpio_get_value(dev);
+
+		if ((vbus_saved == vbus) && (vbus == 0)) {
+			dev_dbg(&dev->pdev->dev, "VBUS fell");
+			if (dev->driver
+				&& dev->driver->disconnect) {
+				dev->driver->disconnect(
+					&dev->gadget);
+			}
+			if (dev->vbus_gpio.intr)
+				pch_udc_init(dev);
+			else
+				pch_udc_reconnect(dev);
+			return;
+		}
+		vbus_saved = vbus;
+		mdelay(PCH_VBUS_INTERVAL);
+	}
+}
+
+/**
+ * pch_vbus_gpio_work_rise() - This API checks VBUS is High.
+ *                             If VBUS is High, connect is processed
+ * @irq_work:	Structure for WorkQueue
+ *
+ */
+static void pch_vbus_gpio_work_rise(struct work_struct *irq_work)
+{
+	struct pch_vbus_gpio_data *vbus_gpio = container_of(irq_work,
+		struct pch_vbus_gpio_data, irq_work_rise);
+	struct pch_udc_dev *dev =
+		container_of(vbus_gpio, struct pch_udc_dev, vbus_gpio);
+	int vbus;
+
+	if (!dev->vbus_gpio.port)
+		return;
+
+	mdelay(PCH_VBUS_INTERVAL);
+	vbus = pch_vbus_gpio_get_value(dev);
+
+	if (vbus == 1) {
+		dev_dbg(&dev->pdev->dev, "VBUS rose");
+		pch_udc_reconnect(dev);
+		return;
+	}
+}
+
+/**
+ * pch_vbus_gpio_irq() - IRQ handler for GPIO intrerrupt for changing VBUS
+ * @irq:	Interrupt request number
+ * @dev:	Reference to the device structure
+ *
+ * Return codes:
+ *	0: Success
+ *	-EINVAL: GPIO port is invalid or can't be initialized.
+ */
+static irqreturn_t pch_vbus_gpio_irq(int irq, void *data)
+{
+	struct pch_udc_dev *dev = (struct pch_udc_dev *)data;
+
+	if (!dev->vbus_gpio.port || !dev->vbus_gpio.intr)
+		return IRQ_NONE;
+
+	if (pch_vbus_gpio_get_value(dev))
+		schedule_work(&dev->vbus_gpio.irq_work_rise);
+	else
+		schedule_work(&dev->vbus_gpio.irq_work_fall);
+
+	return IRQ_HANDLED;
+}
+
+/**
+ * pch_vbus_gpio_init() - This API initializes GPIO port detecting VBUS.
+ * @dev:	Reference to the driver structure
+ * @vbus_gpio	Number of GPIO port to detect gpio
+ *
+ * Return codes:
+ *	0: Success
+ *	-EINVAL: GPIO port is invalid or can't be initialized.
+ */
+static int pch_vbus_gpio_init(struct pch_udc_dev *dev, int vbus_gpio_port)
+{
+	int err;
+	int irq_num = 0;
+
+	dev->vbus_gpio.port = 0;
+	dev->vbus_gpio.intr = 0;
+
+	if (vbus_gpio_port <= -1)
+		return -EINVAL;
+
+	err = gpio_is_valid(vbus_gpio_port);
+	if (!err) {
+		pr_err("%s: gpio port %d is invalid\n",
+			__func__, vbus_gpio_port);
+		return -EINVAL;
+	}
+
+	err = gpio_request(vbus_gpio_port, "pch_vbus");
+	if (err) {
+		pr_err("%s: can't request gpio port %d, err: %d\n",
+			__func__, vbus_gpio_port, err);
+		return -EINVAL;
+	}
+
+	dev->vbus_gpio.port = vbus_gpio_port;
+	gpio_direction_input(vbus_gpio_port);
+	INIT_WORK(&dev->vbus_gpio.irq_work_fall, pch_vbus_gpio_work_fall);
+
+	irq_num = gpio_to_irq(vbus_gpio_port);
+	if (irq_num > 0) {
+		irq_set_irq_type(irq_num, IRQ_TYPE_EDGE_BOTH);
+		err = request_irq(irq_num, pch_vbus_gpio_irq, 0,
+			"vbus_detect", dev);
+		if (!err) {
+			dev->vbus_gpio.intr = irq_num;
+			INIT_WORK(&dev->vbus_gpio.irq_work_rise,
+				pch_vbus_gpio_work_rise);
+		} else {
+			pr_err("%s: can't request irq %d, err: %d\n",
+				__func__, irq_num, err);
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * pch_vbus_gpio_free() - This API frees resources of GPIO port
+ * @dev:	Reference to the driver structure
+ */
+static void pch_vbus_gpio_free(struct pch_udc_dev *dev)
+{
+	if (dev->vbus_gpio.intr)
+		free_irq(dev->vbus_gpio.intr, dev);
+
+	if (dev->vbus_gpio.port)
+		gpio_free(dev->vbus_gpio.port);
+}
+
+/**
+>>>>>>> cm-10.0
  * complete_req() - This API is invoked from the driver when processing
  *			of a request is complete
  * @ep:		Reference to the endpoint structure
@@ -1461,7 +1781,11 @@ static int pch_udc_pcd_ep_enable(struct usb_ep *usbep,
 	ep->desc = desc;
 	ep->halted = 0;
 	pch_udc_ep_enable(ep, &ep->dev->cfg_data, desc);
+<<<<<<< HEAD
 	ep->ep.maxpacket = le16_to_cpu(desc->wMaxPacketSize);
+=======
+	ep->ep.maxpacket = usb_endpoint_maxp(desc);
+>>>>>>> cm-10.0
 	pch_udc_enable_ep_interrupts(ep->dev, PCH_UDC_EPINT(ep->in, ep->num));
 	spin_unlock_irqrestore(&dev->lock, iflags);
 	return 0;
@@ -1496,6 +1820,10 @@ static int pch_udc_pcd_ep_disable(struct usb_ep *usbep)
 	pch_udc_ep_disable(ep);
 	pch_udc_disable_ep_interrupts(ep->dev, PCH_UDC_EPINT(ep->in, ep->num));
 	ep->desc = NULL;
+<<<<<<< HEAD
+=======
+	ep->ep.desc = NULL;
+>>>>>>> cm-10.0
 	INIT_LIST_HEAD(&ep->queue);
 	spin_unlock_irqrestore(&ep->dev->lock, iflags);
 	return 0;
@@ -2338,8 +2666,16 @@ static void pch_udc_svc_ur_interrupt(struct pch_udc_dev *dev)
 		/* Complete request queue */
 		empty_req_queue(ep);
 	}
+<<<<<<< HEAD
 	if (dev->driver && dev->driver->disconnect)
 		dev->driver->disconnect(&dev->gadget);
+=======
+	if (dev->driver && dev->driver->disconnect) {
+		spin_unlock(&dev->lock);
+		dev->driver->disconnect(&dev->gadget);
+		spin_lock(&dev->lock);
+	}
+>>>>>>> cm-10.0
 }
 
 /**
@@ -2374,6 +2710,14 @@ static void pch_udc_svc_enum_interrupt(struct pch_udc_dev *dev)
 	pch_udc_set_dma(dev, DMA_DIR_TX);
 	pch_udc_set_dma(dev, DMA_DIR_RX);
 	pch_udc_ep_set_rrdy(&(dev->ep[UDC_EP0OUT_IDX]));
+<<<<<<< HEAD
+=======
+
+	/* enable device interrupts */
+	pch_udc_enable_interrupts(dev, UDC_DEVINT_UR | UDC_DEVINT_US |
+					UDC_DEVINT_ES | UDC_DEVINT_ENUM |
+					UDC_DEVINT_SI | UDC_DEVINT_SC);
+>>>>>>> cm-10.0
 }
 
 /**
@@ -2462,12 +2806,27 @@ static void pch_udc_svc_cfg_interrupt(struct pch_udc_dev *dev)
  */
 static void pch_udc_dev_isr(struct pch_udc_dev *dev, u32 dev_intr)
 {
+<<<<<<< HEAD
 	/* USB Reset Interrupt */
 	if (dev_intr & UDC_DEVINT_UR)
 		pch_udc_svc_ur_interrupt(dev);
 	/* Enumeration Done Interrupt */
 	if (dev_intr & UDC_DEVINT_ENUM)
 		pch_udc_svc_enum_interrupt(dev);
+=======
+	int vbus;
+
+	/* USB Reset Interrupt */
+	if (dev_intr & UDC_DEVINT_UR) {
+		pch_udc_svc_ur_interrupt(dev);
+		dev_dbg(&dev->pdev->dev, "USB_RESET\n");
+	}
+	/* Enumeration Done Interrupt */
+	if (dev_intr & UDC_DEVINT_ENUM) {
+		pch_udc_svc_enum_interrupt(dev);
+		dev_dbg(&dev->pdev->dev, "USB_ENUM\n");
+	}
+>>>>>>> cm-10.0
 	/* Set Interface Interrupt */
 	if (dev_intr & UDC_DEVINT_SI)
 		pch_udc_svc_intf_interrupt(dev);
@@ -2475,8 +2834,35 @@ static void pch_udc_dev_isr(struct pch_udc_dev *dev, u32 dev_intr)
 	if (dev_intr & UDC_DEVINT_SC)
 		pch_udc_svc_cfg_interrupt(dev);
 	/* USB Suspend interrupt */
+<<<<<<< HEAD
 	if (dev_intr & UDC_DEVINT_US)
 		dev_dbg(&dev->pdev->dev, "USB_SUSPEND\n");
+=======
+	if (dev_intr & UDC_DEVINT_US) {
+		if (dev->driver
+			&& dev->driver->suspend) {
+			spin_unlock(&dev->lock);
+			dev->driver->suspend(&dev->gadget);
+			spin_lock(&dev->lock);
+		}
+
+		vbus = pch_vbus_gpio_get_value(dev);
+		if ((dev->vbus_session == 0)
+			&& (vbus != 1)) {
+			if (dev->driver && dev->driver->disconnect) {
+				spin_unlock(&dev->lock);
+				dev->driver->disconnect(&dev->gadget);
+				spin_lock(&dev->lock);
+			}
+			pch_udc_reconnect(dev);
+		} else if ((dev->vbus_session == 0)
+			&& (vbus == 1)
+			&& !dev->vbus_gpio.intr)
+			schedule_work(&dev->vbus_gpio.irq_work_fall);
+
+		dev_dbg(&dev->pdev->dev, "USB_SUSPEND\n");
+	}
+>>>>>>> cm-10.0
 	/* Clear the SOF interrupt, if enabled */
 	if (dev_intr & UDC_DEVINT_SOF)
 		dev_dbg(&dev->pdev->dev, "SOF\n");
@@ -2502,6 +2888,17 @@ static irqreturn_t pch_udc_isr(int irq, void *pdev)
 	dev_intr = pch_udc_read_device_interrupts(dev);
 	ep_intr = pch_udc_read_ep_interrupts(dev);
 
+<<<<<<< HEAD
+=======
+	/* For a hot plug, this find that the controller is hung up. */
+	if (dev_intr == ep_intr)
+		if (dev_intr == pch_udc_readl(dev, UDC_DEVCFG_ADDR)) {
+			dev_dbg(&dev->pdev->dev, "UDC: Hung up\n");
+			/* The controller is reset */
+			pch_udc_writel(dev, UDC_SRST, UDC_SRST_ADDR);
+			return IRQ_HANDLED;
+		}
+>>>>>>> cm-10.0
 	if (dev_intr)
 		/* Clear device interrupts */
 		pch_udc_write_device_interrupts(dev, dev_intr);
@@ -2628,6 +3025,10 @@ static int pch_udc_pcd_init(struct pch_udc_dev *dev)
 {
 	pch_udc_init(dev);
 	pch_udc_pcd_reinit(dev);
+<<<<<<< HEAD
+=======
+	pch_vbus_gpio_init(dev, vbus_gpio_port);
+>>>>>>> cm-10.0
 	return 0;
 }
 
@@ -2690,13 +3091,21 @@ static int init_dma_pools(struct pch_udc_dev *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 int usb_gadget_probe_driver(struct usb_gadget_driver *driver,
+=======
+static int pch_udc_start(struct usb_gadget_driver *driver,
+>>>>>>> cm-10.0
 	int (*bind)(struct usb_gadget *))
 {
 	struct pch_udc_dev	*dev = pch_udc;
 	int			retval;
 
+<<<<<<< HEAD
 	if (!driver || (driver->speed == USB_SPEED_UNKNOWN) || !bind ||
+=======
+	if (!driver || (driver->max_speed == USB_SPEED_UNKNOWN) || !bind ||
+>>>>>>> cm-10.0
 	    !driver->setup || !driver->unbind || !driver->disconnect) {
 		dev_err(&dev->pdev->dev,
 			"%s: invalid driver parameter\n", __func__);
@@ -2728,14 +3137,24 @@ int usb_gadget_probe_driver(struct usb_gadget_driver *driver,
 	pch_udc_setup_ep0(dev);
 
 	/* clear SD */
+<<<<<<< HEAD
 	pch_udc_clear_disconnect(dev);
+=======
+	if ((pch_vbus_gpio_get_value(dev) != 0) || !dev->vbus_gpio.intr)
+		pch_udc_clear_disconnect(dev);
+>>>>>>> cm-10.0
 
 	dev->connected = 1;
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(usb_gadget_probe_driver);
 
 int usb_gadget_unregister_driver(struct usb_gadget_driver *driver)
+=======
+
+static int pch_udc_stop(struct usb_gadget_driver *driver)
+>>>>>>> cm-10.0
 {
 	struct pch_udc_dev	*dev = pch_udc;
 
@@ -2761,7 +3180,10 @@ int usb_gadget_unregister_driver(struct usb_gadget_driver *driver)
 	pch_udc_set_disconnect(dev);
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(usb_gadget_unregister_driver);
+=======
+>>>>>>> cm-10.0
 
 static void pch_udc_shutdown(struct pci_dev *pdev)
 {
@@ -2778,6 +3200,11 @@ static void pch_udc_remove(struct pci_dev *pdev)
 {
 	struct pch_udc_dev	*dev = pci_get_drvdata(pdev);
 
+<<<<<<< HEAD
+=======
+	usb_del_gadget_udc(&dev->gadget);
+
+>>>>>>> cm-10.0
 	/* gadget driver must not be registered */
 	if (dev->driver)
 		dev_err(&pdev->dev,
@@ -2806,6 +3233,11 @@ static void pch_udc_remove(struct pci_dev *pdev)
 				 UDC_EP0OUT_BUFF_SIZE * 4, DMA_FROM_DEVICE);
 	kfree(dev->ep0out_buf);
 
+<<<<<<< HEAD
+=======
+	pch_vbus_gpio_free(dev);
+
+>>>>>>> cm-10.0
 	pch_udc_exit(dev);
 
 	if (dev->irq_registered)
@@ -2915,8 +3347,15 @@ static int pch_udc_probe(struct pci_dev *pdev,
 	}
 	pch_udc = dev;
 	/* initialize the hardware */
+<<<<<<< HEAD
 	if (pch_udc_pcd_init(dev))
 		goto finished;
+=======
+	if (pch_udc_pcd_init(dev)) {
+		retval = -ENODEV;
+		goto finished;
+	}
+>>>>>>> cm-10.0
 	if (request_irq(pdev->irq, pch_udc_isr, IRQF_SHARED, KBUILD_MODNAME,
 			dev)) {
 		dev_err(&pdev->dev, "%s: request_irq(%d) fail\n", __func__,
@@ -2944,7 +3383,11 @@ static int pch_udc_probe(struct pci_dev *pdev,
 	dev->gadget.dev.dma_mask = pdev->dev.dma_mask;
 	dev->gadget.dev.release = gadget_release;
 	dev->gadget.name = KBUILD_MODNAME;
+<<<<<<< HEAD
 	dev->gadget.is_dualspeed = 1;
+=======
+	dev->gadget.max_speed = USB_SPEED_HIGH;
+>>>>>>> cm-10.0
 
 	retval = device_register(&dev->gadget.dev);
 	if (retval)
@@ -2953,6 +3396,12 @@ static int pch_udc_probe(struct pci_dev *pdev,
 
 	/* Put the device in disconnected state till a driver is bound */
 	pch_udc_set_disconnect(dev);
+<<<<<<< HEAD
+=======
+	retval = usb_add_gadget_udc(&pdev->dev, &dev->gadget);
+	if (retval)
+		goto finished;
+>>>>>>> cm-10.0
 	return 0;
 
 finished:
@@ -2971,6 +3420,14 @@ static DEFINE_PCI_DEVICE_TABLE(pch_udc_pcidev_id) = {
 		.class = (PCI_CLASS_SERIAL_USB << 8) | 0xfe,
 		.class_mask = 0xffffffff,
 	},
+<<<<<<< HEAD
+=======
+	{
+		PCI_DEVICE(PCI_VENDOR_ID_ROHM, PCI_DEVICE_ID_ML7831_IOH_UDC),
+		.class = (PCI_CLASS_SERIAL_USB << 8) | 0xfe,
+		.class_mask = 0xffffffff,
+	},
+>>>>>>> cm-10.0
 	{ 0 },
 };
 
@@ -3000,5 +3457,9 @@ static void __exit pch_udc_pci_exit(void)
 module_exit(pch_udc_pci_exit);
 
 MODULE_DESCRIPTION("Intel EG20T USB Device Controller");
+<<<<<<< HEAD
 MODULE_AUTHOR("OKI SEMICONDUCTOR, <toshiharu-linux@dsn.okisemi.com>");
+=======
+MODULE_AUTHOR("LAPIS Semiconductor, <tomoya-linux@dsn.lapis-semi.com>");
+>>>>>>> cm-10.0
 MODULE_LICENSE("GPL");

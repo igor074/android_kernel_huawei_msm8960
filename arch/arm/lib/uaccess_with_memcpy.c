@@ -17,6 +17,10 @@
 #include <linux/sched.h>
 #include <linux/hardirq.h> /* for in_atomic() */
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/highmem.h>
+>>>>>>> cm-10.0
 #include <asm/current.h>
 #include <asm/page.h>
 

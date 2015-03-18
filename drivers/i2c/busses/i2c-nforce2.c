@@ -309,7 +309,11 @@ static struct i2c_algorithm smbus_algorithm = {
 };
 
 
+<<<<<<< HEAD
 static const struct pci_device_id nforce2_ids[] = {
+=======
+static DEFINE_PCI_DEVICE_TABLE(nforce2_ids) = {
+>>>>>>> cm-10.0
 	{ PCI_DEVICE(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_NFORCE2_SMBUS) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_NFORCE2S_SMBUS) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_NFORCE3_SMBUS) },
@@ -356,7 +360,11 @@ static int __devinit nforce2_probe_smb (struct pci_dev *dev, int bar,
 	error = acpi_check_region(smbus->base, smbus->size,
 				  nforce2_driver.name);
 	if (error)
+<<<<<<< HEAD
 		return -1;
+=======
+		return error;
+>>>>>>> cm-10.0
 
 	if (!request_region(smbus->base, smbus->size, nforce2_driver.name)) {
 		dev_err(&smbus->adapter.dev, "Error requesting region %02x .. %02X for %s\n",

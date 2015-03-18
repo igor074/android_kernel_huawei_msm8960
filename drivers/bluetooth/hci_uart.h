@@ -4,7 +4,11 @@
  *
  *  Copyright (C) 2002-2003  Maxim Krasnyansky <maxk@qualcomm.com>
  *  Copyright (C) 2004-2005  Marcel Holtmann <marcel@holtmann.org>
+<<<<<<< HEAD
  *  Copyright (c) 2000-2001, 2010, Code Aurora Forum. All rights reserved.
+=======
+ *  Copyright (c) 2000-2001, 2010, 2012 The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -66,6 +70,10 @@ struct hci_uart {
 	unsigned long		hdev_flags;
 
 	struct hci_uart_proto	*proto;
+<<<<<<< HEAD
+=======
+	struct tasklet_struct	tty_wakeup_task;
+>>>>>>> cm-10.0
 	void			*priv;
 
 	struct sk_buff		*tx_skb;

@@ -217,7 +217,11 @@ static struct device_node *find_pe_dn(struct pci_dev *dev, int *total)
 	if (!dn)
 		return NULL;
 
+<<<<<<< HEAD
 	dn = find_device_pe(dn);
+=======
+	dn = eeh_find_device_pe(dn);
+>>>>>>> cm-10.0
 	if (!dn)
 		return NULL;
 

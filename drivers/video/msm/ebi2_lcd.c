@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+=======
+/* Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
+>>>>>>> cm-10.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -56,8 +60,11 @@ static struct platform_driver ebi2_lcd_driver = {
 	.probe = ebi2_lcd_probe,
 	.remove = ebi2_lcd_remove,
 	.suspend = NULL,
+<<<<<<< HEAD
 	.suspend_late = NULL,
 	.resume_early = NULL,
+=======
+>>>>>>> cm-10.0
 	.resume = NULL,
 	.shutdown = NULL,
 	.driver = {
@@ -71,17 +78,52 @@ static void *ebi2_lcd_cfg0;
 static void *ebi2_lcd_cfg1;
 static void __iomem *lcd01_base;
 static void __iomem *lcd02_base;
+<<<<<<< HEAD
+=======
+static int lcd01_base_phys;
+>>>>>>> cm-10.0
 static int ebi2_lcd_resource_initialized;
 
 static struct platform_device *pdev_list[MSM_FB_MAX_DEV_LIST];
 static int pdev_list_cnt;
+<<<<<<< HEAD
+=======
+static struct lcdc_platform_data *ebi2_pdata;
+
+static int ebi2_lcd_on(struct platform_device *pdev)
+{
+	int ret;
+
+	if (ebi2_pdata && ebi2_pdata->lcdc_power_save)
+		ebi2_pdata->lcdc_power_save(1);
+
+	ret = panel_next_on(pdev);
+	return ret;
+}
+
+static int ebi2_lcd_off(struct platform_device *pdev)
+{
+	int ret;
+
+	ret = panel_next_off(pdev);
+
+	if (ebi2_pdata && ebi2_pdata->lcdc_power_save)
+		ebi2_pdata->lcdc_power_save(0);
+
+	return ret;
+}
+>>>>>>> cm-10.0
 
 static int ebi2_lcd_probe(struct platform_device *pdev)
 {
 	struct msm_fb_data_type *mfd;
 	struct platform_device *mdp_dev = NULL;
 	struct msm_fb_panel_data *pdata = NULL;
+<<<<<<< HEAD
 	int rc, i;
+=======
+	int rc, i, hw_version;
+>>>>>>> cm-10.0
 
 	if (pdev->id == 0) {
 		for (i = 0; i < pdev->num_resources; i++) {
@@ -98,6 +140,10 @@ static int ebi2_lcd_probe(struct platform_device *pdev)
 				ebi2_lcd_cfg1 = (void *)(ebi2_base + 0x24);
 			} else if (!strncmp(pdev->resource[i].name,
 						"lcd01", 5)) {
+<<<<<<< HEAD
+=======
+				lcd01_base_phys = pdev->resource[i].start;
+>>>>>>> cm-10.0
 				lcd01_base = ioremap(pdev->resource[i].start,
 						pdev->resource[i].end -
 						pdev->resource[i].start + 1);
@@ -118,7 +164,13 @@ static int ebi2_lcd_probe(struct platform_device *pdev)
 				}
 			}
 		}
+<<<<<<< HEAD
 		ebi2_lcd_resource_initialized = 1;
+=======
+		ebi2_pdata = pdev->dev.platform_data;
+		ebi2_lcd_resource_initialized = 1;
+
+>>>>>>> cm-10.0
 		return 0;
 	}
 
@@ -158,15 +210,29 @@ static int ebi2_lcd_probe(struct platform_device *pdev)
 
 	/* data chain */
 	pdata = mdp_dev->dev.platform_data;
+<<<<<<< HEAD
 	pdata->on = panel_next_on;
 	pdata->off = panel_next_off;
+=======
+	pdata->on = ebi2_lcd_on;
+	pdata->off = ebi2_lcd_off;
+>>>>>>> cm-10.0
 	pdata->next = pdev;
 
 	/* get/set panel specific fb info */
 	mfd->panel_info = pdata->panel_info;
 
+<<<<<<< HEAD
 	if (mfd->panel_info.bpp == 24)
 		mfd->fb_imgType = MDP_RGB_888;
+=======
+	hw_version = inp32((int)ebi2_base + 8);
+
+	if (mfd->panel_info.bpp == 24)
+		mfd->fb_imgType = MDP_RGB_888;
+	else if (mfd->panel_info.bpp == 18)
+		mfd->fb_imgType = MDP_RGB_888;
+>>>>>>> cm-10.0
 	else
 		mfd->fb_imgType = MDP_RGB_565;
 
@@ -181,10 +247,19 @@ static int ebi2_lcd_probe(struct platform_device *pdev)
 		 * configure both.
 		 */
 		outp32(ebi2_lcd_cfg0, mfd->panel_info.wait_cycle);
+<<<<<<< HEAD
 		if (mfd->panel_info.bpp == 18)
 			outp32(ebi2_lcd_cfg1, 0x01000000);
 		else
 			outp32(ebi2_lcd_cfg1, 0x0);
+=======
+		if (hw_version < 0x2020) {
+			if (mfd->panel_info.bpp == 18)
+				outp32(ebi2_lcd_cfg1, 0x01000000);
+			else
+				outp32(ebi2_lcd_cfg1, 0x0);
+		}
+>>>>>>> cm-10.0
 	} else {
 #ifdef DEBUG_EBI2_LCD
 		/*
@@ -201,10 +276,25 @@ static int ebi2_lcd_probe(struct platform_device *pdev)
 	 */
 	if (mfd->panel_info.pdest == DISPLAY_1) {
 		mfd->cmd_port = lcd01_base;
+<<<<<<< HEAD
 		mfd->data_port =
 		    (void *)((uint32) mfd->cmd_port + EBI2_PRIM_LCD_RS_PIN);
 		mfd->data_port_phys =
 		    (void *)(LCD_PRIM_BASE_PHYS + EBI2_PRIM_LCD_RS_PIN);
+=======
+		if (hw_version >= 0x2020) {
+			mfd->data_port =
+				(void *)((uint32) mfd->cmd_port + 0x80);
+			mfd->data_port_phys =
+				(void *)(lcd01_base_phys + 0x80);
+		} else {
+			mfd->data_port =
+			    (void *)((uint32) mfd->cmd_port +
+				    EBI2_PRIM_LCD_RS_PIN);
+			mfd->data_port_phys =
+			    (void *)(LCD_PRIM_BASE_PHYS + EBI2_PRIM_LCD_RS_PIN);
+		}
+>>>>>>> cm-10.0
 	} else {
 		mfd->cmd_port = lcd01_base;
 		mfd->data_port =

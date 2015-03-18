@@ -36,6 +36,10 @@
 #include <linux/etherdevice.h>
 #include <linux/usb.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/export.h>
+>>>>>>> cm-10.0
 
 #include "uwb-internal.h"
 
