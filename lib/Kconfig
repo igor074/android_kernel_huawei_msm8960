@@ -19,8 +19,6 @@ config RATIONAL
 config GENERIC_FIND_FIRST_BIT
 	bool
 
-<<<<<<< HEAD
-=======
 config NO_GENERIC_PCI_IOPORT_MAP
 	bool
 
@@ -35,7 +33,6 @@ config GENERIC_IO
 	boolean
 	default n
 
->>>>>>> cm-10.0
 config CRC_CCITT
 	tristate "CRC-CCITT functions"
 	help
@@ -68,20 +65,11 @@ config CRC_ITU_T
 	  functions require M here.
 
 config CRC32
-<<<<<<< HEAD
-	tristate "CRC32 functions"
-=======
 	tristate "CRC32/CRC32c functions"
->>>>>>> cm-10.0
 	default y
 	select BITREVERSE
 	help
 	  This option is provided for the case where no in-kernel-tree
-<<<<<<< HEAD
-	  modules require CRC32 functions, but a module built outside the
-	  kernel tree does. Such modules that use library CRC32 functions
-	  require M here.
-=======
 	  modules require CRC32/CRC32c functions, but a module built outside
 	  the kernel tree does. Such modules that use library CRC32/CRC32c
 	  functions require M here.
@@ -142,7 +130,6 @@ config CRC32_BIT
 	  Only choose this option if you are debugging crc32.
 
 endchoice
->>>>>>> cm-10.0
 
 config CRC7
 	tristate "CRC7 functions"
@@ -163,8 +150,6 @@ config LIBCRC32C
 	  require M here.  See Castagnoli93.
 	  Module will be libcrc32c.
 
-<<<<<<< HEAD
-=======
 config CRC8
 	tristate "CRC8 function"
 	help
@@ -172,7 +157,6 @@ config CRC8
 	  when they need to do cyclic redundancy check according CRC8
 	  algorithm. Module will be called crc8.
 
->>>>>>> cm-10.0
 config AUDIT_GENERIC
 	bool
 	depends on AUDIT && !AUDIT_ARCH
@@ -301,10 +285,7 @@ config BTREE
 config HAS_IOMEM
 	boolean
 	depends on !NO_IOMEM
-<<<<<<< HEAD
-=======
 	select GENERIC_IO
->>>>>>> cm-10.0
 	default y
 
 config HAS_IOPORT
@@ -335,12 +316,9 @@ config CPU_RMAP
 	bool
 	depends on SMP
 
-<<<<<<< HEAD
-=======
 config DQL
 	bool
 
->>>>>>> cm-10.0
 #
 # Netlink attribute parsing support is select'ed if needed
 #
@@ -366,8 +344,6 @@ config AVERAGE
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
-=======
 config CLZ_TAB
 	bool
 
@@ -402,5 +378,4 @@ config SIGNATURE
 	  Digital signature verification. Currently only RSA is supported.
 	  Implementation is done using GnuPG MPI library
 
->>>>>>> cm-10.0
 endmenu

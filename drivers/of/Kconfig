@@ -15,8 +15,6 @@ config PROC_DEVICETREE
 	  an image of the device tree that the kernel copies from Open
 	  Firmware or other boot firmware. If unsure, say Y here.
 
-<<<<<<< HEAD
-=======
 config OF_SELFTEST
 	bool "Device Tree Runtime self tests"
 	help
@@ -26,7 +24,6 @@ config OF_SELFTEST
 
 	  If unsure, say N here, but this option is safe to enable.
 
->>>>>>> cm-10.0
 config OF_FLATTREE
 	bool
 	select DTC
@@ -38,16 +35,10 @@ config OF_EARLY_FLATTREE
 config OF_PROMTREE
 	bool
 
-<<<<<<< HEAD
-config OF_DYNAMIC
-	def_bool y
-	depends on PPC_OF
-=======
 # Hardly any platforms need this.  It is safe to select, but only do so if you
 # need it.
 config OF_DYNAMIC
 	bool
->>>>>>> cm-10.0
 
 config OF_ADDRESS
 	def_bool y
@@ -90,12 +81,6 @@ config OF_MDIO
 
 config OF_PCI
 	def_tristate PCI
-<<<<<<< HEAD
-	depends on PCI && (PPC || MICROBLAZE || X86)
-	help
-	  OpenFirmware PCI bus accessors
-
-=======
 	depends on PCI
 	help
 	  OpenFirmware PCI bus accessors
@@ -122,5 +107,4 @@ config OF_SLIMBUS
 	help
 	  OpenFirmware SLIMBUS accessors
 
->>>>>>> cm-10.0
 endmenu # OF

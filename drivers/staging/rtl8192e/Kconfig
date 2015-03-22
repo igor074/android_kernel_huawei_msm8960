@@ -1,14 +1,4 @@
-<<<<<<< HEAD
-config RTL8192E
-	tristate "RealTek RTL8192E Wireless LAN NIC driver"
-	depends on PCI && WLAN
-	depends on m
-	select WIRELESS_EXT
-	select WEXT_PRIV
-	select CRYPTO
-	default N
-	---help---
-=======
+
 config RTLLIB
 	tristate "Support for rtllib wireless devices"
 	depends on WLAN && m
@@ -52,4 +42,3 @@ config RTLLIB_CRYPTO_WEP
 source "drivers/staging/rtl8192e/rtl8192e/Kconfig"
 
 endif
->>>>>>> cm-10.0

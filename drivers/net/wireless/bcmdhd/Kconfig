@@ -31,8 +31,6 @@ config BCMDHD_WEXT
 	select WEXT_PRIV
 	help
 	  Enables WEXT support
-<<<<<<< HEAD
-=======
 
 config DHD_USE_STATIC_BUF
 	bool "Enable memory preallocation"
@@ -47,4 +45,3 @@ config DHD_USE_SCHED_SCAN
 	default n
 	---help---
 	  Use CFG80211 sched scan
->>>>>>> cm-10.0

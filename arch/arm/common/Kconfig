@@ -1,20 +1,12 @@
 config ARM_GIC
 	select IRQ_DOMAIN
-<<<<<<< HEAD
-	bool
-	select MSM_SHOW_RESUME_IRQ
-=======
 	select MULTI_IRQ_HANDLER
 	select MSM_SHOW_RESUME_IRQ
 	bool
->>>>>>> cm-10.0
 
 config GIC_NON_BANKED
 	bool
 
-<<<<<<< HEAD
-config ARM_VIC
-=======
 config GIC_SECURE
 	bool
 	depends on ARM_GIC
@@ -22,7 +14,6 @@ config GIC_SECURE
 config ARM_VIC
 	select IRQ_DOMAIN
 	select MULTI_IRQ_HANDLER
->>>>>>> cm-10.0
 	bool
 
 config ARM_VIC_NR
@@ -38,12 +29,6 @@ config ARM_VIC_NR
 config ICST
 	bool
 
-<<<<<<< HEAD
-config PL330
-	bool
-
-=======
->>>>>>> cm-10.0
 config SA1111
 	bool
 	select DMABOUNCE if !ARCH_PXA
@@ -52,12 +37,6 @@ config DMABOUNCE
 	bool
 	select ZONE_DMA
 
-<<<<<<< HEAD
-config TIMER_ACORN
-	bool
-
-=======
->>>>>>> cm-10.0
 config SHARP_LOCOMO
 	bool
 

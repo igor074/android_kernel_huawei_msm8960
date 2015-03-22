@@ -7,28 +7,17 @@ config ARCH_MSM7X01A
 	select ARCH_MSM_ARM11
 	select MSM_VIC
 	select CPU_V6
-<<<<<<< HEAD
-	select MSM_REMOTE_SPINLOCK_SWP
-	select MSM_PM if PM
-=======
 	select GPIO_MSM_V1
 	select MSM_REMOTE_SPINLOCK_SWP
->>>>>>> cm-10.0
 
 config ARCH_MSM7X25
 	bool "MSM7x25"
 	select ARCH_MSM_ARM11
 	select MSM_VIC
 	select CPU_V6
-<<<<<<< HEAD
-	select MSM_REMOTE_SPINLOCK_SWP
-	select MULTI_IRQ_HANDLER
-	select MSM_PM if PM
-=======
 	select GPIO_MSM_V1
 	select MSM_REMOTE_SPINLOCK_SWP
 	select MULTI_IRQ_HANDLER
->>>>>>> cm-10.0
 
 config ARCH_MSM7X27
 	bool "MSM7x27"
@@ -38,10 +27,7 @@ config ARCH_MSM7X27
 	select MSM_VIC
 	select CPU_V6 if MSM_SOC_REV_NONE
 	select CPU_V7 if MSM_SOC_REV_A
-<<<<<<< HEAD
-=======
 	select GPIO_MSM_V1
->>>>>>> cm-10.0
 	select MSM_REMOTE_SPINLOCK_SWP if MSM_SOC_REV_NONE
 	select MSM_GPIOMUX
 	select REGULATOR
@@ -50,23 +36,17 @@ config ARCH_MSM7X27
 	select CLEANCACHE
 	select QCACHE
 	select MSM_PM2 if PM
-<<<<<<< HEAD
-=======
 	select MSM_RUN_QUEUE_STATS if MSM_SOC_REV_A
 	select DONT_MAP_HOLE_AFTER_MEMBANK0
 	select MIGHT_HAVE_CACHE_L2X0
 	select MSM_MODEM_RESTART
->>>>>>> cm-10.0
 
 config ARCH_MSM7X30
 	bool "MSM7x30"
 	select ARCH_MSM_SCORPION
 	select MSM_VIC
 	select CPU_V7
-<<<<<<< HEAD
-=======
 	select GPIO_MSM_V1
->>>>>>> cm-10.0
 	select MSM_REMOTE_SPINLOCK_DEKKERS
 	select ARCH_SPARSEMEM_ENABLE
 	select ARCH_HAS_HOLES_MEMORYMODEL
@@ -85,31 +65,22 @@ config ARCH_MSM7X30
 	select MSM_PROC_COMM_REGULATOR
 	select MULTI_IRQ_HANDLER
 	select MSM_PM2 if PM
-<<<<<<< HEAD
-=======
 	select HOLES_IN_ZONE if SPARSEMEM
 	select MSM_MODEM_RESTART
->>>>>>> cm-10.0
 
 config ARCH_QSD8X50
 	bool "QSD8X50"
 	select ARCH_MSM_SCORPION
 	select MSM_VIC
 	select CPU_V7
-<<<<<<< HEAD
-=======
 	select GPIO_MSM_V1
->>>>>>> cm-10.0
 	select MSM_REMOTE_SPINLOCK_LDREX
 	select CPU_USE_DOMAINS
 	select EMULATE_DOMAIN_MANAGER_V7
 	select MSM_GPIOMUX
 	select MSM_DALRPC
 	select MSM_PM2 if PM
-<<<<<<< HEAD
-=======
 	select MSM_MODEM_RESTART
->>>>>>> cm-10.0
 
 config ARCH_MSM8X60
 	bool "MSM8X60"
@@ -122,11 +93,7 @@ config ARCH_MSM8X60
 	select MSM_ADM3
 	select REGULATOR
 	select MSM_RPM_REGULATOR
-<<<<<<< HEAD
-	select MSM_V2_TLMM
-=======
 	select GPIO_MSM_V2
->>>>>>> cm-10.0
 	select MSM_PIL
 	select ARCH_HAS_CPU_IDLE_WAIT
 	select MSM_DIRECT_SCLK_ACCESS
@@ -137,10 +104,7 @@ config ARCH_MSM8X60
 	select MSM_SECURE_IO
 	select MSM_DALRPC
 	select MSM_QDSP6_APR
-<<<<<<< HEAD
-=======
 	select MSM_QDSP6_CODECS
->>>>>>> cm-10.0
 	select MSM_NATIVE_RESTART
 	select ARCH_INLINE_SPIN_TRYLOCK
 	select ARCH_INLINE_SPIN_TRYLOCK_BH
@@ -175,22 +139,15 @@ config ARCH_MSM8X60
 	select MULTI_IRQ_HANDLER
 	select MSM_MULTIMEDIA_USE_ION
 	select MSM_PM8X60 if PM
-<<<<<<< HEAD
-=======
 	select MSM_RUN_QUEUE_STATS
 	select ARM_HAS_SG_CHAIN
->>>>>>> cm-10.0
 
 config ARCH_MSM8960
 	bool "MSM8960"
 	select ARCH_MSM_KRAITMP
 	select ARM_GIC
 	select CPU_V7
-<<<<<<< HEAD
-	select MSM_V2_TLMM
-=======
 	select GPIO_MSM_V2
->>>>>>> cm-10.0
 	select MSM_GPIOMUX
 	select MSM_SCM if SMP
 	select MSM_DIRECT_SCLK_ACCESS
@@ -199,10 +156,7 @@ config ARCH_MSM8960
 	select MSM_RPM
 	select MSM_XO
 	select MSM_QDSP6_APR
-<<<<<<< HEAD
-=======
 	select MSM_QDSP6_CODECS
->>>>>>> cm-10.0
 	select MSM_PIL
 	select MSM_AUDIO_QDSP6 if SND_SOC
 	select CPU_HAS_L2_PMU
@@ -211,62 +165,35 @@ config ARCH_MSM8960
 	select MSM_NATIVE_RESTART
 	select DONT_MAP_HOLE_AFTER_MEMBANK0
 	select MSM_REMOTE_SPINLOCK_SFPB
-<<<<<<< HEAD
-	select ARCH_POPULATES_NODE_MAP
 	select ARCH_SPARSEMEM_ENABLE
 	select ARCH_HAS_HOLES_MEMORYMODEL
-	select MEMORY_HOTPLUG if ENABLE_DMM
-	select MEMORY_HOTREMOVE if ENABLE_DMM
-	select ARCH_ENABLE_MEMORY_HOTPLUG if ENABLE_DMM
-	select ARCH_ENABLE_MEMORY_HOTREMOVE if ENABLE_DMM
-	select MIGRATION if ENABLE_DMM
-	select ARCH_MEMORY_PROBE if ENABLE_DMM
-	select ARCH_MEMORY_REMOVE if ENABLE_DMM
-	select FIX_MOVABLE_ZONE if ENABLE_DMM
-=======
-	select ARCH_SPARSEMEM_ENABLE
-	select ARCH_HAS_HOLES_MEMORYMODEL
->>>>>>> cm-10.0
 	select CLEANCACHE
 	select QCACHE
 	select MSM_MULTIMEDIA_USE_ION
 	select MULTI_IRQ_HANDLER
 	select MSM_PM8X60 if PM
 	select HOLES_IN_ZONE if SPARSEMEM
-<<<<<<< HEAD
-=======
 	select MSM_RUN_QUEUE_STATS
 	select ARM_HAS_SG_CHAIN
 	select MSM_KRAIT_WFE_FIXUP
 	select MSM_IOMMU_GPU_SYNC
 	select MSM_CPU_PWRCTL
->>>>>>> cm-10.0
 
 config ARCH_MSM8930
 	bool "MSM8930"
 	select ARCH_MSM_KRAITMP
 	select ARM_GIC
 	select CPU_V7
-<<<<<<< HEAD
-	select MSM_V2_TLMM
-=======
 	select GPIO_MSM_V2
->>>>>>> cm-10.0
 	select MSM_GPIOMUX
 	select MSM_SCM if SMP
 	select MSM_DIRECT_SCLK_ACCESS
 	select REGULATOR
-<<<<<<< HEAD
-	select MSM_RPM
-	select MSM_XO
-	select MSM_QDSP6_APR
-=======
 	select MSM_RPM_REGULATOR
 	select MSM_RPM
 	select MSM_XO
 	select MSM_QDSP6_APR
 	select MSM_QDSP6_CODECS
->>>>>>> cm-10.0
 	select MSM_PIL
 	select MSM_AUDIO_QDSP6 if SND_SOC
 	select CPU_HAS_L2_PMU
@@ -275,43 +202,21 @@ config ARCH_MSM8930
 	select MSM_NATIVE_RESTART
 	select DONT_MAP_HOLE_AFTER_MEMBANK0
 	select MSM_REMOTE_SPINLOCK_SFPB
-<<<<<<< HEAD
-	select ARCH_POPULATES_NODE_MAP
 	select ARCH_SPARSEMEM_ENABLE
 	select ARCH_HAS_HOLES_MEMORYMODEL
-	select MEMORY_HOTPLUG if ENABLE_DMM
-	select MEMORY_HOTREMOVE if ENABLE_DMM
-	select ARCH_ENABLE_MEMORY_HOTPLUG if ENABLE_DMM
-	select ARCH_ENABLE_MEMORY_HOTREMOVE if ENABLE_DMM
-	select MIGRATION if ENABLE_DMM
-	select ARCH_MEMORY_PROBE if ENABLE_DMM
-	select ARCH_MEMORY_REMOVE if ENABLE_DMM
-	select FIX_MOVABLE_ZONE if ENABLE_DMM
-=======
-	select ARCH_SPARSEMEM_ENABLE
-	select ARCH_HAS_HOLES_MEMORYMODEL
->>>>>>> cm-10.0
 	select MSM_ULTRASOUND
 	select MULTI_IRQ_HANDLER
 	select MSM_PM8X60 if PM
 	select HOLES_IN_ZONE if SPARSEMEM
-<<<<<<< HEAD
-=======
 	select ARM_HAS_SG_CHAIN
 	select MSM_KRAIT_WFE_FIXUP
 	select MSM_IOMMU_GPU_SYNC
 	select MSM_CPU_PWRCTL
->>>>>>> cm-10.0
 
 config ARCH_APQ8064
 	bool "APQ8064"
 	select ARCH_MSM_KRAITMP
-<<<<<<< HEAD
-	select MACH_APQ8064_SIM if !MACH_APQ8064_RUMI3
-	select MSM_V2_TLMM
-=======
 	select GPIO_MSM_V2
->>>>>>> cm-10.0
 	select ARM_GIC
 	select CPU_V7
 	select MSM_SCM if SMP
@@ -319,17 +224,6 @@ config ARCH_APQ8064
 	select MSM_REMOTE_SPINLOCK_SFPB
 	select MSM_PIL
 	select MSM_QDSP6_APR
-<<<<<<< HEAD
-	select MSM_AUDIO_QDSP6 if SND_SOC
-	select MULTI_IRQ_HANDLER
-	select MSM_PM8X60 if PM
-	select HOLES_IN_ZONE if SPARSEMEM
-
-config ARCH_MSMCOPPER
-	bool "MSM Copper"
-	select ARCH_MSM_KRAITMP
-	select MSM_V2_TLMM
-=======
 	select MSM_QDSP6_CODECS
 	select MSM_AUDIO_QDSP6 if SND_SOC
 	select MULTI_IRQ_HANDLER
@@ -352,15 +246,12 @@ config ARCH_MSM8974
 	bool "MSM8974"
 	select ARCH_MSM_KRAITMP
 	select GPIO_MSM_V3
->>>>>>> cm-10.0
 	select ARM_GIC
 	select CPU_V7
 	select MSM_SCM if SMP
 	select MSM_GPIOMUX
 	select MULTI_IRQ_HANDLER
 	select MSM_MULTIMEDIA_USE_ION
-<<<<<<< HEAD
-=======
 	select MSM_PIL
 	select MSM_SPM_V2
 	select MSM_L2_SPM
@@ -374,7 +265,6 @@ config ARCH_MSM8974
 	select MSM_AUDIO_QDSP6V2 if SND_SOC
 	select MSM_RPM_REGULATOR_SMD
 	select ARM_HAS_SG_CHAIN
->>>>>>> cm-10.0
 
 config ARCH_FSM9XXX
 	bool "FSM9XXX"
@@ -382,27 +272,17 @@ config ARCH_FSM9XXX
 	select MSM_VIC
 	select CPU_V7
 	select MSM_REMOTE_SPINLOCK_LDREX
-<<<<<<< HEAD
-	select FSM9XXX_TLMM
-=======
 	select GPIO_FSM9XXX
->>>>>>> cm-10.0
 	select MULTI_IRQ_HANDLER
 	select MSM_DALRPC
 
 config ARCH_MSM9615
 	bool "MSM9615"
 	select ARM_GIC
-<<<<<<< HEAD
-	select ARCH_MSM_CORTEX_A5
-	select CPU_V7
-	select MSM_V2_TLMM
-=======
 	select GIC_SECURE
 	select ARCH_MSM_CORTEX_A5
 	select CPU_V7
 	select GPIO_MSM_V2
->>>>>>> cm-10.0
 	select MSM_GPIOMUX
 	select MSM_RPM
 	select MSM_SPM_V2
@@ -411,21 +291,6 @@ config ARCH_MSM9615
 	select MSM_RPM_REGULATOR
 	select MULTI_IRQ_HANDLER
 	select MSM_PM8X60 if PM
-<<<<<<< HEAD
-
-endmenu
-
-config  HUAWEI_KERNEL
-	bool "HUAWEI Product"
-	depends on ARCH_MSM8960
-
-config HUAWEI_KERNEL_DEBUG
-	bool "HUAWEI kernel debug"
-	depends on HUAWEI_KERNEL
-	default n
-	help
-	  Select Y if print HUAWEI log
-=======
 	select MSM_XO
 	select MSM_MULTIMEDIA_USE_ION
 	select MSM_QDSP6_APR
@@ -460,7 +325,6 @@ config ARCH_MSM9625
 	select GPIO_MSM_V2
 
 endmenu
->>>>>>> cm-10.0
 
 choice
 	prompt "MSM SoC Revision"
@@ -497,27 +361,19 @@ config  ARCH_MSM_KRAIT
 	select ARM_L1_CACHE_SHIFT_6
 
 config  MSM_SMP
-<<<<<<< HEAD
-=======
 	select HAVE_SMP
->>>>>>> cm-10.0
 	bool
 
 config  ARCH_MSM_SCORPIONMP
 	select ARCH_MSM_SCORPION
 	select MSM_SMP
-<<<<<<< HEAD
-=======
 	select HAVE_ARCH_HAS_CURRENT_TIMER
 	select MSM_JTAG if MSM_QDSS
->>>>>>> cm-10.0
 	bool
 
 config  ARCH_MSM_KRAITMP
 	select ARCH_MSM_KRAIT
 	select MSM_SMP
-<<<<<<< HEAD
-=======
 	select HAVE_ARCH_HAS_CURRENT_TIMER
 	select MSM_JTAG if MSM_QDSS
 	bool
@@ -528,7 +384,6 @@ config  ARCH_MSM_CORTEXMP
 	bool
 
 config  MSM_KRAIT_WFE_FIXUP
->>>>>>> cm-10.0
 	bool
 
 config  ARCH_MSM_CORTEX_A5
@@ -540,13 +395,10 @@ config ARCH_MSM7X27A
 	select MSM_DALRPC
 	select MSM_PROC_COMM_REGULATOR
 	select MULTI_IRQ_HANDLER
-<<<<<<< HEAD
-=======
 	select ARM_GIC
 	select ARCH_MSM_CORTEXMP
 	select MIGHT_HAVE_CACHE_L2X0
 	select ARM_HAS_SG_CHAIN
->>>>>>> cm-10.0
 
 config  MSM_VIC
 	bool
@@ -555,13 +407,10 @@ config MSM_RPM
 	bool "Resource Power Manager"
 	select MSM_MPM
 
-<<<<<<< HEAD
-=======
 config MSM_RPM_SMD
 	depends on MSM_SMD
 	bool "Support for using SMD as the transport layer for communicatons with RPM"
 
->>>>>>> cm-10.0
 config MSM_MPM
 	bool "Modem Power Manager"
 
@@ -673,9 +522,6 @@ config MACH_MSM7627A_QRD1
         default y
         bool "MSM7627A QRD1"
         help
-<<<<<<< HEAD
-          Support for the Qualcomm MSM7627A Refrence Design.
-=======
           Support for the Qualcomm MSM7627A Reference Design.
 
 config MACH_MSM7627A_QRD3
@@ -741,7 +587,6 @@ config MACH_MSM8625_EVT
 	bool "MSM8625 EVT"
 	help
 	  Support for the Qualcomm MSM8625 Reference Design.
->>>>>>> cm-10.0
 
 config MACH_MSM7X30_SURF
        depends on ARCH_MSM7X30
@@ -995,8 +840,6 @@ config MACH_APQ8064_RUMI3
 	help
 	  Support for the Qualcomm APQ8064 RUMI3 emulator.
 
-<<<<<<< HEAD
-=======
 config MACH_APQ8064_CDP
 	depends on ARCH_APQ8064
 	bool "APQ8064 CDP"
@@ -1033,7 +876,6 @@ config MACH_MPQ8064_DTV
 	help
 	  Support for the Qualcomm MPQ8064 DTV device.
 
->>>>>>> cm-10.0
 config MACH_FSM9XXX_SURF
 	depends on ARCH_FSM9XXX
 	depends on !MSM_STACKED_MEMORY
@@ -1060,14 +902,9 @@ config PHYS_OFFSET
 	default "0x80200000" if ARCH_APQ8064
 	default "0x80200000" if ARCH_MSM8960
 	default "0x80200000" if ARCH_MSM8930
-<<<<<<< HEAD
-	default "0x80200000" if ARCH_MSMCOPPER
-	default "0x10000000" if ARCH_FSM9XXX
-=======
 	default "0x00000000" if ARCH_MSM8974
 	default "0x10000000" if ARCH_FSM9XXX
 	default "0x20200000" if ARCH_MSM9625
->>>>>>> cm-10.0
 	default "0x00200000" if !MSM_STACKED_MEMORY
 	default "0x00000000" if ARCH_QSD8X50 && MSM_SOC_REV_A
 	default "0x20000000" if ARCH_QSD8X50
@@ -1077,11 +914,7 @@ config PHYS_OFFSET
 config KERNEL_PMEM_EBI_REGION
 	bool "Enable in-kernel PMEM region for EBI"
 	default y if ARCH_MSM8X60
-<<<<<<< HEAD
-	depends on ANDROID_PMEM && (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSMCOPPER)
-=======
 	depends on ANDROID_PMEM && (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
->>>>>>> cm-10.0
 	help
 	   Enable the in-kernel PMEM allocator to use EBI memory.
 
@@ -1131,15 +964,6 @@ config MSM_HAS_DEBUG_UART_HS_V14
 	help
 	  Say Y here if high speed MSM UART v1.4 is present.
 
-<<<<<<< HEAD
-config DEBUG_MSM8930_UART
-	bool "Kernel low-level debugging messages via MSM 8930 UART"
-	depends on ARCH_MSM8930 && DEBUG_LL
-	select MSM_HAS_DEBUG_UART_HS
-	help
-	  Say Y here if you want the debug print routines to direct
-	  their output to the serial port on MSM 8930 devices.
-=======
 config MSM_DEBUG_UART_PHYS
 	hex
 	default 0xA9A00000 if (ARCH_MSM7X27 || ARCH_QSD8X50) && DEBUG_MSM_UART1
@@ -1150,7 +974,6 @@ config MSM_DEBUG_UART_PHYS
 	default 0x94100000 if ARCH_FSM9XXX && DEBUG_MSM_UART2
 	default 0xA9C00000 if (ARCH_MSM7X27 || ARCH_QSD8X50) && DEBUG_MSM_UART3
 	default 0xACC00000 if ARCH_MSM7X30 && DEBUG_MSM_UART3
->>>>>>> cm-10.0
 
 choice
 	prompt "Debug UART"
@@ -1158,33 +981,21 @@ choice
 
 	config DEBUG_MSM_UART1
 		bool "Kernel low-level debugging messages via MSM UART1"
-<<<<<<< HEAD
-		depends on ARCH_MSM7X00A || ARCH_MSM7X30 || ARCH_QSD8X50
-=======
 		depends on ARCH_MSM7X27 || ARCH_MSM7X30 || ARCH_QSD8X50 || ARCH_FSM9XXX
->>>>>>> cm-10.0
 		help
 		  Say Y here if you want the debug print routines to direct
 		  their output to the first serial port on MSM devices.
 
 	config DEBUG_MSM_UART2
 		bool "Kernel low-level debugging messages via MSM UART2"
-<<<<<<< HEAD
-		depends on ARCH_MSM7X00A || ARCH_MSM7X30 || ARCH_QSD8X50
-=======
 		depends on ARCH_MSM7X27 || ARCH_MSM7X30 || ARCH_QSD8X50 || ARCH_FSM9XXX
->>>>>>> cm-10.0
 		help
 		  Say Y here if you want the debug print routines to direct
 		  their output to the second serial port on MSM devices.
 
 	config DEBUG_MSM_UART3
 		bool "Kernel low-level debugging messages via MSM UART3"
-<<<<<<< HEAD
-		depends on ARCH_MSM7X00A || ARCH_MSM7X30 || ARCH_QSD8X50
-=======
 		depends on ARCH_MSM7X27 || ARCH_MSM7X30 || ARCH_QSD8X50
->>>>>>> cm-10.0
 		help
 		  Say Y here if you want the debug print routines to direct
 		  their output to the third serial port on MSM devices.
@@ -1199,26 +1010,12 @@ choice
 
 	config DEBUG_MSM8960_UART
 		bool "Kernel low-level debugging messages via MSM 8960 UART"
-<<<<<<< HEAD
-		depends on ARCH_MSM8960
-		select DEBUG_MSM8930_UART
-=======
 		depends on ARCH_MSM8960 && DEBUG_LL
->>>>>>> cm-10.0
 		select MSM_HAS_DEBUG_UART_HS
 		help
 		  Say Y here if you want the debug print routines to direct
 		  their output to the serial port on MSM 8960 devices.
 
-<<<<<<< HEAD
-	config DEBUG_MSMCOPPER_UART
-		bool "Kernel low-level debugging messages via MSM Copper UART"
-		depends on ARCH_MSMCOPPER
-		select MSM_HAS_DEBUG_UART_HS_V14
-		help
-		  Say Y here if you want the debug print routines to direct
-		  their output to the serial port on MSM Copper devices.
-=======
 	config DEBUG_MSM8930_UART
 		bool "Kernel low-level debugging messages via MSM 8930 UART"
 		depends on ARCH_MSM8930 && DEBUG_LL
@@ -1242,7 +1039,6 @@ choice
 		help
 		  Say Y here if you want the debug print routines to direct
 		  their output to the serial port on MSM 8974 devices.
->>>>>>> cm-10.0
 endchoice
 
 choice
@@ -1465,8 +1261,6 @@ choice
 	    prompt "Package 4"
 endchoice
 
-<<<<<<< HEAD
-=======
 config MSM_PCIE
 	bool "MSM PCIe Controller driver"
 	depends on PCI && PCI_MSI
@@ -1474,7 +1268,6 @@ config MSM_PCIE
 	  Enables the PCIe functionality by configures PCIe core on
 	  MSM chipset and by enabling the ARM PCI framework extension.
 
->>>>>>> cm-10.0
 config MSM_RPC_SDIO_XPRT
 	depends on MSM_SDIO_AL
 	default y
@@ -1555,8 +1348,6 @@ config MSM_SMD_LOGGING
 
 	  If in doubt, say yes.
 
-<<<<<<< HEAD
-=======
 config MSM_IPC_LOGGING
 	bool "MSM Debug Logging for IPC Drivers"
 	help
@@ -1564,7 +1355,6 @@ config MSM_IPC_LOGGING
 
 	  If in doubt, say no.
 
->>>>>>> cm-10.0
 config MSM_SMD_NMEA
 	bool "NMEA GPS Driver"
 	depends on MSM_SMD
@@ -2037,12 +1827,6 @@ config MSM_RPM_REGULATOR
 	  voltages and other parameters of the various power rails supplied
 	  by some Qualcomm PMICs.
 
-<<<<<<< HEAD
-config MSM_PIL
-	bool "Peripheral image loading"
-	select FW_LOADER
-	depends on (ARCH_MSM8X60 || ARCH_MSM8960)
-=======
 config MSM_RPM_REGULATOR_SMD
 	bool "SMD RPM regulator driver"
 	depends on REGULATOR
@@ -2058,7 +1842,6 @@ config MSM_RPM_REGULATOR_SMD
 config MSM_PIL
 	bool "Peripheral image loading"
 	select FW_LOADER
->>>>>>> cm-10.0
 	default n
 	help
 	  Some peripherals need to be loaded into memory before they can be
@@ -2087,8 +1870,6 @@ config MSM_PIL_QDSP6V4
 	  The QDSP6 is a low power DSP used in audio, modem firmware, and modem
 	  software applications.
 
-<<<<<<< HEAD
-=======
 config MSM_PIL_LPASS_QDSP6V5
        tristate "LPASS QDSP6v5 (Hexagon) Boot Support"
        depends on MSM_PIL
@@ -2110,7 +1891,6 @@ config MSM_PIL_MBA
 	  Support for booting self-authenticating modems using the Modem Boot
 	  Authenticator.
 
->>>>>>> cm-10.0
 config MSM_PIL_RIVA
 	tristate "RIVA (WCNSS) Boot Support"
 	depends on MSM_PIL
@@ -2129,10 +1909,6 @@ config MSM_PIL_TZAPPS
 	  used to decrypt data and perform secure operations on the behalf of
 	  the kernel.
 
-<<<<<<< HEAD
-config MSM_PIL_VIDC
-	tristate "Video Core Boot Support"
-=======
 config MSM_PIL_DSPS
 	tristate "DSPS Boot Support"
 	depends on MSM_PIL
@@ -2144,13 +1920,10 @@ config MSM_PIL_DSPS
 
 config MSM_PIL_VIDC
 	tristate "Video Core Secure Boot Support"
->>>>>>> cm-10.0
 	depends on MSM_PIL
 	help
 	  Support for authenticating the video core image.
 
-<<<<<<< HEAD
-=======
 config MSM_PIL_VENUS
 	tristate "VENUS (Video) Boot Support"
 	depends on MSM_PIL
@@ -2173,7 +1946,6 @@ config MSM_PIL_PRONTO
 	  PRONTO is the wireless subsystem processor used in bluetooth, wireless
 	  LAN, and FM software applications.
 
->>>>>>> cm-10.0
 config MSM_SCM
 	bool "Secure Channel Manager (SCM) support"
 	default n
@@ -2219,8 +1991,6 @@ config MSM_WCNSS_SSR_8960
 	 monitors WCNSS hardware watchdog interrupt lines and plugs WCNSS
 	 into the subsystem restart framework.
 
-<<<<<<< HEAD
-=======
 config MSM_GSS_SSR_8064
 	bool "MSM 8064 GSS restart driver"
 	depends on (ARCH_APQ8064)
@@ -2229,7 +1999,6 @@ config MSM_GSS_SSR_8064
 	 gss hardware watchdog interrupt lines and plugs into the subsystem
 	 restart and PIL drivers.
 
->>>>>>> cm-10.0
 config SCORPION_Uni_45nm_BUG
 	bool "Scorpion Uni 45nm(SC45U): Workaround for ICIMVAU and BPIMVA"
 	depends on ARCH_MSM7X30 || (ARCH_QSD8X50 && MSM_SOC_REV_A)
@@ -2283,32 +2052,6 @@ config MSM_RPM_STATS_LOG
 	  the low power modes that RPM enters. The drivers outputs the message
 	  via a debugfs node.
 
-<<<<<<< HEAD
-config MSM_IOMMU
-	bool "MSM IOMMU Support"
-	depends on ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_APQ8064
-	select IOMMU_API
-	default n
-	help
-	  Support for the IOMMUs found on certain Qualcomm SOCs.
-	  These IOMMUs allow virtualization of the address space used by most
-	  cores within the multimedia subsystem.
-
-	  If unsure, say N here.
-
-config IOMMU_PGTABLES_L2
-	bool "Allow SMMU page tables in the L2 cache (Experimental)"
-	depends on MSM_IOMMU=y
-	depends on MMU
-	depends on CPU_DCACHE_DISABLE=n
-	depends on SMP
-	default y
-	help
-	 Improves TLB miss latency at the expense of potential L2 pollution.
-	 However, with large multimedia buffers, the TLB should mostly contain
-	 section mappings and TLB misses should be quite infrequent.
-	 Most people can probably say Y here.
-=======
 config MSM_RPM_RBCPR_STATS_LOG
         tristate "MSM Resource Power Manager RPBCPR Stat Driver"
         depends on DEBUG_FS
@@ -2318,7 +2061,6 @@ config MSM_RPM_RBCPR_STATS_LOG
           memory location. These messages provide statistical information about
           RBCPR (Rapid Bridge Core Power Reduction) information . The drivers
           outputs the message via a debugfs node.
->>>>>>> cm-10.0
 
 config MSM_DIRECT_SCLK_ACCESS
 	bool "Direct access to the SCLK timer"
@@ -2330,27 +2072,13 @@ config IOMMU_API
 config MSM_GPIOMUX
 	bool
 
-<<<<<<< HEAD
-config MSM_V2_TLMM
-       bool
-
-config FSM9XXX_TLMM
-	bool
-
-=======
->>>>>>> cm-10.0
 config MSM_SECURE_IO
 	bool
 
 config MSM_NATIVE_RESTART
 	bool
 
-<<<<<<< HEAD
-config MSM_PM
-	depends on PM
-=======
 config MSM_MODEM_RESTART
->>>>>>> cm-10.0
 	bool
 
 config MSM_PM2
@@ -2375,19 +2103,13 @@ config MSM_BUS_RPM_MULTI_TIER_ENABLED
 
 config MSM_WATCHDOG
 	bool "MSM Watchdog Support"
-<<<<<<< HEAD
-	depends on ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM9615
-=======
 	depends on ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM9615 || ARCH_FSM9XXX
->>>>>>> cm-10.0
 	help
 		This enables the watchdog as is present on 8x60. Currently we use
 		core 0's watchdog, and reset the entire SoC if it times out. It does
 		not run during the bootup process, so it will not catch any early
 		lockups.
 
-<<<<<<< HEAD
-=======
 config MSM_WATCHDOG_V2
 	bool "MSM Watchdog Support"
 	help
@@ -2396,7 +2118,6 @@ config MSM_WATCHDOG_V2
 		deadlocks. It does not run during the bootup process, so it will
 		not catch any early lockups.
 
->>>>>>> cm-10.0
 config MSM_DLOAD_MODE
 	bool "Enable download mode on crashes"
 	depends on ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM9615
@@ -2408,11 +2129,6 @@ config MSM_DLOAD_MODE
 		enabled via another mechanism.
 
 config MSM_JTAG
-<<<<<<< HEAD
-        bool "JTAG debug and trace support"
-	help
-          Add additional support for JTAG kernel debugging and tracing.
-=======
 	bool "JTAG and kernel debug and trace support across power collapse"
 	help
 	  Enables support for kernel debugging (specifically breakpoints) and
@@ -2422,7 +2138,6 @@ config MSM_JTAG
 
 	  For production builds, you should probably say 'N' here to avoid
 	  potential power, performance and memory penalty.
->>>>>>> cm-10.0
 
 config MSM_ETM
 	tristate "Enable MSM ETM and ETB"
@@ -2431,30 +2146,6 @@ config MSM_ETM
 	help
 	  Enables embedded trace collection on MSM8660
 
-<<<<<<< HEAD
-config MSM_QDSS
-	bool "Qualcomm Debug Subsystem"
-	select MSM_JTAG
-	help
-	  Enables support for Qualcomm Debug Subsystem.
-
-config MSM_QDSS_ETM_DEFAULT_ENABLE
-	bool "Turn on QDSS ETM Tracing by Default"
-	depends on MSM_QDSS
-	help
-	  Turns on QDSS ETM tracing by default. Otherwise, tracing is
-	  disabled by default but can be enabled by other means.
-
-config CLOCK_MAP
-	bool "Log clk_enable()/clk_disable() calls"
-	help
-	  Turn on extra debugging for clk_enable()/clk_disable() calls.
-	  A bitmap is maintained in non-cached memory and each registered
-	  clock gets a unique id. If the bitmap has that bit set the clock
-	  is enabled, otherwise the clock is disabled.
-
-=======
->>>>>>> cm-10.0
 config MSM_SLEEP_STATS
 	bool "Enable exporting of MSM sleep stats to userspace"
 	depends on CPU_IDLE
@@ -2463,8 +2154,6 @@ config MSM_SLEEP_STATS
 config MSM_SLEEP_STATS_DEVICE
 	bool "Enable exporting of MSM sleep device stats to userspace"
 
-<<<<<<< HEAD
-=======
 config MSM_RUN_QUEUE_STATS
 	bool "Enable collection and exporting of MSM Run Queue stats to userspace"
 	depends on (MSM_SOC_REV_A || ARCH_MSM8X60 || ARCH_MSM8960)
@@ -2473,7 +2162,6 @@ config MSM_RUN_QUEUE_STATS
          in user mode, called MPDecision will be using this data to decide
          on when to switch off/on the other cores.
 
->>>>>>> cm-10.0
 config MSM_STANDALONE_POWER_COLLAPSE
        bool "Enable standalone power collapse"
        default n
@@ -2529,8 +2217,6 @@ config MSM_QDSP6_APR
 	  used by audio driver to configure QDSP6's
 	  ASM, ADM and AFE.
 
-<<<<<<< HEAD
-=======
 config MSM_QDSP6_CODECS
 	bool "Audio Codecs on QDSP6 APR "
 	depends on MSM_SMD
@@ -2549,7 +2235,6 @@ config MSM_QDSP6V2_CODECS
 	  application processor and QDSP6 for B-family. APR is
 	  used by audio driver to configure QDSP6's
 	  ASM, ADM and AFE.
->>>>>>> cm-10.0
 
 config MSM_AUDIO_QDSP6
         bool "QDSP6 HW Audio support"
@@ -2559,8 +2244,6 @@ config MSM_AUDIO_QDSP6
           Enable HW audio support in QDSP6.
           QDSP6 can support HW encoder & decoder and audio processing
 
-<<<<<<< HEAD
-=======
 config MSM_AUDIO_QDSP6V2
         bool "QDSP6V2 HW Audio support"
         select SND_SOC_MSM_QDSP6V2_INTF
@@ -2571,7 +2254,6 @@ config MSM_AUDIO_QDSP6V2
           AAC, AMRNB, AMRWB, EVRC, MP3, QCELP among
           others.
 
->>>>>>> cm-10.0
 config MSM_ULTRASOUND
 	bool "MSM ultrasound support"
 	depends on MSM_AUDIO_QDSP6
@@ -2625,15 +2307,12 @@ config MSM_MULTIMEDIA_USE_ION
 	  instead of pmem. Selecting this may also involve userspace
 	  dependencies as well.
 
-<<<<<<< HEAD
-=======
 config MSM_OCMEM
 	bool "MSM On-Chip memory driver (OCMEM)"
 	help
 	  Enable support for On-Chip Memory available on certain MSM chipsets.
 	  OCMEM is a low latency, high performance pool shared by subsystems.
 
->>>>>>> cm-10.0
 config MSM_RTB
 	bool "Register tracing"
 	help
@@ -2644,18 +2323,13 @@ config MSM_RTB
 config MSM_RTB_SEPARATE_CPUS
 	bool "Separate entries for each cpu"
 	depends on MSM_RTB
-<<<<<<< HEAD
-=======
 	depends on SMP
->>>>>>> cm-10.0
 	help
 	  Under some circumstances, it may be beneficial to give dedicated space
 	  for each cpu to log accesses. Selecting this option will log each cpu
 	  separately. This will guarantee that the last acesses for each cpu
 	  will be logged but there will be fewer entries per cpu
 
-<<<<<<< HEAD
-=======
 config MSM_EBI_ERP
 	bool "External Bus Interface (EBI) error reporting"
 	help
@@ -2666,7 +2340,6 @@ config MSM_EBI_ERP
 
 	  For production builds, you should probably say 'N' here.
 
->>>>>>> cm-10.0
 config MSM_CACHE_ERP
 	bool "Cache / CPU error reporting"
 	depends on ARCH_MSM_KRAIT
@@ -2679,17 +2352,6 @@ config MSM_CACHE_ERP
 	  For production builds, you should probably say 'N' here.
 
 config MSM_L1_ERR_PANIC
-<<<<<<< HEAD
-	bool "Panic on L1 cache / TLB errors"
-	depends on MSM_CACHE_ERP
-	help
-	  To cause the kernel to panic whenever an L1 cache or TLB error is
-	  detected, say 'Y' here. This may be useful as a debugging technique if
-	  general system instability is suspected.
-
-	  For production builds, you should probably say 'N' here.
-
-=======
 	bool "Panic on L1 cache errors"
 	depends on MSM_CACHE_ERP
 	help
@@ -2709,7 +2371,6 @@ config MSM_L1_ERR_LOG
 
 	  For production builds, you may want to say 'Y' here.
 
->>>>>>> cm-10.0
 config MSM_L2_ERP_PRINT_ACCESS_ERRORS
 	bool "Report L2 master port slave/decode errors in kernel log"
 	depends on MSM_CACHE_ERP
@@ -2723,18 +2384,6 @@ config MSM_L2_ERP_PRINT_ACCESS_ERRORS
 	  interrupt rather than as an exception, meaning that the backtrace may
 	  have some skid. This option may help with debugging, though production
 	  builds should probably say 'N' here.
-<<<<<<< HEAD
-config MSM_L1_ERR_LOG
-	bool "Log CPU ERP events to system memory"
-	depends on MSM_CACHE_ERP
-	help
-	  Enable logging CPU ERP events to an area of memory that will be
-	  preserved across a system reset. This may be useful for detecting and
-	  troubleshooting ERP-related system crashes in the field.
-
-	  For production builds, you may want to say 'Y' here.
-=======
->>>>>>> cm-10.0
 
 config MSM_L2_ERP_PORT_PANIC
 	bool "Panic on L2 master port errors"
@@ -2770,16 +2419,6 @@ config MSM_L2_ERP_2BIT_PANIC
 	  For production builds, it may be acceptable to say 'N' here, since
 	  an uncorrectable error might not necessarily cause further problems.
 
-<<<<<<< HEAD
-config MSM_CACHE_DUMP
-	bool "Cache dumping support"
-	help
-	  Add infrastructure to dump the L1 and L2 caches to an allocated buffer.
-	  This allows for analysis of the caches in case cache corruption is
-	  suspected.
-
-=======
->>>>>>> cm-10.0
 config MSM_DCVS
 	bool "Use MSM DCVS for CPU/GPU Frequency control"
 	depends on MSM_SCM
@@ -2789,8 +2428,6 @@ config MSM_DCVS
 	  algorithm and the algorithm returns a frequency for the core which is
 	  passed to the frequency change driver.
 
-<<<<<<< HEAD
-=======
 config MSM_CPR
 	tristate "Use MSM CPR in S/W mode"
 	help
@@ -2807,7 +2444,6 @@ config MSM_VP_REGULATOR
 config HAVE_ARCH_HAS_CURRENT_TIMER
 	bool
 
->>>>>>> cm-10.0
 config MSM_CACHE_DUMP
 	bool "Cache dumping support"
 	help
@@ -2824,8 +2460,6 @@ config MSM_CACHE_DUMP_ON_PANIC
 	  want to dump the L1 and L2 caches on panic before any flush occurs.
 	  If unsure, say N
 
-<<<<<<< HEAD
-=======
 config MSM_HSIC_SYSMON
 	tristate "MSM HSIC system monitor driver"
 	depends on USB
@@ -2850,5 +2484,4 @@ config MSM_CPU_PWRCTL
 	  stand alone power collapse operation. Selecting this option
 	  ensures that they are always off.
 
->>>>>>> cm-10.0
 endif

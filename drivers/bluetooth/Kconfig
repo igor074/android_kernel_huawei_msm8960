@@ -266,7 +266,7 @@ config BT_WILINK
 
 	  Say Y here to compile support for Texas Instrument's WiLink7 driver
 	  into the kernel or say M to compile it as module.
-<<<<<<< HEAD
+
 config BCM_BT
 	tristate "CONFIG BCM BT"
 	help
@@ -275,7 +275,5 @@ config BCM_BT
 config WCN_BT
 	tristate "CONFIG WCN BT"
 	help
-	  Bluetooth WCN CONFIG.
-=======
->>>>>>> cm-10.0
+	
 endmenu

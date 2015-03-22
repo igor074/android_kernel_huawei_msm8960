@@ -12,8 +12,6 @@ config SND_SOC_TEGRA_I2S
 	  Tegra I2S interface. You will also need to select the individual
 	  machine drivers to support below.
 
-<<<<<<< HEAD
-=======
 config SND_SOC_TEGRA_SPDIF
 	tristate
 	depends on SND_SOC_TEGRA
@@ -23,7 +21,6 @@ config SND_SOC_TEGRA_SPDIF
 	  You will also need to select the individual machine drivers to support
 	  below.
 
->>>>>>> cm-10.0
 config MACH_HAS_SND_SOC_TEGRA_WM8903
 	bool
 	help
@@ -50,8 +47,6 @@ config SND_SOC_TEGRA_TRIMSLICE
 	help
 	  Say Y or M here if you want to add support for SoC audio on the
 	  TrimSlice platform.
-<<<<<<< HEAD
-=======
 
 config SND_SOC_TEGRA_ALC5632
        tristate "SoC Audio support for Tegra boards using an ALC5632 codec"
@@ -61,4 +56,3 @@ config SND_SOC_TEGRA_ALC5632
        help
          Say Y or M here if you want to add support for SoC audio on the
          Toshiba AC100 netbook.
->>>>>>> cm-10.0

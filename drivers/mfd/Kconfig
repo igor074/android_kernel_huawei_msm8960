@@ -2,28 +2,8 @@
 # Multifunction miscellaneous devices
 #
 
-<<<<<<< HEAD
-menuconfig MFD_SUPPORT
-	bool "Multifunction device drivers"
-	depends on HAS_IOMEM
-	default y
-	help
-	  Multifunction devices embed several functions (e.g. GPIOs,
-	  touchscreens, keyboards, current regulators, power management chips,
-	  etc...) in one single integrated circuit. They usually talk to the
-	  main CPU through one or more IRQ lines and low speed data busses (SPI,
-	  I2C, etc..). They appear as one single device to the main system
-	  through the data bus and the MFD framework allows for sub devices
-	  (a.k.a. functions) to appear as discrete platform devices.
-	  MFDs are typically found on embedded platforms.
-
-	  This option alone does not add any kernel code.
-
-if MFD_SUPPORT
-=======
 if HAS_IOMEM
 menu "Multifunction device drivers"
->>>>>>> cm-10.0
 
 config MFD_CORE
 	tristate
@@ -32,10 +12,7 @@ config MFD_CORE
 config MFD_88PM860X
 	bool "Support Marvell 88PM8606/88PM8607"
 	depends on I2C=y && GENERIC_HARDIRQS
-<<<<<<< HEAD
-=======
 	select REGMAP_I2C
->>>>>>> cm-10.0
 	select MFD_CORE
 	help
 	  This supports for Marvell 88PM8606/88PM8607 Power Management IC.
@@ -198,8 +175,6 @@ config TPS6507X
 	  This driver can also be built as a module.  If so, the module
 	  will be called tps6507x.
 
-<<<<<<< HEAD
-=======
 config MFD_TPS65217
 	tristate "TPS65217 Power Management / White LED chips"
 	depends on I2C
@@ -215,7 +190,6 @@ config MFD_TPS65217
 	  This driver can also be built as a module.  If so, the module
 	  will be called tps65217.
 
->>>>>>> cm-10.0
 config MFD_TPS6586X
 	bool "TPS6586x Power Management chips"
 	depends on I2C=y && GPIOLIB && GENERIC_HARDIRQS
@@ -230,8 +204,6 @@ config MFD_TPS6586X
 	  This driver can also be built as a module.  If so, the module
 	  will be called tps6586x.
 
-<<<<<<< HEAD
-=======
 config MFD_TPS65910
 	bool "TPS65910 Power Management chip"
 	depends on I2C=y && GPIOLIB
@@ -264,7 +236,6 @@ config MFD_TPS65912_SPI
 	  If you say yes here you get support for the TPS65912 series of
 	  PM chips with SPI interface.
 
->>>>>>> cm-10.0
 config MENELAUS
 	bool "Texas Instruments TWL92330/Menelaus PM chip"
 	depends on I2C=y && ARCH_OMAP2
@@ -305,10 +276,7 @@ config TIMPANI_CODEC
 config TWL4030_CORE
 	bool "Texas Instruments TWL4030/TWL5030/TWL6030/TPS659x0 Support"
 	depends on I2C=y && GENERIC_HARDIRQS
-<<<<<<< HEAD
-=======
 	select IRQ_DOMAIN
->>>>>>> cm-10.0
 	help
 	  Say yes here if you have TWL4030 / TWL6030 family chip on your board.
 	  This core driver provides register access and IRQ handling
@@ -359,16 +327,6 @@ config TWL6030_PWM
 	  This is used to control charging LED brightness.
 
 config TWL6040_CORE
-<<<<<<< HEAD
-	bool
-	depends on TWL4030_CORE && GENERIC_HARDIRQS
-	select MFD_CORE
-	default n
-
-config MFD_STMPE
-	bool "Support STMicroelectronics STMPE"
-	depends on I2C=y && GENERIC_HARDIRQS
-=======
 	bool "Support for TWL6040 audio codec"
 	depends on I2C=y && GENERIC_HARDIRQS
 	select MFD_CORE
@@ -384,7 +342,6 @@ config MFD_STMPE
 config MFD_STMPE
 	bool "Support STMicroelectronics STMPE"
 	depends on (I2C=y || SPI_MASTER=y) && GENERIC_HARDIRQS
->>>>>>> cm-10.0
 	select MFD_CORE
 	help
 	  Support for the STMPE family of I/O Expanders from
@@ -405,8 +362,6 @@ config MFD_STMPE
 		Keypad: stmpe-keypad
 		Touchscreen: stmpe-ts
 
-<<<<<<< HEAD
-=======
 menu "STMPE Interface Drivers"
 depends on MFD_STMPE
 
@@ -424,7 +379,6 @@ config STMPE_SPI
 	  This is used to enable SPI interface of STMPE
 endmenu
 
->>>>>>> cm-10.0
 config MFD_TC3589X
 	bool "Support Toshiba TC35892 and variants"
 	depends on I2C=y && GENERIC_HARDIRQS
@@ -458,11 +412,7 @@ config MFD_TC6387XB
 
 config MFD_TC6393XB
 	bool "Support Toshiba TC6393XB"
-<<<<<<< HEAD
-	depends on GPIOLIB && ARM
-=======
 	depends on GPIOLIB && ARM && HAVE_CLK
->>>>>>> cm-10.0
 	select MFD_CORE
 	select MFD_TMIO
 	help
@@ -479,8 +429,6 @@ config PMIC_DA903X
 	  individual components like LCD backlight, voltage regulators,
 	  LEDs and battery-charger under the corresponding menus.
 
-<<<<<<< HEAD
-=======
 config PMIC_DA9052
 	bool
 	select MFD_CORE
@@ -509,7 +457,6 @@ config MFD_DA9052_I2C
 	  for accessing the device, additional drivers must be enabled in
 	  order to use the functionality of the device.
 
->>>>>>> cm-10.0
 config PMIC_ADP5520
 	bool "Analog Devices ADP5520/01 MFD PMIC Core Support"
 	depends on I2C=y
@@ -535,11 +482,7 @@ config MFD_MAX8997
 	depends on I2C=y && GENERIC_HARDIRQS
 	select MFD_CORE
 	help
-<<<<<<< HEAD
-	  Say yes here to support for Maxim Semiconductor MAX8998/8966.
-=======
 	  Say yes here to support for Maxim Semiconductor MAX8997/8966.
->>>>>>> cm-10.0
 	  This is a Power Management IC with RTC, Flash, Fuel Gauge, Haptic,
 	  MUIC controls on chip.
 	  This driver provides common support for accessing the device;
@@ -557,8 +500,6 @@ config MFD_MAX8998
 	  additional drivers must be enabled in order to use the functionality
 	  of the device.
 
-<<<<<<< HEAD
-=======
 config MFD_S5M_CORE
 	bool "SAMSUNG S5M Series Support"
 	depends on I2C=y && GENERIC_HARDIRQS
@@ -570,15 +511,11 @@ config MFD_S5M_CORE
 	 additional drivers must be enabled in order to use the functionality
 	 of the device
 
->>>>>>> cm-10.0
 config MFD_WM8400
 	tristate "Support Wolfson Microelectronics WM8400"
 	select MFD_CORE
 	depends on I2C
-<<<<<<< HEAD
-=======
 	select REGMAP_I2C
->>>>>>> cm-10.0
 	help
 	  Support for the Wolfson Microelecronics WM8400 PMIC and audio
 	  CODEC.  This driver provides common support for accessing
@@ -593,10 +530,7 @@ config MFD_WM831X_I2C
 	bool "Support Wolfson Microelectronics WM831x/2x PMICs with I2C"
 	select MFD_CORE
 	select MFD_WM831X
-<<<<<<< HEAD
-=======
 	select REGMAP_I2C
->>>>>>> cm-10.0
 	depends on I2C=y && GENERIC_HARDIRQS
 	help
 	  Support for the Wolfson Microelecronics WM831x and WM832x PMICs
@@ -608,10 +542,7 @@ config MFD_WM831X_SPI
 	bool "Support Wolfson Microelectronics WM831x/2x PMICs with SPI"
 	select MFD_CORE
 	select MFD_WM831X
-<<<<<<< HEAD
-=======
 	select REGMAP_SPI
->>>>>>> cm-10.0
 	depends on SPI_MASTER && GENERIC_HARDIRQS
 	help
 	  Support for the Wolfson Microelecronics WM831x and WM832x PMICs
@@ -685,11 +616,8 @@ config MFD_WM8350_I2C
 config MFD_WM8994
 	bool "Support Wolfson Microelectronics WM8994"
 	select MFD_CORE
-<<<<<<< HEAD
-=======
 	select REGMAP_I2C
 	select REGMAP_IRQ
->>>>>>> cm-10.0
 	depends on I2C=y && GENERIC_HARDIRQS
 	help
 	  The WM8994 is a highly integrated hi-fi CODEC designed for
@@ -702,10 +630,7 @@ config MFD_WM8994
 config MFD_PCF50633
 	tristate "Support for NXP PCF50633"
 	depends on I2C
-<<<<<<< HEAD
-=======
 	select REGMAP_I2C
->>>>>>> cm-10.0
 	help
 	  Say yes here if you have NXP PCF50633 chip on your board.
 	  This core driver provides register access and IRQ handling
@@ -782,8 +707,6 @@ config EZX_PCAP
 	  This enables the PCAP ASIC present on EZX Phones. This is
 	  needed for MMC, TouchScreen, Sound, USB, etc..
 
-<<<<<<< HEAD
-=======
 config AB5500_CORE
 	bool "ST-Ericsson AB5500 Mixed Signal Power Management chip"
 	depends on ABX500_CORE && MFD_DB5500_PRCMU
@@ -801,7 +724,6 @@ config AB5500_DEBUG
 	  Select this option if you want debug information from the AB5500
 	  using the debug filesystem, debugfs.
 
->>>>>>> cm-10.0
 config AB8500_CORE
 	bool "ST-Ericsson AB8500 Mixed Signal Power Management chip"
 	depends on GENERIC_HARDIRQS && ABX500_CORE
@@ -838,23 +760,6 @@ config AB8500_GPADC
 	help
 	  AB8500 GPADC driver used to convert Acc and battery/ac/usb voltage
 
-<<<<<<< HEAD
-config AB3550_CORE
-        bool "ST-Ericsson AB3550 Mixed Signal Circuit core functions"
-	select MFD_CORE
-	depends on I2C=y && GENERIC_HARDIRQS && ABX500_CORE
-	help
-	  Select this to enable the AB3550 Mixed Signal IC core
-	  functionality. This connects to a AB3550 on the I2C bus
-	  and expose a number of symbols needed for dependent devices
-	  to read and write registers and subscribe to events from
-	  this multi-functional IC. This is needed to use other features
-	  of the AB3550 such as battery-backed RTC, charging control,
-	  LEDs, vibrator, system power and temperature, power management
-	  and ALSA sound.
-
-=======
->>>>>>> cm-10.0
 config MFD_DB8500_PRCMU
 	bool "ST-Ericsson DB8500 Power Reset Control Management Unit"
 	depends on UX500_SOC_DB8500
@@ -922,14 +827,9 @@ config MFD_JANZ_CMODIO
 	  CAN and GPIO controllers.
 
 config MFD_JZ4740_ADC
-<<<<<<< HEAD
-	tristate "Support for the JZ4740 SoC ADC core"
-	select MFD_CORE
-=======
 	bool "Support for the JZ4740 SoC ADC core"
 	select MFD_CORE
 	select GENERIC_IRQ_CHIP
->>>>>>> cm-10.0
 	depends on MACH_JZ4740
 	help
 	  Say yes here if you want support for the ADC unit in the JZ4740 SoC.
@@ -1036,16 +936,6 @@ config MFD_PM8XXX_IRQ
 	  This is required to use certain other PM 8xxx features, such as GPIO
 	  and MPP.
 
-<<<<<<< HEAD
-config MFD_TPS65910
-	bool "TPS65910 Power Management chip"
-	depends on I2C=y && GPIOLIB
-	select MFD_CORE
-	select GPIO_TPS65910
-	help
-	  if you say yes here you get support for the TPS65910 series of
-	  Power Management chips.
-=======
 config MFD_PM8821_IRQ
 	bool "Support for Qualcomm PM8821 IRQ features"
 	default y if MFD_PM8821_CORE
@@ -1053,13 +943,10 @@ config MFD_PM8821_IRQ
 	  This is the IRQ driver for Qualcomm PM 8821 PMIC chips.
 
 	  This is required to use certain other PM 8821 features, such as MPPs.
->>>>>>> cm-10.0
 
 config TPS65911_COMPARATOR
 	tristate
 
-<<<<<<< HEAD
-=======
 config MFD_TPS65090
 	bool "TPS65090 Power Management chips"
 	depends on I2C=y && GENERIC_HARDIRQS
@@ -1091,7 +978,6 @@ config MFD_INTEL_MSIC
 	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
 	  devices used in Intel Medfield platforms.
 
->>>>>>> cm-10.0
 config MFD_PM8XXX_DEBUG
 	tristate "Qualcomm PM8xxx debugfs support"
 	depends on MFD_PM8XXX && DEBUG_FS
@@ -1120,8 +1006,6 @@ config MFD_PM8XXX_MISC
 	  This driver implements several miscellaneous APIs that may be needed
 	  in order to control the PM8XXX PMIC chip.
 
-<<<<<<< HEAD
-=======
 config MFD_PM8XXX_SPK
 	tristate "Support for Qualcomm PM8xxx speaker APIs"
 	depends on MFD_PM8XXX
@@ -1129,7 +1013,6 @@ config MFD_PM8XXX_SPK
 	  This driver implements several external speaker amplifier APIs that
 	  may be needed in order to control the PM8XXX PMIC chip.
 
->>>>>>> cm-10.0
 config MFD_PM8XXX_BATT_ALARM
 	tristate "Support for Qualcomm PM8xxx battery voltage alarm"
 	depends on MFD_PM8XXX
@@ -1140,8 +1023,6 @@ config MFD_PM8XXX_BATT_ALARM
 	  voltage leaves the accepatable range which then calls a notifier call
 	  chain.
 
-<<<<<<< HEAD
-=======
 config WCD9304_CODEC
         tristate "WCD9304 Codec"
         select SLIMBUS
@@ -1152,7 +1033,6 @@ config WCD9304_CODEC
           read/write capability to registers which are part of the
           WCD9304 core and gives the ability to use the WCD9304 codec.
 
->>>>>>> cm-10.0
 config WCD9310_CODEC
         tristate "WCD9310 Codec"
         select SLIMBUS
@@ -1163,9 +1043,6 @@ config WCD9310_CODEC
           read/write capability to registers which are part of the
           WCD9310 core and gives the ability to use the WCD9310 codec.
 
-<<<<<<< HEAD
-endif # MFD_SUPPORT
-=======
 config WCD9320_CODEC
 	tristate "WCD9320 Codec"
 	select SLIMBUS
@@ -1202,7 +1079,6 @@ config MFD_ANATOP
 
 endmenu
 endif
->>>>>>> cm-10.0
 
 menu "Multimedia Capabilities Port drivers"
 	depends on ARCH_SA1100
@@ -1218,14 +1094,9 @@ config MCP_SA11X0
 
 # Chip drivers
 config MCP_UCB1200
-<<<<<<< HEAD
-	tristate "Support for UCB1200 / UCB1300"
-	depends on MCP
-=======
 	bool "Support for UCB1200 / UCB1300"
 	depends on MCP_SA11X0
 	select MCP
->>>>>>> cm-10.0
 
 config MCP_UCB1200_TS
 	tristate "Touchscreen interface support"

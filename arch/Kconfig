@@ -30,13 +30,10 @@ config OPROFILE_EVENT_MULTIPLEX
 config HAVE_OPROFILE
 	bool
 
-<<<<<<< HEAD
-=======
 config OPROFILE_NMI_TIMER
 	def_bool y
 	depends on PERF_EVENTS && HAVE_PERF_EVENTS_NMI
 
->>>>>>> cm-10.0
 config KPROBES
 	bool "Kprobes"
 	depends on MODULES
@@ -50,20 +47,6 @@ config KPROBES
 	  If in doubt, say "N".
 
 config JUMP_LABEL
-<<<<<<< HEAD
-       bool "Optimize trace point call sites"
-       depends on HAVE_ARCH_JUMP_LABEL
-       help
-         If it is detected that the compiler has support for "asm goto",
-	 the kernel will compile trace point locations with just a
-	 nop instruction. When trace points are enabled, the nop will
-	 be converted to a jump to the trace function. This technique
-	 lowers overhead and stress on the branch prediction of the
-	 processor.
-
-	 On i386, options added to the compiler flags may increase
-	 the size of the kernel slightly.
-=======
        bool "Optimize very unlikely/likely branches"
        depends on HAVE_ARCH_JUMP_LABEL
        help
@@ -87,7 +70,6 @@ config JUMP_LABEL
 
 	 ( On 32-bit x86, the necessary options added to the compiler
 	   flags may increase the size of the kernel slightly. )
->>>>>>> cm-10.0
 
 config OPTPROBES
 	def_bool y
@@ -138,12 +120,9 @@ config HAVE_KRETPROBES
 
 config HAVE_OPTPROBES
 	bool
-<<<<<<< HEAD
-=======
 
 config HAVE_NMI_WATCHDOG
 	bool
->>>>>>> cm-10.0
 #
 # An arch should select this if it provides all these things:
 #
@@ -163,12 +142,9 @@ config HAVE_ARCH_TRACEHOOK
 config HAVE_DMA_ATTRS
 	bool
 
-<<<<<<< HEAD
-=======
 config HAVE_DMA_CONTIGUOUS
 	bool
 
->>>>>>> cm-10.0
 config USE_GENERIC_SMP_HELPERS
 	bool
 
@@ -230,8 +206,6 @@ config HAVE_ARCH_MUTEX_CPU_RELAX
 config HAVE_RCU_TABLE_FREE
 	bool
 
-<<<<<<< HEAD
-=======
 config ARCH_HAVE_NMI_SAFE_CMPXCHG
 	bool
 
@@ -252,5 +226,4 @@ config HAVE_CMPXCHG_DOUBLE
 config ARCH_WANT_OLD_COMPAT_IPC
 	bool
 
->>>>>>> cm-10.0
 source "kernel/gcov/Kconfig"

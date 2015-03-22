@@ -6,10 +6,6 @@ if CAN_SJA1000
 
 config CAN_SJA1000_ISA
 	tristate "ISA Bus based legacy SJA1000 driver"
-<<<<<<< HEAD
-	depends on ISA
-=======
->>>>>>> cm-10.0
 	---help---
 	  This driver adds legacy support for SJA1000 chips connected to
 	  the ISA bus using I/O port, memory mapped or indirect access.
@@ -32,8 +28,6 @@ config CAN_SJA1000_OF_PLATFORM
 	  OpenFirmware bindings, e.g. if you have a PowerPC based system
 	  you may want to enable this option.
 
-<<<<<<< HEAD
-=======
 config CAN_EMS_PCMCIA
 	tristate "EMS CPC-CARD Card"
 	depends on PCMCIA
@@ -41,7 +35,6 @@ config CAN_EMS_PCMCIA
 	  This driver is for the one or two channel CPC-CARD cards from
 	  EMS Dr. Thomas Wuensche (http://www.ems-wuensche.de).
 
->>>>>>> cm-10.0
 config CAN_EMS_PCI
 	tristate "EMS CPC-PCI, CPC-PCIe and CPC-104P Card"
 	depends on PCI
@@ -50,8 +43,6 @@ config CAN_EMS_PCI
 	  CPC-PCIe and CPC-104P cards from EMS Dr. Thomas Wuensche
 	  (http://www.ems-wuensche.de).
 
-<<<<<<< HEAD
-=======
 config CAN_PEAK_PCMCIA
 	tristate "PEAK PCAN-PC Card"
 	depends on PCMCIA
@@ -80,7 +71,6 @@ config CAN_PEAK_PCIEC
 	  Technik. This will also automatically select I2C and I2C_ALGO
 	  configuration options.
 
->>>>>>> cm-10.0
 config CAN_KVASER_PCI
 	tristate "Kvaser PCIcanx and Kvaser PCIcan PCI Cards"
 	depends on PCI
@@ -102,10 +92,7 @@ config CAN_PLX_PCI
 	   - esd CAN-PCIe/2000
 	   - Marathon CAN-bus-PCI card (http://www.marathon.ru/)
 	   - TEWS TECHNOLOGIES TPMC810 card (http://www.tews.com/)
-<<<<<<< HEAD
-=======
 	   - IXXAT Automation PC-I 04/PCI card (http://www.ixxat.com/)
->>>>>>> cm-10.0
 
 config CAN_TSCAN1
 	tristate "TS-CAN1 PC104 boards"

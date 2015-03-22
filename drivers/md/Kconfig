@@ -208,8 +208,6 @@ config DM_DEBUG
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
-=======
 config DM_BUFIO
        tristate
        depends on BLK_DEV_DM && EXPERIMENTAL
@@ -220,7 +218,6 @@ config DM_BUFIO
 
 source "drivers/md/persistent-data/Kconfig"
 
->>>>>>> cm-10.0
 config DM_CRYPT
 	tristate "Crypt target support"
 	depends on BLK_DEV_DM
@@ -246,8 +243,6 @@ config DM_SNAPSHOT
        ---help---
          Allow volume managers to take writable snapshots of a device.
 
-<<<<<<< HEAD
-=======
 config DM_THIN_PROVISIONING
        tristate "Thin provisioning target (EXPERIMENTAL)"
        depends on BLK_DEV_DM && EXPERIMENTAL
@@ -274,7 +269,6 @@ config DM_DEBUG_SPACE_MAPS
 
           If unsure, say N.
 
->>>>>>> cm-10.0
 config DM_MIRROR
        tristate "Mirror target"
        depends on BLK_DEV_DM
@@ -283,14 +277,6 @@ config DM_MIRROR
          needed for live data migration tools such as 'pvmove'.
 
 config DM_RAID
-<<<<<<< HEAD
-       tristate "RAID 4/5/6 target (EXPERIMENTAL)"
-       depends on BLK_DEV_DM && EXPERIMENTAL
-       select MD_RAID456
-       select BLK_DEV_MD
-       ---help---
-	 A dm target that supports RAID4, RAID5 and RAID6 mappings
-=======
        tristate "RAID 1/4/5/6 target"
        depends on BLK_DEV_DM
        select MD_RAID1
@@ -298,7 +284,6 @@ config DM_RAID
        select BLK_DEV_MD
        ---help---
 	 A dm target that supports RAID1, RAID4, RAID5 and RAID6 mappings
->>>>>>> cm-10.0
 
 	 A RAID-5 set of N drives with a capacity of C MB per drive provides
 	 the capacity of C * (N - 1) MB, and protects against a failure
@@ -374,13 +359,8 @@ config DM_DELAY
 	If unsure, say N.
 
 config DM_UEVENT
-<<<<<<< HEAD
-	bool "DM uevents (EXPERIMENTAL)"
-	depends on BLK_DEV_DM && EXPERIMENTAL
-=======
 	bool "DM uevents"
 	depends on BLK_DEV_DM
->>>>>>> cm-10.0
 	---help---
 	Generate udev events for DM events.
 
@@ -390,8 +370,6 @@ config DM_FLAKEY
        ---help---
          A target that intermittently fails I/O for debugging purposes.
 
-<<<<<<< HEAD
-=======
 config DM_VERITY
 	tristate "Verity target support (EXPERIMENTAL)"
 	depends on BLK_DEV_DM && EXPERIMENTAL
@@ -412,5 +390,4 @@ config DM_VERITY
 
 	  If unsure, say N.
 
->>>>>>> cm-10.0
 endif # MD

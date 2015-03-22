@@ -330,8 +330,6 @@ config MOUSE_QCITP
 	  Say Y here if you want to use the Quanta touchpad driver for Quanta
 	  smartbook platforms.
 
-<<<<<<< HEAD
-=======
 config MOUSE_SYNAPTICS_USB
 	tristate "Synaptics USB device support"
 	depends on USB_ARCH_HAS_HCD
@@ -348,6 +346,5 @@ config MOUSE_SYNAPTICS_USB
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called synaptics_usb.
->>>>>>> cm-10.0
 
 endif

@@ -17,11 +17,7 @@ menuconfig NEW_LEDS
 if NEW_LEDS
 
 config LEDS_CLASS
-<<<<<<< HEAD
-	bool "LED Class Support"
-=======
 	tristate "LED Class Support"
->>>>>>> cm-10.0
 	help
 	  This option enables the led sysfs class in /sys/class/leds.  You'll
 	  need this to do anything useful with LEDs.  If unsure, say N.
@@ -73,25 +69,11 @@ config LEDS_MIKROTIK_RB532
 config LEDS_S3C24XX
 	tristate "LED Support for Samsung S3C24XX GPIO LEDs"
 	depends on LEDS_CLASS
-<<<<<<< HEAD
-	depends on ARCH_S3C2410
-=======
 	depends on ARCH_S3C24XX
->>>>>>> cm-10.0
 	help
 	  This option enables support for LEDs connected to GPIO lines
 	  on Samsung S3C24XX series CPUs, such as the S3C2410 and S3C2440.
 
-<<<<<<< HEAD
-config LEDS_AMS_DELTA
-	tristate "LED Support for the Amstrad Delta (E3)"
-	depends on LEDS_CLASS
-	depends on MACH_AMS_DELTA
-	help
-	  This option enables support for the LEDs on Amstrad Delta (E3).
-
-=======
->>>>>>> cm-10.0
 config LEDS_NET48XX
 	tristate "LED Support for Soekris net48xx series Error LED"
 	depends on LEDS_CLASS
@@ -100,19 +82,6 @@ config LEDS_NET48XX
 	  This option enables support for the Soekris net4801 and net4826 error
 	  LED.
 
-<<<<<<< HEAD
-config LEDS_NET5501
-	tristate "LED Support for Soekris net5501 series Error LED"
-	depends on LEDS_TRIGGERS
-	depends on X86 && LEDS_GPIO_PLATFORM && GPIO_CS5535
-	select LEDS_TRIGGER_DEFAULT_ON
-	default n
-	help
-	  Add support for the Soekris net5501 board (detection, error led
-	  and GPIO).
-
-=======
->>>>>>> cm-10.0
 config LEDS_FSG
 	tristate "LED Support for the Freecom FSG-3"
 	depends on LEDS_CLASS
@@ -127,17 +96,6 @@ config LEDS_WRAP
 	help
 	  This option enables support for the PCEngines WRAP programmable LEDs.
 
-<<<<<<< HEAD
-config LEDS_ALIX2
-	tristate "LED Support for ALIX.2 and ALIX.3 series"
-	depends on LEDS_CLASS
-	depends on X86 && !GPIO_CS5535 && !CS5535_GPIO
-	help
-	  This option enables support for the PCEngines ALIX.2 and ALIX.3 LEDs.
-	  You have to set leds-alix2.force=1 for boards with Award BIOS.
-
-=======
->>>>>>> cm-10.0
 config LEDS_COBALT_QUBE
 	tristate "LED Support for the Cobalt Qube series front LED"
 	depends on LEDS_CLASS
@@ -211,8 +169,6 @@ config LEDS_MSM_PDM
 	  To compile this driver as a module, choose M here: the
 	  module will be called leds-msm-pdm.
 
-<<<<<<< HEAD
-=======
 config LEDS_PMIC_MPP
         tristate "LED Support for Qualcomm PMIC MPP connected LEDs"
         depends on LEDS_CLASS && MSM_SMD
@@ -239,7 +195,6 @@ config LEDS_MSM_TRICOLOR
 	  To compile this driver as a module, choose M here: the
 	  module will be called leds-msm-tricolor.
 
->>>>>>> cm-10.0
 config LEDS_GPIO_PLATFORM
 	bool "Platform device bindings for GPIO LEDs"
 	depends on LEDS_GPIO
@@ -269,7 +224,6 @@ config LEDS_LP3944
 	  To compile this driver as a module, choose M here: the
 	  module will be called leds-lp3944.
 
-<<<<<<< HEAD
 config HUAWEI_LEDS_TPS61310
 	tristate "LED Support for TPS61310 (Fun Light) I2C chip"
 	depends on I2C
@@ -281,8 +235,6 @@ config HUAWEI_LEDS_TPS61310
 	  To compile this driver as a module, choose M here: the
 	  module will be called leds-tps61310.
 
-=======
->>>>>>> cm-10.0
 config LEDS_CPLD
 	tristate "LED Support for CPLD connected LEDs"
 	depends on LEDS_CLASS
@@ -358,17 +310,6 @@ config LEDS_PM8XXX
 	  To compile this driver as a module, choose M here: the module will
 	  be called leds-pmic8xxx.
 
-<<<<<<< HEAD
-=======
-config LEDS_PCA9633
-	tristate "LED support for PCA9633 I2C chip"
-	depends on LEDS_CLASS
-	depends on I2C
-	help
-	  This option enables support for LEDs connected to the PCA9633
-	  LED driver chip accessed via the I2C bus.
-
->>>>>>> cm-10.0
 config LEDS_WM831X_STATUS
 	tristate "LED support for status LEDs on WM831x PMICs"
 	depends on LEDS_CLASS
@@ -498,12 +439,8 @@ config LEDS_QCIBL
 config LEDS_NS2
 	tristate "LED support for Network Space v2 GPIO LEDs"
 	depends on LEDS_CLASS
-<<<<<<< HEAD
-	depends on MACH_NETSPACE_V2 || MACH_INETSPACE_V2 || MACH_NETSPACE_MAX_V2 || D2NET_V2
-=======
 	depends on MACH_NETSPACE_V2 || MACH_INETSPACE_V2 || \
 		   MACH_NETSPACE_MAX_V2 || MACH_D2NET_V2
->>>>>>> cm-10.0
 	default y
 	help
 	  This option enable support for the dual-GPIO LED found on the
@@ -513,10 +450,7 @@ config LEDS_NS2
 config LEDS_NETXBIG
 	tristate "LED support for Big Network series LEDs"
 	depends on MACH_NET2BIG_V2 || MACH_NET5BIG_V2
-<<<<<<< HEAD
-=======
 	depends on LEDS_CLASS
->>>>>>> cm-10.0
 	default y
 	help
 	  This option enable support for LEDs found on the LaCie 2Big
@@ -534,8 +468,6 @@ config LEDS_ASIC3
 	  cannot be used. This driver supports hardware blinking with an on+off
 	  period from 62ms to 125s. Say Y to enable LEDs on the HP iPAQ hx4700.
 
-<<<<<<< HEAD
-=======
 config LEDS_RENESAS_TPU
 	bool "LED support for Renesas TPU"
 	depends on LEDS_CLASS && HAVE_CLK && GENERIC_GPIO
@@ -570,7 +502,6 @@ config LEDS_OT200
 	  This option enables support for the LEDs on the Bachmann OT200.
 	  Say Y to enable LEDs on the Bachmann OT200.
 
->>>>>>> cm-10.0
 config LEDS_TRIGGERS
 	bool "LED Trigger support"
 	depends on LEDS_CLASS
@@ -588,11 +519,7 @@ config LEDS_TRIGGER_TIMER
 	  This allows LEDs to be controlled by a programmable timer
 	  via sysfs. Some LED hardware can be programmed to start
 	  blinking the LED without any further software interaction.
-<<<<<<< HEAD
-	  For more details read Documentation/leds-class.txt.
-=======
 	  For more details read Documentation/leds/leds-class.txt.
->>>>>>> cm-10.0
 
 	  If unsure, say Y.
 

@@ -116,11 +116,8 @@ config PARIDE
 
 source "drivers/block/paride/Kconfig"
 
-<<<<<<< HEAD
-=======
 source "drivers/block/mtip32xx/Kconfig"
 
->>>>>>> cm-10.0
 config BLK_CPQ_DA
 	tristate "Compaq SMART2 support"
 	depends on PCI && VIRT_TO_BUS
@@ -261,8 +258,6 @@ config BLK_DEV_LOOP
 
 	  Most users will answer N here.
 
-<<<<<<< HEAD
-=======
 config BLK_DEV_LOOP_MIN_COUNT
 	int "Number of loop devices to pre-create at init time"
 	depends on BLK_DEV_LOOP
@@ -278,7 +273,6 @@ config BLK_DEV_LOOP_MIN_COUNT
 	  is used, it can be set to 0, since needed loop devices can be
 	  dynamically allocated with the /dev/loop-control interface.
 
->>>>>>> cm-10.0
 config BLK_DEV_CRYPTOLOOP
 	tristate "Cryptoloop Support"
 	select CRYPTO
@@ -323,8 +317,6 @@ config BLK_DEV_NBD
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
-=======
 config BLK_DEV_NVME
 	tristate "NVM Express block device"
 	depends on PCI
@@ -336,7 +328,6 @@ config BLK_DEV_NVME
 	  To compile this driver as a module, choose M here: the
 	  module will be called nvme.
 
->>>>>>> cm-10.0
 config BLK_DEV_OSD
 	tristate "OSD object-as-blkdev support"
 	depends on SCSI_OSD_ULD
@@ -363,11 +354,7 @@ config BLK_DEV_SX8
 	  Use devices /dev/sx8/$N and /dev/sx8/$Np$M.
 
 config BLK_DEV_UB
-<<<<<<< HEAD
-	tristate "Low Performance USB Block driver"
-=======
 	tristate "Low Performance USB Block driver (deprecated)"
->>>>>>> cm-10.0
 	depends on USB
 	help
 	  This driver supports certain USB attached storage devices
@@ -512,11 +499,7 @@ config XEN_BLKDEV_FRONTEND
 	  in another domain which drives the actual block device.
 
 config XEN_BLKDEV_BACKEND
-<<<<<<< HEAD
-	tristate "Block-device backend driver"
-=======
 	tristate "Xen block-device backend driver"
->>>>>>> cm-10.0
 	depends on XEN_BACKEND
 	help
 	  The block-device backend driver allows the kernel to export its

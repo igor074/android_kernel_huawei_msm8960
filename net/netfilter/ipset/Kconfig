@@ -109,8 +109,6 @@ config IP_SET_HASH_NETPORT
 
 	  To compile it as a module, choose M here.  If unsure, say N.
 
-<<<<<<< HEAD
-=======
 config IP_SET_HASH_NETIFACE
 	tristate "hash:net,iface set support"
 	depends on IP_SET
@@ -121,7 +119,6 @@ config IP_SET_HASH_NETIFACE
 
 	  To compile it as a module, choose M here.  If unsure, say N.
 
->>>>>>> cm-10.0
 config IP_SET_LIST_SET
 	tristate "list:set set support"
 	depends on IP_SET

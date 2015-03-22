@@ -7,11 +7,8 @@ config VIRTIO_RING
 	tristate
 	depends on VIRTIO
 
-<<<<<<< HEAD
-=======
 menu "Virtio drivers"
 
->>>>>>> cm-10.0
 config VIRTIO_PCI
 	tristate "PCI driver for virtio devices (EXPERIMENTAL)"
 	depends on PCI && EXPERIMENTAL
@@ -38,8 +35,6 @@ config VIRTIO_BALLOON
 
 	 If unsure, say M.
 
-<<<<<<< HEAD
-=======
  config VIRTIO_MMIO
  	tristate "Platform bus driver for memory mapped virtio devices (EXPERIMENTAL)"
  	depends on HAS_IOMEM && EXPERIMENTAL
@@ -52,4 +47,3 @@ config VIRTIO_BALLOON
  	 If unsure, say N.
 
 endmenu
->>>>>>> cm-10.0

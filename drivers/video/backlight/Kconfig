@@ -117,7 +117,6 @@ config LCD_LD9040
 	  If you have an LD9040 Panel, say Y to enable its
 	  control driver.
 
-<<<<<<< HEAD
 endif # LCD_CLASS_DEVICE
 
 config LCD_TUNING_DEVICE
@@ -126,7 +125,7 @@ config LCD_TUNING_DEVICE
 	help
 	  This framework adds support for low-level control of the LCD
           display effect. This includes support for gamma, color enhance, etc.
-=======
+
 config LCD_AMS369FG06
 	tristate "AMS369FG06 AMOLED LCD Driver"
 	depends on SPI && BACKLIGHT_CLASS_DEVICE
@@ -136,8 +135,17 @@ config LCD_AMS369FG06
 	  LCD control driver.
 
 endif # LCD_CLASS_DEVICE
+config BACKLIGHT_CLASS_DEVICE
+        tristate "Lowlevel Backlight controls"
+	default m
+	help
+	  This framework adds support for low-level control of the LCD
+          backlight. This includes support for brightness and power.
 
->>>>>>> cm-10.0
+	  To have support for your specific LCD panel you will have to
+	  select the proper drivers which depend on this option.
+
+if BACKLIGHT_CLASS_DEVICE
 #
 # Backlight
 #
@@ -256,15 +264,12 @@ config BACKLIGHT_DA903X
 	  If you have a LCD backlight connected to the WLED output of DA9030
 	  or DA9034 WLED output, say Y here to enable this driver.
 
-<<<<<<< HEAD
-=======
 config BACKLIGHT_DA9052
 	tristate "Dialog DA9052/DA9053 WLED"
 	depends on PMIC_DA9052
 	help
 	  Enable the Backlight Driver for DA9052-BC and DA9053-AA/Bx PMICs.
 
->>>>>>> cm-10.0
 config BACKLIGHT_MAX8925
 	tristate "Backlight driver for MAX8925"
 	depends on MFD_MAX8925
@@ -300,17 +305,6 @@ config BACKLIGHT_WM831X
 	  If you have a backlight driven by the ISINK and DCDC of a
 	  WM831x PMIC say y to enable the backlight driver for it.
 
-<<<<<<< HEAD
-config BACKLIGHT_ADX
-	tristate "Avionic Design Xanthos Backlight Driver"
-	depends on ARCH_PXA_ADX
-	default y
-	help
-	  Say Y to enable the backlight driver on Avionic Design Xanthos-based
-	  boards.
-
-=======
->>>>>>> cm-10.0
 config BACKLIGHT_ADP5520
 	tristate "Backlight Driver for ADP5520/ADP5501 using WLED"
 	depends on PMIC_ADP5520
@@ -358,8 +352,6 @@ config BACKLIGHT_PCF50633
 	  If you have a backlight driven by a NXP PCF50633 MFD, say Y here to
 	  enable its driver.
 
-<<<<<<< HEAD
-=======
 config BACKLIGHT_AAT2870
 	tristate "AnalogicTech AAT2870 Backlight"
 	depends on BACKLIGHT_CLASS_DEVICE && MFD_AAT2870_CORE
@@ -388,7 +380,6 @@ config BACKLIGHT_PANDORA
 	  If you have a Pandora console, say Y to enable the
 	  backlight driver.
 
->>>>>>> cm-10.0
 endif # BACKLIGHT_CLASS_DEVICE
 
 endif # BACKLIGHT_LCD_SUPPORT

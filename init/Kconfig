@@ -355,11 +355,7 @@ config AUDIT
 
 config AUDITSYSCALL
 	bool "Enable system-call auditing support"
-<<<<<<< HEAD
-	depends on AUDIT && (X86 || PPC || S390 || IA64 || UML || SPARC64 || SUPERH)
-=======
 	depends on AUDIT && (X86 || PPC || S390 || IA64 || UML || SPARC64 || SUPERH || ARM)
->>>>>>> cm-10.0
 	default y if SECURITY_SELINUX
 	help
 	  Enable low-overhead system-call auditing infrastructure that
@@ -376,8 +372,6 @@ config AUDIT_TREE
 	depends on AUDITSYSCALL
 	select FSNOTIFY
 
-<<<<<<< HEAD
-=======
 config AUDIT_LOGINUID_IMMUTABLE
 	bool "Make audit loginuid immutable"
 	depends on AUDIT
@@ -392,7 +386,6 @@ config AUDIT_LOGINUID_IMMUTABLE
 	  one to drop potentially dangerous capabilites from the login tasks,
 	  but may not be backwards compatible with older init systems.
 
->>>>>>> cm-10.0
 source "kernel/irq/Kconfig"
 
 menu "RCU Subsystem"
@@ -412,11 +405,7 @@ config TREE_RCU
 
 config TREE_PREEMPT_RCU
 	bool "Preemptible tree-based hierarchical RCU"
-<<<<<<< HEAD
-	depends on PREEMPT
-=======
 	depends on PREEMPT && SMP
->>>>>>> cm-10.0
 	help
 	  This option selects the RCU implementation that is
 	  designed for very large SMP systems with hundreds or
@@ -426,11 +415,7 @@ config TREE_PREEMPT_RCU
 
 config TINY_RCU
 	bool "UP-only small-memory-footprint RCU"
-<<<<<<< HEAD
-	depends on !SMP
-=======
 	depends on !PREEMPT && !SMP
->>>>>>> cm-10.0
 	help
 	  This option selects the RCU implementation that is
 	  designed for UP systems from which real-time response
@@ -439,11 +424,7 @@ config TINY_RCU
 
 config TINY_PREEMPT_RCU
 	bool "Preemptible UP-only small-memory-footprint RCU"
-<<<<<<< HEAD
-	depends on !SMP && PREEMPT
-=======
 	depends on PREEMPT && !SMP
->>>>>>> cm-10.0
 	help
 	  This option selects the RCU implementation that is designed
 	  for real-time UP systems.  This option greatly reduces the
@@ -457,18 +438,6 @@ config PREEMPT_RCU
 	  This option enables preemptible-RCU code that is common between
 	  the TREE_PREEMPT_RCU and TINY_PREEMPT_RCU implementations.
 
-<<<<<<< HEAD
-config RCU_TRACE
-	bool "Enable tracing for RCU"
-	help
-	  This option provides tracing in RCU which presents stats
-	  in debugfs for debugging RCU implementation.
-
-	  Say Y here if you want to enable RCU tracing
-	  Say N if you are unsure.
-
-=======
->>>>>>> cm-10.0
 config RCU_FANOUT
 	int "Tree-based hierarchical RCU fanout value"
 	range 2 64 if 64BIT
@@ -505,16 +474,6 @@ config RCU_FANOUT_EXACT
 
 config RCU_FAST_NO_HZ
 	bool "Accelerate last non-dyntick-idle CPU's grace periods"
-<<<<<<< HEAD
-	depends on TREE_RCU && NO_HZ && SMP
-	default n
-	help
-	  This option causes RCU to attempt to accelerate grace periods
-	  in order to allow the final CPU to enter dynticks-idle state
-	  more quickly.  On the other hand, this option increases the
-	  overhead of the dynticks-idle checking, particularly on systems
-	  with large numbers of CPUs.
-=======
 	depends on NO_HZ && SMP
 	default n
 	help
@@ -523,7 +482,6 @@ config RCU_FAST_NO_HZ
 	  quickly.  On the other hand, this option increases the overhead
 	  of the dynticks-idle checking, particularly on systems with
 	  large numbers of CPUs.
->>>>>>> cm-10.0
 
 	  Say Y if energy efficiency is critically important, particularly
 	  	if you have relatively few CPUs.
@@ -720,11 +678,7 @@ config CGROUP_MEM_RES_CTLR_SWAP
 	  be careful about enabling this. When memory resource controller
 	  is disabled by boot option, this will be automatically disabled and
 	  there will be no overhead from this. Even when you set this config=y,
-<<<<<<< HEAD
-	  if boot option "noswapaccount" is set, swap will not be accounted.
-=======
 	  if boot option "swapaccount=0" is set, swap will not be accounted.
->>>>>>> cm-10.0
 	  Now, memory usage of swap_cgroup is 2 bytes per entry. If swap page
 	  size is 4096bytes, 512k per 1Gbytes of swap.
 config CGROUP_MEM_RES_CTLR_SWAP_ENABLED
@@ -739,9 +693,6 @@ config CGROUP_MEM_RES_CTLR_SWAP_ENABLED
 	  parameter should have this option unselected.
 	  For those who want to have the feature enabled by default should
 	  select this option (if, for some reason, they need to disable it
-<<<<<<< HEAD
-	  then noswapaccount does the trick).
-=======
 	  then swapaccount=0 does the trick).
 config CGROUP_MEM_RES_CTLR_KMEM
 	bool "Memory Resource Controller Kernel Memory accounting (EXPERIMENTAL)"
@@ -754,7 +705,6 @@ config CGROUP_MEM_RES_CTLR_KMEM
 	  Memory Controller, which are page-based, and can be swapped. Users of
 	  the kmem extension can use it to guarantee that no group of processes
 	  will ever exhaust kernel resources alone.
->>>>>>> cm-10.0
 
 config CGROUP_PERF
 	bool "Enable perf_event per-cpu per-container group (cgroup) monitoring"
@@ -768,10 +718,6 @@ config CGROUP_PERF
 
 menuconfig CGROUP_SCHED
 	bool "Group CPU scheduler"
-<<<<<<< HEAD
-	depends on EXPERIMENTAL
-=======
->>>>>>> cm-10.0
 	default n
 	help
 	  This feature lets CPU scheduler recognize task groups and control CPU
@@ -784,8 +730,6 @@ config FAIR_GROUP_SCHED
 	depends on CGROUP_SCHED
 	default CGROUP_SCHED
 
-<<<<<<< HEAD
-=======
 config CFS_BANDWIDTH
 	bool "CPU bandwidth provisioning for FAIR_GROUP_SCHED"
 	depends on EXPERIMENTAL
@@ -798,7 +742,6 @@ config CFS_BANDWIDTH
 	  restriction.
 	  See tip/Documentation/scheduler/sched-bwc.txt for more information.
 
->>>>>>> cm-10.0
 config RT_GROUP_SCHED
 	bool "Group scheduling for SCHED_RR/FIFO"
 	depends on EXPERIMENTAL
@@ -845,8 +788,6 @@ config DEBUG_BLK_CGROUP
 
 endif # CGROUPS
 
-<<<<<<< HEAD
-=======
 config CHECKPOINT_RESTORE
 	bool "Checkpoint/restore support" if EXPERT
 	default n
@@ -858,7 +799,6 @@ config CHECKPOINT_RESTORE
 
 	  If unsure, say N here.
 
->>>>>>> cm-10.0
 menuconfig NAMESPACES
 	bool "Namespaces support" if EXPERT
 	default !EXPERT
@@ -1021,11 +961,8 @@ config PANIC_TIMEOUT
 
 menuconfig EXPERT
 	bool "Configure standard kernel features (expert users)"
-<<<<<<< HEAD
-=======
 	# Unhide debug options, to make the on-by-default options visible
 	select DEBUG_KERNEL
->>>>>>> cm-10.0
 	help
 	  This option allows certain base kernel options and settings
           to be disabled or tweaked. This is for specialized
@@ -1042,11 +979,7 @@ config UID16
 config SYSCTL_SYSCALL
 	bool "Sysctl syscall support" if EXPERT
 	depends on PROC_SYSCTL
-<<<<<<< HEAD
-	default y
-=======
 	default n
->>>>>>> cm-10.0
 	select SYSCTL
 	---help---
 	  sys_sysctl uses binary paths that have been found challenging
@@ -1057,12 +990,7 @@ config SYSCTL_SYSCALL
 	  Almost nothing using the binary sysctl interface so if you are
 	  trying to save some space it is probably safe to disable this,
 	  making your kernel marginally smaller.
-
-<<<<<<< HEAD
-	  If unsure say Y here.
-=======
 	  If unsure say N here.
->>>>>>> cm-10.0
 
 config KALLSYMS
 	 bool "Load all symbols for debugging/ksymoops" if EXPERT
@@ -1124,28 +1052,19 @@ config ELF_CORE
 	help
 	  Enable support for generating core dumps. Disabling saves about 4k.
 
-<<<<<<< HEAD
-config PCSPKR_PLATFORM
-	bool "Enable PC-Speaker support" if EXPERT
-	depends on ALPHA || X86 || MIPS || PPC_PREP || PPC_CHRP || PPC_PSERIES
-=======
 
 config PCSPKR_PLATFORM
 	bool "Enable PC-Speaker support" if EXPERT
 	depends on HAVE_PCSPKR_PLATFORM
 	select I8253_LOCK
->>>>>>> cm-10.0
 	default y
 	help
           This option allows to disable the internal PC-Speaker
           support, saving some memory.
 
-<<<<<<< HEAD
-=======
 config HAVE_PCSPKR_PLATFORM
 	bool
 
->>>>>>> cm-10.0
 config BASE_FULL
 	default y
 	bool "Enable full-sized data structures for core" if EXPERT
@@ -1510,13 +1429,8 @@ endif # MODULES
 config INIT_ALL_POSSIBLE
 	bool
 	help
-<<<<<<< HEAD
-	  Back when each arch used to define their own cpu_online_map and
-	  cpu_possible_map, some of them chose to initialize cpu_possible_map
-=======
 	  Back when each arch used to define their own cpu_online_mask and
 	  cpu_possible_mask, some of them chose to initialize cpu_possible_mask
->>>>>>> cm-10.0
 	  with all 1s, and others with all 0s.  When they were centralised,
 	  it was better to provide this option than to break all the archs
 	  and have several arch maintainers pursuing me down dark alleys.

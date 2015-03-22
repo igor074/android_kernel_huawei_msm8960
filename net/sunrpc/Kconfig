@@ -4,13 +4,10 @@ config SUNRPC
 config SUNRPC_GSS
 	tristate
 
-<<<<<<< HEAD
-=======
 config SUNRPC_BACKCHANNEL
 	bool
 	depends on SUNRPC
 
->>>>>>> cm-10.0
 config SUNRPC_XPRT_RDMA
 	tristate
 	depends on SUNRPC && INFINIBAND && INFINIBAND_ADDR_TRANS && EXPERIMENTAL
@@ -42,8 +39,6 @@ config RPCSEC_GSS_KRB5
 	  Kerberos support should be installed.
 
 	  If unsure, say Y.
-<<<<<<< HEAD
-=======
 
 config SUNRPC_DEBUG
 	bool "RPC: Enable dprintk debugging"
@@ -57,4 +52,3 @@ config SUNRPC_DEBUG
 	  but makes troubleshooting NFS issues significantly harder.
 
 	  If unsure, say Y.
->>>>>>> cm-10.0

@@ -1,10 +1,6 @@
 config IMX_HAVE_PLATFORM_FEC
 	bool
-<<<<<<< HEAD
-	default y if ARCH_MX25 || SOC_IMX27 || SOC_IMX35 || SOC_IMX51 || SOC_IMX53
-=======
 	default y if ARCH_MX25 || SOC_IMX27 || SOC_IMX35 || SOC_IMX50 || SOC_IMX51 || SOC_IMX53
->>>>>>> cm-10.0
 
 config IMX_HAVE_PLATFORM_FLEXCAN
 	select HAVE_CAN_FLEXCAN if CAN
@@ -35,12 +31,9 @@ config IMX_HAVE_PLATFORM_IMX_I2C
 config IMX_HAVE_PLATFORM_IMX_KEYPAD
 	bool
 
-<<<<<<< HEAD
-=======
 config IMX_HAVE_PLATFORM_PATA_IMX
 	bool
 
->>>>>>> cm-10.0
 config IMX_HAVE_PLATFORM_IMX_SSI
 	bool
 
@@ -86,10 +79,7 @@ config IMX_HAVE_PLATFORM_SDHCI_ESDHC_IMX
 
 config IMX_HAVE_PLATFORM_SPI_IMX
 	bool
-<<<<<<< HEAD
-=======
 
 config IMX_HAVE_PLATFORM_AHCI
 	bool
 	default y if ARCH_MX53
->>>>>>> cm-10.0

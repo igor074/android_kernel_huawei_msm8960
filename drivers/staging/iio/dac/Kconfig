@@ -1,9 +1,6 @@
 #
 # DAC drivers
 #
-<<<<<<< HEAD
-comment "Digital to analog convertors"
-=======
 menu "Digital to analog converters"
 
 config AD5064
@@ -50,18 +47,13 @@ config AD5421
 
 	  To compile this driver as module choose M here: the module will be called
 	  ad5421.
->>>>>>> cm-10.0
 
 config AD5624R_SPI
 	tristate "Analog Devices AD5624/44/64R DAC spi driver"
 	depends on SPI
 	help
 	  Say yes here to build support for Analog Devices AD5624R, AD5644R and
-<<<<<<< HEAD
-	  AD5664R convertors (DAC). This driver uses the common SPI interface.
-=======
 	  AD5664R converters (DAC). This driver uses the common SPI interface.
->>>>>>> cm-10.0
 
 config AD5446
 	tristate "Analog Devices AD5444/6, AD5620/40/60 and AD5542A/12A DAC SPI driver"
@@ -69,11 +61,7 @@ config AD5446
 	help
 	  Say yes here to build support for Analog Devices AD5444, AD5446,
 	  AD5512A, AD5542A, AD5543, AD5553, AD5601, AD5611, AD5620, AD5621,
-<<<<<<< HEAD
-	  AD5640, AD5660 DACs.
-=======
 	  AD5640, AD5660, AD5662 DACs.
->>>>>>> cm-10.0
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called ad5446.
@@ -88,14 +76,6 @@ config AD5504
 	  To compile this driver as a module, choose M here: the
 	  module will be called ad5504.
 
-<<<<<<< HEAD
-config AD5791
-	tristate "Analog Devices AD5760/AD5780/AD5781/AD5791 DAC SPI driver"
-	depends on SPI
-	help
-	  Say yes here to build support for Analog Devices AD5760, AD5780,
-	  AD5781, AD5791 High Resolution Voltage Output Digital to
-=======
 config AD5764
 	tristate "Analog Devices AD5764/64R/44/44R DAC driver"
 	depends on SPI_MASTER
@@ -112,14 +92,11 @@ config AD5791
 	help
 	  Say yes here to build support for Analog Devices AD5760, AD5780,
 	  AD5781, AD5790, AD5791 High Resolution Voltage Output Digital to
->>>>>>> cm-10.0
 	  Analog Converter.
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called ad5791.
 
-<<<<<<< HEAD
-=======
 config AD5686
 	tristate "Analog Devices AD5686R/AD5685R/AD5684R DAC SPI driver"
 	depends on SPI
@@ -131,7 +108,6 @@ config AD5686
 	  To compile this driver as a module, choose M here: the
 	  module will be called ad5686.
 
->>>>>>> cm-10.0
 config MAX517
 	tristate "Maxim MAX517/518/519 DAC driver"
 	depends on I2C && EXPERIMENTAL
@@ -141,8 +117,5 @@ config MAX517
 
 	  This driver can also be built as a module.  If so, the module
 	  will be called max517.
-<<<<<<< HEAD
-=======
 
 endmenu
->>>>>>> cm-10.0

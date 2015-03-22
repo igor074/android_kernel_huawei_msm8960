@@ -229,10 +229,7 @@ source "net/sched/Kconfig"
 source "net/dcb/Kconfig"
 source "net/dns_resolver/Kconfig"
 source "net/batman-adv/Kconfig"
-<<<<<<< HEAD
-=======
 source "net/openvswitch/Kconfig"
->>>>>>> cm-10.0
 
 config RPS
 	boolean "RPS"
@@ -250,8 +247,6 @@ config XPS
 	depends on SMP && SYSFS && USE_GENERIC_SMP_HELPERS
 	default y
 
-<<<<<<< HEAD
-=======
 config NETPRIO_CGROUP
 	tristate "Network priority cgroup"
 	depends on CGROUPS
@@ -265,7 +260,6 @@ config BQL
 	select DQL
 	default y
 
->>>>>>> cm-10.0
 config HAVE_BPF_JIT
 	bool
 
@@ -356,10 +350,7 @@ source "net/rfkill/Kconfig"
 source "net/9p/Kconfig"
 source "net/caif/Kconfig"
 source "net/ceph/Kconfig"
-<<<<<<< HEAD
-=======
 source "net/nfc/Kconfig"
->>>>>>> cm-10.0
 
 
 endif   # if NET

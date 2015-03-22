@@ -65,8 +65,6 @@ config BLK_DEV_BSG
 
 	  If unsure, say Y.
 
-<<<<<<< HEAD
-=======
 config BLK_DEV_BSGLIB
 	bool "Block layer SG support v4 helper lib"
 	default n
@@ -77,7 +75,6 @@ config BLK_DEV_BSGLIB
 
 	  If unsure, say N.
 
->>>>>>> cm-10.0
 config BLK_DEV_INTEGRITY
 	bool "Block layer data integrity support"
 	---help---
@@ -102,15 +99,12 @@ config BLK_DEV_THROTTLING
 
 	See Documentation/cgroups/blkio-controller.txt for more information.
 
-<<<<<<< HEAD
-=======
 menu "Partition Types"
 
 source "block/partitions/Kconfig"
 
 endmenu
 
->>>>>>> cm-10.0
 endif # BLOCK
 
 config BLOCK_COMPAT

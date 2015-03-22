@@ -29,8 +29,6 @@ config PPS_CLIENT_PARPORT
 	  If you say yes here you get support for a PPS source connected
 	  with the interrupt pin of your parallel port.
 
-<<<<<<< HEAD
-=======
 config PPS_CLIENT_GPIO
 	tristate "PPS client using GPIO"
 	depends on PPS && GENERIC_HARDIRQS
@@ -40,5 +38,4 @@ config PPS_CLIENT_GPIO
 	  specifying the GPIO pin and other options, usually in your board
 	  setup.
 
->>>>>>> cm-10.0
 endif

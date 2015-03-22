@@ -81,14 +81,6 @@ config MMC_RICOH_MMC
 
 	  If unsure, say Y.
 
-<<<<<<< HEAD
-config MMC_SDHCI_OF
-	tristate "SDHCI support on OpenFirmware platforms"
-	depends on MMC_SDHCI && OF
-	help
-	  This selects the OF support for Secure Digital Host Controller
-	  Interfaces.
-=======
 config MMC_SDHCI_PLTFM
 	tristate "SDHCI platform and OF driver helper"
 	depends on MMC_SDHCI
@@ -97,30 +89,17 @@ config MMC_SDHCI_PLTFM
 	  Host Controller Interface based platform and OF drivers.
 
 	  If you have a controller with this interface, say Y or M here.
->>>>>>> cm-10.0
 
 	  If unsure, say N.
 
 config MMC_SDHCI_OF_ESDHC
-<<<<<<< HEAD
-	bool "SDHCI OF support for the Freescale eSDHC controller"
-	depends on MMC_SDHCI_OF
-=======
 	tristate "SDHCI OF support for the Freescale eSDHC controller"
 	depends on MMC_SDHCI_PLTFM
->>>>>>> cm-10.0
 	depends on PPC_OF
 	select MMC_SDHCI_BIG_ENDIAN_32BIT_BYTE_SWAPPER
 	help
 	  This selects the Freescale eSDHC controller support.
 
-<<<<<<< HEAD
-	  If unsure, say N.
-
-config MMC_SDHCI_OF_HLWD
-	bool "SDHCI OF support for the Nintendo Wii SDHCI controllers"
-	depends on MMC_SDHCI_OF
-=======
 	  If you have a controller with this interface, say Y or M here.
 
 	  If unsure, say N.
@@ -128,7 +107,6 @@ config MMC_SDHCI_OF_HLWD
 config MMC_SDHCI_OF_HLWD
 	tristate "SDHCI OF support for the Nintendo Wii SDHCI controllers"
 	depends on MMC_SDHCI_PLTFM
->>>>>>> cm-10.0
 	depends on PPC_OF
 	select MMC_SDHCI_BIG_ENDIAN_32BIT_BYTE_SWAPPER
 	help
@@ -136,44 +114,17 @@ config MMC_SDHCI_OF_HLWD
 	  found in the "Hollywood" chipset of the Nintendo Wii video game
 	  console.
 
-<<<<<<< HEAD
-	  If unsure, say N.
-
-config MMC_SDHCI_PLTFM
-	tristate "SDHCI support on the platform specific bus"
-	depends on MMC_SDHCI
-	help
-	  This selects the platform specific bus support for Secure Digital Host
-	  Controller Interface.
-
-=======
->>>>>>> cm-10.0
 	  If you have a controller with this interface, say Y or M here.
 
 	  If unsure, say N.
 
 config MMC_SDHCI_CNS3XXX
-<<<<<<< HEAD
-	bool "SDHCI support on the Cavium Networks CNS3xxx SoC"
-=======
 	tristate "SDHCI support on the Cavium Networks CNS3xxx SoC"
->>>>>>> cm-10.0
 	depends on ARCH_CNS3XXX
 	depends on MMC_SDHCI_PLTFM
 	help
 	  This selects the SDHCI support for CNS3xxx System-on-Chip devices.
 
-<<<<<<< HEAD
-	  If unsure, say N.
-
-config MMC_SDHCI_ESDHC_IMX
-	bool "SDHCI platform support for the Freescale eSDHC i.MX controller"
-	depends on MMC_SDHCI_PLTFM && (ARCH_MX25 || ARCH_MX35 || ARCH_MX5)
-	select MMC_SDHCI_IO_ACCESSORS
-	help
-	  This selects the Freescale eSDHC controller support on the platform
-	  bus, found on platforms like mx35/51.
-=======
 	  If you have a controller with this interface, say Y or M here.
 
 	  If unsure, say N.
@@ -188,16 +139,11 @@ config MMC_SDHCI_ESDHC_IMX
 	  found on i.MX25, i.MX35 i.MX5x and i.MX6x.
 
 	  If you have a controller with this interface, say Y or M here.
->>>>>>> cm-10.0
 
 	  If unsure, say N.
 
 config MMC_SDHCI_DOVE
-<<<<<<< HEAD
-	bool "SDHCI support on Marvell's Dove SoC"
-=======
 	tristate "SDHCI support on Marvell's Dove SoC"
->>>>>>> cm-10.0
 	depends on ARCH_DOVE
 	depends on MMC_SDHCI_PLTFM
 	select MMC_SDHCI_IO_ACCESSORS
@@ -205,13 +151,6 @@ config MMC_SDHCI_DOVE
 	  This selects the Secure Digital Host Controller Interface in
 	  Marvell's Dove SoC.
 
-<<<<<<< HEAD
-	  If unsure, say N.
-
-config MMC_SDHCI_TEGRA
-	bool "SDHCI platform support for the Tegra SD/MMC Controller"
-	depends on MMC_SDHCI_PLTFM && ARCH_TEGRA
-=======
 	  If you have a controller with this interface, say Y or M here.
 
 	  If unsure, say N.
@@ -220,7 +159,6 @@ config MMC_SDHCI_TEGRA
 	tristate "SDHCI platform support for the Tegra SD/MMC Controller"
 	depends on ARCH_TEGRA
 	depends on MMC_SDHCI_PLTFM
->>>>>>> cm-10.0
 	select MMC_SDHCI_IO_ACCESSORS
 	help
 	  This selects the Tegra SD/MMC controller. If you have a Tegra
@@ -243,16 +181,6 @@ config MMC_SDHCI_S3C
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
-config MMC_SDHCI_PXA
-	tristate "Marvell PXA168/PXA910/MMP2 SD Host Controller support"
-	depends on ARCH_PXA || ARCH_MMP
-	select MMC_SDHCI
-	select MMC_SDHCI_IO_ACCESSORS
-	help
-	  This selects the Marvell(R) PXA168/PXA910/MMP2 SD Host Controller.
-	  If you have a PXA168/PXA910/MMP2 platform with SD Host Controller
-=======
 config MMC_SDHCI_PXAV3
 	tristate "Marvell MMP2 SD Host Controller support (PXAV3)"
 	depends on CLKDEV_LOOKUP
@@ -275,7 +203,6 @@ config MMC_SDHCI_PXAV2
 	help
 	  This selects the Marvell(R) PXAV2 SD Host Controller.
 	  If you have a PXA9XX platform with SD Host Controller
->>>>>>> cm-10.0
 	  and a card slot, say Y or M here.
 
 	  If unsure, say N.
@@ -336,11 +263,7 @@ config MMC_WBSD
 
 config MMC_AU1X
 	tristate "Alchemy AU1XX0 MMC Card Interface support"
-<<<<<<< HEAD
-	depends on SOC_AU1200
-=======
 	depends on MIPS_ALCHEMY
->>>>>>> cm-10.0
 	help
 	  This selects the AMD Alchemy(R) Multimedia card interface.
 	  If you have a Alchemy platform with a MMC slot, say Y or M here.
@@ -375,22 +298,12 @@ config MMC_ATMELMCI
 endchoice
 
 config MMC_ATMELMCI_DMA
-<<<<<<< HEAD
-	bool "Atmel MCI DMA support (EXPERIMENTAL)"
-	depends on MMC_ATMELMCI && (AVR32 || ARCH_AT91SAM9G45) && DMA_ENGINE && EXPERIMENTAL
-	help
-	  Say Y here to have the Atmel MCI driver use a DMA engine to
-	  do data transfers and thus increase the throughput and
-	  reduce the CPU utilization. Note that this is highly
-	  experimental and may cause the driver to lock up.
-=======
 	bool "Atmel MCI DMA support"
 	depends on MMC_ATMELMCI && (AVR32 || ARCH_AT91SAM9G45) && DMA_ENGINE
 	help
 	  Say Y here to have the Atmel MCI driver use a DMA engine to
 	  do data transfers and thus increase the throughput and
 	  reduce the CPU utilization.
->>>>>>> cm-10.0
 
 	  If unsure, say N.
 
@@ -413,19 +326,11 @@ config MMC_MSM
 	  support for SDIO devices.
 
 config MMC_MXC
-<<<<<<< HEAD
-	tristate "Freescale i.MX2/3 Multimedia Card Interface support"
-	depends on MACH_MX21 || MACH_MX27 || ARCH_MX31
-	help
-	  This selects the Freescale i.MX2/3 Multimedia card Interface.
-	  If you have a i.MX platform with a Multimedia Card slot,
-=======
 	tristate "Freescale i.MX21/27/31 Multimedia Card Interface support"
 	depends on ARCH_MXC
 	help
 	  This selects the Freescale i.MX21, i.MX27 and i.MX31 Multimedia card
 	  Interface. If you have a i.MX platform with a Multimedia Card slot,
->>>>>>> cm-10.0
 	  say Y or M here.
 
 	  If unsure, say N.
@@ -490,11 +395,7 @@ config MMC_SPI
 
 config MMC_S3C
 	tristate "Samsung S3C SD/MMC Card Interface support"
-<<<<<<< HEAD
-	depends on ARCH_S3C2410
-=======
 	depends on ARCH_S3C24XX
->>>>>>> cm-10.0
 	help
 	  This selects a driver for the MCI interface found in
           Samsung's S3C2410, S3C2412, S3C2440, S3C2442 CPUs.
@@ -564,16 +465,6 @@ config MMC_MSM
 	  This provides support for the SD/MMC cell found in the
           MSM and QSD SOCs from Qualcomm.
 
-<<<<<<< HEAD
-config MMC_MSM_CARD_HW_DETECTION
-	boolean "Qualcomm MMC Hardware detection support"
-	depends on MMC_MSM
-	default n
-	help
-	  Select Y if the hardware has support to detect card insertion/removal.
-
-=======
->>>>>>> cm-10.0
 config MMC_MSM_SDC1_SUPPORT
 	boolean "Qualcomm SDC1 support"
 	depends on MMC_MSM
@@ -626,11 +517,7 @@ config MMC_MSM_SDC3_WP_SUPPORT
 config MMC_MSM_SDC4_SUPPORT
 	boolean "Qualcomm SDC4 support"
 	depends on MMC_MSM
-<<<<<<< HEAD
-	default Y
-=======
 	default n
->>>>>>> cm-10.0
 	help
 	  Select Y to enable Slot 4.
 
@@ -641,10 +528,6 @@ config MMC_MSM_SDC4_8_BIT_SUPPORT
 	help
 	  Select Y to enable 8bit support for Slot 4.
 
-<<<<<<< HEAD
-
-=======
->>>>>>> cm-10.0
 config MMC_MSM_SDC5_SUPPORT
 	boolean "Qualcomm SDC5 support"
 	depends on MMC_MSM
@@ -685,10 +568,6 @@ config MMC_SDHI
 config MMC_CB710
 	tristate "ENE CB710 MMC/SD Interface support"
 	depends on PCI
-<<<<<<< HEAD
-	select MISC_DEVICES
-=======
->>>>>>> cm-10.0
 	select CB710_CORE
 	help
 	  This option enables support for MMC/SD part of ENE CB710/720 Flash
@@ -745,8 +624,6 @@ config MMC_DW_IDMAC
 	  Designware Mobile Storage IP block. This disables the external DMA
 	  interface.
 
-<<<<<<< HEAD
-=======
 config MMC_DW_PLTFM
 	tristate "Synopsys Designware MCI Support as platform device"
 	depends on MMC_DW
@@ -772,7 +649,6 @@ config MMC_DW_PCI
 
 	  If unsure, say N.
 
->>>>>>> cm-10.0
 config MMC_SH_MMCIF
 	tristate "SuperH Internal MMCIF support"
 	depends on MMC_BLOCK && (SUPERH || ARCH_SHMOBILE)

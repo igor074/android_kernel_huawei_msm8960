@@ -14,18 +14,11 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
-<<<<<<< HEAD
-#define LKC_DIRECT_LINK
-=======
->>>>>>> cm-10.0
 #include "lkc.h"
 
 static void conf(struct menu *menu);
 static void check_conf(struct menu *menu);
-<<<<<<< HEAD
-=======
 static void xfgets(char *str, int size, FILE *in);
->>>>>>> cm-10.0
 
 enum input_mode {
 	oldaskconfig,
@@ -42,11 +35,6 @@ enum input_mode {
 	oldnoconfig,
 } input_mode = oldaskconfig;
 
-<<<<<<< HEAD
-char *defconfig_file;
-
-=======
->>>>>>> cm-10.0
 static int indent = 1;
 static int valid_stdin = 1;
 static int sync_kconfig;
@@ -116,10 +104,7 @@ static int conf_askvalue(struct symbol *sym, const char *def)
 			return 0;
 		}
 		check_stdin();
-<<<<<<< HEAD
-=======
 		/* fall through */
->>>>>>> cm-10.0
 	case oldaskconfig:
 		fflush(stdout);
 		xfgets(line, 128, stdin);
@@ -164,10 +149,7 @@ static int conf_string(struct menu *menu)
 				def = NULL;
 				break;
 			}
-<<<<<<< HEAD
-=======
 			/* fall through */
->>>>>>> cm-10.0
 		default:
 			line[strlen(line)-1] = 0;
 			def = line;
@@ -322,10 +304,7 @@ static int conf_choice(struct menu *menu)
 				break;
 			}
 			check_stdin();
-<<<<<<< HEAD
-=======
 			/* fall through */
->>>>>>> cm-10.0
 		case oldaskconfig:
 			fflush(stdout);
 			xfgets(line, 128, stdin);
@@ -391,10 +370,7 @@ static void conf(struct menu *menu)
 				check_conf(menu);
 				return;
 			}
-<<<<<<< HEAD
-=======
 			/* fall through */
->>>>>>> cm-10.0
 		case P_COMMENT:
 			prompt = menu_get_prompt(menu);
 			if (prompt)
@@ -482,12 +458,6 @@ static struct option long_opts[] = {
 	{NULL, 0, NULL, 0}
 };
 
-<<<<<<< HEAD
-int main(int ac, char **av)
-{
-	int opt;
-	const char *name;
-=======
 static void conf_usage(const char *progname)
 {
 
@@ -512,7 +482,6 @@ int main(int ac, char **av)
 	const char *progname = av[0];
 	int opt;
 	const char *name, *defconfig_file = NULL /* gcc uninit */;
->>>>>>> cm-10.0
 	struct stat tmpstat;
 
 	setlocale(LC_ALL, "");
@@ -544,10 +513,6 @@ int main(int ac, char **av)
 			srand(seed);
 			break;
 		}
-<<<<<<< HEAD
-		case '?':
-			fprintf(stderr, _("See README for usage info\n"));
-=======
 		case oldaskconfig:
 		case oldconfig:
 		case allnoconfig:
@@ -559,17 +524,13 @@ int main(int ac, char **av)
 			break;
 		case '?':
 			conf_usage(progname);
->>>>>>> cm-10.0
 			exit(1);
 			break;
 		}
 	}
 	if (ac == optind) {
 		printf(_("%s: Kconfig file missing\n"), av[0]);
-<<<<<<< HEAD
-=======
 		conf_usage(progname);
->>>>>>> cm-10.0
 		exit(1);
 	}
 	name = av[optind];
@@ -712,21 +673,11 @@ int main(int ac, char **av)
 	}
 	return 0;
 }
-<<<<<<< HEAD
-/*
- * Helper function to facilitate fgets() by Jean Sacren.
- */
-void xfgets(str, size, in)
-	char *str;
-	int size;
-	FILE *in;
-=======
 
 /*
  * Helper function to facilitate fgets() by Jean Sacren.
  */
 void xfgets(char *str, int size, FILE *in)
->>>>>>> cm-10.0
 {
 	if (fgets(str, size, in) == NULL)
 		fprintf(stderr, "\nError in reading or end of file.\n");

@@ -70,8 +70,6 @@ config EEPROM_93CX6
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
-=======
 config EEPROM_93XX46
 	tristate "Microwire EEPROM 93XX46 support"
 	depends on SPI && SYSFS
@@ -97,5 +95,4 @@ config EEPROM_DIGSY_MTC_CFG
 
 	  If unsure, say N.
 
->>>>>>> cm-10.0
 endmenu

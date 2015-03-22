@@ -2,10 +2,7 @@ menuconfig SND_HDA_INTEL
 	tristate "Intel HD Audio"
 	select SND_PCM
 	select SND_VMASTER
-<<<<<<< HEAD
-=======
 	select SND_KCTL_JACK
->>>>>>> cm-10.0
 	help
 	  Say Y here to include support for Intel "High Definition
 	  Audio" (Azalia) and its compatible devices.
@@ -18,8 +15,6 @@ menuconfig SND_HDA_INTEL
 
 if SND_HDA_INTEL
 
-<<<<<<< HEAD
-=======
 config SND_HDA_PREALLOC_SIZE
 	int "Pre-allocated buffer size for HD-audio driver"
 	range 0 32768
@@ -33,7 +28,6 @@ config SND_HDA_PREALLOC_SIZE
 	  Note that the pre-allocation size can be changed dynamically
 	  via a proc file (/proc/asound/card*/pcm*/sub*/prealloc), too.
 
->>>>>>> cm-10.0
 config SND_HDA_HWDEP
 	bool "Build hwdep interface for HD-audio driver"
 	select SND_HWDEP
@@ -103,8 +97,6 @@ config SND_HDA_CODEC_REALTEK
 	  snd-hda-codec-realtek.
 	  This module is automatically loaded at probing.
 
-<<<<<<< HEAD
-=======
 config SND_HDA_ENABLE_REALTEK_QUIRKS
 	bool "Build static quirks for Realtek codecs"
 	depends on SND_HDA_CODEC_REALTEK
@@ -118,7 +110,6 @@ config SND_HDA_ENABLE_REALTEK_QUIRKS
 	  need the quirk code.  By turning this off, you can reduce the
 	  module size quite a lot.
 
->>>>>>> cm-10.0
 config SND_HDA_CODEC_ANALOG
 	bool "Build Analog Device HD-audio codec support"
 	default y
@@ -207,8 +198,6 @@ config SND_HDA_CODEC_CA0110
 	  snd-hda-codec-ca0110.
 	  This module is automatically loaded at probing.
 
-<<<<<<< HEAD
-=======
 config SND_HDA_CODEC_CA0132
 	bool "Build Creative CA0132 codec support"
 	depends on SND_HDA_INTEL
@@ -222,7 +211,6 @@ config SND_HDA_CODEC_CA0132
 	  snd-hda-codec-ca0132.
 	  This module is automatically loaded at probing.
 
->>>>>>> cm-10.0
 config SND_HDA_CODEC_CMEDIA
 	bool "Build C-Media HD-audio codec support"
 	default y
@@ -256,10 +244,7 @@ config SND_HDA_GENERIC
 
 config SND_HDA_POWER_SAVE
 	bool "Aggressive power-saving on HD-audio"
-<<<<<<< HEAD
-=======
 	depends on PM
->>>>>>> cm-10.0
 	help
 	  Say Y here to enable more aggressive power-saving mode on
 	  HD-audio driver.  The power-saving timeout can be configured

@@ -93,15 +93,9 @@ obj-dirs	:= $(addprefix $(obj)/,$(obj-dirs))
 # already
 # $(modname_flags) #defines KBUILD_MODNAME as the name of the module it will 
 # end up in (or would, if it gets compiled in)
-<<<<<<< HEAD
-# Note: It's possible that one object gets potentially linked into more
-#       than one module. In that case KBUILD_MODNAME will be set to foo_bar,
-#       where foo and bar are the name of the modules.
-=======
 # Note: Files that end up in two or more modules are compiled without the
 #       KBUILD_MODNAME definition. The reason is that any made-up name would
 #       differ in different configs.
->>>>>>> cm-10.0
 name-fix = $(subst $(comma),_,$(subst -,_,$1))
 basename_flags = -D"KBUILD_BASENAME=KBUILD_STR($(call name-fix,$(basetarget)))"
 modname_flags  = $(if $(filter 1,$(words $(modname))),\
@@ -166,8 +160,6 @@ ld_flags       = $(LDFLAGS) $(ldflags-y)
 modname-multi = $(sort $(foreach m,$(multi-used),\
 		$(if $(filter $(subst $(obj)/,,$*.o), $($(m:.o=-objs)) $($(m:.o=-y))),$(m:.o=))))
 
-<<<<<<< HEAD
-=======
 ifdef REGENERATE_PARSERS
 
 # GPERF
@@ -210,18 +202,13 @@ $(src)/%.tab.h_shipped: $(src)/%.y
 
 endif
 
->>>>>>> cm-10.0
 # Shipped files
 # ===========================================================================
 
 quiet_cmd_shipped = SHIPPED $@
 cmd_shipped = cat $< > $@
 
-<<<<<<< HEAD
-$(obj)/%:: $(src)/%_shipped
-=======
 $(obj)/%: $(src)/%_shipped
->>>>>>> cm-10.0
 	$(call cmd,shipped)
 
 # Commands useful for building a boot image
@@ -277,11 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
 	$(call cmd,dt_S_dtb)
 
 quiet_cmd_dtc = DTC     $@
-<<<<<<< HEAD
-cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $<
-=======
 cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
->>>>>>> cm-10.0
 
 # Bzip2
 # ---------------------------------------------------------------------------
@@ -321,8 +304,6 @@ cmd_lzo = (cat $(filter-out FORCE,$^) | \
 	lzop -9 && $(call size_append, $(filter-out FORCE,$^))) > $@ || \
 	(rm -f $@ ; false)
 
-<<<<<<< HEAD
-=======
 # U-Boot mkimage
 # ---------------------------------------------------------------------------
 
@@ -347,7 +328,6 @@ quiet_cmd_uimage = UIMAGE  $(UIMAGE_OUT)
 			-a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
 			-n $(UIMAGE_NAME) -d $(UIMAGE_IN) $(UIMAGE_OUT)
 
->>>>>>> cm-10.0
 # XZ
 # ---------------------------------------------------------------------------
 # Use xzkern to compress the kernel image and xzmisc to compress other things.

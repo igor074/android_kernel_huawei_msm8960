@@ -10,15 +10,6 @@ config SND_BF5XX_I2S
 
 config SND_BF5XX_SOC_SSM2602
 	tristate "SoC SSM2602 Audio support for BF52x ezkit"
-<<<<<<< HEAD
-	depends on SND_BF5XX_I2S
-	select SND_BF5XX_SOC_I2S
-	select SND_SOC_SSM2602
-	select I2C
-	help
-	  Say Y if you want to add support for SoC audio on BF527-EZKIT.
-
-=======
 	depends on SND_BF5XX_I2S && (SPI_MASTER || I2C)
 	select SND_BF5XX_SOC_I2S
 	select SND_SOC_SSM2602
@@ -62,7 +53,6 @@ config SND_SOC_BFIN_EVAL_ADAV80X
 	  Note: This driver assumes that the ADAV80X digital record and playback
 	  interfaces are connected to the first SPORT port on the BF5XX board.
 
->>>>>>> cm-10.0
 config SND_BF5XX_SOC_AD73311
 	tristate "SoC AD73311 Audio support for Blackfin"
 	depends on SND_BF5XX_I2S

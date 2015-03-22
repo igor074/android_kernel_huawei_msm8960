@@ -1,10 +1,7 @@
 menuconfig ION
 	tristate "Ion Memory Manager"
 	select GENERIC_ALLOCATOR
-<<<<<<< HEAD
-=======
 	select DMA_SHARED_BUFFER
->>>>>>> cm-10.0
 	help
 	  Chose this option to enable the ION Memory Manager.
 

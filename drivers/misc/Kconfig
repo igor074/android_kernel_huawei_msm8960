@@ -2,32 +2,14 @@
 # Misc strange devices
 #
 
-<<<<<<< HEAD
-# This one has to live outside of the MISC_DEVICES conditional,
-# because it may be selected by drivers/platform/x86/hp_accel.
-=======
 menu "Misc devices"
 
->>>>>>> cm-10.0
 config SENSORS_LIS3LV02D
 	tristate
 	depends on INPUT
 	select INPUT_POLLDEV
 	default n
 
-<<<<<<< HEAD
-menuconfig MISC_DEVICES
-	bool "Misc devices"
-	---help---
-	  Say Y here to get to see options for device drivers from various
-	  different categories. This option alone does not add any kernel code.
-
-	  If you say N, all options in this submenu will be skipped and disabled.
-
-if MISC_DEVICES
-
-=======
->>>>>>> cm-10.0
 config AD525X_DPOT
 	tristate "Analog Devices Digital Potentiometers"
 	depends on (I2C || SPI) && SYSFS
@@ -75,11 +57,7 @@ config ANDROID_PMEM
 
 config ATMEL_PWM
 	tristate "Atmel AT32/AT91 PWM support"
-<<<<<<< HEAD
-	depends on AVR32 || ARCH_AT91SAM9263 || ARCH_AT91SAM9RL || ARCH_AT91CAP9
-=======
 	depends on HAVE_CLK
->>>>>>> cm-10.0
 	help
 	  This option enables device driver support for the PWM channels
 	  on certain Atmel processors.  Pulse Width Modulation is used for
@@ -162,10 +140,7 @@ config PHANTOM
 
 config INTEL_MID_PTI
 	tristate "Parallel Trace Interface for MIPI P1149.7 cJTAG standard"
-<<<<<<< HEAD
-=======
 	depends on PCI
->>>>>>> cm-10.0
 	default n
 	help
 	  The PTI (Parallel Trace Interface) driver directs
@@ -503,11 +478,7 @@ config BMP085
 	  module will be called bmp085.
 
 config PCH_PHUB
-<<<<<<< HEAD
-	tristate "Intel EG20T PCH / OKI SEMICONDUCTOR IOH(ML7213/ML7223) PHUB"
-=======
 	tristate "Intel EG20T PCH/LAPIS Semicon IOH(ML7213/ML7223/ML7831) PHUB"
->>>>>>> cm-10.0
 	depends on PCI
 	help
 	  This driver is for PCH(Platform controller Hub) PHUB(Packet Hub) of
@@ -515,14 +486,6 @@ config PCH_PHUB
 	  processor. The Topcliff has MAC address and Option ROM data in SROM.
 	  This driver can access MAC address and Option ROM data in SROM.
 
-<<<<<<< HEAD
-	  This driver also can be used for OKI SEMICONDUCTOR IOH(Input/
-	  Output Hub), ML7213 and ML7223.
-	  ML7213 IOH is for IVI(In-Vehicle Infotainment) use and ML7223 IOH is
-	  for MP(Media Phone) use.
-	  ML7213/ML7223 is companion chip for Intel Atom E6xx series.
-	  ML7213/ML7223 is completely compatible for Intel EG20T PCH.
-=======
 	  This driver also can be used for LAPIS Semiconductor's IOH,
 	  ML7213/ML7223/ML7831.
 	  ML7213 which is for IVI(In-Vehicle Infotainment) use.
@@ -530,13 +493,10 @@ config PCH_PHUB
 	  ML7831 IOH is for general purpose use.
 	  ML7213/ML7223/ML7831 is companion chip for Intel Atom E6xx series.
 	  ML7213/ML7223/ML7831 is completely compatible for Intel EG20T PCH.
->>>>>>> cm-10.0
 
 	  To compile this driver as a module, choose M here: the module will
 	  be called pch_phub.
 
-<<<<<<< HEAD
-=======
 config USB_SWITCH_FSA9480
 	tristate "FSA9480 USB Switch"
 	depends on I2C
@@ -554,7 +514,6 @@ config MAX8997_MUIC
 	  Maxim MAX8997 PMIC.
 	  The MAX8997 MUIC is a USB port accessory detector and switch.
 
->>>>>>> cm-10.0
 config WL127X_RFKILL
 	tristate "Bluetooth power control driver for TI wl127x"
 	depends on RFKILL
@@ -669,17 +628,6 @@ config PMIC8058_XOADC
 	  PMIC8058. Driver interface to program registers of the ADC over
 	  AMUX channels, devices on programmable MPP's and xotherm.
 
-<<<<<<< HEAD
-config TZCOM
-	tristate "Trustzone Communicator driver"
-	default n
-	help
-	  Provides a communication interface between userspace and
-	  TrustZone Operating Environment (TZBSP) using Secure Channel
-	  Manager (SCM) interface.
-
-=======
->>>>>>> cm-10.0
 config QSEECOM
 	tristate "Qualcomm Secure Execution Communicator driver"
 	help
@@ -695,8 +643,6 @@ config QFP_FUSE
 	  to the fuse block. Currently this is supported only
 	  on FSM targets.
 
-<<<<<<< HEAD
-=======
 config USB_HSIC_SMSC_HUB
 	tristate "Support for HSIC based MSM on-chip SMSC3503 HUB"
 	depends on USB_EHCI_MSM_HSIC
@@ -707,7 +653,6 @@ config USB_HSIC_SMSC_HUB
 	  This adds support for connecting devices like mouse in HSIC
 	  Host mode.
 
->>>>>>> cm-10.0
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
@@ -715,10 +660,5 @@ source "drivers/misc/iwmc3200top/Kconfig"
 source "drivers/misc/ti-st/Kconfig"
 source "drivers/misc/lis3lv02d/Kconfig"
 source "drivers/misc/carma/Kconfig"
-<<<<<<< HEAD
-
-endif # MISC_DEVICES
-=======
 source "drivers/misc/altera-stapl/Kconfig"
 endmenu
->>>>>>> cm-10.0

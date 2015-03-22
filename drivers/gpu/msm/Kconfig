@@ -96,7 +96,6 @@ config MSM_KGSL_DISABLE_SHADOW_WRITES
 	bool "Disable register shadow writes for context switches"
 	default n
 	depends on MSM_KGSL
-<<<<<<< HEAD
 
 config HUAWEI_VM_LOW_MEMORY_KILLER
         bool "Enable Huawei VM Low Memory Killer"
@@ -117,6 +116,3 @@ config HUAWEI_MSM_KGSL_VM_RSS_THRESHOLD
        default 0x00000000
        depends on MSM_KGSL && HUAWEI_VM_LOW_MEMORY_KILLER
        ---help---
-         Configures a threshold of minimum process RSS size (in bytes) where background home processes will be included in vm memory killer
-=======
->>>>>>> cm-10.0

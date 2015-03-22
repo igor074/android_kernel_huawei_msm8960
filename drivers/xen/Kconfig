@@ -9,8 +9,6 @@ config XEN_BALLOON
 	  the system to expand the domain's memory allocation, or alternatively
 	  return unneeded memory to the system.
 
-<<<<<<< HEAD
-=======
 config XEN_SELFBALLOONING
 	bool "Dynamically self-balloon kernel memory to target"
 	depends on XEN && XEN_BALLOON && CLEANCACHE && SWAP && XEN_TMEM
@@ -58,7 +56,6 @@ config XEN_BALLOON_MEMORY_HOTPLUG
 
 	  In that case step 3 should be omitted.
 
->>>>>>> cm-10.0
 config XEN_SCRUB_PAGES
 	bool "Scrub pages before returning them to system"
 	depends on XEN_BALLOON
@@ -89,10 +86,7 @@ config XEN_BACKEND
 
 config XENFS
 	tristate "Xen filesystem"
-<<<<<<< HEAD
-=======
 	select XEN_PRIVCMD
->>>>>>> cm-10.0
 	default y
 	help
 	  The xen filesystem provides a way for domains to share
@@ -144,26 +138,11 @@ config XEN_GRANT_DEV_ALLOC
 	  to other domains. This can be used to implement frontend drivers
 	  or as part of an inter-domain shared memory channel.
 
-<<<<<<< HEAD
-config XEN_PLATFORM_PCI
-	tristate "xen platform pci device driver"
-	depends on XEN_PVHVM && PCI
-	default m
-	help
-	  Driver for the Xen PCI Platform device: it is responsible for
-	  initializing xenbus and grant_table when running in a Xen HVM
-	  domain. As a consequence this driver is required to run any Xen PV
-	  frontend on Xen HVM.
-
-=======
->>>>>>> cm-10.0
 config SWIOTLB_XEN
 	def_bool y
 	depends on PCI
 	select SWIOTLB
 
-<<<<<<< HEAD
-=======
 config XEN_TMEM
 	bool
 	default y if (CLEANCACHE || FRONTSWAP)
@@ -217,5 +196,4 @@ config XEN_ACPI_PROCESSOR
 	  called xen_acpi_processor  If you do not know what to choose, select
 	  M here. If the CPUFREQ drivers are built in, select Y here.
 
->>>>>>> cm-10.0
 endmenu

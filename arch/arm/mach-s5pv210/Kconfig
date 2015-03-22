@@ -11,18 +11,11 @@ if ARCH_S5PV210
 
 config CPU_S5PV210
 	bool
-<<<<<<< HEAD
-	select S3C_PL330_DMA
-	select S5P_EXT_INT
-	select S5P_HRT
-	select S5PV210_PM if PM
-=======
 	select SAMSUNG_DMADEV
 	select S5P_EXT_INT
 	select S5P_HRT
 	select S5P_PM if PM
 	select S5P_SLEEP if PM
->>>>>>> cm-10.0
 	help
 	  Enable S5PV210 CPU support
 
@@ -67,8 +60,6 @@ config S5PV210_SETUP_FIMC
 	help
 	  Common setup code for the camera interfaces.
 
-<<<<<<< HEAD
-=======
 config S5PV210_SETUP_SPI
 	bool
 	help
@@ -79,7 +70,6 @@ config S5PV210_SETUP_USB_PHY
 	help
 	  Common setup code for USB PHY controller
 
->>>>>>> cm-10.0
 menu "S5PC110 Machines"
 
 config MACH_AQUILA
@@ -111,27 +101,18 @@ config MACH_GONI
 	select S3C_DEV_HSMMC2
 	select S3C_DEV_I2C1
 	select S3C_DEV_I2C2
-<<<<<<< HEAD
-	select S3C_DEV_USB_HSOTG
-	select S5P_DEV_ONENAND
-	select SAMSUNG_DEV_KEYPAD
-=======
 	select S5P_DEV_MFC
 	select S3C_DEV_USB_HSOTG
 	select S5P_DEV_ONENAND
 	select SAMSUNG_DEV_KEYPAD
 	select S5P_DEV_TV
->>>>>>> cm-10.0
 	select S5PV210_SETUP_FB_24BPP
 	select S5PV210_SETUP_I2C1
 	select S5PV210_SETUP_I2C2
 	select S5PV210_SETUP_KEYPAD
 	select S5PV210_SETUP_SDHCI
-<<<<<<< HEAD
-=======
 	select S5PV210_SETUP_FIMC
 	select S5PV210_SETUP_USB_PHY
->>>>>>> cm-10.0
 	help
 	  Machine support for Samsung GONI board
 	  S5PC110(MCP) is one of package option of S5PV210
@@ -143,13 +124,10 @@ config MACH_SMDKC110
 	select S3C_DEV_I2C2
 	select S3C_DEV_RTC
 	select S3C_DEV_WDT
-<<<<<<< HEAD
-=======
 	select S5P_DEV_FIMC0
 	select S5P_DEV_FIMC1
 	select S5P_DEV_FIMC2
 	select S5P_DEV_MFC
->>>>>>> cm-10.0
 	select SAMSUNG_DEV_IDE
 	select S5PV210_SETUP_I2C1
 	select S5PV210_SETUP_I2C2
@@ -174,9 +152,6 @@ config MACH_SMDKV210
 	select S3C_DEV_I2C2
 	select S3C_DEV_RTC
 	select S3C_DEV_WDT
-<<<<<<< HEAD
-	select SAMSUNG_DEV_ADC
-=======
 	select S5P_DEV_FIMC0
 	select S5P_DEV_FIMC1
 	select S5P_DEV_FIMC2
@@ -184,7 +159,6 @@ config MACH_SMDKV210
 	select S5P_DEV_MFC
 	select SAMSUNG_DEV_ADC
 	select SAMSUNG_DEV_BACKLIGHT
->>>>>>> cm-10.0
 	select SAMSUNG_DEV_IDE
 	select SAMSUNG_DEV_KEYPAD
 	select SAMSUNG_DEV_PWM
@@ -218,12 +192,4 @@ config MACH_TORBRECK
 
 endmenu
 
-<<<<<<< HEAD
-config S5PV210_PM
-	bool
-	help
-	  Power Management code common to S5PV210
-
-=======
->>>>>>> cm-10.0
 endif

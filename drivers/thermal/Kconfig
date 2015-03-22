@@ -14,21 +14,10 @@ menuconfig THERMAL
 	  If you want this support, you should say Y or M here.
 
 config THERMAL_HWMON
-<<<<<<< HEAD
-	bool "Hardware monitoring support"
-	depends on THERMAL
-	depends on HWMON=y || HWMON=THERMAL
-	help
-	  The generic thermal sysfs driver's hardware monitoring support
-	  requires a 2.10.7/3.0.2 or later lm-sensors userspace.
-
-	  Say Y if your user-space is new enough.
-=======
 	bool
 	depends on THERMAL
 	depends on HWMON=y || HWMON=THERMAL
 	default y
->>>>>>> cm-10.0
 
 config THERMAL_MSM_POPMEM
 	tristate "Qualcomm MSM POP memory temperature sensor"
@@ -77,18 +66,13 @@ config THERMAL_PM8XXX
 config THERMAL_MONITOR
 	bool "Monitor thermal state and limit CPU Frequency"
 	depends on THERMAL_TSENS8960
-<<<<<<< HEAD
-=======
 	depends on CPU_FREQ_MSM
->>>>>>> cm-10.0
 	default n
 	help
 	  This enables thermal monitoring capability in the kernel in the
 	  absence of a system wide thermal monitoring entity or until such an
 	  entity starts running in the userspace. Monitors TSENS temperature
 	  and limits the max frequency of the cores.
-<<<<<<< HEAD
-=======
 
 config SPEAR_THERMAL
 	bool "SPEAr thermal sensor driver"
@@ -97,4 +81,3 @@ config SPEAR_THERMAL
 	help
 	  Enable this to plug the SPEAr thermal sensor driver into the Linux
 	  thermal framework
->>>>>>> cm-10.0

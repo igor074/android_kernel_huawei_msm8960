@@ -31,8 +31,6 @@ config BTRFS_FS_POSIX_ACL
 	  Linux website <http://acl.bestbits.at/>.
 
 	  If you don't know what Access Control Lists are, say N
-<<<<<<< HEAD
-=======
 
 config BTRFS_FS_CHECK_INTEGRITY
 	bool "Btrfs with integrity check tool compiled in (DANGEROUS)"
@@ -52,4 +50,3 @@ config BTRFS_FS_CHECK_INTEGRITY
 	  In most cases, unless you are a btrfs developer who needs
 	  to verify the integrity of (super)-block write requests
 	  during the run of a regression test, say N
->>>>>>> cm-10.0

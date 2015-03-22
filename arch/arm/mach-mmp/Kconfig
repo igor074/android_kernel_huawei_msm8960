@@ -2,8 +2,6 @@ if ARCH_MMP
 
 menu "Marvell PXA168/910/MMP2 Implmentations"
 
-<<<<<<< HEAD
-=======
 config MACH_MMP_DT
 	bool "Support MMP2 platforms from device tree"
 	select CPU_PXA168
@@ -14,7 +12,6 @@ config MACH_MMP_DT
 	  the device tree. Needn't select any other machine while
 	  MACH_MMP_DT is enabled.
 
->>>>>>> cm-10.0
 config MACH_ASPENITE
 	bool "Marvell's PXA168 Aspenite Development Board"
 	select CPU_PXA168
@@ -90,8 +87,6 @@ config MACH_TETON_BGA
 	  Say 'Y' here if you want to support the Marvell PXA168-based
 	  Teton BGA Development Board.
 
-<<<<<<< HEAD
-=======
 config MACH_GPLUGD
 	bool "Marvell's PXA168 GuruPlug Display (gplugD) Board"
 	select CPU_PXA168
@@ -99,7 +94,6 @@ config MACH_GPLUGD
 	  Say 'Y' here if you want to support the Marvell PXA168-based
 	  GuruPlug Display (gplugD) Board
 
->>>>>>> cm-10.0
 endmenu
 
 config CPU_PXA168

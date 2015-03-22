@@ -309,10 +309,7 @@ config SCSI_FC_TGT_ATTRS
 config SCSI_ISCSI_ATTRS
 	tristate "iSCSI Transport Attributes"
 	depends on SCSI && NET
-<<<<<<< HEAD
-=======
 	select BLK_DEV_BSGLIB
->>>>>>> cm-10.0
 	help
 	  If you wish to export transport-specific information about
 	  each attached iSCSI device to sysfs, say Y.
@@ -563,8 +560,6 @@ source "drivers/scsi/aic7xxx/Kconfig.aic79xx"
 source "drivers/scsi/aic94xx/Kconfig"
 source "drivers/scsi/mvsas/Kconfig"
 
-<<<<<<< HEAD
-=======
 config SCSI_MVUMI
 	tristate "Marvell UMI driver"
 	depends on SCSI && PCI
@@ -574,7 +569,6 @@ config SCSI_MVUMI
 	  To compile this driver as a module, choose M here: the
 	  module will be called mvumi.
 
->>>>>>> cm-10.0
 config SCSI_DPT_I2O
 	tristate "Adaptec I2O RAID support "
 	depends on SCSI && PCI && VIRT_TO_BUS
@@ -622,29 +616,9 @@ config SCSI_ARCMSR
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called arcmsr (modprobe arcmsr).
-
-<<<<<<< HEAD
-config SCSI_ARCMSR_AER
-	bool "Enable PCI Error Recovery Capability in Areca Driver(ARCMSR)"
-	depends on SCSI_ARCMSR && PCIEAER
-	default n
-	help
-	  The advanced error reporting(AER) capability is "NOT" provided by
-	  ARC1200/1201/1202 SATA RAID controllers cards.
-	  If your card is one of ARC1200/1201/1202, please use the default setting, n.
-	  If your card is other models, you could pick it
-	  on condition that the kernel version is greater than 2.6.19.
-	  This function is maintained driver by Nick Cheng. If you have any
-	  problems or suggestion, you are welcome to contact with <nick.cheng@areca.com.tw>.
-	  To enable this function, choose Y here.
-
-source "drivers/scsi/megaraid/Kconfig.megaraid"
-source "drivers/scsi/mpt2sas/Kconfig"
-=======
 source "drivers/scsi/megaraid/Kconfig.megaraid"
 source "drivers/scsi/mpt2sas/Kconfig"
 source "drivers/scsi/ufs/Kconfig"
->>>>>>> cm-10.0
 
 config SCSI_HPTIOP
 	tristate "HighPoint RocketRAID 3xxx/4xxx Controller support"
@@ -688,8 +662,6 @@ config VMWARE_PVSCSI
 	  To compile this driver as a module, choose M here: the
 	  module will be called vmw_pvscsi.
 
-<<<<<<< HEAD
-=======
 config HYPERV_STORAGE
 	tristate "Microsoft Hyper-V virtual storage driver"
 	depends on SCSI && HYPERV
@@ -697,7 +669,6 @@ config HYPERV_STORAGE
 	help
 	  Select this option to enable the Hyper-V virtual storage driver.
 
->>>>>>> cm-10.0
 config LIBFC
 	tristate "LibFC module"
 	select SCSI_FC_ATTRS
@@ -866,21 +837,11 @@ config SCSI_ISCI
 	tristate "Intel(R) C600 Series Chipset SAS Controller"
 	depends on PCI && SCSI
 	depends on X86
-<<<<<<< HEAD
-	# (temporary): known alpha quality driver
-	depends on EXPERIMENTAL
-=======
->>>>>>> cm-10.0
 	select SCSI_SAS_LIBSAS
 	---help---
 	  This driver supports the 6Gb/s SAS capabilities of the storage
 	  control unit found in the Intel(R) C600 series chipset.
 
-<<<<<<< HEAD
-	  The experimental tag will be removed after the driver exits alpha
-
-=======
->>>>>>> cm-10.0
 config SCSI_GENERIC_NCR5380
 	tristate "Generic NCR5380/53c400 SCSI PIO support"
 	depends on ISA && SCSI
@@ -1013,14 +974,8 @@ config SCSI_IPS
 
 config SCSI_IBMVSCSI
 	tristate "IBM Virtual SCSI support"
-<<<<<<< HEAD
-	depends on PPC_PSERIES || PPC_ISERIES
-	select SCSI_SRP_ATTRS
-	select VIOPATH if PPC_ISERIES
-=======
 	depends on PPC_PSERIES
 	select SCSI_SRP_ATTRS
->>>>>>> cm-10.0
 	help
 	  This is the IBM POWER Virtual SCSI Client
 
@@ -1914,13 +1869,6 @@ config ZFCP
           called zfcp. If you want to compile it as a module, say M here
           and read <file:Documentation/kbuild/modules.txt>.
 
-<<<<<<< HEAD
-config ZFCP_DIF
-	tristate "T10 DIF/DIX support for the zfcp driver (EXPERIMENTAL)"
-	depends on ZFCP && EXPERIMENTAL
-
-=======
->>>>>>> cm-10.0
 config SCSI_PMCRAID
 	tristate "PMC SIERRA Linux MaxRAID adapter support"
 	depends on PCI && SCSI && NET
@@ -1955,8 +1903,6 @@ config SCSI_BFA_FC
 	  To compile this driver as a module, choose M here. The module will
 	  be called bfa.
 
-<<<<<<< HEAD
-=======
 config SCSI_VIRTIO
 	tristate "virtio-scsi support (EXPERIMENTAL)"
 	depends on EXPERIMENTAL && VIRTIO
@@ -1964,8 +1910,6 @@ config SCSI_VIRTIO
           This is the virtual HBA driver for virtio.  If the kernel will
           be used in a virtual machine, say Y or M.
 
-
->>>>>>> cm-10.0
 endif # SCSI_LOWLEVEL
 
 source "drivers/scsi/pcmcia/Kconfig"

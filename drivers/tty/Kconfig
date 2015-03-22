@@ -1,10 +1,6 @@
 config VT
 	bool "Virtual terminal" if EXPERT
-<<<<<<< HEAD
-	depends on !S390
-=======
 	depends on !S390 && !UML
->>>>>>> cm-10.0
 	select INPUT
 	default y
 	---help---
@@ -64,11 +60,6 @@ config VT_CONSOLE
 
 	  If unsure, say Y.
 
-<<<<<<< HEAD
-config HW_CONSOLE
-	bool
-	depends on VT && !S390 && !UML
-=======
 config VT_CONSOLE_SLEEP
 	def_bool y
 	depends on VT_CONSOLE && PM_SLEEP
@@ -76,7 +67,6 @@ config VT_CONSOLE_SLEEP
 config HW_CONSOLE
 	bool
 	depends on VT && !UML
->>>>>>> cm-10.0
 	default y
 
 config VT_HW_CONSOLE_BINDING
@@ -333,8 +323,6 @@ config N_GSM
 	  This line discipline provides support for the GSM MUX protocol and
 	  presents the mux as a set of 61 individual tty devices.
 
-<<<<<<< HEAD
-=======
 config N_SMUX
 	tristate "SMUX line discipline support"
 	depends on NET && SERIAL_MSM_HS
@@ -354,7 +342,6 @@ config SMUX_CTL
 	help
 	  Support for SMUX control driver on top of serial MUX.
 
->>>>>>> cm-10.0
 config TRACE_ROUTER
 	tristate "Trace data router for MIPI P1149.7 cJTAG standard"
 	depends on TRACE_SINK
@@ -386,8 +373,6 @@ config TRACE_SINK
 
 	  If you select this option, you need to select
 	  "Trace data router for MIPI P1149.7 cJTAG standard".
-<<<<<<< HEAD
-=======
 
 config PPC_EPAPR_HV_BYTECHAN
 	tristate "ePAPR hypervisor byte channel driver"
@@ -422,4 +407,3 @@ config PPC_EARLY_DEBUG_EHV_BC_HANDLE
 	  If the number you specify is not a valid byte channel handle, then
 	  there simply will be no early console output.  This is true also
 	  if you don't boot under a hypervisor at all.
->>>>>>> cm-10.0

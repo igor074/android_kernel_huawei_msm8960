@@ -100,8 +100,6 @@ config CRYPTO_MANAGER2
 	select CRYPTO_BLKCIPHER2
 	select CRYPTO_PCOMP2
 
-<<<<<<< HEAD
-=======
 config CRYPTO_USER
 	tristate "Userspace cryptographic algorithm configuration"
 	depends on NET
@@ -110,7 +108,6 @@ config CRYPTO_USER
 	  Userspace configuration for cryptographic instantiations such as
 	  cbc(aes).
 
->>>>>>> cm-10.0
 config CRYPTO_MANAGER_DISABLE_TESTS
 	bool "Disable run-time self tests"
 	default y
@@ -120,11 +117,7 @@ config CRYPTO_MANAGER_DISABLE_TESTS
 	  algorithm registration.
 
 config CRYPTO_GF128MUL
-<<<<<<< HEAD
-	tristate "GF(2^128) multiplication functions (EXPERIMENTAL)"
-=======
 	tristate "GF(2^128) multiplication functions"
->>>>>>> cm-10.0
 	help
 	  Efficient table driven implementation of multiplications in the
 	  field GF(2^128).  This is needed by some cypher modes. This
@@ -248,12 +241,7 @@ config CRYPTO_ECB
 	  the input block by block.
 
 config CRYPTO_LRW
-<<<<<<< HEAD
-	tristate "LRW support (EXPERIMENTAL)"
-	depends on EXPERIMENTAL
-=======
 	tristate "LRW support"
->>>>>>> cm-10.0
 	select CRYPTO_BLKCIPHER
 	select CRYPTO_MANAGER
 	select CRYPTO_GF128MUL
@@ -273,12 +261,7 @@ config CRYPTO_PCBC
 	  This block cipher algorithm is required for RxRPC.
 
 config CRYPTO_XTS
-<<<<<<< HEAD
-	tristate "XTS support (EXPERIMENTAL)"
-	depends on EXPERIMENTAL
-=======
 	tristate "XTS support"
->>>>>>> cm-10.0
 	select CRYPTO_BLKCIPHER
 	select CRYPTO_MANAGER
 	select CRYPTO_GF128MUL
@@ -325,10 +308,7 @@ comment "Digest"
 config CRYPTO_CRC32C
 	tristate "CRC32c CRC algorithm"
 	select CRYPTO_HASH
-<<<<<<< HEAD
-=======
 	select CRC32
->>>>>>> cm-10.0
 	help
 	  Castagnoli, et al Cyclic Redundancy-Check Algorithm.  Used
 	  by iSCSI for header and data digests and by others.
@@ -348,10 +328,6 @@ config CRYPTO_CRC32C_INTEL
 
 config CRYPTO_GHASH
 	tristate "GHASH digest algorithm"
-<<<<<<< HEAD
-	select CRYPTO_SHASH
-=======
->>>>>>> cm-10.0
 	select CRYPTO_GF128MUL
 	help
 	  GHASH is message digest algorithm for GCM (Galois/Counter Mode).
@@ -384,11 +360,7 @@ config CRYPTO_RMD128
 	  RIPEMD-128 (ISO/IEC 10118-3:2004).
 
 	  RIPEMD-128 is a 128-bit cryptographic hash function. It should only
-<<<<<<< HEAD
-	  to be used as a secure replacement for RIPEMD. For other use cases
-=======
 	  be used as a secure replacement for RIPEMD. For other use cases,
->>>>>>> cm-10.0
 	  RIPEMD-160 should be used.
 
 	  Developed by Hans Dobbertin, Antoon Bosselaers and Bart Preneel.
@@ -441,8 +413,6 @@ config CRYPTO_SHA1
 	help
 	  SHA-1 secure hash standard (FIPS 180-1/DFIPS 180-2).
 
-<<<<<<< HEAD
-=======
 config CRYPTO_SHA1_SSSE3
 	tristate "SHA1 digest algorithm (SSSE3/AVX)"
 	depends on X86 && 64BIT
@@ -453,7 +423,6 @@ config CRYPTO_SHA1_SSSE3
 	  using Supplemental SSE3 (SSSE3) instructions or Advanced Vector
 	  Extensions (AVX), when available.
 
->>>>>>> cm-10.0
 config CRYPTO_SHA256
 	tristate "SHA224 and SHA256 digest algorithm"
 	select CRYPTO_HASH
@@ -505,12 +474,7 @@ config CRYPTO_WP512
 
 config CRYPTO_GHASH_CLMUL_NI_INTEL
 	tristate "GHASH digest algorithm (CLMUL-NI accelerated)"
-<<<<<<< HEAD
-	depends on (X86 || UML_X86) && 64BIT
-	select CRYPTO_SHASH
-=======
 	depends on X86 && 64BIT
->>>>>>> cm-10.0
 	select CRYPTO_CRYPTD
 	help
 	  GHASH is message digest algorithm for GCM (Galois/Counter Mode).
@@ -584,11 +548,7 @@ config CRYPTO_AES_X86_64
 
 config CRYPTO_AES_NI_INTEL
 	tristate "AES cipher algorithms (AES-NI)"
-<<<<<<< HEAD
-	depends on (X86 || UML_X86)
-=======
 	depends on X86
->>>>>>> cm-10.0
 	select CRYPTO_AES_X86_64 if 64BIT
 	select CRYPTO_AES_586 if !64BIT
 	select CRYPTO_CRYPTD
@@ -645,10 +605,7 @@ config CRYPTO_ARC4
 config CRYPTO_BLOWFISH
 	tristate "Blowfish cipher algorithm"
 	select CRYPTO_ALGAPI
-<<<<<<< HEAD
-=======
 	select CRYPTO_BLOWFISH_COMMON
->>>>>>> cm-10.0
 	help
 	  Blowfish cipher algorithm, by Bruce Schneier.
 
@@ -659,8 +616,6 @@ config CRYPTO_BLOWFISH
 	  See also:
 	  <http://www.schneier.com/blowfish.html>
 
-<<<<<<< HEAD
-=======
 config CRYPTO_BLOWFISH_COMMON
 	tristate
 	help
@@ -685,7 +640,6 @@ config CRYPTO_BLOWFISH_X86_64
 	  See also:
 	  <http://www.schneier.com/blowfish.html>
 
->>>>>>> cm-10.0
 config CRYPTO_CAMELLIA
 	tristate "Camellia cipher algorithms"
 	depends on CRYPTO
@@ -701,8 +655,6 @@ config CRYPTO_CAMELLIA
 	  See also:
 	  <https://info.isl.ntt.co.jp/crypt/eng/camellia/index_s.html>
 
-<<<<<<< HEAD
-=======
 config CRYPTO_CAMELLIA_X86_64
 	tristate "Camellia cipher algorithm (x86_64)"
 	depends on X86 && 64BIT
@@ -721,7 +673,6 @@ config CRYPTO_CAMELLIA_X86_64
 	  See also:
 	  <https://info.isl.ntt.co.jp/crypt/eng/camellia/index_s.html>
 
->>>>>>> cm-10.0
 config CRYPTO_CAST5
 	tristate "CAST5 (CAST-128) cipher algorithm"
 	select CRYPTO_ALGAPI
@@ -830,8 +781,6 @@ config CRYPTO_SERPENT
 	  See also:
 	  <http://www.cl.cam.ac.uk/~rja14/serpent.html>
 
-<<<<<<< HEAD
-=======
 config CRYPTO_SERPENT_SSE2_X86_64
 	tristate "Serpent cipher algorithm (x86_64/SSE2)"
 	depends on X86 && 64BIT
@@ -872,7 +821,6 @@ config CRYPTO_SERPENT_SSE2_586
 	  See also:
 	  <http://www.cl.cam.ac.uk/~rja14/serpent.html>
 
->>>>>>> cm-10.0
 config CRYPTO_TEA
 	tristate "TEA, XTEA and XETA cipher algorithms"
 	select CRYPTO_ALGAPI
@@ -943,8 +891,6 @@ config CRYPTO_TWOFISH_X86_64
 	  See also:
 	  <http://www.schneier.com/twofish.html>
 
-<<<<<<< HEAD
-=======
 config CRYPTO_TWOFISH_X86_64_3WAY
 	tristate "Twofish cipher algorithm (x86_64, 3-way parallel)"
 	depends on X86 && 64BIT
@@ -967,7 +913,6 @@ config CRYPTO_TWOFISH_X86_64_3WAY
 	  See also:
 	  <http://www.schneier.com/twofish.html>
 
->>>>>>> cm-10.0
 comment "Compression"
 
 config CRYPTO_DEFLATE
